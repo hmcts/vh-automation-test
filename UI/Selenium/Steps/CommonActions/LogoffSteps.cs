@@ -23,7 +23,7 @@ namespace UI.Steps
         [Then(@"I log off")]
         public void ThenILogOff()
         {
-            if (Driver.FindElement(Header.LinkSignOut).Displayed)
+            if (Driver.FindElement(Header.LinkSignOut)?.Displayed == true)
             {
                 Driver.FindElement(Header.LinkSignOut).Click();
             }
@@ -40,7 +40,8 @@ namespace UI.Steps
             {
                 Driver = GetDriver(participant.Id, _scenarioContext);
                 _scenarioContext["driver"] = Driver;
-                ThenILogOff();
+                //ThenILogOff();
+                Driver.FindElement(Header.SignOut).Click();
                 Driver.Url.Should().Contain(loginUrl);
             }
 

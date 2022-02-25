@@ -38,4 +38,3 @@ Scenario: End to End test
 	And the judge checks that all participants have joined the hearing room
 	Then the judge closes the hearing
 	And everyone signs out
-
