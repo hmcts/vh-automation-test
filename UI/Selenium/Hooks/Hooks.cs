@@ -27,7 +27,7 @@ namespace SeleniumSpecFlow
         public IConfiguration Configuration { get; }
         //private IObjectContainer _objectContainer;
         public static EnvironmentConfigSettings config;
-        public static string ProjectPath = AppDomain.CurrentDomain.BaseDirectory.ToString().Remove(AppDomain.CurrentDomain.BaseDirectory.ToString().LastIndexOf("\\") - 24);
+        public static string ProjectPath = AppDomain.CurrentDomain.BaseDirectory.ToString().Remove(AppDomain.CurrentDomain.BaseDirectory.ToString().LastIndexOf("\\") - 17);
         public static string PathReport = ProjectPath + "\\TestResults\\Report\\ExtentReport.html";
         private static ExtentTest _feature;
         private static ExtentTest _scenario;
