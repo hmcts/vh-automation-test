@@ -1,15 +1,10 @@
 ﻿using SeleniumSpecFlow.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using UISelenium.Pages;
 using OpenQA.Selenium.Support.UI;
 using TestFramework;
 using SeleniumExtras.WaitHelpers;
-using NUnit.Framework;
 using FluentAssertions;
 
 namespace UI.Steps

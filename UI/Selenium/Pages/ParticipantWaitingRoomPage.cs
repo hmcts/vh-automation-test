@@ -16,5 +16,6 @@ namespace UISelenium.Pages
         public static By ParticipantDetails(string name) => By.XPath($"//*[contains(text(),'{name}')]");
         public static By ChooseCameraAndMicButton => By.Id("changeCameraButton");
         public static By JoinPrivateMeetingButton => By.Id("changeCameraButton");
+        public static string ParticipantWaitingRoomClosedTitle = "This hearing has finished. You may now sign out";
     }
 }

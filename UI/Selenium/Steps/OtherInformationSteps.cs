@@ -33,7 +33,6 @@ namespace UI.Steps
                 IsHearingRecorded = isRecorded,
                 AnyOtherInfo = tableRow["Other information"]
             };
-
             _hearing.OtherInformation = otherInformation;
         }
 

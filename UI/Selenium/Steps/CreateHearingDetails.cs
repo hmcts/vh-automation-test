@@ -34,7 +34,6 @@ namespace UI.Steps
         {
             Driver.FindElement(HearingDetailsPage.CaseNumber).SendKeys(caseDetails.CaseNumber);
             Driver.FindElement(HearingDetailsPage.CaseName).SendKeys(caseDetails.CaseName);
-
             var caseTypeElement = Driver.FindElement(HearingDetailsPage.CaseType);
             var selectElement = new SelectElement(caseTypeElement);
             selectElement.SelectByText(caseDetails.CaseType);
@@ -54,16 +53,12 @@ namespace UI.Steps
                 _hearing=new Hearing();
                 _scenarioContext.Add("Hearing", _hearing);
             }
-
             var tableRow = table.Rows[0];
-
             _hearing.Case.CaseNumber=$"{tableRow["Case Number"]}{new Random().Next(99, 99999).ToString()}";
             _hearing.Case.CaseName=$"{tableRow["Case Name"]}-{_hearing.Case.CaseNumber}";
             _hearing.Case.CaseType=tableRow["Case Type"];
             _hearing.Case.HearingType=tableRow["Hearing Type"];
-
             _scenarioContext["Hearing"]=_hearing;
-
         }
     }
 }

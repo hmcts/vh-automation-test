@@ -17,7 +17,7 @@ namespace TestFramework
 
         public static IWebElement FindElementWithWait(IWebDriver webdriver, By findBy, TimeSpan? waitPeriod=null)
         {
-            waitPeriod = waitPeriod == null ? TimeSpan.FromSeconds(60) : waitPeriod;
+            waitPeriod = waitPeriod == null ? TimeSpan.FromSeconds(20) : waitPeriod;
             IWebElement webelement = null;
             try
             {

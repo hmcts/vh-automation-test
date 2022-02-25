@@ -31,7 +31,6 @@ namespace UI.Steps
         public void SelectDashboardOption(string optionName)
         {
             var isPageLoaded = false;
-            var waitPeriod=TimeSpan.FromSeconds(Int32.Parse(Config.DefaultElementWait));
             switch(optionName)
             {
                 case "Book a video hearing":
@@ -39,7 +38,6 @@ namespace UI.Steps
                     isPageLoaded=IsHeardingDetailsPageLoaded();
                     break;
             }
-
             isPageLoaded.Should().BeTrue($"cannot load {optionName} page");
         }
 
@@ -58,7 +56,5 @@ namespace UI.Steps
                 return false;
             }
         }
-
-
     }
 }

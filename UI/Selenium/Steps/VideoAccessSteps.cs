@@ -40,7 +40,6 @@ namespace UI.Steps
                     DisplayName = row["Display Name"],
                     Advocate = row["Advocate"]
                 };
-
                 _hearing.VideoAccessPoints.Add(videoAccessPoints);
             }
         }
