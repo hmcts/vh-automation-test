@@ -65,7 +65,6 @@ namespace UI.Steps
                     TestFramework.ExtensionMethods.FindElementEnabledWithWait(Driver, ParticipantHearingListPage.ContinueButton, 180).Click();
                     Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(int.Parse(Config.DefaultElementWait));
                 }
-
                 Driver.FindElement(ParticipantHearingListPage.CameraWorkingYes)?.Click();
                 Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(int.Parse(Config.DefaultElementWait));
                 Driver.FindElement(ParticipantHearingListPage.ContinueButton).Click();

@@ -43,6 +43,8 @@ namespace UI.Steps
                 ThenILogOff();
                 Driver.Url.Should().Contain(loginUrl);
             }
+
+            Driver?.Close();
         }
     }
 }

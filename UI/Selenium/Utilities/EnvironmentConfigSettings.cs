@@ -4,14 +4,14 @@
     {
         public string Environment { get; set; }
         public string ConnectionString { get; set; }
-        public string URL { get; set; }
-        public string BambooURL { get; set; }
-        public string BambooPassword { get; set; }
+        public string UserURL { get; set; }
+        public string UserPassword { get; set; }
         public string ApiUrl { get; set; }
         public string SoapApiUrl { get; set; }
         public string DefaultElementWait { get; set; }
         public string OneMinuteElementWait { get; set; }
         public string VideoUrl { get; set; }
+        public string AdminUrl { get; set; }
 
     }
 }

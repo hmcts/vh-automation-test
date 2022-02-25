@@ -30,8 +30,8 @@ namespace SeleniumSpecFlow.Steps
         [Given(@"I log in as ""([^""]*)""")]
         public void GivenILogInAs(string userName)
         {
-            var result= CommonPageActions.NavigateToPage(Config.URL, "login.microsoftonline.com");
-            Login(userName, Config.BambooPassword);
+            var result= CommonPageActions.NavigateToPage(Config.AdminUrl, "login.microsoftonline.com");
+            Login(userName, Config.UserPassword);
         }
     
         public void Login(string username, string password)
@@ -49,8 +49,6 @@ namespace SeleniumSpecFlow.Steps
         [Then(@"all participants log in to video web")]
         public void ThenAllParticipantsLogInToVideoWeb()
         {
-            Driver?.Close();
-   
             _hearing = (Hearing)_scenarioContext["Hearing"];
             foreach (var participant in _hearing.Participant)
             {
@@ -60,8 +58,7 @@ namespace SeleniumSpecFlow.Steps
                 var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.DefaultElementWait)));
                 wait.Until(ExpectedConditions.ElementIsVisible(LoginPage.UsernameTextfield));
                 drivers.Add($"{participant.Id}#{participant.Party.Name}-{participant.Role.Name}", Driver);
-                    
-                Login(participant.Id, Config.BambooPassword);
+                Login(participant.Id, Config.UserPassword);
             }
             _scenarioContext.Add("drivers", drivers);
         }
