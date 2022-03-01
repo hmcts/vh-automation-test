@@ -21,7 +21,7 @@ using NLog.Web;
 namespace SeleniumSpecFlow
 {
     [Binding]
-    public class Hooks //: ObjectFactory
+    public class Hooks 
     {
          public static RestClient restClient { get; private set; }
         public IConfiguration Configuration { get; }
