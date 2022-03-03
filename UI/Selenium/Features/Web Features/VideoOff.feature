@@ -1,8 +1,8 @@
 ﻿Feature: VideoOff
 
 As a participant of a Hearing
-I should be able to disable the Video option
-So that I can choose my option
+When I disable the Video option
+The judge shouldn't be able to see me
 
 @web
 Scenario: Participant switched off Video in Waiting Room
