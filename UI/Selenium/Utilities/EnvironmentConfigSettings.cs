@@ -12,6 +12,7 @@
         public string OneMinuteElementWait { get; set; }
         public string VideoUrl { get; set; }
         public string AdminUrl { get; set; }
+        public string ServiceUrl { get; set; }
 
     }
 }

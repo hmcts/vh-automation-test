@@ -38,9 +38,9 @@ namespace TestLibrary.Utilities
                 {
                     return systemConfiguration.DevelopmentEnvironmentConfigSettings;
                 }
-                else if (environment.ToLower() == "QA".ToLower())
+                else if (environment.ToLower() == "Acceptance".ToLower())
                 {
-                    return systemConfiguration.StagingEnvironmentConfigSettings;
+                    return systemConfiguration.AcceptanceEnvironmentConfigSettings;
                 }
                 else if (environment.ToLower() == "Production".ToLower())
                 {
