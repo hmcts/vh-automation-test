@@ -22,6 +22,7 @@ namespace UISelenium.Pages
         public static By LowerHands => By.XPath("//*[contains(text(),'Lower hands')]");
         public static By ParticipantDisplayName(string name) => By.XPath($"//*[contains(text(),'{name}')]");
         public static By IncomingFeedJudgeVideo => By.Id("incomingFeedJudgePrivate");
-        //
+        public static By ParticipantVideoOff(string name) => By.XPath($"//div[contains(.,'{name}')]//fa-icon[@icon='video-slash']");
+
     }
 }

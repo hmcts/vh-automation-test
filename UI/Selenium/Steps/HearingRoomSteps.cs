@@ -30,7 +30,7 @@ namespace UI.Steps
         [Then(@"the judge checks that all participants have joined the hearing room")]
         public void ThenTheJudgeChecksThatAllParticipantsHaveJoinedTheHearingRoom()
         {
-            _scenarioContext.UpdatePageName("Judge Waiting Room");
+            _scenarioContext.UpdatePageName("Judge Hearing Room");
             Driver = GetDriver("Judge", _scenarioContext);
             _scenarioContext["driver"] = Driver;
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.OneMinuteElementWait)));
@@ -40,6 +40,26 @@ namespace UI.Steps
             foreach (var participant in _hearing.Participant)
             {
                 ExtensionMethods.FindElementEnabledWithWait(Driver, ParticipantWaitingRoomPage.ParticipantDetails($"{participant.Name.FirstName} {participant.Name.LastName}"), int.Parse(Config.DefaultElementWait)).Displayed.Should().BeTrue();
+            }
+        }
+
+        [Then(@"the judge sees that participants? video has been switched off")]
+        public void ThenTheJudgeSeesThatParticipantVideoHasBeenSwitchedOff()
+        {
+            _scenarioContext.UpdatePageName("Judge Hearing Room");
+            Driver = GetDriver("Judge", _scenarioContext);
+            _scenarioContext["driver"] = Driver;
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.OneMinuteElementWait)));
+            wait.Until(ExpectedConditions.ElementToBeClickable(HearingRoomPage.CloseHearingButton));
+            foreach (var participant in _hearing.Participant)
+            {
+                if (participant.VideoOff)
+                {
+                    var isVideoOff = ExtensionMethods.IsElementVisible(Driver,
+                                                                       HearingRoomPage.ParticipantVideoOff(participant.Name.FirstName),
+                                                                       _scenarioContext);
+                    isVideoOff.Should().BeTrue($"Participant video not switched off for '{participant.Id}'");
+                }
             }
         }
 

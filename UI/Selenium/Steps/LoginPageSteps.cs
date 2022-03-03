@@ -40,14 +40,14 @@ namespace SeleniumSpecFlow.Steps
     
         public void Login(string username, string password)
         {
-            TestFramework.ExtensionMethods.FindElementWithWait(Driver, LoginPage.UsernameTextfield, _scenarioContext, TimeSpan.FromSeconds(int.Parse(Config.DefaultElementWait))).SendKeys(username);
+            ExtensionMethods.FindElementWithWait(Driver, LoginPage.UsernameTextfield, _scenarioContext, TimeSpan.FromSeconds(int.Parse(Config.DefaultElementWait))).SendKeys(username);
             Driver.FindElement(LoginPage.Next).Click();
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.DefaultElementWait)));
             wait.Until(ExpectedConditions.ElementIsVisible(LoginPage.PasswordField));
             wait.Until(ExpectedConditions.ElementToBeClickable(LoginPage.SignIn));
             wait.Until(ExpectedConditions.ElementToBeClickable(LoginPage.BackButton));
             Driver.FindElement(LoginPage.PasswordField).SendKeys(password);
-            TestFramework.ExtensionMethods.FindElementWithWait(Driver, LoginPage.SignIn, _scenarioContext).Click();
+            ExtensionMethods.FindElementWithWait(Driver, LoginPage.SignIn, _scenarioContext).Click();
         }
 
         [Then(@"all participants log in to video web")]

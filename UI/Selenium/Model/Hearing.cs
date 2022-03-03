@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UI.Model
 {
@@ -69,6 +66,7 @@ namespace UI.Model
         public Role Role { get; set; } = new Role();
         public string Id;
         public Name Name { get; set; } = new Name();
+        public bool VideoOff { get; set; } 
     }
 
     public class VideoAccessPoints

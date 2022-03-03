@@ -63,7 +63,8 @@ namespace UI.Steps
                     {
                         FirstName = $"AutoFirst{Util.RandomAlphabet(4)}",
                         LastName = $"AutoLast{Util.RandomAlphabet(4)}"
-                    }
+                    },
+                    VideoOff=row.ContainsKey("Video Off") ? bool.Parse(row["Video Off"]) : false
                 };
 
                 _hearing.Participant.Add(participant);
