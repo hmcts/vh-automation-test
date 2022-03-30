@@ -21,9 +21,11 @@ namespace RestSharpApi.Steps
     {
         private static UserApi UserApiService;
 
+        protected static ScenarioContext _scenarioContext;
 
-        UserApiSteps()
+        public UserApiSteps(ScenarioContext scenarioContext)
         {
+            _scenarioContext=scenarioContext;
             var _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));

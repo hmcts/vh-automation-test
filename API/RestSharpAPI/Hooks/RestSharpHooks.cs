@@ -73,14 +73,14 @@ namespace RestSharpApi.Hooks
         [BeforeStep]
         public static void BeforeStep(ScenarioContext scenarioContext)
         {
-            var stepTitle = ScenarioStepContext.Current.StepInfo.Text;
+            var stepTitle = scenarioContext.StepContext.StepInfo.Text;
             _logger.Info($"Starting step '{stepTitle}'");
         }
 
         [AfterStep]
         public static void AfterStep(ScenarioContext scenarioContext)
         {
-            var stepTitle = ScenarioStepContext.Current.StepInfo.Text;
+            var stepTitle = scenarioContext.StepContext.StepInfo.Text;
             _logger.Info($"ending step '{stepTitle}'");
         }
 

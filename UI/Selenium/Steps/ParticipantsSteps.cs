@@ -95,12 +95,11 @@ namespace UI.Steps
                     ExtensionMethods.SendKeys(Driver, Keys.Tab);
                     ExtensionMethods.ClickAll(Driver, ParticipantsPage.EmailList);
 
-                    Driver.FindElement(ParticipantsPage.PhoneTextfield).ClearText();
-                    Driver.FindElement(ParticipantsPage.PhoneTextfield).SendKeys("07021234567");
                     _scenarioContext.UpdateElementName("PhoneTextfield");
                     _scenarioContext.UpdateActionName("SendKeys");
-                    
-
+                    Driver.FindElement(ParticipantsPage.PhoneTextfield).ClearText();
+                    Driver.FindElement(ParticipantsPage.PhoneTextfield).SendKeys("07021234567");
+  
                     if (participant.Role.Name.Equals("Interpreter"))
                     {
                         IWebElement el = Driver.FindElement(ParticipantsPage.InterpreterFor);

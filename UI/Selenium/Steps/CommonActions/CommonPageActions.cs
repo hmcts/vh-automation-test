@@ -14,6 +14,11 @@ namespace UI.Steps.CommonActions
     public class CommonPageActions
     {
         IWebDriver Driver;
+        private ScenarioContext _scenarioContext;
+        public CommonPageActions(ScenarioContext scenarioContext)
+        {
+            _scenarioContext=scenarioContext;
+        }
         public CommonPageActions(IWebDriver _Driver)
         {
             Driver = _Driver;

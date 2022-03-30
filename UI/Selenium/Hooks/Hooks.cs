@@ -134,14 +134,14 @@ namespace SeleniumSpecFlow
         [BeforeStep]
         public static void BeforeStep(ScenarioContext scenarioContext)
         {
-            var stepTitle = ScenarioStepContext.Current.StepInfo.Text;
+            var stepTitle = scenarioContext.StepContext.StepInfo.Text;
             Logger.Info($"Starting step '{stepTitle}'");
         }
 
         [AfterStep]
         public static void AfterStep(ScenarioContext scenarioContext)
         {
-            var stepTitle = ScenarioStepContext.Current.StepInfo.Text;
+            var stepTitle = scenarioContext.StepContext.StepInfo.Text;
             Logger.Info($"ending step '{stepTitle}'");
         }
 
@@ -156,7 +156,7 @@ namespace SeleniumSpecFlow
 
             if (scenarioContext.TestError != null && !(scenarioContext.TestError is AssertionException))
             {
-                var stepTitle = ScenarioStepContext.Current.StepInfo.Text;
+                var stepTitle = scenarioContext.StepContext.StepInfo.Text;
                 Logger.Error(scenarioContext.TestError, $"Exception occured while executing step:'{stepTitle}'");
                 var infoTextBuilder = new StringBuilder();
                 
@@ -191,38 +191,38 @@ namespace SeleniumSpecFlow
                 }
 
                 driver.TakeScreenshot().SaveAsFile(ScreenshotFilePath, ScreenshotImageFormat.Png);
-                Logger.Info($"Screenshot has been saved to {ScreenshotFilePath}");
+                Logger.Info($"Screenshot has been saved to {ScreenshotFilePath}"); 
 
-                switch (ScenarioStepContext.Current.StepInfo.StepDefinitionType)
+                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(ScenarioStepContext.Current.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
+                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(ScenarioStepContext.Current.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
+                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
                         break;
                 }
             }
 
             if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.StepDefinitionPending)
             {
-                switch (ScenarioStepContext.Current.StepInfo.StepDefinitionType)
+                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(ScenarioStepContext.Current.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
+                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(ScenarioStepContext.Current.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
+                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
                         break;
                 }
             }
@@ -233,19 +233,19 @@ namespace SeleniumSpecFlow
                 driver.TakeScreenshot().SaveAsFile(ScreenshotFilePath, ScreenshotImageFormat.Png);
                 Logger.Info($"Screenshot has been saved to {ScreenshotFilePath}");
                 //For Extent report
-                switch (ScenarioStepContext.Current.StepInfo.StepDefinitionType)
+                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty, mediaModel);
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty, mediaModel);
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty, mediaModel);
+                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty, mediaModel);
+                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
                         break;
                 }
 
@@ -259,54 +259,54 @@ namespace SeleniumSpecFlow
         {
             if (scenarioContext.TestError != null)
             {
-                switch (ScenarioStepContext.Current.StepInfo.StepDefinitionType)
+                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Fail(scenarioContext.TestError.Message);
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(ScenarioStepContext.Current.StepInfo.Text).Fail(scenarioContext.TestError.Message);
+                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(ScenarioStepContext.Current.StepInfo.Text).Fail(scenarioContext.TestError.Message);
+                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message);
                         break;
                 }
             }
 
             if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.StepDefinitionPending)
             {
-                switch (ScenarioStepContext.Current.StepInfo.StepDefinitionType)
+                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Skip("Step Definition Pending");
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending");
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(ScenarioStepContext.Current.StepInfo.Text).Skip("Step Definition Pending");
+                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending");
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(ScenarioStepContext.Current.StepInfo.Text).Skip("Step Definition Pending");
+                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending");
                         break;
                 }
             }
 
             if (scenarioContext.TestError == null)
             {
-                switch (ScenarioStepContext.Current.StepInfo.StepDefinitionType)
+                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty);
+                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty);
+                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(ScenarioStepContext.Current.StepInfo.Text).Pass(string.Empty);
+                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty);
                         break;
                 }
             }

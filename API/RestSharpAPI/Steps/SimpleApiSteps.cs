@@ -11,6 +11,12 @@ namespace RestSharpApi.Steps
     {
         private RestClient _client;
         public RestRequest _request;
+        protected static ScenarioContext _scenarioContext;
+
+        public SimpleApiSteps(ScenarioContext scenarioContext)
+        {
+            _scenarioContext=scenarioContext;
+        }
 
         [Given(@"The user send an GEt call to endpoiint '(.*)'")]
         public void GivenTheUserSendAnGEtCallToEndpoiint(string endpoint)
