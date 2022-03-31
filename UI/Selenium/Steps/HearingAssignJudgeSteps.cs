@@ -42,8 +42,8 @@ namespace UI.Steps
 
         private void EnterJudgeDetails(Judge judge)
         {
-            ExtensionMethods.FindElementWithWait(Driver,HearingAssignJudgePage.JudgeEmail, _scenarioContext).SendKeys(judge.Email);
-            ExtensionMethods.FindElementWithWait(Driver, HearingAssignJudgePage.SearchResults, _scenarioContext).Click();
+            ExtensionMethods.FindElementWithWait(Driver,HearingAssignJudgePage.JudgeEmail).SendKeys(judge.Email);
+            ExtensionMethods.FindElementWithWait(Driver, HearingAssignJudgePage.SearchResults).Click();
             Driver.FindElement(HearingAssignJudgePage.NextButton).Click();
             var participant = new Participant();
             participant.Party.Name = "Judge";

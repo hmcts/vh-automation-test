@@ -9,6 +9,7 @@ namespace UI.Model
     public class Hearing
     {
         public Case Case { get; set; } = new Case();
+        public BookingList BookingList { get; set; } = new BookingList();
         public List<string> Interpreters { get; set; } = new List<string>();
         public List<Participant> Participant { get; set; } = new List<Participant>();
         public string VHO { get; set; }
@@ -94,6 +95,13 @@ namespace UI.Model
         public string HearingListID { get; set; }
         public string HearingListURL { get; set; }
         public string HearingListPhone { get; set; }
+
+    }
+
+    public class BookingList
+    {
+        public string TelephoneParticipantLink { get; set; }
+        public string VideoParticipantLink { get; set; }
 
     }
 }

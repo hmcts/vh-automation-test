@@ -71,7 +71,6 @@ namespace SeleniumSpecFlow.Steps
             wait.Until(ExpectedConditions.ElementToBeClickable(LoginPage.BackButton));
             Driver.FindElement(LoginPage.PasswordField).SendKeys(password);
             ExtensionMethods.FindElementWithWait(Driver, LoginPage.SignIn, _scenarioContext).Click();
-
         }
 
         [Then(@"all participants log in to video web")]
@@ -92,6 +91,18 @@ namespace SeleniumSpecFlow.Steps
             }
             _scenarioContext.UpdatePageName("Your Video Hearings");
             _scenarioContext.Add("drivers", drivers);
+        }
+
+        [Given(@"I open a new browser and log into admin web as ""([^""]*)""")]
+        public void GivenIOpenANewBrowserAndLogInAs(string email)
+        {
+            Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
+            _scenarioContext["driver"] = Driver;
+            _scenarioContext["drivers"] = drivers;
+            Driver.Navigate().GoToUrl(Config.AdminUrl);
+            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(Config.DefaultElementWait));
+            wait.Until(ExpectedConditions.ElementIsVisible(LoginPage.UsernameTextfield));
+            Login(email, Config.UserPassword);
         }
     }
 }

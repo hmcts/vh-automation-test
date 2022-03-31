@@ -34,9 +34,13 @@ namespace UI.Steps
                 case "Book a video hearing":
                     ExtensionMethods.FindElementWithWait(Driver, DashboardPage.BookHearingButton, _scenarioContext).Click();
                     isPageLoaded=IsHeardingDetailsPageLoaded();
+                    isPageLoaded.Should().BeTrue($"cannot load {optionName} page");
+                    break;
+                case "Get audio file link":
+                    ExtensionMethods.FindElementWithWait(Driver, DashboardPage.GetAudioFileLinkButton, _scenarioContext).Click();
+                    ExtensionMethods.WaitForElementVisible(Driver, GetAudioFilePage.CaseNumberInput);
                     break;
             }
-            isPageLoaded.Should().BeTrue($"cannot load {optionName} page");
         }
 
         public bool IsHeardingDetailsPageLoaded()

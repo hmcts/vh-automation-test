@@ -6,6 +6,9 @@ using UI.Utilities;
 using UI.Model;
 using TestFramework;
 using UISelenium.Pages;
+using System;
+using NUnit.Framework;
+
 namespace UI.Steps
 {
      internal class BookingListSteps : ObjectFactory
@@ -102,6 +105,43 @@ namespace UI.Steps
         public void ThenTheVHOIsOnTheBookingDetailsPage()
         {
              ExtensionMethods.FindElementWithWait(Driver, BookingDetailsPage.SpecificBookingConfirmedStatus(_hearing.Case.CaseNumber), _scenarioContext).Displayed.Should().BeTrue();
+        }
+
+        [When(@"I search for case number")]
+        public void WhenISearchForCaseNumber()
+        {
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.SearchPanelButton, _scenarioContext).Click();
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.SearchCaseTextBox, _scenarioContext).SendKeys(_hearing.Case.CaseNumber);
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.SearchButton, _scenarioContext).Click();
+
+        }
+
+        [When(@"I copy telephone participant link")]
+        public void WhenICopyTelephoneParticipantLink()
+        {
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.ConfirmedButton, _scenarioContext).Click();
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.TelephoneParticipantLink, _scenarioContext).Click();
+            _hearing.BookingList.TelephoneParticipantLink = new TextCopy.Clipboard().GetText();
+        }
+
+        [Then(@"telephone participant link should be copied")]
+        public void ThenTelephoneParticipantLinkShouldBeCopied()
+        {
+            Assert.IsTrue(_hearing.BookingList.TelephoneParticipantLink.Contains("+448000488500"), "Phone verified");
+        }
+
+        [When(@"I copy video participant link")]
+        public void WhenICopyVideoParticipantLink()
+        {
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.ConfirmedButton, _scenarioContext).Click();
+            ExtensionMethods.FindElementWithWait(Driver, BookingListPage.VideoParticipantLink, _scenarioContext).Click();
+            _hearing.BookingList.VideoParticipantLink = new TextCopy.Clipboard().GetText();
+        }
+
+        [Then(@"video participant link should be copied")]
+        public void ThenVideoParticipantLinkShouldBeCopied()
+        {
+            Assert.IsTrue(_hearing.BookingList.VideoParticipantLink.Contains(".hearings.reform.hmcts.net"), "Video link verification failed :" + _hearing.BookingList.VideoParticipantLink);
         }
     }
 }

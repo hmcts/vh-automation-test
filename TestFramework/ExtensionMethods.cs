@@ -461,6 +461,33 @@ namespace TestFramework
             }
         }
 
+        public static IWebElement FindElementWithWait(IWebDriver driver, By findBy, int? waitPeriod = null)
+        {
+            waitPeriod = waitPeriod == null ? 60 : waitPeriod.Value;
+            var timeStart = new TimeSpan(DateTime.Now.Ticks);
+            bool isVisible = IsElementVisible(driver, findBy, null);
+            while (!isVisible)
+            {
+                if (driver.FindElement(By.TagName("body")).Text.Contains("You've been signed out of the service"))
+                {
+                    driver.Navigate().Back();
+                }
+                var timeSpent = Math.Abs((timeStart - new TimeSpan(DateTime.Now.Ticks)).TotalSeconds);
+                if (timeSpent > waitPeriod)
+                {
+                    return null;
+                }
+
+                isVisible = IsElementVisible(driver, findBy, null);
+            }
+
+            if (isVisible)
+            {
+                return driver.FindElement(findBy);
+            }
+            return null;
+        }
+      
         public static void ClearText(this IWebElement element, int? timeInSec = null)
         {
             var isCleared = false;

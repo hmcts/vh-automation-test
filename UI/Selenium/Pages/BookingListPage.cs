@@ -15,6 +15,9 @@ namespace UISelenium.Pages
         public static By HearingSelectionSpecificRow(string caseNumber) => By.XPath($"//div[@class='govuk-grid-row vh-row vh-a' and contains(.,'{caseNumber}')]//div[@class='vh-created-booking']");
         public static By SearchCaseTextBox = By.Id("caseNumber");
         public static By SearchButton => By.Id("searchButton");
+        public static By ConfirmedButton => By.XPath("//*[contains(text(),'Confirmed')]");
+        public static By TelephoneParticipantLink => By.XPath("//div[@id='conference_phone_details']");
+        public static By VideoParticipantLink => By.XPath("//div[contains(text(),'video-participant-link')]");
         public static By SearchPanelButton => By.Id("openSearchPanelButton");
     }
 }
