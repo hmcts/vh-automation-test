@@ -134,7 +134,11 @@ namespace UI.Steps
             scriptExecutor.ExecuteScript(script);
             ExtensionMethods.FindElementWithWait(Driver, ConsultationRoomPage.ConfirmLeaveButton, _scenarioContext).Click();
 
-            Driver.FindElement(ParticipantWaitingRoomPage.ParticipantDetails($"{participant.Name.FirstName} {participant.Name.LastName}")).Displayed.Should().BeTrue();
+            Driver.IsDisplayed(ParticipantWaitingRoomPage.ParticipantDetails($"{participant.Name.FirstName} {participant.Name.LastName}")
+                            , _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait));
+            ExtensionMethods.FindElementWithWait(
+                Driver, ParticipantWaitingRoomPage.ParticipantDetails($"{participant.Name.FirstName} {participant.Name.LastName}"), _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait))
+                .Displayed.Should().BeTrue();
 
             ExtensionMethods.FindElementWithWait(Driver, ParticipantWaitingRoomPage.ParticipantDetails(_hearing.Case.CaseNumber), _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait)).Displayed.Should().BeTrue();
             Driver.FindElement(ParticipantWaitingRoomPage.ChooseCameraAndMicButton).Displayed.Should().BeTrue();
