@@ -272,9 +272,11 @@ namespace UI.Steps
                 {
                     if (SkipPracticeVideoHearingDemo)
                     {
-                        cameraUrl = Driver.Url.Replace("introduction", "participant/waiting-room");
-                        Thread.Sleep(3000);
+                        ExtensionMethods.FindElementWithWait(Driver, GetReadyForTheHearingPage.NextButton, _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait));
+                        var oldUrl = Driver.Url;
+                        cameraUrl = oldUrl.Replace("introduction", "participant/waiting-room");
                         Driver.Navigate().GoToUrl(cameraUrl);
+                        Thread.Sleep(3000);
                         Driver.SwitchTo().Alert().Accept();
                     }
                     else
@@ -282,7 +284,7 @@ namespace UI.Steps
                         TestFramework.ExtensionMethods.FindElementEnabledWithWait(Driver, ParticipantHearingListPage.ContinueButton, 180).Click();
                         Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(Config.DefaultElementWait);
                     }
-                    Driver.FindElement(ParticipantWaitingRoomPage.Returntovideohearinglist).Click();
+                    ExtensionMethods.FindElementWithWait(Driver, ParticipantWaitingRoomPage.Returntovideohearinglist, _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait)).Click();
                 }
             }
 
@@ -402,7 +404,7 @@ namespace UI.Steps
             {
                 var alerts = Driver.FindElements(SelectYourHearingListPage.FailedAlert);
 
-                for (int i = 1; i <= alerts.Count; i++)
+                for (int i = 0; i <= alerts.Count; i++)
                 {
 
                     string alertMsg = ExtensionMethods.FindElementWithWait(Driver, SelectYourHearingListPage.AlertMsg(i.ToString()), _scenarioContext).Text;

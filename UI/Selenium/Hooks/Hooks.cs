@@ -345,8 +345,8 @@ namespace SeleniumSpecFlow
                         Logger.Info($"Driver has been closed");
                     }
                 }
-            } 
-            else
+            }
+            if (scenarioContext.ContainsKey("driver"))
             {
                 var driver = (IWebDriver)scenarioContext["driver"];
                 browserName=$@"{((WebDriver)driver).Capabilities["browserName"]}";
