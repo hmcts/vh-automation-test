@@ -35,6 +35,7 @@ Scenario: Alert Failed self test - No to Camera
 		| Birmingham Civil and Family Justice Centre |
 	When the Video Hearings Officer check alerts for this hearing
 	Then the the Video Hearings Officer see the alert Failed self-test (No to Camera) participant F & L name
+	And I log off 
 	And everyone signs out
 
 

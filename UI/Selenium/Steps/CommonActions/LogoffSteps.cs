@@ -43,7 +43,6 @@ namespace UI.Steps
             foreach (var participant in _hearing.Participant)
             {
                 Driver = GetDriver(participant.Id, _scenarioContext);
-                _scenarioContext["driver"] = Driver;
                 Driver.FindElement(Header.SignOut).Click();
             }
         }
