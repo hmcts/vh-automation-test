@@ -49,7 +49,7 @@ namespace UI.Steps
             Driver = GetDriver(participant, _scenarioContext);
             _scenarioContext["driver"] = Driver;
             Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(Config.DefaultElementWait);
-            ExtensionMethods.FindElementWithWait(Driver, ParticipantHearingListPage.SelectButton(_hearing.Case.CaseNumber), _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait)).Click();
+            Driver.RetryClick(ParticipantHearingListPage.SelectButton(_hearing.Case.CaseNumber), _scenarioContext, TimeSpan.FromSeconds(Config.DefaultElementWait));
             if (!(participant.ToLower().Contains("judge") || participant.ToLower().Contains("panel")))
             {
                 Driver.FindElement(ParticipantHearingListPage.ButtonNext).Click();
@@ -57,7 +57,7 @@ namespace UI.Steps
                 Driver.FindElement(ParticipantHearingListPage.SwitchOnButton).Click();
                 Driver.FindElement(ParticipantHearingListPage.WatchVideoButton).Click();
                 // Assert video is playing
-                Driver.FindElement(ParticipantHearingListPage.ContinueButton).Click();
+                Driver.RetryClick(ParticipantHearingListPage.ContinueButton,_scenarioContext,TimeSpan.FromSeconds(Config.DefaultElementWait));
                 if (SkipPracticeVideoHearingDemo)
                 {
                     string cameraUrl = Driver.Url.Replace("practice-video-hearing", "camera-working");

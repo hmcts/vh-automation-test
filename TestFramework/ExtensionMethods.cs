@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using Polly;
 using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,44 @@ namespace TestFramework
             return value;
         }
 
+        public static bool IsDisplayed(this IWebDriver webdriver, By findBy, ScenarioContext scenarioContext, TimeSpan? waitPeriod = null)
+        {
+            var isDisplayed = false;
+            var timeoutAfterPolicy = Policy.Timeout(waitPeriod.Value);
+            var retryPolicy = Policy.Handle<StaleElementReferenceException>()
+                              .WaitAndRetryForever(iteration => TimeSpan.FromSeconds(1));
+            isDisplayed= timeoutAfterPolicy.Wrap(retryPolicy).Execute(() =>
+            {
+                var element = FindElementWithWait(webdriver, findBy, scenarioContext, waitPeriod);
+                return element.Displayed;
+            });
+            return isDisplayed;
+        }
+
+        public static void RetryClick(this IWebDriver webdriver, By findBy, ScenarioContext scenarioContext, TimeSpan? waitPeriod = null)
+        {
+            var retryPolicy = Policy.Handle<StaleElementReferenceException>()
+                                    .Or<NullReferenceException>()
+                                    .Or<ElementClickInterceptedException>()
+                              .WaitAndRetry(5, iteration => TimeSpan.FromSeconds(1));
+            retryPolicy.Execute(() =>
+            {
+                var element = FindElementWithWait(webdriver, findBy, scenarioContext, waitPeriod);
+                element.Click();
+            });
+        }
+
+        public static void RetryClick(this IWebElement parentElement, By findBy)
+        {
+            var retryPolicy = Policy.Handle<StaleElementReferenceException>()
+                                    .Or<NullReferenceException>()
+                              .WaitAndRetry(5, iteration => TimeSpan.FromSeconds(1));
+            retryPolicy.Execute(() =>
+            {
+                var element = parentElement.FindElement(findBy);
+                element.Click();
+            });
+        }
         public static IWebElement FindElementWithWait(IWebDriver webdriver, By findBy, ScenarioContext scenarioContext,TimeSpan? waitPeriod=null)
         {
             waitPeriod = waitPeriod == null ? TimeSpan.FromSeconds(60) : waitPeriod.Value;

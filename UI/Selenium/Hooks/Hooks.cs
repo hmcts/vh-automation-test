@@ -33,7 +33,6 @@ namespace SeleniumSpecFlow
         private static ExtentTest _feature;
         private static ExtentTest _scenario;
         private static ExtentReports _extent;
-        private static ISpecFlowOutputHelper _specFlowOutputHelper;
         private static Logger Logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
         private static string featureTitle;
         private static int ImageNumber=0;
@@ -76,8 +75,6 @@ namespace SeleniumSpecFlow
             _feature = _extent.CreateTest<Feature>(featureTitle);
 
             Logger.Info($"Starting feature '{featureTitle}'");
-
-            //_specFlowOutputHelper = outputHelper;
         }
 
         [BeforeScenario]
@@ -252,9 +249,6 @@ namespace SeleniumSpecFlow
                         _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
                         break;
                 }
-
-                //_specFlowOutputHelper.WriteLine("Logging Using Specflow");
-                //_specFlowOutputHelper.AddAttachment(ScreenshotFilePath);
             }
         }
 
@@ -322,7 +316,7 @@ namespace SeleniumSpecFlow
             var drivers = (Dictionary<string, IWebDriver>)scenarioContext["drivers"];
             foreach(var driver in drivers)
             {
-                browserName=$@"{((WebDriver)driver.Value).Capabilities["browserName"]}.exe";
+                browserName=$@"{((WebDriver)driver.Value).Capabilities["browserName"]}";
                 driver.Value.Quit();
                 driver.Value.Dispose();
                 Logger.Info("Driver has been closed");
@@ -345,7 +339,7 @@ namespace SeleniumSpecFlow
                 {
                     if (scenarioContext.ContainsKey("driver"))
                     {
-                        browserName=$@"{((WebDriver)driver.Value).Capabilities["browserName"]}.exe";
+                        browserName=$@"{((WebDriver)driver.Value).Capabilities["browserName"]}";
                         driver.Value?.Quit();
                         driver.Value?.Dispose();
                         Logger.Info($"Driver has been closed");
@@ -355,7 +349,7 @@ namespace SeleniumSpecFlow
             else
             {
                 var driver = (IWebDriver)scenarioContext["driver"];
-                browserName=$@"{((WebDriver)driver).Capabilities["browserName"]}.exe";
+                browserName=$@"{((WebDriver)driver).Capabilities["browserName"]}";
                 driver.Quit();
                 driver.Dispose();
                 Logger.Info($"Driver has been closed");
@@ -396,12 +390,19 @@ namespace SeleniumSpecFlow
 
         private static void KillAllBrowserInstances(string processName)
         {
-            var processes = Process.GetProcessesByName(processName);
-            foreach(var process in processes)
+            var processes = Process.GetProcesses().Where(p => p.ProcessName.ToLowerInvariant().Contains(processName.ToLowerInvariant()));
+            foreach (var process in processes)
             {
-                if(process.StartTime > TestStartTime)
+                try
                 {
-                    process.Kill(true);
+                    if (process.StartTime > TestStartTime)
+                    {
+                        process.Kill(true);
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    continue;
                 }
             }
         }

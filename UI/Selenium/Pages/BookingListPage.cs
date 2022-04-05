@@ -19,5 +19,8 @@ namespace UISelenium.Pages
         public static By TelephoneParticipantLink => By.XPath("//div[@id='conference_phone_details']");
         public static By VideoParticipantLink => By.XPath("//div[contains(text(),'video-participant-link')]");
         public static By SearchPanelButton => By.Id("openSearchPanelButton");
+        public static By VenueListbox => By.Id("venues");
+        public static By VenueCheckbox(string venue) => By.XPath($"//input[@aria-label='Venue name {venue}']");
+        public static By AllHearings => By.XPath("//div[@class='govuk-grid-row vh-row vh-a']");
     }
 }
