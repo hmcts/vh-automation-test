@@ -196,5 +196,19 @@ namespace UI.Steps
                 }
             }
         }
+
+        [When(@"the invite into consultation room gets accepted")]
+        public void WhenTheJudgeAcceptsTheIncomingInvite()
+        {
+            Driver = GetDriver(_hearing.Participant.Where(a => a.Role.Name.ToLower() == "judge").FirstOrDefault().Id, _scenarioContext);
+            _scenarioContext["driver"] = Driver;
+            ExtensionMethods.FindElementWithWait(Driver, JudgeWaitingRoomPage.ToastInviteAcceptButton, _scenarioContext).Click();
+            ExtensionMethods.WaitForElementNotVisible(Driver, JudgeWaitingRoomPage.ToastInviteAcceptButton);
+        }
+
+        public void RefreshPage()
+        {
+            Driver.Navigate().Refresh();
+        }
     }
 }

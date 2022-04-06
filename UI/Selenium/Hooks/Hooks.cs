@@ -10,6 +10,7 @@ using OpenQA.Selenium.Support.Extensions;
 using SeleniumSpecFlow.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,11 +33,12 @@ namespace SeleniumSpecFlow
         private static ExtentTest _feature;
         private static ExtentTest _scenario;
         private static ExtentReports _extent;
-        private static ISpecFlowOutputHelper _specFlowOutputHelper;
         private static Logger Logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
         private static string featureTitle;
         private static int ImageNumber=0;
         private static string scenarioTitle;
+        private static DateTime TestStartTime;
+        private string browserName;
         [BeforeTestRun]
         public static void BeforeTestRun()
         {
@@ -57,6 +59,8 @@ namespace SeleniumSpecFlow
                 var reporter = new ExtentHtmlReporter(PathReport);
                 _extent = new ExtentReports();
                 _extent.AttachReporter(reporter);
+
+                TestStartTime=DateTime.Now;
             }
             catch (Exception ex)
             {
@@ -65,14 +69,12 @@ namespace SeleniumSpecFlow
         }
 
         [BeforeFeature]
-        public static void BeforeFeature(FeatureContext featureContext, ISpecFlowOutputHelper outputHelper)
+        public static void BeforeFeature(FeatureContext featureContext)
         {
             featureTitle = featureContext.FeatureInfo.Title;
             _feature = _extent.CreateTest<Feature>(featureTitle);
 
             Logger.Info($"Starting feature '{featureTitle}'");
-
-            _specFlowOutputHelper = outputHelper;
         }
 
         [BeforeScenario]
@@ -237,7 +239,6 @@ namespace SeleniumSpecFlow
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
                         _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
-                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
                         break;
 
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
@@ -248,9 +249,6 @@ namespace SeleniumSpecFlow
                         _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
                         break;
                 }
-
-                _specFlowOutputHelper.WriteLine("Logging Using Specflow");
-                _specFlowOutputHelper.AddAttachment(ScreenshotFilePath);
             }
         }
 
@@ -318,10 +316,14 @@ namespace SeleniumSpecFlow
             var drivers = (Dictionary<string, IWebDriver>)scenarioContext["drivers"];
             foreach(var driver in drivers)
             {
+                browserName=$@"{((WebDriver)driver.Value).Capabilities["browserName"]}";
                 driver.Value.Quit();
+                driver.Value.Dispose();
                 Logger.Info("Driver has been closed");
 
             }
+
+            KillAllBrowserInstances(browserName);
             _extent.Flush();
             Logger.Info("Flush Extent Report Instance");
             GC.SuppressFinalize(this);
@@ -337,7 +339,9 @@ namespace SeleniumSpecFlow
                 {
                     if (scenarioContext.ContainsKey("driver"))
                     {
+                        browserName=$@"{((WebDriver)driver.Value).Capabilities["browserName"]}";
                         driver.Value?.Quit();
+                        driver.Value?.Dispose();
                         Logger.Info($"Driver has been closed");
                     }
                 }
@@ -345,10 +349,14 @@ namespace SeleniumSpecFlow
             else
             {
                 var driver = (IWebDriver)scenarioContext["driver"];
+                browserName=$@"{((WebDriver)driver).Capabilities["browserName"]}";
                 driver.Quit();
+                driver.Dispose();
                 Logger.Info($"Driver has been closed");
             }
-           
+            
+            KillAllBrowserInstances(browserName);
+
             _extent.Flush();
             Logger.Info("Flush Extent Report Instance");
             GC.SuppressFinalize(this);
@@ -369,7 +377,7 @@ namespace SeleniumSpecFlow
         }
 
         [AfterFeature]
-        public static void AfterFeature(FeatureContext featureContext, ISpecFlowOutputHelper outputHelper)
+        public static void AfterFeature(FeatureContext featureContext)
         {
             var featureTitle = featureContext.FeatureInfo.Title;
             Logger.Info($"Ending feature '{featureTitle}'");
@@ -378,6 +386,25 @@ namespace SeleniumSpecFlow
         private static bool RunOnSauceLabs(string[] tags)
         {
             return config.RunOnSaucelabs && tags.Any(s => s.Contains("DeviceTest"));
+        }
+
+        private static void KillAllBrowserInstances(string processName)
+        {
+            var processes = Process.GetProcesses().Where(p => p.ProcessName.ToLowerInvariant().Contains(processName.ToLowerInvariant()));
+            foreach (var process in processes)
+            {
+                try
+                {
+                    if (process.StartTime > TestStartTime)
+                    {
+                        process.Kill(true);
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+            }
         }
     }
 }

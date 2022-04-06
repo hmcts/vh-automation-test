@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
-
+using OpenQA.Selenium.Support.Extensions;
 namespace TestFramework
 {
     public static class ExtensionMethods
@@ -96,14 +96,26 @@ namespace TestFramework
         {
             var retryPolicy = Policy.Handle<StaleElementReferenceException>()
                                     .Or<NullReferenceException>()
-                              .WaitAndRetry(5,iteration => TimeSpan.FromSeconds(5));
-           retryPolicy.Execute(() =>
+                                    .Or<ElementClickInterceptedException>()
+                              .WaitAndRetry(5, iteration => TimeSpan.FromSeconds(1));
+            retryPolicy.Execute(() =>
             {
                 var element = FindElementWithWait(webdriver, findBy, scenarioContext, waitPeriod);
                 element.Click();
             });
         }
 
+        public static void RetryClick(this IWebElement parentElement, By findBy)
+        {
+            var retryPolicy = Policy.Handle<StaleElementReferenceException>()
+                                    .Or<NullReferenceException>()
+                              .WaitAndRetry(5, iteration => TimeSpan.FromSeconds(1));
+            retryPolicy.Execute(() =>
+            {
+                var element = parentElement.FindElement(findBy);
+                element.Click();
+            });
+        }
         public static IWebElement FindElementWithWait(IWebDriver webdriver, By findBy, ScenarioContext scenarioContext,TimeSpan? waitPeriod=null)
         {
             waitPeriod = waitPeriod == null ? TimeSpan.FromSeconds(60) : waitPeriod.Value;
@@ -517,6 +529,10 @@ namespace TestFramework
                 }
                 count++;
             }
+        }
+        public static void SwitchToIframe(IWebDriver driver, By by)
+        {
+            driver.SwitchTo().Frame(driver.FindElement(by));
         }
     }
 }

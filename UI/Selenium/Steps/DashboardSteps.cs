@@ -12,7 +12,7 @@ namespace UI.Steps
     public class DashboardSteps: ObjectFactory
     {
         private readonly ScenarioContext _scenarioContext;
-        
+        SelectYourHearingListSteps selectYourHearingListSteps;
         public DashboardSteps(ScenarioContext scenarioContext)
             : base(scenarioContext)
         {
@@ -56,6 +56,14 @@ namespace UI.Steps
             {
                 return false;
             }
+        }
+
+        [When(@"selects hearing venue in the venue list")]
+        public void WhenSelectsHearingVenueInTheVenueList()
+        {
+            selectYourHearingListSteps = new SelectYourHearingListSteps(_scenarioContext);
+            selectYourHearingListSteps.SelectVenue("Birmingham Civil and Family Justice Centre");
+            selectYourHearingListSteps.WhenIClickOnViewHearings();
         }
     }
 }

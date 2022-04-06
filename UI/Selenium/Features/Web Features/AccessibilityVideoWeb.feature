@@ -45,6 +45,3 @@ Then assert page should be accessible
 Scenario: Declaration page accessibility
 Given an individual on the "Declaration" page
 Then assert page should be accessible
-
-
-

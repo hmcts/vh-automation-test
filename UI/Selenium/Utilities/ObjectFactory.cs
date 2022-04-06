@@ -40,5 +40,17 @@ namespace SeleniumSpecFlow.Utilities
             this.Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
             return Driver;
         }
+
+        public void SwitchToWindowByTitle(string title)
+        {
+            foreach (var w in Driver.WindowHandles)
+            {
+                var f = Driver.SwitchTo().Window(w).Title;
+                if(f == title)
+                {
+                    break;
+                }
+            }
+        }
     }
 }

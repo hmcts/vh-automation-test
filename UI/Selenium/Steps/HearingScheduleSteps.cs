@@ -30,6 +30,13 @@ namespace UI.Steps
             EnterHearingSchedule(_hearing.HearingSchedule);
         }
 
+        public void GivenTheHearingHasTheScheduleDetails(Table table, int min = 3)
+        {
+            _scenarioContext.UpdatePageName("Hearing schedule");
+            _hearing = CreateHearingModel(table, min);
+            EnterHearingSchedule(_hearing.HearingSchedule);
+        }
+
         private void EnterHearingSchedule(HearingSchedule hearingSchedule)
         {
             ExtensionMethods.FindElementEnabledWithWait(Driver, HearingSchedulePage.HearingDate).SendKeys(hearingSchedule.HearingDate.FirstOrDefault().ToString("dd/MM/yyyy"));

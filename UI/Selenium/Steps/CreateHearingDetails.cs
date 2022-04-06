@@ -35,8 +35,9 @@ namespace UI.Steps
         {
             Driver.FindElement(HearingDetailsPage.CaseNumber).SendKeys(caseDetails.CaseNumber);
             Driver.FindElement(HearingDetailsPage.CaseName).SendKeys(caseDetails.CaseName);
-            var caseTypeElement = Driver.FindElement(HearingDetailsPage.CaseType);
-            var selectElement = new SelectElement(caseTypeElement);
+            ExtensionMethods.WaitForDropDownListItems(Driver, HearingDetailsPage.CaseType);
+            //var caseTypeElement = Driver.FindElement(HearingDetailsPage.CaseType);
+            var selectElement = new SelectElement(Driver.FindElement(HearingDetailsPage.CaseType));
             selectElement.SelectByText(caseDetails.CaseType);
             selectElement = new SelectElement(ExtensionMethods.WaitForDropDownListItems(Driver, HearingDetailsPage.HeardingType));
             selectElement.SelectByText(caseDetails.HearingType);

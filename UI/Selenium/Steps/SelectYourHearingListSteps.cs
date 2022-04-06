@@ -19,7 +19,7 @@ namespace UI.Steps
         ScenarioContext _scenarioContext;
         private HearingList _hearingList;
 
-        SelectYourHearingListSteps(ScenarioContext scenarioContext)
+        public SelectYourHearingListSteps(ScenarioContext scenarioContext)
             : base(scenarioContext)
         {
             _scenarioContext = scenarioContext;
@@ -31,13 +31,9 @@ namespace UI.Steps
             _scenarioContext.UpdatePageName("View hearing venue list");
             foreach (var row in table.Rows)
             {
-                ExtensionMethods.FindElementWithWait(Driver, SelectYourHearingListPage.HearingList, _scenarioContext).SendKeys(row[0]);
-                ExtensionMethods.FindElementWithWait(Driver, SelectYourHearingListPage.HearingCheckBox, _scenarioContext).Click();
+                SelectVenue(row[0]);
             }
-
-            
         }
-
 
         [When(@"I click on view hearings")]
         public void WhenIClickOnViewHearings()
@@ -47,7 +43,11 @@ namespace UI.Steps
             _scenarioContext.Add("HearingList", _hearingList);
         }
 
-      
+      public void SelectVenue(string venueId)
+      {
+            ExtensionMethods.FindElementWithWait(Driver, SelectYourHearingListPage.HearingList, _scenarioContext).SendKeys(venueId);
+            ExtensionMethods.FindElementWithWait(Driver, SelectYourHearingListPage.HearingCheckBox, _scenarioContext).Click();
+      }
     }
 }
 
