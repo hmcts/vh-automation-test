@@ -469,13 +469,13 @@ steps:
   inputs:
     PathtoPublish: $(System.DefaultWorkingDirectory)/API/RestSharpAPI/TestResults
     artifactName: ApIResults
-- task: DotNetCoreCLI@2
-  condition: succeededOrFailed()
-  displayName: Test UI 
-  inputs:
-    command: 'test'
-    projects: '**/UI.csproj'
-    testRunTitle: 'Testing'
+#- task: DotNetCoreCLI@2
+#  condition: succeededOrFailed()
+#  displayName: Test UI 
+#  inputs:
+#    command: 'test'
+#    projects: '**/UI.csproj'
+#    testRunTitle: 'Testing'
 - task: PublishBuildArtifacts@1
   condition: succeededOrFailed()
   displayName: Test UI Results
