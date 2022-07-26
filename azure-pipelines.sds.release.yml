@@ -5,6 +5,24 @@ trigger:
 pr:
 - master
 
+parameters:
+- name: runUITests
+  type: boolean
+  default: true
+
+- name: runApiTests
+  type: boolean
+  default: false
+
+- name: environment
+  type: string
+  default: Dev
+  values:
+    - Dev
+    - Demo
+    - Stg
+    - Prod
+
 pool:
   name: 'vh-self-hosted'
 
@@ -12,32 +30,37 @@ variables:
 - group: vh-automation-test
 
 stages:
-- stage: Automation_Tests
+
+
+- stage: Automation_Tests_${{ parameters.environment }}
+  displayName: Automation Tests ${{ parameters.environment }}
   jobs:
-  - job: Automation_Tests
-    steps:
-    - bash: |
-       echo $APP_SETTINGS > "$(System.DefaultWorkingDirectory)/API/RestSharpAPI/appSettings.json"
-       cat "$(System.DefaultWorkingDirectory)/API/RestSharpAPI/appSettings.json"
-       echo $APP_SETTINGS > "$(System.DefaultWorkingDirectory)/UI/Selenium/appSettings.json"
-       cat "$(System.DefaultWorkingDirectory)/UI/Selenium/appSettings.json"
-      displayName: Transform App Settings
-      env:
-        APP_SETTINGS: $(app_settings)
+  - ${{ if eq(parameters.runUITests, true) }}:
+    - job: UI_Tests
+      displayName: UI Tests ${{ parameters.environment }}
+      variables:
+      - projectPath: "UI/Selenium"
+      steps:
+      
+      - task: FileTransform@1
+        displayName: Transform App Settings
+        inputs:
+          folderPath: $(projectPath)
+          fileType: json
+          targetFiles: appSettings.sds.json
 
-    - task: DotNetCoreCLI@2
-      displayName: Build
-      inputs:
-        command: build
-        projects: '**/*csproj'
-        arguments: '--configuration $(buildConfiguration)'
+      - pwsh: | 
+          mv appSettings.json appSettings.old.json
+          mv appSettings.sds.json appSettings.json
+        displayName: Move App Settings
+        workingDirectory: $(projectPath)
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: '**/*csproj'
-        arguments: '--configuration $(buildConfiguration)'
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: test
+          projects: '$(projectPath)/*.csproj'
+          arguments: '--configuration Release'
 
-    - task: PublishTestResults@2
-      condition: succeededOrFailed()
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
 
