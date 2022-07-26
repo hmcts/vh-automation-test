@@ -39,9 +39,10 @@ stages:
     - job: UI_Tests
       displayName: UI Tests ${{ parameters.environment }}
       variables:
-      - projectPath: "UI/Selenium"
+      - name: projectPath
+        value: "UI/Selenium"
       steps:
-      
+
       - task: FileTransform@1
         displayName: Transform App Settings
         inputs:
@@ -63,4 +64,3 @@ stages:
 
       - task: PublishTestResults@2
         condition: succeededOrFailed()
-
