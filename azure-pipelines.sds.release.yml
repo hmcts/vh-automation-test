@@ -48,16 +48,17 @@ stages:
         inputs:
           folderPath: $(projectPath)
           fileType: json
-          targetFiles: appSettings.sds.json
+          targetFiles: appsettings.sds.json
 
       - bash: | 
-          mv appsettings.json appSettings.old.json
-          mv appSettings.sds.json appSettings.json
-          cat appSettings.json
+          mv appsettings.json appsettings.old.json
+          mv appsettings.sds.json appsettings.json
+          cat appsttings.json
         displayName: Move App Settings
         workingDirectory: $(projectPath)
 
       - task: DotNetCoreCLI@2
+        displayName:  Run UI Tests
         inputs:
           command: test
           projects: '$(projectPath)/*.csproj'
