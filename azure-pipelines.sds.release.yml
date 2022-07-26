@@ -50,7 +50,7 @@ stages:
           fileType: json
           targetFiles: appSettings.sds.json
 
-      - pwsh: | 
+      - bash: | 
           mv appSettings.json appSettings.old.json
           mv appSettings.sds.json appSettings.json
         displayName: Move App Settings
