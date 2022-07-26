@@ -26,9 +26,6 @@ parameters:
 pool:
   name: 'vh-self-hosted'
 
-variables:
-- group: vh-automation-test
-
 stages:
 
 
@@ -39,8 +36,11 @@ stages:
     - job: UI_Tests
       displayName: UI Tests ${{ parameters.environment }}
       variables:
+      - name: env
+        value: ${{ replace(parameters.environment, 'stg', 'staging') }}
       - name: projectPath
         value: "UI/Selenium"
+      - group: vh-automation-test
       steps:
 
       - task: FileTransform@1
@@ -53,6 +53,7 @@ stages:
       - bash: | 
           mv appSettings.json appSettings.old.json
           mv appSettings.sds.json appSettings.json
+          cat appSettings.json
         displayName: Move App Settings
         workingDirectory: $(projectPath)
 
