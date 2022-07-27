@@ -56,6 +56,7 @@ stages:
       - bash: | 
           mv appsettings.json appsettings.old.json
           mv appsettings.sds.json appsettings.json
+          echo "##[section]Printing appsettings.json ..."
           cat appsettings.json
         displayName: Move App Settings
         workingDirectory: $(projectPath)
