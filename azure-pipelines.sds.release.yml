@@ -7,10 +7,12 @@ pr:
 
 parameters:
 - name: runUITests
+  displayName: Run UI Tests
   type: boolean
   default: true
 
 - name: runApiTests
+  displayName: Run API Tests
   type: boolean
   default: false
 
@@ -51,10 +53,10 @@ stages:
           fileType: json
           targetFiles: appsettings.sds.json
 
-      - pwsh: | 
+      - bash: | 
           mv appsettings.json appsettings.old.json
           mv appsettings.sds.json appsettings.json
-          cat appsttings.json
+          cat appsettings.json
         displayName: Move App Settings
         workingDirectory: $(projectPath)
 
