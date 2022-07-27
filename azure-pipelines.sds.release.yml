@@ -54,7 +54,8 @@ stages:
       - pwsh: | 
           mv appsettings.json appsettings.old.json
           mv appsettings.sds.json appsettings.json
-          cat appsttings.json
+          Write-Host "##[section]Printing appsettings.json ..."
+          cat appsettings.json
         displayName: Move App Settings
         workingDirectory: $(projectPath)
 
