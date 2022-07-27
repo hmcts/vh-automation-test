@@ -59,12 +59,12 @@ stages:
         displayName: Move App Settings
         workingDirectory: $(projectPath)
 
-      - task: DotNetCoreCLI@2
-        displayName:  Run UI Tests
-        inputs:
-          command: test
-          projects: '$(projectPath)/*.csproj'
-          arguments: '--configuration Release'
+      # - task: DotNetCoreCLI@2
+      #   displayName:  Run UI Tests
+      #   inputs:
+      #     command: test
+      #     projects: '$(projectPath)/*.csproj'
+      #     arguments: '--configuration Release'
 
-      - task: PublishTestResults@2
-        condition: succeededOrFailed()
+      # - task: PublishTestResults@2
+      #   condition: succeededOrFailed()
