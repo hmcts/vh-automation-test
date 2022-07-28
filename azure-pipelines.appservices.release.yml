@@ -1,0 +1,78 @@
+
+trigger: 
+- VIH-9112-v2
+
+pr:
+- master
+
+parameters:
+- name: runUITests
+  displayName: Run UI Tests
+  type: boolean
+  default: true
+
+- name: runApiTests
+  displayName: Run API Tests
+  type: boolean
+  default: false
+
+- name: environment
+  type: string
+  default: Preview
+  values:
+    - Preview
+    - Dev
+    - AAT
+    - Sandbox
+    - Test1
+    - Test2
+    - Demo
+    - Preprod
+    - Prod
+
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+
+####################################################
+# UI Testing. ######################################
+- stage: Automation_Tests_${{ parameters.environment }}
+  displayName: Automation Tests ${{ parameters.environment }}
+  jobs:
+  - ${{ if eq(parameters.runUITests, true) }}:
+    - job: UI_Tests
+      displayName: UI Tests ${{ parameters.environment }}
+      variables:
+      - name: env
+        value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
+      - name: projectPath
+        value: "UI/Selenium"
+      - group: vh-automation-test-${{ parameters.environment }}
+      steps:
+
+      - task: FileTransform@1
+        displayName: Transform App Settings
+        inputs:
+          folderPath: $(projectPath)
+          fileType: json
+          targetFiles: appsettings.json
+
+      - bash: | 
+          mv appsettings.json appsettings.old.json
+          mv appsettings.json appsettings.json
+          echo "##[section]Printing appsettings.json ..."
+          cat appsettings.json
+        displayName: Move App Settings
+        workingDirectory: $(projectPath)
+
+      - task: DotNetCoreCLI@2
+        displayName:  Run UI Tests
+        inputs:
+          command: test
+          projects: '$(projectPath)/*.csproj'
+          arguments: '--configuration Release -l "console;verbosity=detailed"'
+
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
