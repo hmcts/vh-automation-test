@@ -10,14 +10,6 @@ parameters:
   type: boolean
   default: true
 
-- name: baseAgent
-  type: string
-  default: 'ubuntu-latest'
-
-- name: projectPath
-  type: string
-  default: "UI/Selenium"
-
 - name: environment
   type: string
   default: Preview
@@ -41,8 +33,9 @@ stages:
 
   jobs: 
     - job: Publish_Automation_Tests
-
-      pool: ${{parameters.baseAgent}}
+      variables:
+      - name: projectPath
+        value: "UI/Selenium"
 
       steps: 
         - checkout: self
@@ -51,7 +44,7 @@ stages:
           displayName: dotnet Restore
           inputs: 
             command: restore
-            projects: '${{parameters.projectPath}}/*.csproj'
+            projects: '$(projectPath)/*.csproj'
         
         - task: DotNetCoreCLI@2
           displayName: donet Publish
@@ -60,7 +53,7 @@ stages:
             publishWebProjects: false
             arguments: --configuration Release --no-restore --output $(build.artifactstagingdirectory)/AutomationTests
             zipAfterPublish: false
-            workingDirectory: ${{parameters.projectPath}}
+            workingDirectory: $(projectPath)
 
         - task: PublishBuildArtifacts@1
           displayName: Publish AutomationTests
