@@ -12,7 +12,7 @@ parameters:
 
 - name: baseAgent
   type: string
-  default: Ubuntu-latest
+  default: 'ubuntu-latest'
 
 - name: projectPath
   type: string
