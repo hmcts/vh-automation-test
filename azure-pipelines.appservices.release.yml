@@ -60,6 +60,28 @@ stages:
           inputs:
             PathtoPublish: $(Build.ArtifactStagingDirectory)/AutomationTests
             ArtifactName: AutomationTests
+- stage: Run Tests
+
+  jobs: 
+    - deployment: Yada
+      dependsOn:
+        - Publish_Automation_Tests
+      strategy: 
+        runOnce: 
+          deploy: 
+            steps:  
+              - checkout: none
+
+              - download: none
+
+              - task: DownloadPipelineArtifact@2
+                displayName: Download App Binaries
+                inputs:
+                  artifact: App
+                  path: $(Pipeline.Workspace)/App
+                  preferTriggeringPipeline: true
+                  source: current
+
 
 # ####################################################
 # # UI Testing. ######################################
