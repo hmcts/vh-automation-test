@@ -60,7 +60,8 @@ stages:
           inputs:
             PathtoPublish: $(Build.ArtifactStagingDirectory)/AutomationTests
             ArtifactName: AutomationTests
-- stage: Run Tests
+
+- stage: Run_Tests
 
   jobs: 
     - deployment: Yada
