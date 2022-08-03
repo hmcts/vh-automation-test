@@ -77,8 +77,8 @@ stages:
               - task: DownloadPipelineArtifact@2
                 displayName: Download App Binaries
                 inputs:
-                  artifact: App
-                  path: $(Pipeline.Workspace)/App
+                  artifact: AutomationTests
+                  path: $(Pipeline.Workspace)/AutomationTests
                   preferTriggeringPipeline: true
                   source: current
 
