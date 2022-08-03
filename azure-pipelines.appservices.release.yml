@@ -65,8 +65,6 @@ stages:
 
   jobs: 
     - deployment: Yada
-      dependsOn:
-        - Publish_Automation_Tests
       strategy: 
         runOnce: 
           deploy: 
