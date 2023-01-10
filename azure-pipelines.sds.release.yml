@@ -70,9 +70,10 @@ stages:
       #     projects: '$(projectPath)/*.csproj'
       #     arguments: '--configuration Release'
 
-      - task: MSBuild@1
+      - task: VSBuild@1
+        displayName:  Build UI Tests
         inputs:
-          solution: '$(projectPath)/*.csproj'
+          solution: '**\*.sln'
           configuration: 'Release'
           restoreNugetPackages: true
       
