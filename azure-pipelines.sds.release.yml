@@ -84,7 +84,7 @@ stages:
             **\UISelenium.dll
             !**\*TestAdapter.dll
             !**\obj\**
-          searchFolder: '$(projectPath)'
+          searchFolder: '$(System.DefaultWorkingDirectory)'
           rerunFailedTests: true
           rerunMaxAttempts: '2'
           publishRunAttachments: True
