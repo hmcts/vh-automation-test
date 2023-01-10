@@ -55,10 +55,22 @@ stages:
           Get-Content "$(projectPath)/appsettings.json"
         displayName: Print App Settings
 
-      - task: DotNetCoreCLI@2
-        displayName:  Run UI Tests
+      # - task: DotNetCoreCLI@2
+      #   displayName:  Run UI Tests
+      #   inputs:
+      #     command: test
+      #     projects: '$(projectPath)/*.csproj'
+      #     arguments: '--configuration Release'
+      #     publishTestResults: true
+
+      - task: VSTest@2
         inputs:
-          command: test
-          projects: '$(projectPath)/*.csproj'
-          arguments: '--configuration Release'
-          publishTestResults: true
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            **\UISelenium.dll
+            !**\*TestAdapter.dll
+            !**\obj\**
+          searchFolder: '$(projectPath)'
+          rerunFailedTests: true
+          rerunMaxAttempts: '2'
+          publishRunAttachments: True
