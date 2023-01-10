@@ -58,7 +58,7 @@ stages:
       - task: DotNetCoreCLI@2
         displayName:  Run UI Tests
         inputs:
-          command: test
+          command: build
           projects: '$(projectPath)/*.csproj'
           arguments: '--configuration Release'
           publishTestResults: true
