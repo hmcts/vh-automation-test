@@ -63,13 +63,19 @@ stages:
       #     arguments: '--configuration Release'
       #     publishTestResults: true
 
-      - task: DotNetCoreCLI@2
-        displayName:  Build UI Tests
-        inputs:
-          command: 'build'
-          projects: '$(projectPath)/*.csproj'
-          arguments: '--configuration Release'
+      # - task: DotNetCoreCLI@2
+      #   displayName:  Build UI Tests
+      #   inputs:
+      #     command: 'build'
+      #     projects: '$(projectPath)/*.csproj'
+      #     arguments: '--configuration Release'
 
+      - task: MSBuild@1
+        inputs:
+          solution: '$(projectPath)/*.csproj'
+          configuration: 'Release'
+          restoreNugetPackages: true
+      
       - task: VisualStudioTestPlatformInstaller@1
         displayName: Run VS Test Installer
         inputs:
