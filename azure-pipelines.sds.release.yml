@@ -63,12 +63,21 @@ stages:
       #     arguments: '--configuration Release'
       #     publishTestResults: true
 
+      - task: DotNetCoreCLI@2
+        displayName:  Build UI Tests
+        inputs:
+          command: 'build'
+          projects: '$(projectPath)/*.csproj'
+          arguments: '--configuration Release'
+
       - task: VisualStudioTestPlatformInstaller@1
+        displayName: Run VS Test Installer
         inputs:
           packageFeedSelector: 'nugetOrg'
           versionSelector: 'latestStable'
 
       - task: VSTest@2
+        displayName:  Run UI Tests
         inputs:
           testSelector: 'testAssemblies'
           testAssemblyVer2: |
