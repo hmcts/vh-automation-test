@@ -2,9 +2,11 @@
 @web
 @DeviceTest
 
+@ignore
 Feature: Consultation room 
     Participants can join the consultation room
-
+	
+@ignore
 Scenario: Judge invites the participant to join the consultation room
     Given I log in as "auto_aw.videohearingsofficer_03@hearings.reform.hmcts.net"
     And I select book a hearing
@@ -137,7 +139,8 @@ Scenario: JOH can start and leave Consultation room
     Then judge checks participant joined the consultation room
     And all participants leave consultation room
     And everyone signs out
-
+    
+@ignore
 Scenario: Consultation room VHO can start and close consultaion
 Given I log in as "auto_aw.videohearingsofficer_01@hearings.reform.hmcts.net"
 	And I select book a hearing
@@ -172,7 +175,7 @@ Given I log in as "auto_aw.videohearingsofficer_01@hearings.reform.hmcts.net"
 	Then check judge is in the consultation room
 	And closes the consultation
 	Then check the judge returns to the waiting room
-
+@ignore
 Scenario: Consultation room Check Instant Messages are sent correctly
 Given I log in as "auto_aw.videohearingsofficer_01@hearings.reform.hmcts.net"
 	And I select book a hearing

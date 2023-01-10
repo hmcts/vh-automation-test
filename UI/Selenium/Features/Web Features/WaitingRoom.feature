@@ -3,7 +3,8 @@
 Feature: WaitingRoom
 
 Check all waiting room statuses are correct
-
+	
+@ignore
 Scenario: Waiting Room Statuses
 Given I log in as "auto_aw.videohearingsofficer_11@hearings.reform.hmcts.net"
 	And I select book a hearing

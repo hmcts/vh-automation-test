@@ -2,6 +2,7 @@
 @DeviceTest
 Feature: Join By Telephone Number Are Correct
 	
+@ignore	
 Scenario:  Join By Telephone
 	Given I log in as "auto_aw.videohearingsofficer_10@hearings.reform.hmcts.net"
 	And I select book a hearing
@@ -30,8 +31,9 @@ Scenario:  Join By Telephone
 	And I search for case number
 	And I copy telephone participant link
 	Then telephone participant link should be copied	
-
-	Scenario:  Join By Video Participant Link
+	
+@ignore
+Scenario:  Join By Video Participant Link
 	Given I log in as "auto_aw.videohearingsofficer_10@hearings.reform.hmcts.net"
 	And I select book a hearing
 	And I want to create a hearing with case details

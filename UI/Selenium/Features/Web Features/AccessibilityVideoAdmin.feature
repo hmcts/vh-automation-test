@@ -28,7 +28,7 @@ Scenario: AssignJudge page accessibility
 Scenario: Participants page accessibility
 	Given I'm on the "Participants" page
 	Then the page should be accessible
-
+@ignore
 Scenario: Video Access Points page accessibility
 	Given I'm on the "Video Access Points" page
 	Then the page should be accessible

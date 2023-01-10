@@ -2,6 +2,7 @@
 using NLog.Layouts;
 using NLog.Targets;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace TestLibrary.Utilities
@@ -44,6 +45,11 @@ namespace TestLibrary.Utilities
                 }
             }
             return rtnVal;
+        }
+        
+        public static string SetCsvFile(string folderName, string fileName)
+        {
+            return Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, folderName, fileName);
         }
     }
 }

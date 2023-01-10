@@ -62,6 +62,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="TestData" />
 		<Folder Include="TestResults\Img\" />
 		<Folder Include="TestResults\Logs\" />
 	</ItemGroup>

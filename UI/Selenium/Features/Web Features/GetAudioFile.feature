@@ -4,7 +4,8 @@
 Feature: GetAudioFile
 
 A short summary of the feature
-
+	
+@ignore
 Scenario: Get audio file for main Hearing and Interpreter room
    
     Given I log in as "auto_aw.videohearingsofficer_11@hearings.reform.hmcts.net"

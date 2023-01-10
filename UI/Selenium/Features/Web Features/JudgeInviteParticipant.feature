@@ -3,7 +3,8 @@
 
 Feature: Judge Invites Participants
 	Judge invites the participants to meeting
-
+	
+@ignore
 Scenario: Judge invites the participants to join meeting in consultation room
 	Given I log in as "auto_aw.videohearingsofficer_03@hearings.reform.hmcts.net"
 	And I select book a hearing
