@@ -55,13 +55,13 @@ stages:
           Get-Content "$(projectPath)/appsettings.json"
         displayName: Print App Settings
 
-      # - task: DotNetCoreCLI@2
-      #   displayName:  Run UI Tests
-      #   inputs:
-      #     command: test
-      #     projects: '$(projectPath)/*.csproj'
-      #     arguments: '--configuration Release'
-      #     publishTestResults: true
+      - task: DotNetCoreCLI@2
+        displayName:  Run UI Tests
+        inputs:
+          command: test
+          projects: '$(projectPath)/*.csproj'
+          arguments: '--configuration Release'
+          publishTestResults: true
 
       # - task: DotNetCoreCLI@2
       #   displayName:  Build UI Tests
@@ -69,13 +69,6 @@ stages:
       #     command: 'build'
       #     projects: '$(projectPath)/*.csproj'
       #     arguments: '--configuration Release'
-
-      - task: VSBuild@1
-        displayName:  Build UI Tests
-        inputs:
-          solution: '**\*.sln'
-          configuration: 'Release'
-          restoreNugetPackages: true
       
       - task: VisualStudioTestPlatformInstaller@1
         displayName: Run VS Test Installer
