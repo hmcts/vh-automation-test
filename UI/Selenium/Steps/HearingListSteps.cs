@@ -1,14 +1,14 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using SeleniumSpecFlow.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Model;
-using UISelenium.Pages;
 using FluentAssertions;
+using UI.Pages;
+using UI.Utilities;
 
 namespace UI.Steps
 {

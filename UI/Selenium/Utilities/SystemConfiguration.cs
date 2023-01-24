@@ -1,4 +1,4 @@
-﻿namespace TestLibrary.Utilities
+﻿namespace UI.Utilities
 {
     ///<summary>
     /// Class representing application configuration

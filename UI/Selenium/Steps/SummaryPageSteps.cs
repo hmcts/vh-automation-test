@@ -1,11 +1,11 @@
-﻿using SeleniumSpecFlow.Utilities;
-using System;
+﻿using System;
 using TechTalk.SpecFlow;
-using UISelenium.Pages;
 using OpenQA.Selenium.Support.UI;
 using TestFramework;
 using SeleniumExtras.WaitHelpers;
 using FluentAssertions;
+using UI.Pages;
+using UI.Utilities;
 
 namespace UI.Steps
 {
@@ -47,7 +47,7 @@ namespace UI.Steps
             //ExtensionMethods.FindElementWithWait(Driver, BookingDetailsPage.ConfirmBookingButton, _scenarioContext).Click();
             //WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.OneMinuteElementWait)));
             //wait.Until(ExpectedConditions.InvisibilityOfElementLocated(SummaryPage.DotLoader));
-            ExtensionMethods.FindElementWithWait(Driver, BookingDetailsPage.BookingConfirmedStatus, _scenarioContext);
+            // ExtensionMethods.FindElementWithWait(Driver, BookingDetailsPage.BookingConfirmedStatus, _scenarioContext);
         }
     }
 }

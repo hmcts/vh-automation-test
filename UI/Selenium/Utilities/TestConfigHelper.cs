@@ -1,84 +1,60 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SeleniumSpecFlow.Utilities;
-using System;
-using System.IO;
-using System.Linq;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 
-namespace TestLibrary.Utilities
+namespace UI.Utilities
 {
     ///<summary>
     /// Class to work with application configuration
     ///</summary>
-    public class TestConfigHelper
+    public static class TestConfigHelper
     {
-        public static BrowserType browser { get; private set; }
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
-        public static IConfigurationRoot GetIConfigurationBase()
-        {
-            return new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: true)
-            .AddJsonFile("passwords.json",optional:true)
-            .AddEnvironmentVariables()
-            .Build();
-        }
 
         public static EnvironmentConfigSettings GetApplicationConfiguration()
         {
-            EnvironmentConfigSettings configSettings=null;
-            LaunchSettingsFixture();
-            var environment = Environment.GetEnvironmentVariable("ENVIRONMENT");
-            browser = (BrowserType)Enum.Parse(typeof(BrowserType), Environment.GetEnvironmentVariable("BROWSER"));
-            var systemConfiguration = new SystemConfiguration();
-            var iTestConfigurationRoot = GetIConfigurationBase();
             Logger.Info("Reading Appsetitngs Json File");
-            iTestConfigurationRoot.GetSection("SystemConfiguration").Bind(systemConfiguration);
-            if (environment != null)
+            var configRoot = BuildConfigurationRoot();
+            var environmentConfig = configRoot.GetSection("SystemConfiguration:EnvironmentConfigSettings").Get<EnvironmentConfigSettings>();
+            
+            if (environmentConfig == null)
             {
-                if (environment.ToLower() == "Development".ToLower())
-                {
-                    configSettings=systemConfiguration.DevelopmentEnvironmentConfigSettings;
-                }
-                else if (environment.ToLower() == "Acceptance".ToLower())
-                {
-                    configSettings=systemConfiguration.AcceptanceEnvironmentConfigSettings;
-                }
-                else if (environment.ToLower() == "Production".ToLower())
-                {
-                    configSettings=systemConfiguration.ProductionEnvironmentConfigSettings;
-                }
-                //set the correct ElementWait based on execution environment
-                if (configSettings.RunOnSaucelabs)
-                {
-                    configSettings.DefaultElementWait=configSettings.SaucelabsElementWait;
-                }
+                var exception = new Exception("EnvironmentConfigSettings section missing from configuration sources");
+                Logger.Error(exception);
+                throw exception;
             }
-            return configSettings;
+            
+            VerifyEnvironmentConfigValuesHaveBeenSet(environmentConfig);
+            
+            //set the correct ElementWait based on execution environment
+            if (environmentConfig.RunOnSaucelabs)
+            {
+                // TODO: should have a separate property in the class instead of overwriting this one
+                environmentConfig.DefaultElementWait=environmentConfig.SaucelabsElementWait;
+            }
+            return environmentConfig;
         }
 
-        public static void LaunchSettingsFixture()
+        private static void VerifyEnvironmentConfigValuesHaveBeenSet(EnvironmentConfigSettings environmentConfig)
         {
-            var cs = AppDomain.CurrentDomain.BaseDirectory.ToString();
-            var separator = Path.DirectorySeparatorChar;
-            using (var file = File.OpenText($@"Properties{separator}launchSettings.json"))
+            foreach (var pi in environmentConfig.GetType().GetProperties())
             {
-                var reader = new JsonTextReader(file);
-                var jObject = JObject.Load(reader);
-                var variables = jObject
-                    .GetValue("profiles")
-                    //select a proper profile here
-                    .SelectMany(profiles => profiles.Children())
-                    .SelectMany(profile => profile.Children<JProperty>())
-                    .Where(prop => prop.Name == "environmentVariables")
-                    .SelectMany(prop => prop.Value.Children<JProperty>())
-                    .ToList();
-                foreach (var variable in variables)
+                if (pi.PropertyType != typeof(string)) continue;
+                var value = (string) pi.GetValue(environmentConfig);
+                if (string.IsNullOrEmpty(value))
                 {
-                    Environment.SetEnvironmentVariable(variable.Name, variable.Value.ToString());
+                    throw new ArgumentNullException($"Expected property {pi} is empty or has not been set");
                 }
             }
+        }
+
+        private static IConfigurationRoot BuildConfigurationRoot()
+        {
+            return new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddUserSecrets("e6b90eee-2685-42f6-972e-6d17e1b85a3b")
+                .AddJsonFile("passwords.json",optional:true)
+                .AddEnvironmentVariables()
+                .Build();
         }
     }
 }

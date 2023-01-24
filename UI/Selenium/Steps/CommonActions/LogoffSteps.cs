@@ -1,14 +1,11 @@
-﻿
-using SeleniumSpecFlow.Utilities;
+﻿using OpenQA.Selenium;
 using TechTalk.SpecFlow;
-using UI.Model;
-using UISelenium.Pages;
-using FluentAssertions;
 using TestFramework;
-using OpenQA.Selenium;
-using System;
+using UI.Model;
+using UI.Pages.PageElements;
+using UI.Utilities;
 
-namespace UI.Steps
+namespace UI.Steps.CommonActions
 {
     [Binding]
     ///<summary>

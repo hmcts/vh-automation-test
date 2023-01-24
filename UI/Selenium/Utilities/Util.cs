@@ -1,10 +1,10 @@
-﻿using NLog;
+﻿using System;
+using System.Linq;
+using NLog;
 using NLog.Layouts;
 using NLog.Targets;
-using System;
-using System.Linq;
 
-namespace TestLibrary.Utilities
+namespace UI.Utilities
 {
     ///<summary>
     /// Class with general utilities function to generate random data

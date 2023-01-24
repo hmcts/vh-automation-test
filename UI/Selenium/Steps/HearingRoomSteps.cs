@@ -1,7 +1,5 @@
-﻿using SeleniumSpecFlow.Utilities;
-using System;
+﻿using System;
 using UI.Model;
-using UISelenium.Pages;
 using TechTalk.SpecFlow;
 using NUnit.Framework;
 using FluentAssertions;
@@ -9,6 +7,8 @@ using TestFramework;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Linq;
+using UI.Pages;
+using UI.Utilities;
 
 namespace UI.Steps
 {

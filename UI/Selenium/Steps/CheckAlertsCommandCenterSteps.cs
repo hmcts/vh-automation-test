@@ -1,18 +1,17 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using SeleniumSpecFlow.Utilities;
 using System;
 using System.Linq;
 using System.Threading;
 using TechTalk.SpecFlow;
 using TestFramework;
-using UISelenium.Pages;
 using UI.Model;
 using System.Collections.Generic;
 using FluentAssertions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using TestLibrary.Utilities;
+using UI.Pages;
+using UI.Utilities;
 
 namespace UI.Steps
 {
@@ -39,7 +38,7 @@ namespace UI.Steps
         public void GivenILoginToVHOInVideoUrlAsForExistingHearing(string userName)
         {
 
-            Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
+            Driver = new DriverFactory().InitializeDriver(Config.BrowserType);
             _scenarioContext["driver"] = Driver;
             Driver.Navigate().GoToUrl(Config.VideoUrl);
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(Config.DefaultElementWait));

@@ -6,6 +6,8 @@
 		<IsPackable>false</IsPackable>
 
 		<AssemblyName>UISelenium</AssemblyName>
+
+		<UserSecretsId>e6b90eee-2685-42f6-972e-6d17e1b85a3b</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -59,11 +61,6 @@
 		<None Update="Properties\launchSettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="TestResults\Img\" />
-		<Folder Include="TestResults\Logs\" />
 	</ItemGroup>
 
 	<ItemGroup>

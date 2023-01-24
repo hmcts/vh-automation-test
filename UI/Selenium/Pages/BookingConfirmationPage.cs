@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
-namespace UISelenium.Pages
+﻿using OpenQA.Selenium;
+
+namespace UI.Pages
 {
 	///<summary>
 	///   BookingConfirmationPage
