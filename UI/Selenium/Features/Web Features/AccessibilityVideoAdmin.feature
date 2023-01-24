@@ -9,6 +9,7 @@ Feature: Accessibility
 	I want to check each page for potential accessibility issues
 
 
+@DeviceTest
 Scenario: Dashboard page accessibility
 	Given I'm on the "Dashboard" page
 	Then the page should be accessible

@@ -10,6 +10,7 @@ using AventStack.ExtentReports.Reporter;
 using NLog;
 using NLog.Web;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using TechTalk.SpecFlow;
@@ -166,7 +167,8 @@ namespace UI.Hooks
             var screenshotFilePath = Path.Combine(ProjectPath + _imagesPath, $"{imageFileName}.png");
             var mediaModel = MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotFilePath).Build();
 
-            if (scenarioContext.TestError != null)
+            var stepFailed = scenarioContext.TestError != null; 
+            if (stepFailed)
             {
                 var stepTitle = scenarioContext.StepContext.StepInfo.Text;
                 Logger.Error(scenarioContext.TestError, $"Exception occured while executing step:'{stepTitle}'");
@@ -196,8 +198,10 @@ namespace UI.Hooks
                 {
                     Logger.Info(infoText);
                 }
+                
                 driver.TakeScreenshot().SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
                 Logger.Info($"Screenshot has been saved to {screenshotFilePath}");
+                
                 switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
                     case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
@@ -231,7 +235,7 @@ namespace UI.Hooks
                         break;
                 }
             }
-            if (scenarioContext.TestError == null)
+            if (!stepFailed)
             {
                 driver = (IWebDriver)scenarioContext["driver"];
                 driver.TakeScreenshot().SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
@@ -311,6 +315,8 @@ namespace UI.Hooks
         [AfterScenario("web")]
         public void AfterScenarioWeb(ScenarioContext scenarioContext,FeatureContext featureContext)
         {
+            var driver = (IWebDriver)scenarioContext["driver"];
+            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             featureContext["AccessibilityBaseUrl"] = scenarioContext["AccessibilityBaseUrl"];
             StopAllDrivers(scenarioContext);
             _extent.Flush();
@@ -326,8 +332,10 @@ namespace UI.Hooks
         }
 
         [AfterTestRun]
-        public static void AfterTestRun()
+        public static void AfterTestRun(ScenarioContext scenarioContext)
         {
+            var driver = (IWebDriver)scenarioContext["driver"];
+            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             KillAllBrowserInstances(_browserName);
             Logger.Info("Automation Test Execution Ended");
             LogManager.Shutdown();
@@ -410,6 +418,13 @@ namespace UI.Hooks
             {
                 KillAllBrowserInstances((ScenarioContext)obj);
             }
+        }
+            
+        
+        private static void LogTestResultOnSauceLabs(bool runningOnSauceLabs, IWebDriver driver)
+        {
+            if (!runningOnSauceLabs) return;
+            SauceLabsResult.LogPassed(TestContext.CurrentContext.Result.Outcome == ResultState.Success, driver);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Enums;
@@ -9,6 +9,7 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Safari;
+using RestSharp.Extensions;
 using UI.Model;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -135,49 +136,99 @@ namespace UI.Utilities
             return drivers;
         }
 
+        public string GetBuildNameForSauceLabs(DriverOptions driverOptions)
+        {
+            var attemptNumber = GetAttemptNumber();
+            var build = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Today:dd.MM.yyyy}     [ {driverOptions.BrowserName} | {driverOptions.PlatformName} | {driverOptions.BrowserVersion} | {driverOptions.BrowserVersion.ToPascalCase(new CultureInfo("en-GB", false))} ] {attemptNumber}";
+            return build;
+        }
+        
+        private static string GetAttemptNumber()
+        {
+            var attemptNumber = Environment.GetEnvironmentVariable("Build_AttemptNumber");
+            if (string.IsNullOrWhiteSpace(attemptNumber)) return string.Empty;
+            return Convert.ToInt32(attemptNumber) > 1 ? $" : Attempt {attemptNumber}" : string.Empty;
+        }
+        
+        private static string GetGitVersionNumber()
+        {
+            var gitVersionNumber = Environment.GetEnvironmentVariable("GITVERSION_FULLSEMVER");
+            return !string.IsNullOrEmpty(gitVersionNumber) ? $" | {gitVersionNumber}" : string.Empty;
+        }
+        
+        private static string GetBuildDefinition()
+        {
+            var definition = Environment.GetEnvironmentVariable("BUILD_DEFINITIONNAME")?
+                                 .ToLower()
+                                 .Replace("hmcts.vh-", "")
+                                 .Replace("-", " ")
+                                 .Replace("cd", "")
+                                 .Replace("webnightly", " Web Nightly")
+                                 .Replace("web", " Web")
+                             ?? string.Empty;
+            return new CultureInfo("en-GB", false).TextInfo.ToTitleCase(definition);
+        }
+
         public IWebDriver InitializeSauceDriver(SauceLabsOptions sauceLabsOptions, SauceLabsConfiguration config)
         {
+            var driverOptions = new ChromeOptions()
+            {
+                PlatformName = "Windows 11",
+                BrowserVersion = "latest"
+            };
+            driverOptions.AddAdditionalOption("username", config.SauceUsername);
+            driverOptions.AddAdditionalOption("accessKey", config.SauceAccessKey);
+
+            var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
+                "local" : 
+                GetBuildNameForSauceLabs(driverOptions);
+            
             var sauceOptions = new Dictionary<string, object>
             {
-                {"username", config.SauceUsername},
-                {"accessKey", config.SauceAccessKey},
-                {"name", sauceLabsOptions.Name}, {"commandTimeout", sauceLabsOptions.CommandTimeoutInSeconds},
-                {"idleTimeout", sauceLabsOptions.IdleTimeoutInSeconds},
+                {"build", buildName},
+                {"name", sauceLabsOptions.Name},
+                // TODO: UTC timezone is not playing nice
+                {"timeZone", "London"},
                 {"maxDuration", sauceLabsOptions.MaxDurationInSeconds},
-                {"seleniumVersion", sauceLabsOptions.SeleniumVersion}, {"timeZone", sauceLabsOptions.Timezone}
+                {"commandTimeout", sauceLabsOptions.CommandTimeoutInSeconds},
+                {"idleTimeout", sauceLabsOptions.IdleTimeoutInSeconds}
             };
-            var remoteUrl = new Uri($"https://{config.SauceUsername}:{config.SauceAccessKey}{config.SauceUrl}");
+            driverOptions.AddAdditionalOption("sauce:options", sauceOptions);
 
-            switch (config.PlatformName)
-            {
-                case "Android":
-                    var options = InitAndroidAppiumOptions(sauceLabsOptions, config, sauceOptions);
-                    WebDriver = new RemoteWebDriver(remoteUrl, options.ToCapabilities());
-                    break;
-                case "iOS":
-                    var iosOptions = InitIOsAppiumOptions(sauceLabsOptions, config, sauceOptions);
-                    WebDriver = new RemoteWebDriver(remoteUrl, iosOptions.ToCapabilities());
-                    break;
-                case "macOS 12":
-                    DriverOptions driverOptions = config.BrowserName switch
-                    {
-                        "chrome" => new ChromeOptions(),
-                        "Firefox" => new FirefoxOptions(),
-                        "Edge" => new EdgeOptions(),
-                        "Safari" => new SafariOptions(),
-                        _ => null
-                    };
-
-                    Debug.Assert(driverOptions != null, nameof(driverOptions) + " != null");
-                    driverOptions.PlatformName = config.PlatformName;
-                    foreach (var (key, value) in sauceOptions)
-                    {
-                        driverOptions.AddAdditionalOption(key, value);
-                    }
-
-                    WebDriver = new RemoteWebDriver(remoteUrl, driverOptions);
-                    break;
-            }
+            var remoteUrl = new Uri($"http://{config.SauceUsername}:{config.SauceAccessKey}@{config.SauceUrl}");
+            // var remoteUrl = new Uri(config.SauceUrl);
+            WebDriver = new RemoteWebDriver(remoteUrl, driverOptions);
+            // switch (config.PlatformName)
+            // {
+            //     case "Android":
+            //         var options = InitAndroidAppiumOptions(sauceLabsOptions, config, sauceOptions);
+            //         WebDriver = new RemoteWebDriver(remoteUrl, options.ToCapabilities());
+            //         break;
+            //     case "iOS":
+            //         var iosOptions = InitIOsAppiumOptions(sauceLabsOptions, config, sauceOptions);
+            //         WebDriver = new RemoteWebDriver(remoteUrl, iosOptions.ToCapabilities());
+            //         break;
+            //     case "macOS 12":
+            //     default:
+            //         DriverOptions driverOptions = config.BrowserName switch
+            //         {
+            //             "Firefox" => new FirefoxOptions(),
+            //             "Edge" => new EdgeOptions(),
+            //             "Safari" => new SafariOptions(),
+            //             "Chrome" => new ChromeOptions(),
+            //             _ => new ChromeOptions()
+            //         };
+            //
+            //         Debug.Assert(driverOptions != null, nameof(driverOptions) + " != null");
+            //         driverOptions.PlatformName = config.PlatformName;
+            //         foreach (var (key, value) in sauceOptions)
+            //         {
+            //             driverOptions.AddAdditionalOption(key, value);
+            //         }
+            //
+            //         WebDriver = new RemoteWebDriver(remoteUrl, driverOptions);
+            //         break;
+            // }
 
             return WebDriver;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
 namespace UI.Utilities
@@ -28,6 +29,9 @@ namespace UI.Utilities
             //set the correct ElementWait based on execution environment
             if (environmentConfig.RunOnSaucelabs)
             {
+                Debug.Assert(!string.IsNullOrEmpty(environmentConfig.SauceLabsConfiguration.SauceUsername));
+                Debug.Assert(!string.IsNullOrEmpty(environmentConfig.SauceLabsConfiguration.SauceUrl));
+                Debug.Assert(!string.IsNullOrEmpty(environmentConfig.SauceLabsConfiguration.SauceAccessKey));
                 // TODO: should have a separate property in the class instead of overwriting this one
                 environmentConfig.DefaultElementWait=environmentConfig.SaucelabsElementWait;
             }

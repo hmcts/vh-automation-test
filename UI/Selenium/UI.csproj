@@ -35,10 +35,10 @@
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
-    <PackageReference Include="Selenium.Axe" Version="4.0.5" />
-    <PackageReference Include="Selenium.Support" Version="4.6.0" />
-    <PackageReference Include="Selenium.WebDriver" Version="4.6.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="108.0.5359.7100" />
+    <PackageReference Include="Selenium.Axe" Version="4.0.9" />
+    <PackageReference Include="Selenium.Support" Version="4.8.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.8.0" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="109.0.5414.7400" />
     <PackageReference Include="SeleniumExtras.WaitHelpers" Version="1.0.2" />
     <PackageReference Include="SpecFlow" Version="3.9.74" />
     <PackageReference Include="SpecFlow.Assist.Dynamic" Version="1.4.2" />
@@ -65,6 +65,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\TestFramework\TestFramework.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="RestSharp">
+	    <HintPath>..\..\packages\restsharp\106.15.0\lib\netstandard2.0\RestSharp.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>
