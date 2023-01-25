@@ -45,7 +45,7 @@ stages:
               - group: vh-test-users
               - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
                 value: true
-              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.Username
+              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
                 value: $(Saucelabs:Username)
               - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
                 value: $(Saucelabs:AccessKey)
