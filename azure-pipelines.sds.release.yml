@@ -42,7 +42,6 @@ stages:
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_Dev
-              - group: vh-test-users
               - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
                 value: true
               - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
@@ -51,8 +50,6 @@ stages:
                 value: $(Saucelabs:AccessKey)
               - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
                 value: $(ConferencePhoneNumber)
-              - name: SystemConfiguration.EnvironmentConfigSettings.UserPassword
-                value: $(TestUserSecrets:TestUserPassword)
 
             steps:
               - task: FileTransform@1
