@@ -56,6 +56,15 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
+              # inserts variables to help create unique test names
+              - task: gitversion/setup@0
+                displayName: Install GitVersion
+                inputs:
+                  versionSpec: "5.x"
+
+              - task: gitversion/execute@0
+                displayName: Determine Version
+
               - task: FileTransform@1
                 displayName: Transform App Settings
                 inputs:
