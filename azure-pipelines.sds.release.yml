@@ -50,6 +50,10 @@ stages:
                 value: $(Saucelabs:AccessKey)
               - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
                 value: $(ConferencePhoneNumber)
+              - name: SystemConfiguration.LogLocation
+                value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
+              - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
+                value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
               - task: FileTransform@1
@@ -65,8 +69,15 @@ stages:
 
               - task: DotNetCoreCLI@2
                 displayName: Run UI Tests
+                continueOnError: true
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
                   arguments: "--configuration Release --filter TestCategory=Smoketest"
                   publishTestResults: true
+
+              - task: PublishBuildArtifacts@1
+                displayName: Publish Test Results Output
+                inputs:
+                  pathToPublish: "$(Build.ArtifactStagingDirectory)/TestResults/"
+                  artifactName: TestResultsOutput
