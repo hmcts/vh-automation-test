@@ -67,10 +67,4 @@
 		<ProjectReference Include="..\..\TestFramework\TestFramework.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Reference Include="RestSharp">
-	    <HintPath>..\..\packages\restsharp\106.15.0\lib\netstandard2.0\RestSharp.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
 </Project>

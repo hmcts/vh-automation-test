@@ -9,7 +9,6 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Safari;
-using RestSharp.Extensions;
 using UI.Model;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -139,7 +138,7 @@ namespace UI.Utilities
         public string GetBuildNameForSauceLabs(DriverOptions driverOptions)
         {
             var attemptNumber = GetAttemptNumber();
-            var build = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Today:dd.MM.yyyy}     [ {driverOptions.BrowserName} | {driverOptions.PlatformName} | {driverOptions.BrowserVersion} | {driverOptions.BrowserVersion.ToPascalCase(new CultureInfo("en-GB", false))} ] {attemptNumber}";
+            var build = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Today:dd.MM.yyyy}     [ {driverOptions.BrowserName} | {driverOptions.PlatformName} | {driverOptions.BrowserVersion} ] {attemptNumber}";
             return build;
         }
         
