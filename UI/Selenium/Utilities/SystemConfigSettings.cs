@@ -2,6 +2,7 @@ namespace UI.Utilities;
 
 public class SystemConfigSettings
 {
+    public string TestResultsDirectory { get; set; }
     public string ReportLocation { get; set; }
     public string ImageLocation { get; set; }
     public bool RunOnSaucelabs { get; set; }

@@ -23,7 +23,7 @@ namespace UI.Utilities
     {
         private IWebDriver WebDriver { get; set; }
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        public static List<int> ProcessIds = new();
+        public static readonly List<int> ProcessIds = new();
 
         public IWebDriver InitializeDriver(BrowserType browser)
         {
@@ -180,7 +180,7 @@ namespace UI.Utilities
             driverOptions.AddAdditionalOption("accessKey", config.SauceAccessKey);
 
             var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
-                "local" : 
+                $"local-{Environment.MachineName}-{DateTime.Today:dd-mm-yy-hh-mm}" : 
                 GetBuildNameForSauceLabs(driverOptions);
             
             var sauceOptions = new Dictionary<string, object>
@@ -191,7 +191,8 @@ namespace UI.Utilities
                 {"timeZone", "London"},
                 {"maxDuration", sauceLabsOptions.MaxDurationInSeconds},
                 {"commandTimeout", sauceLabsOptions.CommandTimeoutInSeconds},
-                {"idleTimeout", sauceLabsOptions.IdleTimeoutInSeconds}
+                {"idleTimeout", sauceLabsOptions.IdleTimeoutInSeconds},
+                {"screenResolution", "1280x768"}
             };
             driverOptions.AddAdditionalOption("sauce:options", sauceOptions);
 
