@@ -41,12 +41,19 @@ stages:
                 value: "UI/Selenium"
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
+              - group: KinlyConfiguration_Dev
               - name: SystemConfiguration.DevelopmentEnvironmentConfigSettings.RunOnSauceLabs
                 value: true
               - name: SystemConfiguration.DevelopmentEnvironmentConfigSettings.SauceLabsConfiguration.Username
                 value: $(Saucelabs:Username)
               - name: SystemConfiguration.DevelopmentEnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
                 value: $(Saucelabs:AccessKey)
+              - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
+                value: $(ConferencePhoneNumber)
+              - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
+                value: "https://pre-video.hearings.reform.hmcts.net/"
+              - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+                value: "https://pre-admin.hearings.reform.hmcts.net/"
 
             steps:
               - task: FileTransform@1
@@ -65,5 +72,5 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release"
+                  arguments: "--configuration Release --filter TestCategory=Smoketest"
                   publishTestResults: true
