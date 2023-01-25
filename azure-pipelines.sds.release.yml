@@ -42,18 +42,17 @@ stages:
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_Dev
-              - name: SystemConfiguration.DevelopmentEnvironmentConfigSettings.RunOnSauceLabs
+              - group: vh-test-users
+              - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
                 value: true
-              - name: SystemConfiguration.DevelopmentEnvironmentConfigSettings.SauceLabsConfiguration.Username
+              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.Username
                 value: $(Saucelabs:Username)
-              - name: SystemConfiguration.DevelopmentEnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
+              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
                 value: $(Saucelabs:AccessKey)
               - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
                 value: $(ConferencePhoneNumber)
-              - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
-                value: "https://pre-video.hearings.reform.hmcts.net/"
-              - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
-                value: "https://pre-admin.hearings.reform.hmcts.net/"
+              - name: SystemConfiguration.EnvironmentConfigSettings.UserPassword
+                value: $(TestUserSecrets:TestUserPassword)
 
             steps:
               - task: FileTransform@1
