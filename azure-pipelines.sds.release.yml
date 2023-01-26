@@ -76,14 +76,36 @@ stages:
                   Get-Content "$(projectPath)/appsettings.json"
                 displayName: Print App Settings
 
+              # - task: DotNetCoreCLI@2
+              #   displayName: Run UI Tests
+              #   continueOnError: true
+              #   inputs:
+              #     command: test
+              #     projects: "$(projectPath)/*.csproj"
+              #     arguments: "--configuration Release --filter TestCategory=Smoketest"
+              #     publishTestResults: true
+
               - task: DotNetCoreCLI@2
-                displayName: Run UI Tests
-                continueOnError: true
+                displayName: Build UI Test Project
                 inputs:
-                  command: test
+                  command: build
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=Smoketest"
-                  publishTestResults: true
+                  arguments: "--configuration Release --output $(Agent.TempDirectory)/$(projectPath)"
+
+              - pwsh: |
+                  dotnet vstest $(Agent.TempDirectory)/$(projectPath)/UISelenium.dll --Logger:trx --ResultsDirectory:$(Agent.TempDirectory)/TestResults
+                  $retry = 1
+                  do {
+                    $testFiles = (Get-ChildItem '$(Agent.TempDirectory)/TestResults' | Sort-Object LastWriteTime | Select-Object -last 1).FullName
+                    $failedTests = (Select-Xml -Path $testFiles -XPath "//ns:UnitTestResult[@outcome='Failed']/@testName" -Namespace @{"ns"="http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}).Node.Value
+                    if($failedTests.count -gt 0) {
+                      write-warning "There are currently $($failedTests.count) failing tests, retrying for $retry times in 10 seconds"
+                      Start-Sleep 10
+                      dotnet vstest $(Agent.TempDirectory)/$(projectPath)/UISelenium.dll /Logger:trx --ResultsDirectory:$(Agent.TempDirectory)/TestResults /Tests:"$($failedTests -join ',')"
+                    }
+                  } while ($failedTests.count -gt 0 -and $retry++ -lt 2)
+                displayName: Run UI Tests
+                timeoutInMinutes: 0
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish Test Results Output
