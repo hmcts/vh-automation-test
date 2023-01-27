@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 		<None Remove="App.config" />
+		<None Remove="passwords.json" />
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="5.0.0-beta01" />
@@ -53,9 +54,6 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="NLog.config">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="passwords.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="Properties\launchSettings.json">
