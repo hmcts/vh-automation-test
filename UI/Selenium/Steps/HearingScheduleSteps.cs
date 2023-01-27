@@ -9,11 +9,11 @@ using UI.Utilities;
 
 namespace UI.Steps
 {
-    [Binding]
     ///<summary>
     /// Steps class for Hearing Schedule Page
     ///</summary>
-    public class HearingScheduleSteps :ObjectFactory
+    [Binding]
+    public class HearingScheduleSteps : ObjectFactory
     {
         private readonly ScenarioContext _scenarioContext;
         private Hearing _hearing;
@@ -42,7 +42,9 @@ namespace UI.Steps
 
         private void EnterHearingSchedule(HearingSchedule hearingSchedule)
         {
-            ExtensionMethods.FindElementEnabledWithWait(Driver, HearingSchedulePage.HearingDate).SendKeys(hearingSchedule.HearingDate.FirstOrDefault().ToString("dd/MM/yyyy"));
+            var dateString = hearingSchedule.HearingDate.FirstOrDefault()
+                .ToString(DateFormats.LocalDateFormat(TestConfigHelper.GetApplicationConfiguration().RunOnSaucelabs));
+            ExtensionMethods.FindElementEnabledWithWait(Driver, HearingSchedulePage.HearingDate).SendKeys(dateString);
             Driver.FindElement(HearingSchedulePage.HearingDate).Click();
             Driver.FindElement(HearingSchedulePage.HearingStartTimeHour).SendKeys(hearingSchedule.HearingDate.FirstOrDefault().ToString("HH"));
             Driver.FindElement(HearingSchedulePage.HearingStartTimeMinute).SendKeys(hearingSchedule.HearingDate.FirstOrDefault().ToString("mm"));

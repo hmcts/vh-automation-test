@@ -179,7 +179,7 @@ namespace UI.Utilities
             driverOptions.AddAdditionalOption("accessKey", config.SauceAccessKey);
 
             var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
-                $"local-{Environment.MachineName}-{DateTime.Today:dd-mm-yy-hh-mm}" : 
+                $"local-{Environment.MachineName}-{DateTime.Now:dd-mm-yy-hh-mm}" : 
                 GetBuildNameForSauceLabs(driverOptions);
             
             var sauceOptions = new Dictionary<string, object>

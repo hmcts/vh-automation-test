@@ -164,6 +164,7 @@ namespace TestFramework
             catch (Exception ex)
             {
                 Logger.Error(ex, $"Cannot find element By locator:'{findBy.Criteria}' on page:'{pageName}, logged in User: {userName}");
+                throw;
             }
             return webelement;
         }

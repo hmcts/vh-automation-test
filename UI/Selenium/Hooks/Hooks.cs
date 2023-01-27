@@ -307,7 +307,15 @@ namespace UI.Hooks
                     break;
             }
 
-            var failureMessage = scenarioContext.TestError?.Message != null ? scenarioContext.TestError.Message : "Unknown error. The scenario content test error is empty" ;
+            var error = scenarioContext.TestError;
+            var sb = new StringBuilder(error.Message);
+            while (error.InnerException != null)
+            {
+                error = error.InnerException;
+                sb.AppendLine(error.Message);
+            }
+
+            var failureMessage = sb.ToString();
             Assert.Fail(failureMessage);
         }
 
