@@ -42,6 +42,7 @@ namespace UI.Steps
         {
             ExtensionMethods.WaitForElementVisible(Driver, HearingAssignJudgePage.JudgeEmail);
             ExtensionMethods.FindElementWithWait(Driver,HearingAssignJudgePage.JudgeEmail).SendKeys(judge.Email);
+            ExtensionMethods.WaitForElementVisible(Driver, HearingAssignJudgePage.SearchResults);
             ExtensionMethods.FindElementWithWait(Driver, HearingAssignJudgePage.SearchResults).Click();
             Driver.FindElement(HearingAssignJudgePage.NextButton).Click();
             var participant = new Participant();

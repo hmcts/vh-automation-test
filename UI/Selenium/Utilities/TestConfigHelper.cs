@@ -11,8 +11,14 @@ namespace UI.Utilities
     {
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private static EnvironmentConfigSettings _config;
+
         public static EnvironmentConfigSettings GetApplicationConfiguration()
         {
+            if (_config != null)
+            {
+                return _config;
+            }
             Logger.Info("Reading Appsetitngs Json File");
             var configRoot = BuildConfigurationRoot();
             var environmentConfig = configRoot.GetSection("SystemConfiguration:EnvironmentConfigSettings").Get<EnvironmentConfigSettings>();
@@ -33,9 +39,12 @@ namespace UI.Utilities
                 Debug.Assert(!string.IsNullOrEmpty(environmentConfig.SauceLabsConfiguration.SauceUrl));
                 Debug.Assert(!string.IsNullOrEmpty(environmentConfig.SauceLabsConfiguration.SauceAccessKey));
                 // TODO: should have a separate property in the class instead of overwriting this one
-                environmentConfig.DefaultElementWait=environmentConfig.SaucelabsElementWait;
+                environmentConfig.DefaultElementWait = environmentConfig.SaucelabsElementWait;
             }
-            return environmentConfig;
+
+            _config = environmentConfig; 
+
+            return _config;
         }
 
         private static void VerifyEnvironmentConfigValuesHaveBeenSet(EnvironmentConfigSettings environmentConfig)

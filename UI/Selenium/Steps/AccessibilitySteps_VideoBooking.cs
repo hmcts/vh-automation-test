@@ -122,6 +122,7 @@ namespace UI.Steps
                     ProceedToPage("Booking Confirmation");
                     WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.OneMinuteElementWait)));
                     wait.Until(ExpectedConditions.InvisibilityOfElementLocated(SummaryPage.DotLoader));
+                    ExtensionMethods.FindElementWithWait(Driver, BookingConfirmationPage.ViewBookingLink).Click();
                     ExtensionMethods.FindElementWithWait(Driver, BookingDetailsPage.BookingConfirmedStatus, _scenarioContext);
                     AxeAnalyze(pageName);
                     break;
