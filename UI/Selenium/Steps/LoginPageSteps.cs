@@ -1,25 +1,24 @@
-﻿using TechTalk.SpecFlow;
-using SeleniumSpecFlow.Utilities;
-using UISelenium.Pages;
-using FluentAssertions;
-using SeleniumExtras.WaitHelpers;
-using OpenQA.Selenium.Support.UI;
-using System;
-using UI.Model;
-using TestLibrary.Utilities;
+﻿using System;
 using System.Collections.Generic;
-using OpenQA.Selenium;
 using System.Linq;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+using TechTalk.SpecFlow;
 using TestFramework;
-namespace SeleniumSpecFlow.Steps
+using UI.Model;
+using UI.Pages;
+using UI.Utilities;
+
+namespace UI.Steps
 {
-    [Binding]
     ///<summary>
     /// Steps class for Login page
     ///</summary>
+    [Binding]
     public class LoginPageSteps : ObjectFactory
     {
-        private ScenarioContext _scenarioContext;
+        private readonly ScenarioContext _scenarioContext;
         private Hearing _hearing;
         public string LoginUrl { get; set; }
         public string UserName;
@@ -77,8 +76,8 @@ namespace SeleniumSpecFlow.Steps
             Driver?.Quit();
             foreach (var participant in _hearing.Participant)
             {
-                Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
-                ((List<int>)_scenarioContext["ProcessIds"]).Add(DriverFactory.ProcessId);
+                Driver = new DriverFactory().InitializeDriver(Config.BrowserType);
+                ((List<int>)_scenarioContext["ProcessIds"]).AddRange(DriverFactory.ProcessIds);
                 ((Dictionary<string, IWebDriver>)_scenarioContext["drivers"]).Add($"{participant.Id}#{participant.Party.Name}-{participant.Role.Name}", Driver);
                 Driver = GetDriver(participant.Id, _scenarioContext);
                 Driver.Navigate().GoToUrl(Config.VideoUrl);
@@ -93,8 +92,8 @@ namespace SeleniumSpecFlow.Steps
         [Given(@"I open a new browser and log into admin web as ""([^""]*)""")] 
         public void GivenIOpenANewBrowserAndLogInAs(string email)
         {
-            Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
-            ((List<int>)_scenarioContext["ProcessIds"]).Add(DriverFactory.ProcessId);
+            Driver = new DriverFactory().InitializeDriver(Config.BrowserType);
+            ((List<int>)_scenarioContext["ProcessIds"]).AddRange(DriverFactory.ProcessIds);
             ((Dictionary<string, IWebDriver>)_scenarioContext["drivers"]).Add(email, Driver);
             Driver = GetDriver(email, _scenarioContext);
             Driver.Navigate().GoToUrl(Config.AdminUrl);
@@ -106,9 +105,9 @@ namespace SeleniumSpecFlow.Steps
         [When(@"Video Hearing Officer logs into video web as ""([^""]*)""")]
         public void WhenVideoHearingOfficerLogsIntoVideoWebAs(string email)
         {
-            Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
+            Driver = new DriverFactory().InitializeDriver(Config.BrowserType);
             _scenarioContext["driver"]=Driver;
-            ((List<int>)_scenarioContext["ProcessIds"]).Add(DriverFactory.ProcessId);
+            ((List<int>)_scenarioContext["ProcessIds"]).AddRange(DriverFactory.ProcessIds);
             ((Dictionary<string, IWebDriver>)_scenarioContext["drivers"]).Add(email, Driver);
             Driver = GetDriver(email, _scenarioContext);
             Driver.Navigate().GoToUrl(Config.VideoUrl);
@@ -124,7 +123,7 @@ namespace SeleniumSpecFlow.Steps
                     Name = "VHO"
                 }
             });
-            var participant = _hearing.Participant.Where(a => a.Id == email).FirstOrDefault();
+            var participant = _hearing.Participant.FirstOrDefault(a => a.Id == email);
             drivers.Add($"{participant.Id}#{participant.Party.Name}-{participant.Role.Name}", Driver);
             Login(participant.Id, Config.UserPassword);
         }

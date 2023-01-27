@@ -1,4 +1,4 @@
-﻿namespace SeleniumSpecFlow.Utilities
+﻿namespace UI.Utilities
 {
     public enum BrowserType
     {

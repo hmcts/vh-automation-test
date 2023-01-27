@@ -1,13 +1,12 @@
-﻿using UISelenium.Pages;
-using TechTalk.SpecFlow;
-using TestLibrary.Utilities;
-using UI.Steps.CommonActions;
-using OpenQA.Selenium;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using OpenQA.Selenium;
+using TechTalk.SpecFlow;
+using UI.Pages;
+using UI.Steps.CommonActions;
 
-namespace SeleniumSpecFlow.Utilities
+namespace UI.Utilities
 {
     [Binding]
     ///<summary>
@@ -54,7 +53,7 @@ namespace SeleniumSpecFlow.Utilities
         public IWebDriver StartNewDriver()
         {
             Driver?.Dispose();
-            this.Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
+            this.Driver = new DriverFactory().InitializeDriver(Config.BrowserType);
             _scenarioContext["driver"] = this.Driver;
             return Driver;
         }

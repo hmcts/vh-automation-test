@@ -1,10 +1,11 @@
 ﻿using OpenQA.Selenium.Support.UI;
-using SeleniumSpecFlow.Utilities;
 using System;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Model;
-using UISelenium.Pages;
+using UI.Pages;
+using UI.Utilities;
+
 namespace UI.Steps
 {
     [Binding]

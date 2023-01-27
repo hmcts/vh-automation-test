@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
-namespace UISelenium.Pages
+
+namespace UI.Pages
 {
 	///<summary>
 	///   ParticipantWaitingRoomPage

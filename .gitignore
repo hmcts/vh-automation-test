@@ -11,7 +11,6 @@
 *.sln.docstates
 *.feature.cs
 
-
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -346,3 +345,4 @@ healthchecksdb
 *passwords.json
 /azure-pipelines.nightly.yml
 /azure-pipelines.release.yml
+.DS_Store

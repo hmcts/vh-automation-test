@@ -1,21 +1,22 @@
 ﻿using FluentAssertions;
-using SeleniumSpecFlow.Utilities;
 using TechTalk.SpecFlow;
-using SeleniumSpecFlow.Steps;
 using UI.Utilities;
 using UI.Model;
 using TestFramework;
-using UISelenium.Pages;
 using System;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using System.Diagnostics;
+using UI.Pages;
+using UI.Pages.PageElements;
+
 namespace UI.Steps
 {
     ///<summary>
     /// Steps class for Bookings List
     ///</summary>
+    [Binding]
     internal class BookingListSteps : ObjectFactory
     {
         private readonly ScenarioContext _scenarioContext;

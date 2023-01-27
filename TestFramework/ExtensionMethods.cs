@@ -100,6 +100,11 @@ namespace TestFramework
             retryPolicy.Execute(() =>
             {
                 var element = FindElementWithWait(webdriver, findBy, scenarioContext, waitPeriod);
+                if (element == null)
+                {
+                    Logger.Debug($"Unable to find element {findBy}");
+                }
+
                 element.Click();
             });
         }

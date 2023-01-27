@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
-using SeleniumSpecFlow.Utilities;
 using System;
 using TechTalk.SpecFlow;
 using TestFramework;
-using UISelenium.Pages;
-using TestLibrary.Utilities;
 using UI.Model;
+using UI.Pages;
+using UI.Utilities;
 
 namespace UI.Steps
 {
@@ -60,7 +59,7 @@ namespace UI.Steps
         public void ThenIShouldAbleToOpenQuicklinkOnNewBrowser()
         {
             Driver.Close();
-            Driver = new DriverFactory().InitializeDriver(TestConfigHelper.browser);
+            Driver = new DriverFactory().InitializeDriver(Config.BrowserType);
             _scenarioContext["driver"] = Driver;
             Driver.Navigate().GoToUrl(_hearingList.HearingListURL);
         }

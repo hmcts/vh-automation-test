@@ -1,118 +1,128 @@
-﻿using AventStack.ExtentReports;
-using AventStack.ExtentReports.Gherkin.Model;
-using AventStack.ExtentReports.Reporter;
-using Microsoft.Extensions.Configuration;
-using NLog;
-using NLog.Web;
-using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
-using SeleniumSpecFlow.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using AventStack.ExtentReports;
+using AventStack.ExtentReports.Gherkin.Model;
+using AventStack.ExtentReports.Reporter;
+using NLog;
+using NLog.Web;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
 using TechTalk.SpecFlow;
 using TestFramework;
-using TestLibrary.Utilities;
 using UI.Model;
+using UI.Utilities;
 
 [assembly: Parallelizable(ParallelScope.Fixtures)]
 [assembly: LevelOfParallelism(3)]
 
-namespace SeleniumSpecFlow
+namespace UI.Hooks
 {
-    [Binding]
     ///<summary>
-    /// Class to define the code to execute at certian events during test execution
+    /// Class to define the code to execute at certain events during test execution
     /// Saves images after each step
     /// Closes any orphaned browser instances at the end of a Scenario and final Test Run
     ///</summary>
+    [Binding]
     public class Hooks 
     {
-        public IConfiguration Configuration { get; }
-        public static EnvironmentConfigSettings config;
-        private static readonly string ProjectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        public static string PathReport ;
-        private static string ImagesPath;
+        private static readonly Logger Logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+        private static string _projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        private static EnvironmentConfigSettings _config;
+        private static string _pathReport ;
+        private static string _imagesPath;
         private static ExtentTest _feature;
         private static ExtentTest _scenario;
         private static ExtentReports _extent;
-        private static Logger Logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-        private static string featureTitle;
-        private static int ImageNumber=0;
-        private static string scenarioTitle;
-        private static DateTime TestStartTime;
-        private static string BrowserName;
-		
+        
+        private static string _featureTitle;
+        private static int _imageNumber;
+        private static string _scenarioTitle;
+        private static DateTime _testStartTime;
+        private static string _browserName;
+
         [BeforeTestRun]
         public static void BeforeTestRun()
         {
             try
             {
-                config = TestConfigHelper.GetApplicationConfiguration();
+                _config = TestConfigHelper.GetApplicationConfiguration();
+                _projectPath = _config.TestResultsDirectory.Equals("default")
+                    ? Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName
+                    : _config.TestResultsDirectory;
+                SetupTestReporter();
                 Logger.Info("Automation Test Execution Commenced");
-                var logFilePath = Util.GetLogFileName("logfile");
-                var logFileName = Path.GetFileNameWithoutExtension(logFilePath);
-                var folderName = logFileName.Replace(":",".");
-                ImagesPath=Path.Combine(config.ImageLocation, folderName);
-                Directory.CreateDirectory(ProjectPath + ImagesPath);
-                PathReport= Path.Combine(ProjectPath+config.ReportLocation, folderName, "ExtentReport.html");
-                var reporter = new ExtentHtmlReporter(PathReport);
-                _extent = new ExtentReports();
-                _extent.AttachReporter(reporter);
-                TestStartTime =DateTime.Now;
+                _testStartTime = DateTime.Now;
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "An error has occured before Automation Test Execution ");
+                throw;
             }
+        }
+
+        private static void SetupTestReporter()
+        {
+            var logFilePath = Util.GetLogFileName("logfile");
+            var logFileName = Path.GetFileNameWithoutExtension(logFilePath);
+            var folderName = logFileName.Replace(":",".");
+            _imagesPath=Path.Combine(_config.ImageLocation, folderName);
+            Directory.CreateDirectory(_projectPath + _imagesPath);
+            _pathReport= Path.Combine(_projectPath+_config.ReportLocation, folderName, "ExtentReport.html");
+            var reporter = new ExtentHtmlReporter(_pathReport);
+            _extent = new ExtentReports();
+            _extent.AttachReporter(reporter);
         }
 
         [BeforeFeature]
         public static void BeforeFeature(FeatureContext featureContext)
         {
-            featureTitle = featureContext.FeatureInfo.Title;
-            _feature = _extent.CreateTest<Feature>(featureTitle);
-            Logger.Info($"Starting feature '{featureTitle}'");
+            _featureTitle = featureContext.FeatureInfo.Title;
+            _feature = _extent.CreateTest<Feature>(_featureTitle);
+            Logger.Info($"Starting feature '{_featureTitle}'");
             featureContext.Add("AccessibilityBaseUrl", "");
         }
 
         [BeforeScenario]
         public void BeforeScenario(ScenarioContext scenarioContext)
         {
-            scenarioTitle = scenarioContext.ScenarioInfo.Title;
-            Logger.Info($"Starting scenario '{scenarioTitle}'");
-            ImageNumber=0;
+            _scenarioTitle = scenarioContext.ScenarioInfo.Title;
+            Logger.Info($"Starting scenario '{_scenarioTitle}'");
+            _imageNumber=0;
         }
         
         [BeforeScenario("web")]
         public void BeforeScenarioWeb(ScenarioContext scenarioContext,FeatureContext featureContext)
         {
+            var tags = new List<string>(scenarioContext.ScenarioInfo.Tags.Concat(featureContext.FeatureInfo.Tags));
             var title = scenarioContext.ScenarioInfo.Title;
-            var tags= scenarioContext.ScenarioInfo.Tags;
-            scenarioTitle = scenarioContext.ScenarioInfo.Title;
+            _scenarioTitle = scenarioContext.ScenarioInfo.Title;
             _scenario = _feature.CreateNode<Scenario>(title);
-            _scenario.AssignCategory(tags);
+            _scenario.AssignCategory(tags.ToArray());
             scenarioContext.Add("ProcessIds", new List<int>());
-            BrowserName = TestConfigHelper.browser.ToString();
-            IWebDriver Driver;
+            _browserName = _config.BrowserType.ToString();
+            IWebDriver driver;
             if (RunOnSauceLabs(tags))
             {
-                SauceLabsOptions sauceOptions = new SauceLabsOptions();
-                sauceOptions.Name=title;
-                Driver= new DriverFactory().InitializeSauceDriver(sauceOptions,config.SauceLabsConfiguration);
+                var sauceOptions = new SauceLabsOptions
+                {
+                    Name = title
+                };
+                driver= new DriverFactory().InitializeSauceDriver(sauceOptions,_config.SauceLabsConfiguration);
             }
             else
             {
-                Driver= new DriverFactory().InitializeDriver(TestConfigHelper.browser);
-                ((List<int>)scenarioContext["ProcessIds"]).Add(DriverFactory.ProcessId);
+                driver= new DriverFactory().InitializeDriver(_config.BrowserType);
+                ((List<int>)scenarioContext["ProcessIds"]).AddRange(DriverFactory.ProcessIds);
             }
-            scenarioContext.Add("driver", Driver);
-            scenarioContext.Add("config", config);
-            scenarioContext.Add("feature", featureTitle);
+            scenarioContext.Add("driver", driver);
+            scenarioContext.Add("config", _config);
+            scenarioContext.Add("feature", _featureTitle);
             _scenario = _feature.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
             _scenario.AssignCategory(scenarioContext.ScenarioInfo.Tags);
             scenarioContext.Add("drivers", new Dictionary<string, IWebDriver>());
@@ -122,8 +132,8 @@ namespace SeleniumSpecFlow
         [BeforeScenario("api")]
         public void BeforeScenarioApi(ScenarioContext scenarioContext)
         {
-            scenarioTitle = scenarioContext.ScenarioInfo.Title;
-            Logger.Info($"Starting scenario '{scenarioTitle}'");
+            _scenarioTitle = scenarioContext.ScenarioInfo.Title;
+            Logger.Info($"Starting scenario '{_scenarioTitle}'");
             _scenario = _feature.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
             _scenario.AssignCategory(scenarioContext.ScenarioInfo.Tags);
         }
@@ -131,8 +141,8 @@ namespace SeleniumSpecFlow
         [BeforeScenario("soap")]
         public void BeforeScenarioSoapApi(ScenarioContext scenarioContext)
         {
-            scenarioTitle = scenarioContext.ScenarioInfo.Title;
-            Logger.Info($"Starting scenario '{scenarioTitle}'");
+            _scenarioTitle = scenarioContext.ScenarioInfo.Title;
+            Logger.Info($"Starting scenario '{_scenarioTitle}'");
             _scenario = _feature.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
             _scenario.AssignCategory(scenarioContext.ScenarioInfo.Tags);
         }
@@ -154,102 +164,151 @@ namespace SeleniumSpecFlow
         [AfterStep("web")]
         public static void InsertReportingStepsWeb(ScenarioContext scenarioContext)
         {
-            var driver = (IWebDriver)scenarioContext["driver"];
-            var imageNumberStr = (++ImageNumber).ToString("D4");
-            var imageFileName = $"{scenarioTitle.Replace(" ", "_")}{imageNumberStr}";
-            var ScreenshotFilePath = Path.Combine(ProjectPath + ImagesPath, $"{imageFileName}.png");
-            var mediaModel = MediaEntityBuilder.CreateScreenCaptureFromPath(ScreenshotFilePath).Build();
+            var driver = (IWebDriver) scenarioContext["driver"];
+            Debug.Assert(driver != null);
+            var imageNumberStr = (++_imageNumber).ToString("D4");
+            var imageFileName = $"{_scenarioTitle.Replace(" ", "_")}{imageNumberStr}";
+            var screenshotFilePath = Path.Combine(_projectPath + _imagesPath, $"{imageFileName}.png");
+            var mediaModel = MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotFilePath).Build();
 
-            if (scenarioContext.TestError != null)
+            var stepFailed = scenarioContext.TestError != null;
+            if (stepFailed)
             {
-                var stepTitle = scenarioContext.StepContext.StepInfo.Text;
-                Logger.Error(scenarioContext.TestError, $"Exception occured while executing step:'{stepTitle}'");
-                var infoTextBuilder = new StringBuilder();
-                var actionName = scenarioContext.GetActionName();
-                if (!string.IsNullOrWhiteSpace(actionName))
-                {
-                    infoTextBuilder.Append($"Action '{actionName}'");
-                }
-                var elementName = scenarioContext.GetElementName();
-                if (!string.IsNullOrWhiteSpace(elementName))
-                {
-                    infoTextBuilder.Append($",erroed on Element '{elementName}'");
-                }
-                var pageName = scenarioContext.GetPageName();
-                if (!string.IsNullOrWhiteSpace(pageName))
-                {
-                    infoTextBuilder.Append($",on Page '{pageName}'");
-                }
-                var userName = scenarioContext.GetUserName();
-                if (!string.IsNullOrWhiteSpace(userName))
-                {
-                    infoTextBuilder.Append($",for User '{userName}");
-                }
-                var infoText = infoTextBuilder.ToString();
-                if (!string.IsNullOrEmpty(infoText))
-                {
-                    Logger.Info(infoText);
-                }
-                driver.TakeScreenshot().SaveAsFile(ScreenshotFilePath, ScreenshotImageFormat.Png);
-                Logger.Info($"Screenshot has been saved to {ScreenshotFilePath}");
-                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
-                {
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
-                        break;
-
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
-                        break;
-
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message, mediaModel);
-                        break;
-                }
-                Assert.Fail(scenarioContext.TestError.Message);
+                Logger.Warn("Step failed, executing post step failed actions");
+                Debug.Assert(scenarioContext != null);
+                Debug.Assert(driver != null);
+                Debug.Assert(screenshotFilePath != null);
+                Debug.Assert(mediaModel != null);
+                ExecutePostStepFailedActions(scenarioContext, driver, screenshotFilePath, mediaModel);
             }
+
             if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.StepDefinitionPending)
             {
-                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
-                {
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
-                        break;
-
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
-                        break;
-
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending", mediaModel);
-                        break;
-                }
+                Logger.Debug("Step definition pending, executing post step definition pending actions");
+                Debug.Assert(scenarioContext != null);
+                Debug.Assert(mediaModel != null);
+                ExecutePostStepDefinitionPendingActions(scenarioContext, mediaModel);
             }
-            if (scenarioContext.TestError == null)
+
+            if (!stepFailed)
             {
-                driver = (IWebDriver)scenarioContext["driver"];
-                driver.TakeScreenshot().SaveAsFile(ScreenshotFilePath, ScreenshotImageFormat.Png);
-                Logger.Info($"Screenshot has been saved to {ScreenshotFilePath}");
-                //For Extent report
-                switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
-                {
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
-                        _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
-                        break;
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
-                        _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
-                        break;
-                    case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
-                        _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
-                        break;
-                }
+                Logger.Debug("Step succeeded, executing post step success actions");
+                Debug.Assert(scenarioContext != null);
+                Debug.Assert(driver != null);
+                Debug.Assert(screenshotFilePath != null);
+                Debug.Assert(mediaModel != null);
+                ExecutePostStepSuccessActions(scenarioContext, screenshotFilePath, mediaModel, driver);
             }
+
             if (scenarioContext.StepContext.StepInfo.Text.Equals("I log off"))
             {
-                driver?.Close();
-                driver?.Quit();
+                driver.Close();
+                driver.Quit();
                 scenarioContext.Remove("driver");
             }
+        }
+
+        private static void ExecutePostStepSuccessActions(ScenarioContext scenarioContext, string screenshotFilePath,
+            MediaEntityModelProvider mediaModel, IWebDriver driver)
+        {
+            driver.TakeScreenshot().SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
+            Logger.Info($"Screenshot has been saved to {screenshotFilePath}");
+            //For Extent report
+            switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
+            {
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
+                    _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
+                    break;
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
+                    _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
+                    break;
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
+                    _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Pass(string.Empty, mediaModel);
+                    break;
+            }
+        }
+
+        private static void ExecutePostStepDefinitionPendingActions(ScenarioContext scenarioContext,
+            MediaEntityModelProvider mediaModel)
+        {
+            switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
+            {
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
+                    _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text)
+                        .Skip("Step Definition Pending", mediaModel);
+                    break;
+
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
+                    _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text)
+                        .Skip("Step Definition Pending", mediaModel);
+                    break;
+
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
+                    _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text)
+                        .Skip("Step Definition Pending", mediaModel);
+                    break;
+            }
+        }
+
+        private static void ExecutePostStepFailedActions(ScenarioContext scenarioContext, IWebDriver driver,
+            string screenshotFilePath, MediaEntityModelProvider mediaModel)
+        {
+            var stepTitle = scenarioContext.StepContext.StepInfo.Text;
+            Logger.Error(scenarioContext.TestError, $"Exception occured while executing step:'{stepTitle}'");
+            var infoTextBuilder = new StringBuilder();
+            var actionName = scenarioContext.GetActionName();
+            if (!string.IsNullOrWhiteSpace(actionName))
+            {
+                infoTextBuilder.Append($"Action '{actionName}'");
+            }
+
+            var elementName = scenarioContext.GetElementName();
+            if (!string.IsNullOrWhiteSpace(elementName))
+            {
+                infoTextBuilder.Append($",erred on Element '{elementName}'");
+            }
+
+            var pageName = scenarioContext.GetPageName();
+            if (!string.IsNullOrWhiteSpace(pageName))
+            {
+                infoTextBuilder.Append($",on Page '{pageName}'");
+            }
+
+            var userName = scenarioContext.GetUserName();
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                infoTextBuilder.Append($",for User '{userName}");
+            }
+
+            var infoText = infoTextBuilder.ToString();
+            if (!string.IsNullOrEmpty(infoText))
+            {
+                Logger.Info(infoText);
+            }
+
+            driver.TakeScreenshot().SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
+            Logger.Info($"Screenshot has been saved to {screenshotFilePath}");
+
+            switch (scenarioContext.StepContext.StepInfo.StepDefinitionType)
+            {
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.Given:
+                    _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text)
+                        .Fail(scenarioContext.TestError.Message, mediaModel);
+                    break;
+
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.When:
+                    _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text)
+                        .Fail(scenarioContext.TestError.Message, mediaModel);
+                    break;
+
+                case TechTalk.SpecFlow.Bindings.StepDefinitionType.Then:
+                    _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text)
+                        .Fail(scenarioContext.TestError.Message, mediaModel);
+                    break;
+            }
+
+            var failureMessage = scenarioContext.TestError?.Message != null ? scenarioContext.TestError.Message : "Unknown error. The scenario content test error is empty" ;
+            Assert.Fail(failureMessage);
         }
 
         [AfterStep("api", "soap")]
@@ -305,6 +364,8 @@ namespace SeleniumSpecFlow
         [AfterScenario("web")]
         public void AfterScenarioWeb(ScenarioContext scenarioContext,FeatureContext featureContext)
         {
+            var driver = (IWebDriver)scenarioContext["driver"];
+            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             featureContext["AccessibilityBaseUrl"] = scenarioContext["AccessibilityBaseUrl"];
             StopAllDrivers(scenarioContext);
             _extent.Flush();
@@ -320,9 +381,11 @@ namespace SeleniumSpecFlow
         }
 
         [AfterTestRun]
-        public static void AfterTestRun()
+        public static void AfterTestRun(ScenarioContext scenarioContext)
         {
-            KillAllBrowserInstances(BrowserName);
+            var driver = (IWebDriver)scenarioContext["driver"];
+            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
+            KillAllBrowserInstances(_browserName);
             Logger.Info("Automation Test Execution Ended");
             LogManager.Shutdown();
         }
@@ -334,9 +397,9 @@ namespace SeleniumSpecFlow
             Logger.Info($"Ending feature '{featureTitle}'");
         }
 
-        private static bool RunOnSauceLabs(string[] tags)
+        private static bool RunOnSauceLabs(List<string> tags)
         {
-            return config.RunOnSaucelabs && tags.Any(s => s.Contains("DeviceTest"));
+            return _config.RunOnSaucelabs && tags.Any(s => s.Contains("DeviceTest"));
         }
 
         private static void KillAllBrowserInstances(string processName)
@@ -346,14 +409,13 @@ namespace SeleniumSpecFlow
             {
                 try
                 {
-                    if (process.StartTime > TestStartTime)
+                    if (process.StartTime > _testStartTime)
                     {
                         process.Kill(true);
                     }
                 }
                 catch (InvalidOperationException)
                 {
-                    continue;
                 }
             }
         }
@@ -369,6 +431,7 @@ namespace SeleniumSpecFlow
                 }
                 catch
                 {
+                    Logger.Info("There was an issue ending a browser instance");
                 }
             }
         }
@@ -384,7 +447,7 @@ namespace SeleniumSpecFlow
                     var drivers = (Dictionary<string, IWebDriver>)context["drivers"];
                     foreach (var driver in drivers)
                     {
-                        BrowserName = $@"{((WebDriver)driver.Value).Capabilities["browserName"]}";
+                        _browserName = $@"{((WebDriver)driver.Value).Capabilities["browserName"]}";
                         driver.Value?.Close();
                         driver.Value?.Quit();
                         Logger.Info($"Driver has been closed");
@@ -404,6 +467,13 @@ namespace SeleniumSpecFlow
             {
                 KillAllBrowserInstances((ScenarioContext)obj);
             }
+        }
+            
+        
+        private static void LogTestResultOnSauceLabs(bool runningOnSauceLabs, IWebDriver driver)
+        {
+            if (!runningOnSauceLabs) return;
+            SauceLabsResult.LogPassed(TestContext.CurrentContext.Result.Outcome == ResultState.Success, driver);
         }
     }
 }
