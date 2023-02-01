@@ -82,7 +82,7 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=EndtoEndTest"
+                  arguments: "--configuration Release --filter TestCategory=DeviceTest"
                   publishTestResults: true
 
               # - task: DotNetCoreCLI@2
@@ -91,6 +91,7 @@ stages:
               #     command: build
               #     projects: "$(projectPath)/*.csproj"
               #     arguments: "--configuration Release --filter TestCategory=Smoketest"
+              #     arguments: "--configuration Release --filter TestCategory=EndtoEndTest"
               #     arguments: "--configuration Release --output $(Agent.TempDirectory)/$(projectPath)"
 
               # - pwsh: |
