@@ -56,7 +56,6 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
-    
               - task: FileTransform@1
                 displayName: Transform App Settings
                 inputs:
