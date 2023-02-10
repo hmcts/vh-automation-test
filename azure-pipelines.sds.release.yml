@@ -56,6 +56,14 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
+              - task: gitversion/setup@0
+                displayName: Install GitVersion
+                inputs:
+                  versionSpec: "5.11.1"
+
+              - task: gitversion/execute@0
+                displayName: Determine Version
+                
               - task: FileTransform@1
                 displayName: Transform App Settings
                 inputs:
