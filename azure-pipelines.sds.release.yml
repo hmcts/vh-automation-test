@@ -36,7 +36,7 @@ stages:
             displayName: UI Tests ${{ parameters.environment }}
             variables:
               - name: env
-                value: ${{ lower(replace(parameters.environment, 'Dev', 'Development')) }}
+                value: ${{ lower(replace(parameters.environment, 'Stg', 'staging')) }}
               - name: projectPath
                 value: "UI/Selenium"
               - group: vh-automation-test-${{ parameters.environment }}
