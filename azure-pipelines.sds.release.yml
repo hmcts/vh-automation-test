@@ -64,7 +64,7 @@ stages:
                   targetFiles: "**/appsettings.json"
 
               - pwsh: |
-                  Get-Content "$(projectPath)/appsettings.json"
+                 Get-Content "$(projectPath)/appsettings.json"
                 displayName: Print App Settings
 
               - task: DotNetCoreCLI@2
