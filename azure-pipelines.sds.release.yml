@@ -55,9 +55,7 @@ stages:
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
-            steps:
-         
-                
+            steps:                        
               - task: FileTransform@1
                 displayName: Transform App Settings
                 inputs:
@@ -75,7 +73,7 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=HearingRoomControls"
+                  arguments: "--configuration Release --filter TestCategory=Smoketest"
                   publishTestResults: true
 
               - task: PublishBuildArtifacts@1
