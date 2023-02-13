@@ -56,14 +56,7 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
-              #insert variable to help creat unique test names
-              - task: gitversion/setup@0
-                displayName: Install GitVersion
-                inputs:
-                  versionSpec: "5.11.1"
-
-              - task: gitversion/execute@0
-                displayName: Determine Version
+         
                 
               - task: FileTransform@1
                 displayName: Transform App Settings
@@ -82,7 +75,7 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=Smoketest"
+                  arguments: "--configuration Release --filter TestCategory=HearingRoomControls"
                   publishTestResults: true
 
               - task: PublishBuildArtifacts@1
