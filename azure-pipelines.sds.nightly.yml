@@ -79,7 +79,7 @@ stages:
                 inputs:
                   folderPath: $(projectPath)
                   fileType: json
-                  targetFiles: "**/appsettings.json"
+                  targetFiles: appsettings.json
 
               - pwsh: |
                   Get-Content "$(projectPath)/appsettings.json"
