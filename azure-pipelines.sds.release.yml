@@ -56,15 +56,6 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
-              # inserts variables to help create unique test names
-              - task: gitversion/setup@0
-                displayName: Install GitVersion
-                inputs:
-                  versionSpec: "5.11.1"
-
-              - task: gitversion/execute@0
-                displayName: Determine Version
-
               - task: FileTransform@1
                 displayName: Transform App Settings
                 inputs:
@@ -79,12 +70,14 @@ stages:
               - task: DotNetCoreCLI@2
                 displayName: Run UI Tests
                 continueOnError: true
-                timeoutInMinutes: 0
+                timeoutInMinutes: 180
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
                   arguments: "--configuration Release"
                   publishTestResults: true
+                env:
+                  GITVERSION_FULLSEMVER: $(Build.BuildId)
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish Test Results Output
