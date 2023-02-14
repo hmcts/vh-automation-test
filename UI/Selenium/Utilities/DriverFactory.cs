@@ -138,8 +138,18 @@ namespace UI.Utilities
         public string GetBuildNameForSauceLabs(DriverOptions driverOptions)
         {
             var attemptNumber = GetAttemptNumber();
-            var build = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Today:dd.MM.yyyy}     [ {driverOptions.BrowserName} | {driverOptions.PlatformName} | {driverOptions.BrowserVersion} ] {attemptNumber}";
+            var buildName = GetBuildDefinition();
+            var buildId = GetBuildId();
+            var build = $"{buildName}{buildId} {DateTime.Today:dd.MM.yyyy}     [ {driverOptions.BrowserName} | {driverOptions.PlatformName} | {driverOptions.BrowserVersion} ] {attemptNumber}";
             return build;
+        }
+
+        private static string GetBuildId()
+        {
+            var buildId = Environment.GetEnvironmentVariable("BUILD_BUILDID")?
+                                .ToLower()
+                            ?? string.Empty;
+            return new CultureInfo("en-GB", false).TextInfo.ToTitleCase(buildId);
         }
         
         private static string GetAttemptNumber()
@@ -147,12 +157,6 @@ namespace UI.Utilities
             var attemptNumber = Environment.GetEnvironmentVariable("Build_AttemptNumber");
             if (string.IsNullOrWhiteSpace(attemptNumber)) return string.Empty;
             return Convert.ToInt32(attemptNumber) > 1 ? $" : Attempt {attemptNumber}" : string.Empty;
-        }
-        
-        private static string GetGitVersionNumber()
-        {
-            var gitVersionNumber = Environment.GetEnvironmentVariable("GITVERSION_FULLSEMVER");
-            return !string.IsNullOrEmpty(gitVersionNumber) ? $" | {gitVersionNumber}" : string.Empty;
         }
         
         private static string GetBuildDefinition()
