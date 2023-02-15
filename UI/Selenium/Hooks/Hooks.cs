@@ -392,8 +392,6 @@ namespace UI.Hooks
         [AfterTestRun]
         public static void AfterTestRun(ScenarioContext scenarioContext)
         {
-            var driver = (IWebDriver)scenarioContext["driver"];
-            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             KillAllBrowserInstances(_browserName);
             Logger.Info("Automation Test Execution Ended");
             LogManager.Shutdown();
