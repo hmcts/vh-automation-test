@@ -12,6 +12,7 @@ using NLog.Web;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
 using TechTalk.SpecFlow;
 using TestFramework;
@@ -372,8 +373,8 @@ namespace UI.Hooks
         [AfterScenario("web")]
         public void AfterScenarioWeb(ScenarioContext scenarioContext,FeatureContext featureContext)
         {
-            var driver = (IWebDriver)scenarioContext["driver"];
-            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
+            // var driver = (IWebDriver)scenarioContext["driver"];
+            // LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             featureContext["AccessibilityBaseUrl"] = scenarioContext["AccessibilityBaseUrl"];
             StopAllDrivers(scenarioContext);
             _extent.Flush();
@@ -391,8 +392,8 @@ namespace UI.Hooks
         [AfterTestRun]
         public static void AfterTestRun(ScenarioContext scenarioContext)
         {
-            // var driver = (IWebDriver)scenarioContext["driver"];
-            // LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
+            var driver = (IWebDriver)scenarioContext["driver"];
+            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             KillAllBrowserInstances(_browserName);
             Logger.Info("Automation Test Execution Ended");
             LogManager.Shutdown();
@@ -481,8 +482,10 @@ namespace UI.Hooks
         private static void LogTestResultOnSauceLabs(bool runningOnSauceLabs, IWebDriver driver)
         {
             if (!runningOnSauceLabs) return;
-            TestContext.WriteLine($"[{TestContext.CurrentContext.Test.Name}] - [{TestContext.CurrentContext.Result.Outcome}] - [{TestContext.CurrentContext.Result.Message}]");
-            SauceLabsResult.LogPassed(TestContext.CurrentContext.Result.Outcome == ResultState.Success, driver);
+            var sessionId = ((RemoteWebDriver) driver).SessionId;
+            TestContext.WriteLine($"[SessionId: {sessionId}] - [Test Name: {TestContext.CurrentContext.Test.Name}] - [Result: {TestContext.CurrentContext.Result.Outcome.Status}] - [{TestContext.CurrentContext.Result.Message}]");
+            var isPassed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
+            SauceLabsResult.LogPassed(isPassed, driver);
         }
     }
 }
