@@ -481,6 +481,7 @@ namespace UI.Hooks
         private static void LogTestResultOnSauceLabs(bool runningOnSauceLabs, IWebDriver driver)
         {
             if (!runningOnSauceLabs) return;
+            TestContext.Progress.WriteLine($"[{TestContext.CurrentContext.Test.Name}] - [{TestContext.CurrentContext.Result.Outcome}] - [{TestContext.CurrentContext.Result.Message}]");
             SauceLabsResult.LogPassed(TestContext.CurrentContext.Result.Outcome == ResultState.Success, driver);
         }
     }
