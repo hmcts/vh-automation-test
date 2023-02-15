@@ -20,7 +20,7 @@ using UI.Model;
 using UI.Utilities;
 
 [assembly: Parallelizable(ParallelScope.Fixtures)]
-[assembly: LevelOfParallelism(3)]
+[assembly: LevelOfParallelism(1)]
 
 namespace UI.Hooks
 {
