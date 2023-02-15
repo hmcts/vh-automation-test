@@ -372,8 +372,8 @@ namespace UI.Hooks
         [AfterScenario("web")]
         public void AfterScenarioWeb(ScenarioContext scenarioContext,FeatureContext featureContext)
         {
-            var driver = (IWebDriver)scenarioContext["driver"];
-            LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
+            // var driver = (IWebDriver)scenarioContext["driver"];
+            // LogTestResultOnSauceLabs(_config.RunOnSaucelabs, driver);
             featureContext["AccessibilityBaseUrl"] = scenarioContext["AccessibilityBaseUrl"];
             StopAllDrivers(scenarioContext);
             _extent.Flush();
