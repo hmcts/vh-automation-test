@@ -108,7 +108,7 @@ namespace UI.Hooks
             scenarioContext.Add("ProcessIds", new List<int>());
             _browserName = _config.BrowserType.ToString();
             IWebDriver driver;
-            if (RunOnSauceLabs(tags))
+            if (_config.RunOnSaucelabs)
             {
                 var sauceOptions = new SauceLabsOptions
                 {
