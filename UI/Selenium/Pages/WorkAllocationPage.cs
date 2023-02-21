@@ -9,6 +9,7 @@ namespace UI.Pages
     ///</summary>
     public class WorkAllocationPage
     {
+        public static By EditAvailability = By.Id("edit-availability"); 
         public static By ManageWorkAllocationMainButton => By.XPath("//div[@id='manageWorkAllocationBtn']"); 
         
         // Manage Work Allocation Page Links

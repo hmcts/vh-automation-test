@@ -157,7 +157,7 @@ namespace UI.Steps
                     break;
                 case "Work-Allocation":
                     ExtensionMethods.FindElementWithWait(Driver, DashboardPage.ManageWorkAllocation, _scenarioContext).Click();
-                    ExtensionMethods.FindElementWithWait(Driver, WorkAllocation.EditAvailability, _scenarioContext);
+                    ExtensionMethods.FindElementWithWait(Driver, WorkAllocationPage.EditAvailability, _scenarioContext);
                     AxeAnalyze(pageName);
                     break;
             }
