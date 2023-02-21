@@ -65,4 +65,8 @@
 		<ProjectReference Include="..\..\TestFramework\TestFramework.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="TestData" />
+	</ItemGroup>
+
 </Project>

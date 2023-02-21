@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using NLog;
 using NLog.Layouts;
@@ -44,6 +45,11 @@ namespace UI.Utilities
                 }
             }
             return rtnVal;
+        }
+        
+        public static string SetCsvFile(string folderName, string fileName)
+        {
+            return Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, folderName, fileName);
         }
     }
 }
