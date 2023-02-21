@@ -10,5 +10,6 @@ namespace UI.Pages
     public class WorkAllocation
     {
         public static By EditAvailability = By.Id("edit-availability"); 
+        
     }
 }
