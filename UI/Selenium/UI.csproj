@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 		<None Remove="App.config" />
+		<None Remove="passwords.json" />
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="5.0.0-beta01" />
@@ -55,9 +56,6 @@
 		<None Update="NLog.config">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="passwords.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 		<None Update="Properties\launchSettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
@@ -65,6 +63,17 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\TestFramework\TestFramework.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="TestData" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="TestData\NonAvailabilityHours.csv" />
+	  <EmbeddedResource Include="TestData\NonAvailabilityHours.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

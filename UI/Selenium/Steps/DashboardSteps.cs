@@ -45,6 +45,28 @@ namespace UI.Steps
                     Driver.FindElement(DashboardPage.GetAudioFileLinkButton).Click();
                     ExtensionMethods.WaitForElementVisible(Driver, GetAudioFilePage.CaseNumberInput);
                     break;
+                case "Work-Allocation Dashboard":
+                    ExtensionMethods.FindElementWithWait(Driver, DashboardPage.ManageWorkAllocation, _scenarioContext).Click();
+                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.EditAvailability, _scenarioContext);
+                    break;
+                case "Manage work Allocation page":
+                    ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability);
+                    Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click();
+                    break;
+                case "Upload Working hours CSV File":
+                    ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability);
+                    Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click();
+                    var file = Util.SetCsvFile("TestData", "Good.csv");
+                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadCSVFile, _scenarioContext).SendKeys(file);
+                    Driver.FindElement(ManageWorkAllocationPage.UploadAvailabilityHoursButton).Click();
+                    break;
+                case "Upload Non Availability CSV File":
+                    ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours);
+                    //Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHours).Click();
+                    file = Util.SetCsvFile("TestData", "NonAvailabilityHours.csv");
+                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours, _scenarioContext).SendKeys(file);
+                    Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHoursButton).Click();
+                    break;
             }
         }
 
@@ -68,6 +90,29 @@ namespace UI.Steps
             selectYourHearingListSteps = new SelectYourHearingListSteps(_scenarioContext);
             selectYourHearingListSteps.SelectVenue("Birmingham Civil and Family Justice Centre");
             selectYourHearingListSteps.WhenIClickOnViewHearings();
+        }
+        
+        [When(@"i click on Manage Work Allocation Dashboard")]
+        public void GivenIClickOnManageWorkAllocation()
+        {
+            SelectDashboardOption("Work-Allocation Dashboard");
+            _scenarioContext.UpdatePageName("Work-Allocation Dashboard");
+           
+        }
+
+
+        [When(@"i click on Upload CVS workhours")]
+        public void WhenIClickOnUploadCvsWorkhours()
+        {
+            SelectDashboardOption("Upload Working hours CSV File");
+            _scenarioContext.UpdatePageName("Upload Working hours CSV File");
+        }
+
+        [When(@"i click on Upload non Availability hours")]
+        public void WhenIClickOnUploadNonAvailabilityHours()
+        {
+            SelectDashboardOption("Upload Non Availability CSV File");
+            _scenarioContext.UpdatePageName("Upload Non Availability CSV File");
         }
     }
 }
