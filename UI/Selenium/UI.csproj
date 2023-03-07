@@ -69,4 +69,11 @@
 	  <Folder Include="TestData" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="TestData\NonAvailabilityHours.csv" />
+	  <EmbeddedResource Include="TestData\NonAvailabilityHours.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
 </Project>

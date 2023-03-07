@@ -62,9 +62,9 @@ namespace UI.Steps
                     break;
                 case "Upload Non Availability CSV File":
                     ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours);
-                    Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHours).Click();
-                    file = Util.SetCsvFile("TestData", "non Availability hours.csv");
-                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadCSVFile, _scenarioContext).SendKeys(file);
+                    //Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHours).Click();
+                    file = Util.SetCsvFile("TestData", "NonAvailabilityHours.csv");
+                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours, _scenarioContext).SendKeys(file);
                     Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHoursButton).Click();
                     break;
             }
