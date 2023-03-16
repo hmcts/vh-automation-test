@@ -9,7 +9,7 @@ Scenario: WorkAllocation page accessibility
 	Then the page should be accessible
 	
 Scenario: Upload Working hours
-	Given I log in as "auto.vhoteamlead1@hearings.reform.hmcts.net"	
+	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 	Then the page should be accessible
 	When i click on Manage Work Allocation Dashboard
 	And i click on Upload CVS workhours
@@ -20,7 +20,7 @@ Scenario: Upload Working hours
 
 
 Scenario: Upload Non Availability hours
-	Given I log in as "auto.vhoteamlead1@hearings.reform.hmcts.net"	
+	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 	Then the page should be accessible
 	When i click on Manage Work Allocation Dashboard
 	Given i click on Upload Workhours and non Availability
