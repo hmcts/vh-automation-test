@@ -82,7 +82,7 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=DeviceTest"
+                  arguments: "--configuration Release --filter TestCategory=Accessibility"
                   publishTestResults: true 
 
               - task: PublishBuildArtifacts@1
