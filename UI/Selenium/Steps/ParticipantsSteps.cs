@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium.Support.UI;
 using System;
+using System.Threading;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Model;
@@ -28,6 +29,7 @@ namespace UI.Steps
         {
             _scenarioContext.UpdatePageName("Add a participant");
             SetHearingParticipants(table);
+            Thread.Sleep(5000);
             EnterParticipants();
         }
 

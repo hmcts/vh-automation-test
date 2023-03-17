@@ -16,7 +16,7 @@ Scenario: Upload Working hours
 	Then file is uploaded successfully Working Hours
 	When i click on Upload non Availability hours
 	Then file is uploaded successfully non availability hours
-	Given  i click on Edit Working hours and non availability
+
 
 
 Scenario: Upload Non Availability hours
