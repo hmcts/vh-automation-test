@@ -24,9 +24,3 @@ Scenario: Upload Non Availability hours
 	When i click on Upload non Availability hours
 	Then file is uploaded successfully non availability hours
 				
-
-	
-	
-	
-	
-	
