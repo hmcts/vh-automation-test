@@ -20,27 +20,19 @@ namespace UI.Pages
         // Upload working hours availability
         public static By UploadWorkingHoursOrNonAvailability = By.Id("upload-availability");
         public static By UploadCSVFile = By.XPath("//input[@id='working-hours-file-upload']");
-
-        public static By UploadAvailabilityHoursButton =
-            By.CssSelector("#working-hours-file-upload-error .govuk-button");
-
+        public static By UploadAvailabilityHoursButton = By.CssSelector("#working-hours-file-upload-error .govuk-button");
         public static By TeamWorkingHoursUploadedSuccessfully = By.CssSelector("div#file-upload-result > p");
-
         public static By SuccessFileUpload = By.CssSelector("#file-upload-result:nth-of-type(2) p");
         public static By TeamWorkingHoursUploadedSuccessfullyM = By.CssSelector("#file-upload-result > p");
-
-        public static By TeamNonAvailabilityHoursUploadedSuccessfully =
-            By.CssSelector("div[id='file-upload-result'] p");
+        public static By TeamNonAvailabilityHoursUploadedSuccessfully = By.CssSelector("div[id='file-upload-result'] p");
 
         // Edit  working hours /non availability 
         public static By EditWorkinghoursTab = By.CssSelector("app-edit-work-hours .govuk-details__summary");
         public static By EditWorkinghoursRadioButton = By.XPath("//label[@for='edit-working-hours']");
-
         public static By EditNonAvailabilityhoursRadioButton = By.Id("edit-non-availability-hours");
         public static By EditWorkingHoursNonAvailability = By.Id("edit-availability");
         public static By UploadNonAvailabilityHours = By.CssSelector("#non-availability-hours-file-upload");
-
-        public static By UploadNonAvailabilityHoursButton =
+        public static By UploadNonAvailabilityHoursButton = 
             By.XPath("//div[@id='non-working-hours-file-upload-error']//button[.='Upload']");
 
         //Edit working hours non availability
@@ -68,23 +60,17 @@ namespace UI.Pages
         public static By HearingRangeEndDate = By.Id("to-date-entry");
         public static By HearingDate = By.Id("hearing-date-entry");
         public static By AlloctatedCSO = By.XPath("//ng-select[@id='user-list']//div[@role='combobox']");
-
         public static By AlloctatedCSOList =
             By.XPath(
                 "//ng-select[@id='user-list']//div[@role='combobox']//following::ng-dropdown-panel//div[@role='option']");
-
         public static By CaseType = By.Id("caseTypes");
         public static By CaseNumber = By.Id("case-number-entry");
-
         public static By AllocateHearingSearch =
             By.CssSelector("(//button[@data-module='govuk-button'][.='Search'])[3]");
-
         public static By AllocateTo = By.CssSelector("#user-menu #users");
         public static By OnlyAllocatedHearing = By.Id("is-unallocated");
-
         public static By Search =
-            By.XPath(
-                "//main[@id='main-content']/app-work-allocation/div/app-allocate-hearings/details/div/div[4]/button");
+            By.XPath("//main[@id='main-content']/app-work-allocation/div/app-allocate-hearings/details/div/div[4]/button");
 
         /// <summary>
         /// 
@@ -97,7 +83,6 @@ namespace UI.Pages
             System.IO.File.Exists(filePath).Should().BeTrue();
             webdriver.FindElement(UploadCSVFile).SendKeys(fullPath);
             webdriver.FindElement(UploadAvailabilityHoursButton).Click();
-
             // Assert Message
             ExtensionMethods.WaitForElementVisible(webdriver, TeamWorkingHoursUploadedSuccessfully);
             webdriver.FindElement(TeamWorkingHoursUploadedSuccessfully).Should().NotBeNull();
