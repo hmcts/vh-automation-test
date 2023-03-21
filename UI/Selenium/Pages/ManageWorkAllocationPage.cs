@@ -14,17 +14,18 @@ namespace UI.Pages
     public class ManageWorkAllocationPage
     {
         public static By EditAvailability = By.Id("edit-availability");
-
         public static By ManageWorkAllocation = By.Id("manageWorkAllocationBtn");
 
         // Upload working hours availability
         public static By UploadWorkingHoursOrNonAvailability = By.Id("upload-availability");
         public static By UploadCSVFile = By.XPath("//input[@id='working-hours-file-upload']");
-        public static By UploadAvailabilityHoursButton = By.CssSelector("#working-hours-file-upload-error .govuk-button");
+        public static By UploadAvailabilityHoursButton =
+            By.CssSelector("#working-hours-file-upload-error .govuk-button");
         public static By TeamWorkingHoursUploadedSuccessfully = By.CssSelector("div#file-upload-result > p");
         public static By SuccessFileUpload = By.CssSelector("#file-upload-result:nth-of-type(2) p");
         public static By TeamWorkingHoursUploadedSuccessfullyM = By.CssSelector("#file-upload-result > p");
-        public static By TeamNonAvailabilityHoursUploadedSuccessfully = By.CssSelector("div[id='file-upload-result'] p");
+        public static By TeamNonAvailabilityHoursUploadedSuccessfully =
+            By.CssSelector("div[id='file-upload-result'] p");
 
         // Edit  working hours /non availability 
         public static By EditWorkinghoursTab = By.CssSelector("app-edit-work-hours .govuk-details__summary");
@@ -32,7 +33,7 @@ namespace UI.Pages
         public static By EditNonAvailabilityhoursRadioButton = By.Id("edit-non-availability-hours");
         public static By EditWorkingHoursNonAvailability = By.Id("edit-availability");
         public static By UploadNonAvailabilityHours = By.CssSelector("#non-availability-hours-file-upload");
-        public static By UploadNonAvailabilityHoursButton = 
+        public static By UploadNonAvailabilityHoursButton =
             By.XPath("//div[@id='non-working-hours-file-upload-error']//button[.='Upload']");
 
         //Edit working hours non availability
@@ -47,10 +48,8 @@ namespace UI.Pages
         public static By ManageTeam = By.Id("manage-team");
         public static By ManageTeamSearchTeamMemberField1 = By.Id("search-team-member");
         public static By ManageTeamSearchTeamMemberField = By.Id("username");
-
         public static By ManageTeamSearchButton =
             By.XPath("(//input[@id='search-team-member']//following::div/button)[1]");
-
         public static By SearchForTeamMember = By.CssSelector(".govuk-grid-column-one-third > .govuk-button");
 
         // Allocate hearings
@@ -70,7 +69,8 @@ namespace UI.Pages
         public static By AllocateTo = By.CssSelector("#user-menu #users");
         public static By OnlyAllocatedHearing = By.Id("is-unallocated");
         public static By Search =
-            By.XPath("//main[@id='main-content']/app-work-allocation/div/app-allocate-hearings/details/div/div[4]/button");
+            By.XPath(
+                "//main[@id='main-content']/app-work-allocation/div/app-allocate-hearings/details/div/div[4]/button");
 
         /// <summary>
         /// 
