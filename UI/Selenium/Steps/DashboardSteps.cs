@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
+using System.IO;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Pages;
@@ -56,16 +57,18 @@ namespace UI.Steps
                 case "Upload Working hours CSV File":
                     ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability);
                     Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click();
-                    var file = Util.SetCsvFile("TestData", "Good.csv");
-                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadCSVFile, _scenarioContext).SendKeys(file);
-                    Driver.FindElement(ManageWorkAllocationPage.UploadAvailabilityHoursButton).Click();
+                   // var file = Util.SetCsvFile("TestData", "Good.csv");
+                   // ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadCSVFile, _scenarioContext).SendKeys(file);
+                   //Driver.FindElement(ManageWorkAllocationPage.UploadAvailabilityHoursButton).Click();
+                    ManageWorkAllocationPage.UploadWorkHoursFile(Driver ,Path.Join("TestData", "Good.csv"));
                     break;
                 case "Upload Non Availability CSV File":
                     ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours);
                     //Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHours).Click();
-                    file = Util.SetCsvFile("TestData", "NonAvailabilityHours.csv");
-                    ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours, _scenarioContext).SendKeys(file);
-                    Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHoursButton).Click();
+                    //file = Util.SetCsvFile("TestData", "NonAvailabilityHours.csv");
+                    //ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.UploadNonAvailabilityHours, _scenarioContext).SendKeys(file);
+                    //Driver.FindElement(ManageWorkAllocationPage.UploadNonAvailabilityHoursButton).Click();
+                    ManageWorkAllocationPage.UploadNonWorkHoursFile(Driver, Path.Join("TestData", "NonAvailabilityHours.csv"));
                     break;
             }
         }
