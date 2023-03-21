@@ -22,9 +22,7 @@ namespace UI.Pages
         public static By UploadCSVFile = By.XPath("//input[@id='working-hours-file-upload']");
         public static By UploadAvailabilityHoursButton = By.CssSelector("#working-hours-file-upload-error .govuk-button");
         public static By TeamWorkingHoursUploadedSuccessfully = By.CssSelector("div#file-upload-result > p");
-        //public static By TeamNonAvailabilityHoursUploadedSuccessfully = By.XPath("//p[normalize-space()='Team non-availability hours uploaded successfully'");
-        //public static By FileUploadResult = By.CssSelector("#file-upload-result > p");
-            //div[4]/p[@innertext=' Team non-availability hours uploaded successfully ']");
+        
         public static By SuccessFileUpload = By.CssSelector("#file-upload-result:nth-of-type(2) p");
         public static By TeamWorkingHoursUploadedSuccessfullyM = By.CssSelector("#file-upload-result > p");
         public static By TeamNonAvailabilityHoursUploadedSuccessfully = By.CssSelector("div[id='file-upload-result'] p");
@@ -92,8 +90,6 @@ namespace UI.Pages
             webdriver.FindElement(UploadNonAvailabilityHours).SendKeys(fullPath);
             webdriver.FindElement(UploadNonAvailabilityHoursButton).Click();
             
-            //ExtensionMethods.WaitForElementVisible(webdriver, TeamNonAvailabilityHoursUploadedSuccessfully);
-            //webdriver.FindElement(TeamNonAvailabilityHoursUploadedSuccessfully).Should().NotBeNull();
             
         }
         
