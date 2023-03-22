@@ -18,10 +18,10 @@ Scenario: End to End test
 	| auto_aw.judge_02@hearings.reform.hmcts.net |   
 	And I want to create a Hearing for
 	| Party     | Role               | Id                                  |
-	| Claimant  | Litigant in person | auto_vw.individual_05@hearings.reform.hmcts.net    |
-	| Claimant  | Representative     | auto_vw.representative_01@hearings.reform.hmcts.net |
-	| Defendant | Litigant in person | auto_vw.individual_06@hearings.reform.hmcts.net    |
-	| Defendant | Solicitor          | auto_vw.representative_02@hearings.reform.hmcts.net |
+	| Claimant  | Litigant in person | auto_vw.individual_60@hearings.reform.hmcts.net    |
+	| Claimant  | Representative     | auto_vw.representative_139@hearings.reform.hmcts.net |
+	| Defendant | Litigant in person | auto_vw.individual_134@hearings.reform.hmcts.net    |
+	| Defendant | Solicitor          | auto_vw.representative_157@hearings.reform.hmcts.net |
 
 	And With video Access points details
 	| Display Name | Advocate |
@@ -54,10 +54,10 @@ Scenario: Admin Web Booking End to End
 	| auto_aw.judge_02@hearings.reform.hmcts.net |   
 	And I want to create a Hearing for
 	| Party     | Role               | Id                                  |
-	| Claimant  | Litigant in person | auto_vw.individual_05@hearings.reform.hmcts.net    |
-	| Claimant  | Representative     | auto_vw.representative_01@hearings.reform.hmcts.net |
-	| Defendant | Litigant in person | auto_vw.individual_06@hearings.reform.hmcts.net    |
-	| Defendant | Solicitor          | auto_vw.representative_02@hearings.reform.hmcts.net |
+	| Claimant  | Litigant in person | auto_vw.individual_60@hearings.reform.hmcts.net    |
+	| Claimant  | Representative     | auto_vw.representative_139@hearings.reform.hmcts.net |
+	| Defendant | Litigant in person | auto_vw.individual_134@hearings.reform.hmcts.net    |
+	| Defendant | Solicitor          | auto_vw.representative_157@hearings.reform.hmcts.net |
 
 	And With video Access points details
 	| Display Name | Advocate |

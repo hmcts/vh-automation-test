@@ -197,7 +197,11 @@ namespace UI.Utilities
 
             var remoteUrl = new Uri($"http://{config.SauceUsername}:{config.SauceAccessKey}@{config.SauceUrl}");
             // var remoteUrl = new Uri(config.SauceUrl);
-            WebDriver = new RemoteWebDriver(remoteUrl, driverOptions);
+            //WebDriver = new RemoteWebDriver(remoteUrl, driverOptions);
+            
+            var remoteDriver = new RemoteWebDriver(remoteUrl, driverOptions);
+            remoteDriver.FileDetector = new LocalFileDetector();
+            WebDriver = remoteDriver;
             // switch (config.PlatformName)
             // {
             //     case "Android":
