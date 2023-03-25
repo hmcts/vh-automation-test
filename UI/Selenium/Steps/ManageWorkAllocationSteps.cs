@@ -18,6 +18,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     SelectYourHearingListSteps selectYourHearingListSteps;
+    public static String _justiceUserName = GetRandomJusticeUserName();
 
     public ManageWorkAllocationSteps(ScenarioContext scenarioContext)
         : base(scenarioContext)
@@ -159,7 +160,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         */
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamSearchTeamMemberField);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).Click();
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(GetRandomJusticeUserName());
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(_justiceUserName);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
       
       
@@ -168,10 +169,10 @@ public class ManageWorkAllocationSteps : ObjectFactory
     [Then(@"I see no user found message and add new user button")]
     public void ThenISeeNoUserFoundMessageAndAddNewUserButton()
     {
-        //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamNouserErrorMsg);
-        var errorMsgTextUserNotFoundActual = Driver.FindElement(ManageWorkAllocationPage.ManageTeamNouserErrorMsg).Text;
-        var errorMsgTextUserNotFoundExpect = " No users matching this search criteria were found";
-        // Assert.(" No users matching this search criteria were found", errorMsgTextUserNotFoundActual );
+       var errorMsgTextUserNotFoundActual = Driver.FindElement(ManageWorkAllocationPage.ManageTeamNouserErrorMsg).Text;
+       Console.WriteLine("Messgae Check " + errorMsgTextUserNotFoundActual);
+       var errorMsgTextUserNotFoundExpect = "No users matching this search criteria were found. Please check the search and try again. Or, add the team member.";
+       Assert.AreEqual(errorMsgTextUserNotFoundActual, errorMsgTextUserNotFoundExpect);
     }
 
     [Then(@"I click add new user")]
@@ -195,49 +196,62 @@ public class ManageWorkAllocationSteps : ObjectFactory
     {
         _scenarioContext.UpdatePageName("Add a Justice User");
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserID);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(GetRandomJusticeUserName());
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(GetRandomNameJusticeUserFirstName());
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(GetRandomNameJusticeUserLastName());
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(_justiceUserName);
+        var randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
+        var randomLastName = NameGenerator.GenerateLastName();
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(randomFirstName);
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(randomLastName);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber).SendKeys(GenerateRandonUkPhoneNumber());
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserSaveButton).Click();
-        
         
     }
 
+    [Then(@"I save changes")]
+    public void ThenISaveChanges()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserSaveButton).Click();
+        
+    }
 
-    private String GetRandomJusticeUserName()
+    [Then(@"i see save successful message and user details")]
+    public void ThenISeeSaveSuccessfulMessageAndUserDetails()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyJusticeUsername);
+        Assert.AreEqual(_justiceUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyJusticeUsername).Text);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    public static String GetRandomJusticeUserName()
     {
         Random randomGenerator = new Random();
         var randomInt = randomGenerator.NextInt64(1000);
-        var manageTeamUserName = "vihTestUser" + randomInt + "@hearings.hmcts.net";
+        var manageTeamUserName = "auto.VH.TestUser" + randomInt + "@hearings.hmcts.net";
         return manageTeamUserName;
         
     }
-
-    private String GetRandomNameJusticeUserFirstName()
-    {
-        var randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
-        return randomFirstName;
-    }
-
-    private String GetRandomNameJusticeUserLastName()
-    {
-        var randomLastName = NameGenerator.GenerateLastName();
-        return randomLastName;
-    }
+    
     private static string GenerateRandonUkPhoneNumber()
 
     {
-            var sb = new StringBuilder();
-            sb.Append("+44(0)");
+        var sb = new StringBuilder();
+        sb.Append("+44(0)20");
 
-            var rnd = new Random(Guid.NewGuid().GetHashCode());
-            for (int i = 0; i < 10; i++)
-            {
-                sb.Append(rnd.Next(0, 9).ToString());
-            }
+        var rnd = new Random(Guid.NewGuid().GetHashCode());
+        for (int i = 0; i < 8; i++)
+        {
+            sb.Append(rnd.Next(0, 7).ToString());
+        }
 
-            return sb.ToString();
+        return sb.ToString();
     }
-
 }

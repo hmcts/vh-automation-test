@@ -1,8 +1,11 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Android;
 using TestFramework;
 using UI.Model;
+using UI.Steps;
+
 
 namespace UI.Pages
 {
@@ -67,6 +70,9 @@ namespace UI.Pages
         public static By AddJusticeUserRole = By.XPath("//select[@id='role']");
         public static By AddJusticeUserSaveButton = By.XPath("//button[normalize-space()='Save']");
         public static By AddJusticeUserDiscardButton = By.XPath("//button[normalize-space()='Discard Changes']");
+
+        public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + ManageWorkAllocationSteps._justiceUserName + "']");
+        
         
 
         // Allocate hearings
@@ -112,5 +118,6 @@ namespace UI.Pages
             webdriver.FindElement(UploadNonAvailabilityHours).SendKeys(fullPath);
             webdriver.FindElement(UploadNonAvailabilityHoursButton).Click();
         }
+   
     }
 }
