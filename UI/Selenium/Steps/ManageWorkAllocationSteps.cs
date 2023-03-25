@@ -7,9 +7,6 @@ using UI.Pages;
 using UI.Utilities;
 using System;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
-using System.Text;
-using System.Security.Cryptography;
-using RandomNameGenerator;
 
 namespace UI.Steps;
 
@@ -18,7 +15,6 @@ public class ManageWorkAllocationSteps : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     SelectYourHearingListSteps selectYourHearingListSteps;
-
 
     public ManageWorkAllocationSteps(ScenarioContext scenarioContext)
         : base(scenarioContext)
@@ -82,7 +78,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkinghoursRadioButton);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkinghoursRadioButton).Click();
     }
-    
+
     [Then(@"Search for team member")]
     public void ThenSearchForTeamMember()
     {
@@ -132,5 +128,15 @@ public class ManageWorkAllocationSteps : ObjectFactory
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AlloctatedCSOList, _scenarioContext)
             .Click();
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearch).Click();
-   }
+    }
+
+    [Then(@"Team working hours uploaded successfully")]
+    public void ThenTeamWorkingHoursUploadedSuccessfully()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfullyM);
+        var teamWorkingHoursUploadedSuccessfully = "Team working hours uploaded successfully";
+        var getTextWorkingHoursFileUpalodSucess =
+            Driver.FindElement(ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfullyM).Text;
+        Assert.AreEqual(teamWorkingHoursUploadedSuccessfully, getTextWorkingHoursFileUpalodSucess);
+    }
 }
