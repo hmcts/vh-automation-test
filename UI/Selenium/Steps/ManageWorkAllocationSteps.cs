@@ -9,7 +9,7 @@ using System;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 using System.Text;
 using System.Security.Cryptography;
-using System;/*from   w ww . j  a v  a2s. c o  m*/
+using RandomNameGenerator;
 
 namespace UI.Steps;
 
@@ -196,9 +196,10 @@ public class ManageWorkAllocationSteps : ObjectFactory
         _scenarioContext.UpdatePageName("Add a Justice User");
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserID);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(GetRandomJusticeUserName());
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys("TestUserFirstName");
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys("TestUserLastName");
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(GetRandomNameJusticeUserFirstName());
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(GetRandomNameJusticeUserLastName());
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber).SendKeys(GenerateRandonUkPhoneNumber());
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserSaveButton).Click();
         
         
     }
@@ -213,6 +214,17 @@ public class ManageWorkAllocationSteps : ObjectFactory
         
     }
 
+    private String GetRandomNameJusticeUserFirstName()
+    {
+        var randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
+        return randomFirstName;
+    }
+
+    private String GetRandomNameJusticeUserLastName()
+    {
+        var randomLastName = NameGenerator.GenerateLastName();
+        return randomLastName;
+    }
     private static string GenerateRandonUkPhoneNumber()
 
     {
