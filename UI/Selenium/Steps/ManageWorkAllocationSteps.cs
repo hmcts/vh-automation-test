@@ -7,6 +7,9 @@ using UI.Pages;
 using UI.Utilities;
 using System;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
+using System.Text;
+using System.Security.Cryptography;
+using System;/*from   w ww . j  a v  a2s. c o  m*/
 
 namespace UI.Steps;
 
@@ -150,12 +153,13 @@ public class ManageWorkAllocationSteps : ObjectFactory
     [Then(@"I search for new user")]
     public void ThenISearchForNewUser()
     {
-        Random randomGenerator = new Random();
+      /*  Random randomGenerator = new Random();
         var randomInt = randomGenerator.NextInt64(1000);
         var manageTeamUserName = "vihTestUser" + randomInt + "@hearings.hmcts.net";
+        */
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamSearchTeamMemberField);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).Click();
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(manageTeamUserName);
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(GetRandomJusticeUserName());
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
       
       
@@ -175,7 +179,6 @@ public class ManageWorkAllocationSteps : ObjectFactory
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamAddNewTeamMember);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddNewTeamMember).Click();
-        Thread.Sleep(3000);
     }
 
     [Then(@"I see new pop up window - Add a justice user")]
@@ -186,4 +189,43 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Assert.IsTrue(popUpWindowAddJusticeUser);
         
     }
+
+    [Then(@"i fill in all details of new user with correct UK number and valid email address")]
+    public void ThenIFillInAllDetailsOfNewUserWithCorrectUkNumberAndValidEmailAddress(Table table)
+    {
+        _scenarioContext.UpdatePageName("Add a Justice User");
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserID);
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(GetRandomJusticeUserName());
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys("TestUserFirstName");
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys("TestUserLastName");
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber).SendKeys(GenerateRandonUkPhoneNumber());
+        
+        
+    }
+
+
+    private String GetRandomJusticeUserName()
+    {
+        Random randomGenerator = new Random();
+        var randomInt = randomGenerator.NextInt64(1000);
+        var manageTeamUserName = "vihTestUser" + randomInt + "@hearings.hmcts.net";
+        return manageTeamUserName;
+        
+    }
+
+    private static string GenerateRandonUkPhoneNumber()
+
+    {
+            var sb = new StringBuilder();
+            sb.Append("+44(0)");
+
+            var rnd = new Random(Guid.NewGuid().GetHashCode());
+            for (int i = 0; i < 10; i++)
+            {
+                sb.Append(rnd.Next(0, 9).ToString());
+            }
+
+            return sb.ToString();
+    }
+
 }

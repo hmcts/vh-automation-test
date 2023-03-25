@@ -57,6 +57,17 @@ namespace UI.Pages
 
         public static By ManageTeamAddNewTeamMember = By.XPath("//button[normalize-space()='Add a team member']");
         public static By ManageTeamAddJusticeUserPopUp = By.XPath("//form[@class='ng-untouched ng-pristine ng-valid']");
+        
+        // Add Justice User popup window elements
+
+        public static By AddJusticeUserID= By.XPath("//fieldset[@class='govuk-fieldset']//input[@id='username']");
+        public static By AddJusticeUserFirstName = By.XPath("//input[@id='firstName']");
+        public static By AddJusticeUserLastName = By.XPath("//input[@id='lastName']");
+        public static By AddJusticeUserContactNumber = By.XPath("//input[@id='contactTelephone']");
+        public static By AddJusticeUserRole = By.XPath("//select[@id='role']");
+        public static By AddJusticeUserSaveButton = By.XPath("//button[normalize-space()='Save']");
+        public static By AddJusticeUserDiscardButton = By.XPath("//button[normalize-space()='Discard Changes']");
+        
 
         // Allocate hearings
         public static By AllocateHearingsTab = By.CssSelector("css=app-allocate-hearings .govuk-details__summary");
