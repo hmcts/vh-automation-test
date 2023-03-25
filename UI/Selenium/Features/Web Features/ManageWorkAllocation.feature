@@ -23,4 +23,17 @@ Scenario: Upload Non Availability hours
 	Given i click on Upload Workhours and non Availability
 	When i click on Upload non Availability hours
 	Then file is uploaded successfully non availability hours
+	
+	Scenario: Work Allocation Manage Team 
+		Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
+		Then the page should be accessible
+		When i click on Manage Work Allocation Dashboard
+		Then i click manage team 
+		And I search for new user
+		Then I see no user found message and add new user button
+		Then I click add new user 
+		Then I see new pop up window with userdetails to fill
+		Then i fill in all details of new user with correct UK number and valid email eaddress
+		And  I save changes 
+		Then i see save sccucessfull message and user details
 				

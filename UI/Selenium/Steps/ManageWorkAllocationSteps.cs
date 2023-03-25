@@ -139,4 +139,17 @@ public class ManageWorkAllocationSteps : ObjectFactory
             Driver.FindElement(ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfullyM).Text;
         Assert.AreEqual(teamWorkingHoursUploadedSuccessfully, getTextWorkingHoursFileUpalodSucess);
     }
+
+    [Then(@"i click manage team")]
+    public void ThenIClickManageTeam()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeam);
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeam).Click();
+    }
+
+    [Then(@"I search for new user")]
+    public void ThenISearchForNewUser()
+    {
+       
+    }
 }
