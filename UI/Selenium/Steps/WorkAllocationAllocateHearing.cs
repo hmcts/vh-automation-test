@@ -82,7 +82,7 @@ public class WorkAllocationAllocateHearing :ObjectFactory
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg);
         var VerifyHearingupdatedActual = Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
         var VerifyHearingupdatedExpected = "Hearings have been updated.";
-        Assert.AreEqual(VerifyHearingupdatedActual, VerifyHearingupdatedActual);
+        Assert.AreEqual(VerifyHearingupdatedActual, VerifyHearingupdatedExpected);
         
     }
 
