@@ -150,6 +150,40 @@ public class ManageWorkAllocationSteps : ObjectFactory
     [Then(@"I search for new user")]
     public void ThenISearchForNewUser()
     {
-       
+        Random randomGenerator = new Random();
+        var randomInt = randomGenerator.NextInt64(1000);
+        var manageTeamUserName = "vihTestUser" + randomInt + "@hearings.hmcts.net";
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamSearchTeamMemberField);
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).Click();
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(manageTeamUserName);
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
+      
+      
+    }
+
+    [Then(@"I see no user found message and add new user button")]
+    public void ThenISeeNoUserFoundMessageAndAddNewUserButton()
+    {
+        //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamNouserErrorMsg);
+        var errorMsgTextUserNotFoundActual = Driver.FindElement(ManageWorkAllocationPage.ManageTeamNouserErrorMsg).Text;
+        var errorMsgTextUserNotFoundExpect = " No users matching this search criteria were found";
+        // Assert.(" No users matching this search criteria were found", errorMsgTextUserNotFoundActual );
+    }
+
+    [Then(@"I click add new user")]
+    public void ThenIClickAddNewUser()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamAddNewTeamMember);
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddNewTeamMember).Click();
+        Thread.Sleep(3000);
+    }
+
+    [Then(@"I see new pop up window - Add a justice user")]
+    public void ThenISeeNewPopUpWindowWithUserdetailsToFill()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp);
+        var popUpWindowAddJusticeUser = Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp).Displayed;
+        Assert.IsTrue(popUpWindowAddJusticeUser);
+        
     }
 }

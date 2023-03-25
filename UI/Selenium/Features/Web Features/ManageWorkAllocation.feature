@@ -32,8 +32,8 @@ Scenario: Upload Non Availability hours
 		And I search for new user
 		Then I see no user found message and add new user button
 		Then I click add new user 
-		Then I see new pop up window with userdetails to fill
+		Then I see new pop up window - Add a justice user
 		Then i fill in all details of new user with correct UK number and valid email eaddress
 		And  I save changes 
-		Then i see save sccucessfull message and user details
+		Then i see save successful message and user details
 				

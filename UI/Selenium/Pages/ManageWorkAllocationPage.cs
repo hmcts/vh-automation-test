@@ -46,11 +46,17 @@ namespace UI.Pages
 
         // Manage team
         public static By ManageTeam = By.Id("manage-team");
-        public static By ManageTeamSearchTeamMemberField1 = By.Id("search-team-member");
-        public static By ManageTeamSearchTeamMemberField = By.Id("username");
+     // public static By ManageTeamSearchTeamMemberField1 = By.Id("search-team-member");
+        public static By ManageTeamSearchTeamMemberField = By.Id("search-team-member");
         public static By ManageTeamSearchButton =
             By.XPath("(//input[@id='search-team-member']//following::div/button)[1]");
         public static By SearchForTeamMember = By.CssSelector(".govuk-grid-column-one-third > .govuk-button");
+
+        public static By ManageTeamNouserErrorMsg =
+            By.XPath("//div[@class='govuk-!-font-weight-bold vh-text-color-red']");
+
+        public static By ManageTeamAddNewTeamMember = By.XPath("//button[normalize-space()='Add a team member']");
+        public static By ManageTeamAddJusticeUserPopUp = By.XPath("//form[@class='ng-untouched ng-pristine ng-valid']");
 
         // Allocate hearings
         public static By AllocateHearingsTab = By.CssSelector("css=app-allocate-hearings .govuk-details__summary");
