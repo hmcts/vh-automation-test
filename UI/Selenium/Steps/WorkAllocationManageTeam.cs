@@ -10,10 +10,7 @@ using UI.Utilities;
 namespace UI.Steps;
 
 [Binding]
-public class WorkAllocationManageTeam :ObjectFactory
-
-
-
+public class WorkAllocationManageTeam : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     public static String _justiceUserName = GetRandomJusticeUserName();
@@ -39,16 +36,14 @@ public class WorkAllocationManageTeam :ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(_justiceUserName);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
     }
-    
-    
 
 
     [Then(@"I see no user found message and add new user button")]
     public void ThenISeeNoUserFoundMessageAndAddNewUserButton()
     {
         var errorMsgTextUserNotFoundActual = Driver.FindElement(ManageWorkAllocationPage.ManageTeamNouserErrorMsg).Text;
-        Console.WriteLine("Messgae Check " + errorMsgTextUserNotFoundActual); 
-        var errorMsgTextUserNotFoundExpect = "No users matching this search criteria were found. Please check the search and try again. Or, add the team member.";
+        var errorMsgTextUserNotFoundExpect =
+            "No users matching this search criteria were found. Please check the search and try again. Or, add the team member.";
         Assert.AreEqual(errorMsgTextUserNotFoundActual, errorMsgTextUserNotFoundExpect);
     }
 
@@ -63,10 +58,10 @@ public class WorkAllocationManageTeam :ObjectFactory
     public void ThenISeeNewPopUpWindowAddAJusticeUser()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp);
-        var popUpWindowAddJusticeUser = Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp).Displayed;
+        var popUpWindowAddJusticeUser =
+            Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp).Displayed;
         Assert.IsTrue(popUpWindowAddJusticeUser);
     }
-
 
     [Then(@"i fill in all details of new user with correct UK number and valid email address")]
     public void ThenIFillInAllDetailsOfNewUserWithCorrectUkNumberAndValidEmailAddress()
@@ -79,35 +74,8 @@ public class WorkAllocationManageTeam :ObjectFactory
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(randomFirstName);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(randomLastName);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber).SendKeys(GenerateRandonUkPhoneNumber());
-    }
-    
-    
-    
-    
-    
-    public static String GetRandomJusticeUserName()
-    {
-        Random randomGenerator = new Random();
-        var randomInt = randomGenerator.NextInt64(1000);
-        var manageTeamUserName = "auto.VH.TestUser" + randomInt + "@hearings.hmcts.net";
-        return manageTeamUserName;
-        
-    }
-      
-    private static string GenerateRandonUkPhoneNumber()
-
-    {
-        var sb = new StringBuilder();
-        sb.Append("+44(0)744");
-
-        var rnd = new Random(Guid.NewGuid().GetHashCode());
-        for (int i = 0; i < 7; i++)
-        {
-            sb.Append(rnd.Next(0, 6).ToString());
-        }
-
-        return sb.ToString();
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber)
+            .SendKeys(GenerateRandonUkPhoneNumber());
     }
 
     [Then(@"I save changes")]
@@ -138,7 +106,6 @@ public class WorkAllocationManageTeam :ObjectFactory
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamDeletUserPopUpWindow);
         Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamDeletUserPopUpWindow).Displayed);
         Assert.AreEqual(_justiceUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyDeleteUser).Text);
-        
     }
 
     [Then(@"I Click Yes,proceed button")]
@@ -151,9 +118,9 @@ public class WorkAllocationManageTeam :ObjectFactory
     [Then(@"I confirm user has been deleted with option to restore")]
     public void ThenIConfirmUserHasBeenDeletedWithOptionToRestore()
     {
-       ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyManageTeamDeleteUser);
-       var userDeleted = Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamDeleteUser).Text;
-       Assert.AreEqual("Deleted", userDeleted );
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyManageTeamDeleteUser);
+        var userDeleted = Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamDeleteUser).Text;
+        Assert.AreEqual("Deleted", userDeleted);
     }
 
     [Then(@"I click restore team member icon")]
@@ -168,8 +135,49 @@ public class WorkAllocationManageTeam :ObjectFactory
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamRestoreUserPopUpWindow);
         Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamRestoreUserPopUpWindow).Displayed);
-        var verifyRestoreUserActual = Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamRestoreUserDetails).Text;
-        var verifyRestoreUserExpected = "You have selected to restore user:\r\n"+_justiceUserName+"";
+        var verifyRestoreUserActual =
+            Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamRestoreUserDetails).Text;
+        var verifyRestoreUserExpected = "You have selected to restore user:\r\n" + _justiceUserName + "";
         Assert.AreEqual(verifyRestoreUserExpected, verifyRestoreUserActual);
+    }
+
+    [Then(@"I click Yes,proceed button to restore user")]
+    public void ThenIClickYesProceedButtonToRestoreUser()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamRestoreUserYesButton);
+        Driver.FindElement(ManageWorkAllocationPage.ManageTeamRestoreUserYesButton).Click();
+    }
+
+    [Then(@"I confirm user has been restored\.")]
+    public void ThenIConfirmUserHasBeenRestored()
+    {
+        var VerifyRestoreUserActual =
+            Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamRestoreUserConfirmation).Text;
+        var VerifyRestoreUserExpected = "Changes saved successfully.";
+        Assert.AreEqual(VerifyRestoreUserExpected, VerifyRestoreUserActual);
+    }
+
+
+    public static String GetRandomJusticeUserName()
+    {
+        Random randomGenerator = new Random();
+        var randomInt = randomGenerator.NextInt64(1000);
+        var manageTeamUserName = "auto.VH.TestUser" + randomInt + "@hearings.hmcts.net";
+        return manageTeamUserName;
+    }
+
+    private static string GenerateRandonUkPhoneNumber()
+
+    {
+        var sb = new StringBuilder();
+        sb.Append("+44(0)744");
+
+        var rnd = new Random(Guid.NewGuid().GetHashCode());
+        for (int i = 0; i < 7; i++)
+        {
+            sb.Append(rnd.Next(0, 6).ToString());
+        }
+
+        return sb.ToString();
     }
 }

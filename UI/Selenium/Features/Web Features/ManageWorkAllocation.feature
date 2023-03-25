@@ -42,7 +42,7 @@ Scenario: Upload Non Availability hours
 		And I confirm user has been deleted with option to restore
 		Then I click restore team member icon
 		And I see popup message box with correct warning
-		Then I click Yes,proceed button 
+		Then I click Yes,proceed button to restore user
 		And I confirm user has been restored. 
 		
 		

@@ -94,7 +94,9 @@ namespace UI.Pages
         public static By VerifyManageTeamRestoreUserDetails =
             By.XPath(
                 "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-restore-justice-user-popup[1]/div[1]/div[1]/p[1]");
-        
+
+        public static By ManageTeamRestoreUserYesButton = By.XPath("//button[normalize-space()='Yes, proceed']");
+        public static By VerifyManageTeamRestoreUserConfirmation = By.XPath("//div[@class='govuk-!-font-weight-bold']");
 
         // Allocate hearings
         public static By AllocateHearingsTab = By.CssSelector("css=app-allocate-hearings .govuk-details__summary");
