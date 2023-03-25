@@ -71,8 +71,29 @@ namespace UI.Pages
         public static By AddJusticeUserSaveButton = By.XPath("//button[normalize-space()='Save']");
         public static By AddJusticeUserDiscardButton = By.XPath("//button[normalize-space()='Discard Changes']");
 
-        public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + ManageWorkAllocationSteps._justiceUserName + "']");
-        
+        public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+
+        public static By ManageTeamDeleteUser =
+            By.CssSelector("td:nth-child(7)");
+
+        public static By ManageTeamDeletUserPopUpWindow =
+            By.XPath(
+                "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-delete-justice-user-popup[1]/div[1]/div[1]/p[1]");
+
+        public static By VerifyDeleteUser =
+            By.XPath("//a[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+
+        public static By ManageTeamDeleteUserYesButton = By.XPath("//button[@id='btnConfirm']");
+        public static By VerifyManageTeamDeleteUser = By.XPath("//span[@class='badge']");
+
+        public static By ManageTeamRestoreUserButton =
+            By.XPath("//td[@class='govuk-table__cell']//fa-icon[@class='ng-fa-icon']");
+
+        public static By ManageTeamRestoreUserPopUpWindow = By.XPath("//div[@class='popup popup-small']");
+
+        public static By VerifyManageTeamRestoreUserDetails =
+            By.XPath(
+                "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-restore-justice-user-popup[1]/div[1]/div[1]/p[1]");
         
 
         // Allocate hearings

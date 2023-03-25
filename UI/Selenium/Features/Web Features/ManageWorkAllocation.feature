@@ -34,11 +34,19 @@ Scenario: Upload Non Availability hours
 		Then I click add new user 
 		Then I see new pop up window - Add a justice user
 		Then i fill in all details of new user with correct UK number and valid email address
-		  | FirstName    	| LastName               	| Role    |
-		  | TestFirstName 	| TestLastName 				| CSO     |
-		  
 		And  I save changes 
-		Then i see save successful message and user details
+		And i see save successful message and user details
+		Then I delete User
+		And I see popup message with warnings
+		Then I Click Yes,proceed button
+		And I confirm user has been deleted with option to restore
+		Then I click restore team member icon
+		And I see popup message box with correct warning
+		Then I click Yes,proceed button 
+		And I confirm user has been restored. 
+		
+		
+		
 				
 		
 	

@@ -18,7 +18,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     SelectYourHearingListSteps selectYourHearingListSteps;
-    public static String _justiceUserName = GetRandomJusticeUserName();
+
 
     public ManageWorkAllocationSteps(ScenarioContext scenarioContext)
         : base(scenarioContext)
@@ -82,7 +82,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkinghoursRadioButton);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkinghoursRadioButton).Click();
     }
-
+    
     [Then(@"Search for team member")]
     public void ThenSearchForTeamMember()
     {
@@ -132,126 +132,5 @@ public class ManageWorkAllocationSteps : ObjectFactory
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AlloctatedCSOList, _scenarioContext)
             .Click();
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearch).Click();
-    }
-
-    [Then(@"Team working hours uploaded successfully")]
-    public void ThenTeamWorkingHoursUploadedSuccessfully()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfullyM);
-        var teamWorkingHoursUploadedSuccessfully = "Team working hours uploaded successfully";
-        var getTextWorkingHoursFileUpalodSucess =
-            Driver.FindElement(ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfullyM).Text;
-        Assert.AreEqual(teamWorkingHoursUploadedSuccessfully, getTextWorkingHoursFileUpalodSucess);
-    }
-
-    [Then(@"i click manage team")]
-    public void ThenIClickManageTeam()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeam);
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeam).Click();
-    }
-
-    [Then(@"I search for new user")]
-    public void ThenISearchForNewUser()
-    {
-      /*  Random randomGenerator = new Random();
-        var randomInt = randomGenerator.NextInt64(1000);
-        var manageTeamUserName = "vihTestUser" + randomInt + "@hearings.hmcts.net";
-        */
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamSearchTeamMemberField);
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).Click();
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).SendKeys(_justiceUserName);
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
-      
-      
-    }
-
-    [Then(@"I see no user found message and add new user button")]
-    public void ThenISeeNoUserFoundMessageAndAddNewUserButton()
-    {
-       var errorMsgTextUserNotFoundActual = Driver.FindElement(ManageWorkAllocationPage.ManageTeamNouserErrorMsg).Text;
-       Console.WriteLine("Messgae Check " + errorMsgTextUserNotFoundActual);
-       var errorMsgTextUserNotFoundExpect = "No users matching this search criteria were found. Please check the search and try again. Or, add the team member.";
-       Assert.AreEqual(errorMsgTextUserNotFoundActual, errorMsgTextUserNotFoundExpect);
-    }
-
-    [Then(@"I click add new user")]
-    public void ThenIClickAddNewUser()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamAddNewTeamMember);
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddNewTeamMember).Click();
-    }
-
-    [Then(@"I see new pop up window - Add a justice user")]
-    public void ThenISeeNewPopUpWindowWithUserdetailsToFill()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp);
-        var popUpWindowAddJusticeUser = Driver.FindElement(ManageWorkAllocationPage.ManageTeamAddJusticeUserPopUp).Displayed;
-        Assert.IsTrue(popUpWindowAddJusticeUser);
-        
-    }
-
-    [Then(@"i fill in all details of new user with correct UK number and valid email address")]
-    public void ThenIFillInAllDetailsOfNewUserWithCorrectUkNumberAndValidEmailAddress(Table table)
-    {
-        _scenarioContext.UpdatePageName("Add a Justice User");
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserID);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(_justiceUserName);
-        var randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
-        var randomLastName = NameGenerator.GenerateLastName();
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(randomFirstName);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(randomLastName);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber).SendKeys(GenerateRandonUkPhoneNumber());
-        
-    }
-
-    [Then(@"I save changes")]
-    public void ThenISaveChanges()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserSaveButton).Click();
-        
-    }
-
-    [Then(@"i see save successful message and user details")]
-    public void ThenISeeSaveSuccessfulMessageAndUserDetails()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyJusticeUsername);
-        Assert.AreEqual(_justiceUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyJusticeUsername).Text);
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    public static String GetRandomJusticeUserName()
-    {
-        Random randomGenerator = new Random();
-        var randomInt = randomGenerator.NextInt64(1000);
-        var manageTeamUserName = "auto.VH.TestUser" + randomInt + "@hearings.hmcts.net";
-        return manageTeamUserName;
-        
-    }
-    
-    private static string GenerateRandonUkPhoneNumber()
-
-    {
-        var sb = new StringBuilder();
-        sb.Append("+44(0)20");
-
-        var rnd = new Random(Guid.NewGuid().GetHashCode());
-        for (int i = 0; i < 8; i++)
-        {
-            sb.Append(rnd.Next(0, 7).ToString());
-        }
-
-        return sb.ToString();
-    }
+   }
 }
