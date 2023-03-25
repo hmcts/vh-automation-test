@@ -114,9 +114,9 @@ public class ManageWorkAllocationSteps : ObjectFactory
         var startDate = DateTime.Now.ToString("dd/MM/yyyy");
         var endDate = DateTime.Now.AddDays(7).ToString("dd/MM/yyyy");
         //ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext).Click();
-        ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext)
+        ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AllocateHearingsFromDate, _scenarioContext)
             .SendKeys(startDate);
-        ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeEndDate, _scenarioContext)
+        ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AllocateHearingsEndDate, _scenarioContext)
             .SendKeys(endDate);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearch).Click();
     }
@@ -124,7 +124,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     [When(@"i select Allocated CSO")]
     public void WhenISelectAllocatedCso()
     {
-        Driver.FindElement(ManageWorkAllocationPage.AlloctatedCSO).Click();
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AlloctatedCSOList, _scenarioContext)
             .Click();
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearch).Click();

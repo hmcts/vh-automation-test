@@ -53,15 +53,23 @@ namespace UI.Pages
         public static By SearchForTeamMember = By.CssSelector(".govuk-grid-column-one-third > .govuk-button");
 
         // Allocate hearings
-        public static By AllocateHearingsTab = By.CssSelector("css=app-allocate-hearings .govuk-details__summary");
+        public static By AllocateHearingsTab = By.XPath("//span[normalize-space()='Allocate hearings']");
         public static By AllocateHearings = By.Id("allocate-hearings");
-        public static By HearingRangeStartDate = By.Id("from-date-entry");
-        public static By HearingRangeEndDate = By.Id("to-date-entry");
-        public static By HearingDate = By.Id("hearing-date-entry");
-        public static By AlloctatedCSO = By.XPath("//ng-select[@id='user-list']//div[@role='combobox']");
+        public static By AllocateHearingsEndDate = By.Id("to-date-entry");
+        public static By AllocateHearingsFromDate = By.XPath("//input[@name='fromDate']")
+            ;
+        public static By AllocateHearingCSOSelectList = By.CssSelector("body > app-root:nth-child(1) > div:nth-child(1) > div:nth-child(3) > main:nth-child(1) > app-work-allocation:nth-child(2) > div:nth-child(2) > app-allocate-hearings:nth-child(4) > details:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > app-justice-users-menu:nth-child(1) > div:nth-child(1) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)");
         public static By AlloctatedCSOList =
             By.XPath(
                 "//ng-select[@id='user-list']//div[@role='combobox']//following::ng-dropdown-panel//div[@role='option']");
+
+        public static By AllocateHearingSearchButton =
+            By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
+
+        public static By AllocateHearingCsoSelect = By.XPath("//div[@role='option']");
+        
+        
+        
         public static By CaseType = By.Id("caseTypes");
         public static By CaseNumber = By.Id("case-number-entry");
         public static By AllocateHearingSearch =
