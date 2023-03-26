@@ -86,9 +86,20 @@ namespace UI.Pages
                 "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-restore-justice-user-popup[1]/div[1]/div[1]/p[1]");
         public static By ManageTeamRestoreUserYesButton = By.XPath("//button[normalize-space()='Yes, proceed']");
         public static By VerifyManageTeamRestoreUserConfirmation = By.XPath("//div[@class='govuk-!-font-weight-bold']");
+        public static By VerifyExistJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeamEditUser._ValidJusticeUserName + "']");
+        public static By ManageTeamEditRoleButton =
+            By.XPath(
+                "//td[@class='govuk-table__cell']//fa-icon[@class='ng-fa-icon']//*[name()='svg']");
 
+        public static By ManageTeamJusticeUserEditRole = By.XPath("//select[@name='role']");
+        public static By ManageTeamJusticeUserRoleAdministration = By.XPath("option[value='VhTeamLead']");
+
+        public static By ManageTeamJusticeUserRoleVho = By.XPath("//option[@value='Vho']");
+        public static By manageTeamEditRolePopupWindow = By.XPath("//fieldset[@class='govuk-fieldset']");
+        
+        
         // ***********    Allocate hearings
-        public static By AllocateHearingsTab = By.CssSelector("css=app-allocate-hearings .govuk-details__summary");
+        public static By AllocateHearingsTab = By.XPath("//span[@id='allocate-hearings']");
         public static By AllocateHearings = By.Id("allocate-hearings");
         public static By HearingRangeStartDate = By.Id("from-date-entry");
         public static By HearingRangeEndDate = By.Id("to-date-entry");
@@ -106,6 +117,23 @@ namespace UI.Pages
         public static By Search =
             By.XPath(
                 "//main[@id='main-content']/app-work-allocation/div/app-allocate-hearings/details/div/div[4]/button");
+        
+        public static By AllocateHearingsEndDate = By.Id("to-date-entry");
+        public static By AllocateHearingsFromDate = By.XPath("//input[@name='fromDate']")
+            ;
+        public static By AllocateHearingCSOSelectList = By.CssSelector("body > app-root:nth-child(1) > div:nth-child(1) > div:nth-child(3) > main:nth-child(1) > app-work-allocation:nth-child(2) > div:nth-child(2) > app-allocate-hearings:nth-child(4) > details:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > app-justice-users-menu:nth-child(1) > div:nth-child(1) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)");
+        public static By AllocateHearingSearchButton =
+            By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
+
+        public static By AllocateHearingCsoSelect = By.XPath("//div[@role='option']");
+        public static By AllocateHearingSelectFirstCase = By.XPath("//input[@name='select-hearing_0']");
+        public static By AllocateHearingSelectSecondCase = By.XPath("//input[@name='select-hearing_1']");
+        public static By AllocateHearingConfirmButton = By.XPath("//button[normalize-space()='Confirm']");
+
+        public static By VerifyAllocateHearingConfirmMsg = By.CssSelector(
+            "div[class='govuk-body govuk-!-font-weight-bold govuk-grid-column-one-half govuk-!-padding-top-6']");
+
+
 
         /// <summary>
         /// 

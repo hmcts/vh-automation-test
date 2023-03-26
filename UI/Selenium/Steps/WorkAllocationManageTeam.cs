@@ -14,6 +14,8 @@ public class WorkAllocationManageTeam : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     public static String _justiceUserName = GetRandomJusticeUserName();
+    public static String _randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
+    public static String _randomLastName = NameGenerator.GenerateLastName();
 
     public WorkAllocationManageTeam(ScenarioContext scenarioContext)
         : base(scenarioContext)
@@ -69,11 +71,10 @@ public class WorkAllocationManageTeam : ObjectFactory
         _scenarioContext.UpdatePageName("Add a Justice User");
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserID);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(_justiceUserName);
-        var randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
-        var randomLastName = NameGenerator.GenerateLastName();
+        
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(randomFirstName);
-        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(randomLastName);
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(_randomFirstName);
+        Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(_randomLastName);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserContactNumber)
             .SendKeys(GenerateRandonUkPhoneNumber());
     }
@@ -92,7 +93,9 @@ public class WorkAllocationManageTeam : ObjectFactory
         Assert.AreEqual(_justiceUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyJusticeUsername).Text);
     }
 
-
+    
+    
+    
     [Then(@"I delete User")]
     public void ThenIDeleteUser()
     {
@@ -179,5 +182,67 @@ public class WorkAllocationManageTeam : ObjectFactory
         }
 
         return sb.ToString();
+    }
+
+    [Then(@"I click on Allocate Hearing")]
+    public void ThenIClickOnAllocateHearing()
+    {
+        Driver.Navigate().Refresh();
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingsTab);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingsTab).Click();
+    }
+
+    [Then(@"I Select Date Range")]
+    public void ThenISelectDateRange()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingsFromDate);
+        var allocateHearingToday = DateTime.Today.ToString("dd/MM/yyyy");
+        var allocateHearingFuture = DateTime.Now.AddDays(4).ToString("dd/MM/yyyy");
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingsFromDate).SendKeys(allocateHearingToday);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingsEndDate).SendKeys(allocateHearingFuture);
+    }
+
+
+    [Then(@"I press Search")]
+    public void ThenIPressSearch()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingSearchButton);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
+    }
+
+    [Then(@"I Select Allocate To User ""(.*)""")]
+    public void ThenISelectAllocateToUser(string p0)
+    {
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCSOSelectList); 
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).SendKeys(_randomFirstName);
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCsoSelect);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCsoSelect).Click();
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
+    }
+
+    [Then(@"I Select First and Second Hearing")]
+    public void ThenISelectFirstAndSecondHearing()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingSelectFirstCase);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSelectFirstCase).Click();
+        //  Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSelectSecondCase).Click();
+    }
+
+    [Then(@"I click confirm button")]
+    public void ThenIClickConfirmButton()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingConfirmButton);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingConfirmButton).Click();
+    }
+
+    [Then(@"I See Hearing have been updated message")]
+    public void ThenISeeHearingHaveBeenUpdatedMessage()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg);
+        var verifyHearingupdatedActual = Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
+        var verifyHearingupdatedExpected = "Hearings have been updated.";
+        Assert.AreEqual(verifyHearingupdatedExpected, verifyHearingupdatedActual);
     }
 }
