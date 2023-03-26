@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Android;
 using TestFramework;
 using UI.Model;
+using UI.Steps;
 
 namespace UI.Pages
 {
@@ -67,8 +68,12 @@ namespace UI.Pages
         public static By AddJusticeUserSaveButton = By.XPath("//button[normalize-space()='Save']");
         public static By AddJusticeUserDiscardButton = By.XPath("//button[normalize-space()='Discard Changes']");
        // public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
-        public static By ManageTeamDeleteUser =
-            By.CssSelector("td:nth-child(7)");
+       public static By VerifyExistJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeamEditUser._ValidJusticeUserName + "']");
+
+       public static By ManageTeamEditRoleButton =
+           By.XPath(
+               "//td[@class='govuk-table__cell']//fa-icon[@class='ng-fa-icon']//*[name()='svg']");
+        public static By ManageTeamDeleteUser = By.CssSelector("td:nth-child(7)");
         public static By ManageTeamDeletUserPopUpWindow =
             By.XPath(
                 "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-delete-justice-user-popup[1]/div[1]/div[1]/p[1]");

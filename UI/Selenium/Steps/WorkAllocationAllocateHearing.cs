@@ -1,16 +1,9 @@
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Utilities;
-using System.Threading;
 using NUnit.Framework;
-using OpenQA.Selenium;
-using TechTalk.SpecFlow;
-using TestFramework;
 using UI.Pages;
-using UI.Utilities;
 using System;
-using OpenQA.Selenium.DevTools;
-
 namespace UI.Steps;
 
 [Binding]
@@ -36,8 +29,10 @@ public class WorkAllocationAllocateHearing :ObjectFactory
     public void ThenISelectDateRange()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingsFromDate);
-        var allocateHearingtoday = DateTime.Today.ToString("dd/MM/yyyy");
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingsFromDate).SendKeys(allocateHearingtoday);
+        var allocateHearingToday = DateTime.Today.ToString("dd/MM/yyyy");
+        var allocateHearingFuture = DateTime.Now.AddDays(4).ToString("dd/MM/yyyy");
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingsFromDate).SendKeys(allocateHearingToday);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingsEndDate).SendKeys(allocateHearingFuture);
     }
 
     [Then(@"I press Search")]
@@ -71,7 +66,6 @@ public class WorkAllocationAllocateHearing :ObjectFactory
     [Then(@"I click confirm button")]
     public void ThenIClickConfirmButton()
     {
-        
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingConfirmButton);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingConfirmButton).Click();
     }
