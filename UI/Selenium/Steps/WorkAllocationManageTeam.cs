@@ -95,7 +95,6 @@ public class WorkAllocationManageTeam : ObjectFactory
 
     
     
-    
     [Then(@"I delete User")]
     public void ThenIDeleteUser()
     {

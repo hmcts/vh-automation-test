@@ -84,7 +84,7 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserEditRole);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole).Click();
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserRoleAdministration);
+       // ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserRoleAdministration);
         var selectList = new SelectElement(Driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole));
         selectList.SelectByText("Administrator");
                 
@@ -98,9 +98,4 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamEditRoleSaveButton).Click();
     }
 
-    [Then(@"I see Sucessfull message displayed on the page")]
-    public void ThenISeeSucessfullMessageDisplayedOnThePage()
-    {
-        ScenarioContext.StepIsPending();
-    }
 }

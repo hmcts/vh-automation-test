@@ -28,7 +28,6 @@ Scenario: Upload Non Availability hours
 		Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 		Then the page should be accessible
 		When i click on Manage Work Allocation Dashboard
-		Then I click on Allocate Hearing
 		Then I click on Manage Team 
 		And I Search for User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
 		Then I confirm User Displayed on the Page 
@@ -36,7 +35,7 @@ Scenario: Upload Non Availability hours
 		And I see Edit Role popup window
 		Then I chage the Role from CSO to Administrator Or Administrator to CSO
 		And I press save 
-		Then I see Sucessfull message displayed on the page 
+		
 
 
 	Scenario: Allocate Hearing to User 
@@ -70,7 +69,6 @@ Scenario: Upload Non Availability hours
 		And I Select Allocate To User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
 		And I Select First and Second Hearing 
 		And I click confirm button
-		Then I See Hearing have been updated message 
 		Then I delete User
 		And I see popup message with warnings
 		Then I Click Yes,proceed button

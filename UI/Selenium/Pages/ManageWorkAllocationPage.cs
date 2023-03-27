@@ -41,7 +41,7 @@ namespace UI.Pages
         public static By EditSearchTeamMemberField = By.Id("username");
         public static By SearchFieldUsername = By.XPath("//input[@id='username']");
         public static By SearchButton = By.CssSelector(".govuk-grid-row:nth-child(1) > .govuk-button");
-        public static By SetStartDate = By.Id("start-date");
+        public static By EditWorkingHoursSetStartDate = By.Id("start-date");
         public static By SetEndDate = By.Id("end-date");
         public static By FilterDate = By.Id("filter-btn");
 
@@ -116,7 +116,7 @@ namespace UI.Pages
         public static By AllocateHearingSearchButton =
             By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
 
-        public static By AllocateHearingCsoSelect = By.XPath("//input[@id='item-87']");
+        public static By AllocateHearingCsoSelect = By.XPath("//div[@class='ng-option ng-option-marked']");
         
         
         
