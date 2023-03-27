@@ -169,20 +169,6 @@ public class WorkAllocationManageTeam : ObjectFactory
         return manageTeamUserName;
     }
 
-    private static string GenerateRandonUkPhoneNumber()
-
-    {
-        var sb = new StringBuilder();
-        sb.Append("+44(0)744");
-
-        var rnd = new Random(Guid.NewGuid().GetHashCode());
-        for (int i = 0; i < 7; i++)
-        {
-            sb.Append(rnd.Next(0, 6).ToString());
-        }
-
-        return sb.ToString();
-    }
 
     [Then(@"I click on Allocate Hearing")]
     public void ThenIClickOnAllocateHearing()
@@ -244,5 +230,20 @@ public class WorkAllocationManageTeam : ObjectFactory
         var verifyHearingupdatedActual = Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
         var verifyHearingupdatedExpected = "Hearings have been updated.";
         Assert.AreEqual(verifyHearingupdatedExpected, verifyHearingupdatedActual);
+    }
+    
+    private static string GenerateRandonUkPhoneNumber()
+
+    {
+        var sb = new StringBuilder();
+        sb.Append("+44(0)744");
+
+        var rnd = new Random(Guid.NewGuid().GetHashCode());
+        for (int i = 0; i < 7; i++)
+        {
+            sb.Append(rnd.Next(0, 6).ToString());
+        }
+
+        return sb.ToString();
     }
 }

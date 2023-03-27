@@ -1,11 +1,9 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Android;
 using TestFramework;
 using UI.Model;
 using UI.Steps;
-
 
 namespace UI.Pages
 {
@@ -47,8 +45,9 @@ namespace UI.Pages
         public static By SetEndDate = By.Id("end-date");
         public static By FilterDate = By.Id("filter-btn");
 
-        // ******** Manage team ********
-        public static By ManageTeam = By.Id("manage-team");
+        // Manage team
+      public static By ManageTeam = By.Id("manage-team");
+    
      // public static By ManageTeamSearchTeamMemberField1 = By.Id("search-team-member");
         public static By ManageTeamSearchTeamMemberField = By.Id("search-team-member");
         public static By ManageTeamSearchButton =
@@ -58,7 +57,7 @@ namespace UI.Pages
             By.XPath("//div[@class='govuk-!-font-weight-bold vh-text-color-red']");
         public static By ManageTeamAddNewTeamMember = By.XPath("//button[normalize-space()='Add a team member']");
         public static By ManageTeamAddJusticeUserPopUp = By.XPath("//form[@class='ng-untouched ng-pristine ng-valid']");
-        
+
         // Add Justice User popup window elements
 
         public static By AddJusticeUserID= By.XPath("//fieldset[@class='govuk-fieldset']//input[@id='username']");
@@ -68,14 +67,18 @@ namespace UI.Pages
         public static By AddJusticeUserRole = By.XPath("//select[@id='role']");
         public static By AddJusticeUserSaveButton = By.XPath("//button[normalize-space()='Save']");
         public static By AddJusticeUserDiscardButton = By.XPath("//button[normalize-space()='Discard Changes']");
-        public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
-        public static By ManageTeamDeleteUser =
-            By.CssSelector("td:nth-child(7)");
+       // public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+       public static By VerifyExistJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeamEditUser._ValidJusticeUserName + "']");
+
+       public static By ManageTeamEditRoleButton =
+           By.XPath(
+               "//td[@class='govuk-table__cell']//fa-icon[@class='ng-fa-icon']//*[name()='svg']");
+        public static By ManageTeamDeleteUser = By.CssSelector("td:nth-child(7)");
         public static By ManageTeamDeletUserPopUpWindow =
             By.XPath(
                 "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-delete-justice-user-popup[1]/div[1]/div[1]/p[1]");
-        public static By VerifyDeleteUser =
-            By.XPath("//a[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+       // public static By VerifyDeleteUser =
+         //   By.XPath("//a[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
         public static By ManageTeamDeleteUserYesButton = By.XPath("//button[@id='btnConfirm']");
         public static By VerifyManageTeamDeleteUser = By.XPath("//span[@class='badge']");
         public static By ManageTeamRestoreUserButton =
@@ -86,28 +89,37 @@ namespace UI.Pages
                 "//body[1]/app-root[1]/div[1]/div[2]/main[1]/app-work-allocation[1]/div[1]/app-manage-team[1]/details[1]/app-confirm-restore-justice-user-popup[1]/div[1]/div[1]/p[1]");
         public static By ManageTeamRestoreUserYesButton = By.XPath("//button[normalize-space()='Yes, proceed']");
         public static By VerifyManageTeamRestoreUserConfirmation = By.XPath("//div[@class='govuk-!-font-weight-bold']");
-        public static By VerifyExistJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeamEditUser._ValidJusticeUserName + "']");
-        public static By ManageTeamEditRoleButton =
-            By.XPath(
-                "//td[@class='govuk-table__cell']//fa-icon[@class='ng-fa-icon']//*[name()='svg']");
-
         public static By ManageTeamJusticeUserEditRole = By.XPath("//select[@name='role']");
         public static By ManageTeamJusticeUserRoleAdministration = By.XPath("option[value='VhTeamLead']");
 
         public static By ManageTeamJusticeUserRoleVho = By.XPath("//option[@value='Vho']");
-        public static By manageTeamEditRolePopupWindow = By.XPath("//fieldset[@class='govuk-fieldset']");
-        
-        
-        // ***********    Allocate hearings
-        public static By AllocateHearingsTab = By.XPath("//span[@id='allocate-hearings']");
+      
+        public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+        public static By VerifyDeleteUser =
+            By.XPath("//a[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+        public static By ManageTeamEditRolePopupWindow = By.XPath("//fieldset[@class='govuk-fieldset']");
+        public static By ManageTeamEditRoleSaveButton = By.XPath("//button[@type='submit']");
+
+
+
+        // Allocate hearings
+        public static By AllocateHearingsTab = By.XPath("//span[normalize-space()='Allocate hearings']");
         public static By AllocateHearings = By.Id("allocate-hearings");
-        public static By HearingRangeStartDate = By.Id("from-date-entry");
-        public static By HearingRangeEndDate = By.Id("to-date-entry");
-        public static By HearingDate = By.Id("hearing-date-entry");
-        public static By AlloctatedCSO = By.XPath("//ng-select[@id='user-list']//div[@role='combobox']");
+        public static By AllocateHearingsEndDate = By.Id("to-date-entry");
+        public static By AllocateHearingsFromDate = By.XPath("//input[@name='fromDate']")
+            ;
+        public static By AllocateHearingCSOSelectList = By.CssSelector("body > app-root:nth-child(1) > div:nth-child(1) > div:nth-child(3) > main:nth-child(1) > app-work-allocation:nth-child(2) > div:nth-child(2) > app-allocate-hearings:nth-child(4) > details:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > app-justice-users-menu:nth-child(1) > div:nth-child(1) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)");
         public static By AlloctatedCSOList =
             By.XPath(
                 "//ng-select[@id='user-list']//div[@role='combobox']//following::ng-dropdown-panel//div[@role='option']");
+
+        public static By AllocateHearingSearchButton =
+            By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
+
+        public static By AllocateHearingCsoSelect = By.XPath("//input[@id='item-87']");
+        
+        
+        
         public static By CaseType = By.Id("caseTypes");
         public static By CaseNumber = By.Id("case-number-entry");
         public static By AllocateHearingSearch =
@@ -117,23 +129,13 @@ namespace UI.Pages
         public static By Search =
             By.XPath(
                 "//main[@id='main-content']/app-work-allocation/div/app-allocate-hearings/details/div/div[4]/button");
-        
-        public static By AllocateHearingsEndDate = By.Id("to-date-entry");
-        public static By AllocateHearingsFromDate = By.XPath("//input[@name='fromDate']")
-            ;
-        public static By AllocateHearingCSOSelectList = By.CssSelector("body > app-root:nth-child(1) > div:nth-child(1) > div:nth-child(3) > main:nth-child(1) > app-work-allocation:nth-child(2) > div:nth-child(2) > app-allocate-hearings:nth-child(4) > details:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > app-justice-users-menu:nth-child(1) > div:nth-child(1) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)");
-        public static By AllocateHearingSearchButton =
-            By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
 
-        public static By AllocateHearingCsoSelect = By.XPath("//div[@role='option']");
         public static By AllocateHearingSelectFirstCase = By.XPath("//input[@name='select-hearing_0']");
         public static By AllocateHearingSelectSecondCase = By.XPath("//input[@name='select-hearing_1']");
         public static By AllocateHearingConfirmButton = By.XPath("//button[normalize-space()='Confirm']");
 
         public static By VerifyAllocateHearingConfirmMsg = By.CssSelector(
             "div[class='govuk-body govuk-!-font-weight-bold govuk-grid-column-one-half govuk-!-padding-top-6']");
-
-
 
         /// <summary>
         /// 
@@ -158,6 +160,5 @@ namespace UI.Pages
             webdriver.FindElement(UploadNonAvailabilityHours).SendKeys(fullPath);
             webdriver.FindElement(UploadNonAvailabilityHoursButton).Click();
         }
-   
     }
 }
