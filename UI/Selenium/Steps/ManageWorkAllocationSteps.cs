@@ -49,22 +49,20 @@ public class ManageWorkAllocationSteps : ObjectFactory
     }
 
     [Given(@"I click on Edit Working hours and non availability")]
-    [When(@"I click on Edit Working hours and non availability")]
     public void GivenIClickOnEditWorkingHoursAndNonAvailability()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkingHoursNonAvailability);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkingHoursNonAvailability).Click();
     }
 
-    [Given(@"i click on Manage Team")]
+   
     [When(@"I click on Manage Team")]
     public void GivenIClickOnManageTeam()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeam);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeam).Click();
     }
-
-    [Given(@"i click  Allocate Hearings")]
+    
     [When(@"I click  Allocate Hearings")]
     public void GivenIClickAllocateHearings()
     {
@@ -72,10 +70,9 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearings).Click();
     }
 
-    [Then(@"i select Edit Working hour radio Button")]
+    [Then(@"I select Edit Working hour radio Button")]
     public void ThenISelectEditWorkingHourRadioButton()
     {
-        //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkinghoursRadioButton);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkinghoursRadioButton).Click();
     }
 
@@ -121,7 +118,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearch).Click();
     }
 
-    [When(@"i select Allocated CSO")]
+    [When(@"I select Allocated CSO")]
     public void WhenISelectAllocatedCso()
     {
         Driver.FindElement(ManageWorkAllocationPage.AlloctatedCSO).Click();

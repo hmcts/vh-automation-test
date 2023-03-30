@@ -29,7 +29,6 @@ namespace UI.Steps
         {
             _scenarioContext.UpdatePageName("Add a participant");
             SetHearingParticipants(table);
-            //Thread.Sleep(5000);
             EnterParticipants();
         }
 
