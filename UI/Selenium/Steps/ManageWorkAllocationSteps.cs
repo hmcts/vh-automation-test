@@ -95,7 +95,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     public void GivenSearchTeamMembers()
     {
         Driver.FindElement(ManageWorkAllocationPage.SearchFieldUsername)
-            .SendKeys("Phil.debrah@hearings.reform.hmcts.net");
+            .SendKeys("auto.vhoteamlead1@hearings.reform.hmcts.net");
         Driver.FindElement(ManageWorkAllocationPage.SearchButton).Click();
     }
 
@@ -103,7 +103,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     public void WhenSearchForTeamMember()
     {
         Driver.FindElement(ManageWorkAllocationPage.SearchForTeamMember)
-            .SendKeys("Phil.debrah@hearings.reform.hmcts.net");
+            .SendKeys("auto.vhoteamlead1@hearings.reform.hmcts.net");
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
     }
 

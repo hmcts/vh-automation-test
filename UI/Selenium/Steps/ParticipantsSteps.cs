@@ -29,7 +29,7 @@ namespace UI.Steps
         {
             _scenarioContext.UpdatePageName("Add a participant");
             SetHearingParticipants(table);
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
             EnterParticipants();
         }
 
@@ -88,7 +88,10 @@ namespace UI.Steps
                     _scenarioContext.UpdateElementName("ParticipantEmailTextfield");
                     _scenarioContext.UpdateActionName("SendKeys");
                     ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.ParticipantEmailTextfield, _scenarioContext).SendKeys(participant.Id.Replace("hearings.reform.hmcts.net", "hmcts.net"));
-                    ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.EmailList, _scenarioContext, TimeSpan.FromSeconds(1));
+                    if (!ExtensionMethods.IsElementVisible(Driver, ParticipantsPage.NewUserWarning, _scenarioContext))
+                    {
+                        ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.EmailList, _scenarioContext, TimeSpan.FromSeconds(1));
+                    }
                     _scenarioContext["Hearing"] = _hearing;
                     new SelectElement(Driver.FindElement(ParticipantsPage.TitleDropdown)).SelectByText("Mr");
                     ExtensionMethods.SendKeys(Driver, Keys.Tab);
