@@ -95,7 +95,7 @@ namespace UI.Steps
             selectYourHearingListSteps.WhenIClickOnViewHearings();
         }
         
-        [When(@"i click on Manage Work Allocation Dashboard")]
+        [When(@"I click on Manage Work Allocation Dashboard")]
         public void GivenIClickOnManageWorkAllocation()
         {
             SelectDashboardOption("Work-Allocation Dashboard");
@@ -104,14 +104,14 @@ namespace UI.Steps
         }
 
 
-        [When(@"i click on Upload CVS workhours")]
+        [When(@"I click on Upload CVS workhours")]
         public void WhenIClickOnUploadCvsWorkhours()
         {
             SelectDashboardOption("Upload Working hours CSV File");
             _scenarioContext.UpdatePageName("Upload Working hours CSV File");
         }
 
-        [When(@"i click on Upload non Availability hours")]
+        [When(@"I click on Upload non Availability hours")]
         public void WhenIClickOnUploadNonAvailabilityHours()
         {
             SelectDashboardOption("Upload Non Availability CSV File");

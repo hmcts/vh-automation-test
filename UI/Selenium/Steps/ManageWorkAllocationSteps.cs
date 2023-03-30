@@ -30,7 +30,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Assert.True(Driver.FindElement(ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfully).Displayed);
     }
 
-    [Given(@"i click on Upload Workhours and non Availability")]
+    [Given(@"I click on Upload Workhours and non Availability")]
     public void GivenIClickOnUploadWorkhoursAndNonAvailability()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability);
@@ -48,8 +48,8 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Assert.AreEqual(teamNonAvailabilityHoursUploadedSuccessfully, getTextNonAvailabilityHoursSuccess);
     }
 
-    [Given(@"i click on Edit Working hours and non availability")]
-    [When(@"i click on Edit Working hours and non availability")]
+    [Given(@"I click on Edit Working hours and non availability")]
+    [When(@"I click on Edit Working hours and non availability")]
     public void GivenIClickOnEditWorkingHoursAndNonAvailability()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkingHoursNonAvailability);
@@ -57,7 +57,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     }
 
     [Given(@"i click on Manage Team")]
-    [When(@"i click on Manage Team")]
+    [When(@"I click on Manage Team")]
     public void GivenIClickOnManageTeam()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeam);
@@ -65,7 +65,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     }
 
     [Given(@"i click  Allocate Hearings")]
-    [When(@"i click  Allocate Hearings")]
+    [When(@"I click  Allocate Hearings")]
     public void GivenIClickAllocateHearings()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearings);
@@ -85,7 +85,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).Click();
     }
 
-    [Given(@"i Click on Edit working hours button")]
+    [Given(@"I Click on Edit working hours button")]
     public void GivenIClickOnEditWorkingHoursButton()
     {
         Driver.FindElement(ManageWorkAllocationPage.EditWorkinghoursRadioButton).Click();
