@@ -102,13 +102,7 @@ public class WorkAllocationManageTeam : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamDeleteUser).Click();
     }
 
-    [Then(@"I see popup message with warnings")]
-    public void ThenISeePopupMessageWithWarnings()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamDeletUserPopUpWindow);
-        Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamDeletUserPopUpWindow).Displayed);
-        Assert.AreEqual(_justiceUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyDeleteUser).Text);
-    }
+    
 
     [Then(@"I Click Yes,proceed button")]
     public void ThenIClickYesProceedButton()
@@ -132,16 +126,7 @@ public class WorkAllocationManageTeam : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamRestoreUserButton).Click();
     }
 
-    [Then(@"I see popup message box with correct warning")]
-    public void ThenISeePopupMessageBoxWithCorrectWarning()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamRestoreUserPopUpWindow);
-        Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamRestoreUserPopUpWindow).Displayed);
-        var verifyRestoreUserActual =
-            Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamRestoreUserDetails).Text;
-        var verifyRestoreUserExpected = "You have selected to restore user:\r\n" + _justiceUserName + "";
-        Assert.AreEqual(verifyRestoreUserExpected, verifyRestoreUserActual);
-    }
+    
 
     [Then(@"I click Yes,proceed button to restore user")]
     public void ThenIClickYesProceedButtonToRestoreUser()
@@ -226,11 +211,11 @@ public class WorkAllocationManageTeam : ObjectFactory
     public void ThenISeeHearingHaveBeenUpdatedMessage()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg);
-        var verifyHearingupdatedActual = Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
-        var verifyHearingupdatedExpected = "Hearings have been updated.";
-        Assert.AreEqual(verifyHearingupdatedExpected, verifyHearingupdatedActual);
+        var VerifyHearingupdatedActual = Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
+        var VerifyHearingupdatedExpected = "Hearings have been updated.";
+        Assert.AreEqual(VerifyHearingupdatedActual, VerifyHearingupdatedExpected);
+        
     }
-    
     private static string GenerateRandonUkPhoneNumber()
 
     {

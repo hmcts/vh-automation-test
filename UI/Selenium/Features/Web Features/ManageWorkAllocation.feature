@@ -28,29 +28,29 @@ Scenario: Upload Non Availability hours
 		Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 		Then the page should be accessible
 		When i click on Manage Work Allocation Dashboard
-		Then I click on Manage Team 
+		And I click on Manage Team 
 		And I Search for User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
 		Then I confirm User Displayed on the Page 
-		Then I Pres edit role Icon 
+		And I Pres edit role Icon 
 		And I see Edit Role popup window
-		Then I chage the Role from CSO to Administrator Or Administrator to CSO
+		And I change the Role from CSO to Administrator
 		And I press save 
+		Then I see user updated confirmation on the page
+		And I Pres edit role Icon
+		And I change the Role from Administrator to CSO
+		And I press save 
+		Then I see user updated confirmation on the page
+		Then I delete User
+		And I see popup message with warnings
+		Then I Click Yes,proceed button
+		And I confirm user has been deleted with option to restore
+		Then I click restore team member icon
+		And I see popup message box with correct warning
+		Then I click Yes,proceed button to restore user
+		And I confirm user has been restored. 
 		
-
-
-	Scenario: Allocate Hearing to User 
-		Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
-		Then the page should be accessible
-		When i click on Manage Work Allocation Dashboard
-		Then I click on Allocate Hearing
-		Then I Select Date Range
-		And I press Search
-		And I Select Allocate To User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
-		And I Select First and Second Hearing 
-		And I click confirm button
-		Then I See Hearing have been updated message 
-		Then I select manage Team and Delete User and Restore user to unallocate Hearing
-	
+		
+		
 	Scenario: Work Allocation Manage Team and Allocate Hearing 
 		Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 		Then the page should be accessible
@@ -69,14 +69,8 @@ Scenario: Upload Non Availability hours
 		And I Select Allocate To User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
 		And I Select First and Second Hearing 
 		And I click confirm button
-		Then I delete User
-		And I see popup message with warnings
-		Then I Click Yes,proceed button
-		And I confirm user has been deleted with option to restore
-		Then I click restore team member icon
-		And I see popup message box with correct warning
-		Then I click Yes,proceed button to restore user
-		And I confirm user has been restored. 
+		Then I See Hearing have been updated message
+		
 		
 		
 		

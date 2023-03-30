@@ -96,9 +96,10 @@ namespace UI.Pages
       
         public static By VerifyJusticeUsername = By.XPath("//td[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
         public static By VerifyDeleteUser =
-            By.XPath("//a[normalize-space()='" + WorkAllocationManageTeam._justiceUserName + "']");
+            By.XPath("//a[normalize-space()='auto_aw.CSOTestUser@hearings.reform.hmcts.net']");
         public static By ManageTeamEditRolePopupWindow = By.XPath("//fieldset[@class='govuk-fieldset']");
         public static By ManageTeamEditRoleSaveButton = By.XPath("//button[@type='submit']");
+        public static By ManageTeamEditRoleConfirmationMsg = By.XPath("//div[@class='govuk-!-font-weight-bold']");
 
 
 
@@ -108,7 +109,7 @@ namespace UI.Pages
         public static By AllocateHearingsEndDate = By.Id("to-date-entry");
         public static By AllocateHearingsFromDate = By.XPath("//input[@name='fromDate']")
             ;
-        public static By AllocateHearingCSOSelectList = By.CssSelector("body > app-root:nth-child(1) > div:nth-child(1) > div:nth-child(3) > main:nth-child(1) > app-work-allocation:nth-child(2) > div:nth-child(2) > app-allocate-hearings:nth-child(4) > details:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > app-justice-users-menu:nth-child(1) > div:nth-child(1) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)");
+        public static By AllocateHearingCSOSelectList = By.XPath("//div[@id='user-menu']//input[@id='users']");
         public static By AlloctatedCSOList =
             By.XPath(
                 "//ng-select[@id='user-list']//div[@role='combobox']//following::ng-dropdown-panel//div[@role='option']");
