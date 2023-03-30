@@ -71,7 +71,7 @@ public class WorkAllocationManageTeam : ObjectFactory
         _scenarioContext.UpdatePageName("Add a Justice User");
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserID);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserID).SendKeys(_justiceUserName);
-        
+
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AddJusticeUserSaveButton);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserFirstName).SendKeys(_randomFirstName);
         Driver.FindElement(ManageWorkAllocationPage.AddJusticeUserLastName).SendKeys(_randomLastName);
@@ -93,8 +93,7 @@ public class WorkAllocationManageTeam : ObjectFactory
         Assert.AreEqual(_justiceUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyJusticeUsername).Text);
     }
 
-    
-    
+
     [Then(@"I delete User")]
     public void ThenIDeleteUser()
     {
@@ -102,7 +101,6 @@ public class WorkAllocationManageTeam : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamDeleteUser).Click();
     }
 
-    
 
     [Then(@"I Click Yes,proceed button")]
     public void ThenIClickYesProceedButton()
@@ -126,7 +124,6 @@ public class WorkAllocationManageTeam : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamRestoreUserButton).Click();
     }
 
-    
 
     [Then(@"I click Yes,proceed button to restore user")]
     public void ThenIClickYesProceedButtonToRestoreUser()
@@ -184,7 +181,7 @@ public class WorkAllocationManageTeam : ObjectFactory
     public void ThenISelectAllocateToUser(string p0)
     {
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCSOSelectList); 
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCSOSelectList);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).SendKeys(_randomFirstName);
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCsoSelect);
@@ -211,11 +208,12 @@ public class WorkAllocationManageTeam : ObjectFactory
     public void ThenISeeHearingHaveBeenUpdatedMessage()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg);
-        var VerifyHearingupdatedActual = Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
+        var VerifyHearingupdatedActual =
+            Driver.FindElement(ManageWorkAllocationPage.VerifyAllocateHearingConfirmMsg).Text;
         var VerifyHearingupdatedExpected = "Hearings have been updated.";
         Assert.AreEqual(VerifyHearingupdatedActual, VerifyHearingupdatedExpected);
-        
     }
+
     private static string GenerateRandonUkPhoneNumber()
 
     {

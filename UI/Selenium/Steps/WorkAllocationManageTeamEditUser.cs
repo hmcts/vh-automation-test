@@ -14,33 +14,32 @@ using UI.Utilities;
 namespace UI.Steps;
 
 [Binding]
-public class WorkAllocationManageTeamEditUser :ObjectFactory
+public class WorkAllocationManageTeamEditUser : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     public static String _ValidJusticeUserName = "auto_aw.CSOTestUser@hearings.reform.hmcts.net";
+
     public WorkAllocationManageTeamEditUser(ScenarioContext scenarioContext)
         : base(scenarioContext)
     {
         _scenarioContext = scenarioContext;
     }
-    
-   
-   
+
     [Then(@"I confirm User Displayed on the Page")]
     public void ThenIConfirmUserDisplayedOnThePage()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.VerifyExistJusticeUsername);
-        Assert.AreEqual(_ValidJusticeUserName ,Driver.FindElement(ManageWorkAllocationPage.VerifyExistJusticeUsername).Text);
+        Assert.AreEqual(_ValidJusticeUserName,
+            Driver.FindElement(ManageWorkAllocationPage.VerifyExistJusticeUsername).Text);
     }
 
     [Then(@"I Pres edit role Icon")]
     public void ThenIPresEditRoleIcon()
     {
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamEditRoleButton).Click();
-        
     }
 
-    public static void selectCsoRoleDropdown(IWebDriver driver )
+    public static void selectCsoRoleDropdown(IWebDriver driver)
     {
         var justiceUserRoleSelect = driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole).Text;
 
@@ -54,8 +53,6 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
             driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole).Click();
             driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserRoleVho).Click();
         }
-                
-        
     }
 
     [Then(@"I chage the Role from CSO to Administrator Or Administrator to CSO")]
@@ -63,10 +60,9 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserEditRole);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole).Click();
-       // ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserRoleAdministration);
+        // ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserRoleAdministration);
         var selectList = new SelectElement(Driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole));
         selectList.SelectByText("Administrator");
-                
     }
 
     [Then(@"I press save")]
@@ -99,7 +95,7 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
         Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamEditRolePopupWindow).Displayed);
     }
 
- 
+
     [Then(@"I see user updated confirmation on the page")]
     public void ThenISeeUserUpdatedConfirmationOnThePage()
     {
@@ -128,7 +124,7 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
         var selectList = new SelectElement(Driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole));
         selectList.SelectByText("CSO");
     }
-    
+
     [Then(@"I see popup message with warnings")]
     public void ThenISeePopupMessageWithWarnings()
     {
@@ -136,7 +132,7 @@ public class WorkAllocationManageTeamEditUser :ObjectFactory
         Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamDeletUserPopUpWindow).Displayed);
         Assert.AreEqual(_ValidJusticeUserName, Driver.FindElement(ManageWorkAllocationPage.VerifyDeleteUser).Text);
     }
-    
+
     [Then(@"I see popup message box with correct warning")]
     public void ThenISeePopupMessageBoxWithCorrectWarning()
     {
