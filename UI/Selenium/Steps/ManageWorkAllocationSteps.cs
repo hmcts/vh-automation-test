@@ -16,10 +16,11 @@ public class ManageWorkAllocationSteps : ObjectFactory
     private readonly ScenarioContext _scenarioContext;
     SelectYourHearingListSteps selectYourHearingListSteps;
 
-    public ManageWorkAllocationSteps(ScenarioContext scenarioContext)
+    public ManageWorkAllocationSteps(ScenarioContext scenarioContext, SelectYourHearingListSteps selectYourHearingListSteps)
         : base(scenarioContext)
     {
         _scenarioContext = scenarioContext;
+        this.selectYourHearingListSteps = selectYourHearingListSteps;
     }
 
 
