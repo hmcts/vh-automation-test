@@ -18,7 +18,6 @@ public class WorkAllocationManageTeamEditUser : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
     public static String _ValidJusticeUserName = "auto_aw.CSOTestUser@hearings.reform.hmcts.net";
-
     public WorkAllocationManageTeamEditUser(ScenarioContext scenarioContext)
         : base(scenarioContext)
     {
@@ -55,8 +54,8 @@ public class WorkAllocationManageTeamEditUser : ObjectFactory
         }
     }
 
-    [Then(@"I chage the Role from CSO to Administrator Or Administrator to CSO")]
-    public void ThenIChageTheRoleFromCsoToAdministratorOrAdministratorToCso()
+    [Then(@"I change the Role from CSO to Administrator Or Administrator to CSO")]
+    public void ThenIChangeTheRoleFromCsoToAdministratorOrAdministratorToCso()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamJusticeUserEditRole);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamJusticeUserEditRole).Click();
@@ -94,7 +93,6 @@ public class WorkAllocationManageTeamEditUser : ObjectFactory
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamEditRolePopupWindow);
         Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamEditRolePopupWindow).Displayed);
     }
-
 
     [Then(@"I see user updated confirmation on the page")]
     public void ThenISeeUserUpdatedConfirmationOnThePage()
