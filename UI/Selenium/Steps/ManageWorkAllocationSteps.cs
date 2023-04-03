@@ -55,8 +55,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkingHoursNonAvailability);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkingHoursNonAvailability).Click();
     }
-
-   
+    
     [When(@"I click on Manage Team")]
     public void GivenIClickOnManageTeam()
     {
@@ -111,7 +110,6 @@ public class ManageWorkAllocationSteps : ObjectFactory
     {
         var startDate = DateTime.Now.ToString("dd/MM/yyyy");
         var endDate = DateTime.Now.AddDays(7).ToString("dd/MM/yyyy");
-        //ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext).Click();
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext)
             .SendKeys(startDate);
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeEndDate, _scenarioContext)
