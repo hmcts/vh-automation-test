@@ -68,15 +68,5 @@
 	  <Folder Include="TestData" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="TestData\NonAvailabilityHours.csv" />
-	  <EmbeddedResource Include="TestData\NonAvailabilityHours.csv">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	  <None Remove="TestData\Good.csv" />
-	  <EmbeddedResource Include="TestData\Good.csv">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	</ItemGroup>
-
+	
 </Project>
