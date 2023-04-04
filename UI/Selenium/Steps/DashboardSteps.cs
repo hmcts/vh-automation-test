@@ -104,7 +104,7 @@ namespace UI.Steps
         }
 
 
-        [When(@"I click on Upload CVS workhours")]
+        [When(@"I click on Upload CVS workhours")] 
         public void WhenIClickOnUploadCvsWorkhours()
         {
             SelectDashboardOption("Upload Working hours CSV File");

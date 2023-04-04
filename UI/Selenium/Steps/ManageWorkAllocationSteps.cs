@@ -30,7 +30,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     public void GivenIClickOnUploadWorkhoursAndNonAvailability()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability);
-        Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click();
+        Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click(); 
     }
 
     [Then(@"file is uploaded successfully non availability hours")]
