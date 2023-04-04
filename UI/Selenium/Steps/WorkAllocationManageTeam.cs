@@ -184,7 +184,7 @@ public class WorkAllocationManageTeam : ObjectFactory
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingSelectFirstCase);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSelectFirstCase).Click();
-        //  Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSelectSecondCase).Click();
+        
     }
 
     [Then(@"I click confirm button")]

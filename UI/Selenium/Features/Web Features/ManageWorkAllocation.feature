@@ -48,9 +48,7 @@ Scenario: Manage Team Edit User, Delete User, Restore User
 	And I see popup message box with correct warning
 	Then I click Yes,proceed button to restore user
 	And I confirm user has been restored. 
-		
-		
-		
+						
 Scenario: Work Allocation Manage Team and Allocate Hearing 
 	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 	Then the page should be accessible
