@@ -18,7 +18,6 @@
 
 	<ItemGroup>
 		<None Remove="App.config" />
-		<None Remove="passwords.json" />
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="5.0.0-beta01" />
@@ -69,17 +68,6 @@
 
 	<ItemGroup>
 	  <Folder Include="TestData" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="TestData\NonAvailabilityHours.csv" />
-	  <EmbeddedResource Include="TestData\NonAvailabilityHours.csv">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	  <None Remove="TestData\Good.csv" />
-	  <EmbeddedResource Include="TestData\Good.csv">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	</ItemGroup>
-
+	</ItemGroup> 
+	
 </Project>
