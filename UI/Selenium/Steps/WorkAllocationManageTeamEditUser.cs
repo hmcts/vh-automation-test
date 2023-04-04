@@ -71,13 +71,7 @@ public class WorkAllocationManageTeamEditUser : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamEditRoleSaveButton).Click();
     }
 
-    [When(@"I click on Manage Team")]
-    public void WhenIClickOnManageTeam()
-    {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeam);
-        Driver.FindElement(ManageWorkAllocationPage.ManageTeam).Click();
-    }
-
+    
     [When(@"I Search for User ""(.*)""")]
     public void WhenISearchForUser(string p0)
     {

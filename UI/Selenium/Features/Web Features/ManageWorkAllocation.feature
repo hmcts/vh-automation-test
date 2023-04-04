@@ -42,7 +42,7 @@ Scenario: Edit Working Hours
 Scenario: Manage Team Edit User, Delete User, Restore User
 	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 	Then the page should be accessible
-	When i click on Manage Work Allocation Dashboard
+	When I click on Manage Work Allocation Dashboard
 	And I click on Manage Team 
 	And I Search for User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
 	Then I confirm User Displayed on the Page 
@@ -67,7 +67,7 @@ Scenario: Manage Team Edit User, Delete User, Restore User
 Scenario: Work Allocation Manage Team and Allocate Hearing 
 	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
 	Then the page should be accessible
-	When i click on Manage Work Allocation Dashboard
+	When I click on Manage Work Allocation Dashboard
 	Then i click manage team 
 	And I search for new user
 	Then I see no user found message and add new user button
@@ -79,7 +79,7 @@ Scenario: Work Allocation Manage Team and Allocate Hearing
 	Then I click on Allocate Hearing
 	Then I Select Date Range
 	And I press Search
-	And I Select Allocate To User "auto_aw.CSOTestUser@hearings.reform.hmcts.net"
+	And I Select Allocate To User 
 	And I Select First and Second Hearing 
 	And I click confirm button
 	Then I See Hearing have been updated message

@@ -167,18 +167,7 @@ public class WorkAllocationManageTeam : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
     }
 
-    [Then(@"I Select Allocate To User ""(.*)""")]
-    public void ThenISelectAllocateToUser(string p0)
-    {
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCSOSelectList);
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).SendKeys(_randomFirstName);
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCsoSelect);
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCsoSelect).Click();
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
-    }
-
+   
     [Then(@"I Select First and Second Hearing")]
     public void ThenISelectFirstAndSecondHearing()
     {
@@ -217,5 +206,18 @@ public class WorkAllocationManageTeam : ObjectFactory
         }
 
         return sb.ToString();
+    }
+
+    [Then(@"I Select Allocate To User")]
+    public void ThenISelectAllocateToUser()
+    {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingAllocateToCSO);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingAllocateToCSO).Click();
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingAllocateToCSO);
+        //Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingAllocateToCSO).SendKeys(_randomFirstName);
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCsoSelect);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCsoSelect).Click();
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
     }
 }
