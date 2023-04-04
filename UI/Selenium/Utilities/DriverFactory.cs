@@ -237,6 +237,7 @@ namespace UI.Utilities
             return WebDriver;
         }
 
+        
         private static AppiumOptions InitIOsAppiumOptions(SauceLabsOptions sauceLabsOptions, SauceLabsConfiguration config,
             Dictionary<string, object> sauceOptions)
         {
@@ -258,6 +259,7 @@ namespace UI.Utilities
             return iosOptions;
         }
 
+       
         private static AppiumOptions InitAndroidAppiumOptions(SauceLabsOptions sauceLabsOptions, SauceLabsConfiguration config,
             Dictionary<string, object> sauceOptions)
         {

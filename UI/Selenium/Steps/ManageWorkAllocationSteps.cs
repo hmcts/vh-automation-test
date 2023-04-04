@@ -1,12 +1,9 @@
-using System.Threading;
+using System;
 using NUnit.Framework;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Pages;
 using UI.Utilities;
-using System;
-using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 
 namespace UI.Steps;
 
@@ -14,7 +11,6 @@ namespace UI.Steps;
 public class ManageWorkAllocationSteps : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
-    SelectYourHearingListSteps selectYourHearingListSteps;
 
     public ManageWorkAllocationSteps(ScenarioContext scenarioContext)
         : base(scenarioContext)
@@ -30,11 +26,11 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Assert.True(Driver.FindElement(ManageWorkAllocationPage.TeamWorkingHoursUploadedSuccessfully).Displayed);
     }
 
-    [Given(@"i click on Upload Workhours and non Availability")]
+    [Given(@"I click on Upload Workhours and non Availability")]
     public void GivenIClickOnUploadWorkhoursAndNonAvailability()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability);
-        Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click();
+        Driver.FindElement(ManageWorkAllocationPage.UploadWorkingHoursOrNonAvailability).Click(); 
     }
 
     [Then(@"file is uploaded successfully non availability hours")]
@@ -48,34 +44,30 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Assert.AreEqual(teamNonAvailabilityHoursUploadedSuccessfully, getTextNonAvailabilityHoursSuccess);
     }
 
-    [Given(@"i click on Edit Working hours and non availability")]
-    [When(@"i click on Edit Working hours and non availability")]
+    [Given(@"I click on Edit Working hours and non availability")]
     public void GivenIClickOnEditWorkingHoursAndNonAvailability()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkingHoursNonAvailability);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkingHoursNonAvailability).Click();
     }
-
-    [Given(@"i click on Manage Team")]
-    [When(@"i click on Manage Team")]
+    
+    [When(@"I click on Manage Team")]
     public void GivenIClickOnManageTeam()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeam);
         Driver.FindElement(ManageWorkAllocationPage.ManageTeam).Click();
     }
-
-    [Given(@"i click  Allocate Hearings")]
-    [When(@"i click  Allocate Hearings")]
+    
+    [When(@"I click  Allocate Hearings")]
     public void GivenIClickAllocateHearings()
     {
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearings);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearings).Click();
     }
 
-    [Then(@"i select Edit Working hour radio Button")]
+    [Then(@"I select Edit Working hour radio Button")]
     public void ThenISelectEditWorkingHourRadioButton()
     {
-        //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.EditWorkinghoursRadioButton);
         Driver.FindElement(ManageWorkAllocationPage.EditWorkinghoursRadioButton).Click();
     }
 
@@ -85,7 +77,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchTeamMemberField).Click();
     }
 
-    [Given(@"i Click on Edit working hours button")]
+    [Given(@"I Click on Edit working hours button")]
     public void GivenIClickOnEditWorkingHoursButton()
     {
         Driver.FindElement(ManageWorkAllocationPage.EditWorkinghoursRadioButton).Click();
@@ -95,7 +87,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     public void GivenSearchTeamMembers()
     {
         Driver.FindElement(ManageWorkAllocationPage.SearchFieldUsername)
-            .SendKeys("Phil.debrah@hearings.reform.hmcts.net");
+            .SendKeys("auto.vhoteamlead1@hearings.reform.hmcts.net");
         Driver.FindElement(ManageWorkAllocationPage.SearchButton).Click();
     }
 
@@ -103,7 +95,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
     public void WhenSearchForTeamMember()
     {
         Driver.FindElement(ManageWorkAllocationPage.SearchForTeamMember)
-            .SendKeys("Phil.debrah@hearings.reform.hmcts.net");
+            .SendKeys("auto.vhoteamlead1@hearings.reform.hmcts.net");
         Driver.FindElement(ManageWorkAllocationPage.ManageTeamSearchButton).Click();
     }
 
@@ -113,7 +105,6 @@ public class ManageWorkAllocationSteps : ObjectFactory
     {
         var startDate = DateTime.Now.ToString("dd/MM/yyyy");
         var endDate = DateTime.Now.AddDays(7).ToString("dd/MM/yyyy");
-        //ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext).Click();
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext)
             .SendKeys(startDate);
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeEndDate, _scenarioContext)
@@ -121,7 +112,7 @@ public class ManageWorkAllocationSteps : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearch).Click();
     }
 
-    [When(@"i select Allocated CSO")]
+    [When(@"I select Allocated CSO")]
     public void WhenISelectAllocatedCso()
     {
         Driver.FindElement(ManageWorkAllocationPage.AlloctatedCSO).Click();
