@@ -14,7 +14,7 @@ Scenario: Upload Working hours
 	When I click on Manage Work Allocation Dashboard
 	And I click on Upload CVS workhours
 	Then file is uploaded successfully Working Hours
-	And Team working hours uploaded successfully
+	And Team working hours uploaded successfully 
 
 Scenario: Upload Non Availability hours
 	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
