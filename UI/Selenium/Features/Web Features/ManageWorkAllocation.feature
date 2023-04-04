@@ -23,6 +23,7 @@ Scenario: Upload Non Availability hours
 	Given i click on Upload Workhours and non Availability
 	When i click on Upload non Availability hours
 	Then file is uploaded successfully non availability hours
+<<<<<<< HEAD
 	
 Scenario: Manage Team Edit User, Delete User, Restore User
 	Given I log in as "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net"	
@@ -77,3 +78,6 @@ Scenario: Work Allocation Manage Team and Allocate Hearing
 				
 		
 	
+=======
+				
+>>>>>>> parent of b693a85 (Vih 9734 manage work allocating test (#162))

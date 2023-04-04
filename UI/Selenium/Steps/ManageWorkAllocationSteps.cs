@@ -114,7 +114,11 @@ public class ManageWorkAllocationSteps : ObjectFactory
         var startDate = DateTime.Now.ToString("dd/MM/yyyy");
         var endDate = DateTime.Now.AddDays(7).ToString("dd/MM/yyyy");
         //ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext).Click();
+<<<<<<< HEAD
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AllocateHearingsFromDate, _scenarioContext)
+=======
+        ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.HearingRangeStartDate, _scenarioContext)
+>>>>>>> parent of b693a85 (Vih 9734 manage work allocating test (#162))
             .SendKeys(startDate);
         ExtensionMethods.FindElementWithWait(Driver, ManageWorkAllocationPage.AllocateHearingsEndDate, _scenarioContext)
             .SendKeys(endDate);
