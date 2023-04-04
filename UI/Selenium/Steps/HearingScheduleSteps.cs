@@ -4,7 +4,6 @@ using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Model;
 using System.Linq;
-using SeleniumExtras.WaitHelpers;
 using UI.Pages;
 using UI.Utilities;
 
@@ -51,7 +50,6 @@ namespace UI.Steps
             Driver.FindElement(HearingSchedulePage.HearingStartTimeMinute).SendKeys(hearingSchedule.HearingDate.FirstOrDefault().ToString("mm"));
             Driver.FindElement(HearingSchedulePage.HearingDurationHour).SendKeys(hearingSchedule.DurationHours);
             Driver.FindElement(HearingSchedulePage.HearingDurationMinute).SendKeys(hearingSchedule.DurationMinutes);
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementToBeClickable(HearingSchedulePage.CourtVenue));
             new SelectElement(Driver.FindElement(HearingSchedulePage.CourtVenue)).SelectByText(hearingSchedule.HearingVenue);
             Driver.FindElement(HearingSchedulePage.CourtRoom).SendKeys(hearingSchedule.HearingRoom);
             Driver.FindElement(HearingDetailsPage.NextButton).Click();
