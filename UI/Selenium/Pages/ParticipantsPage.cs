@@ -31,5 +31,6 @@ namespace UI.Pages
         public static By ParticipantsList = By.XPath("//*[contains(@class, 'vhtable-header')]");
         public static By InterpreteeDropdown = By.Id("interpreterFor");
         public static By EmailList = By.XPath("//ul[@id='search-results-list']//li");
+        public static By NewUserWarning = By.XPath("//*[@id='search-email-component']/app-search-email/div/div[2]/strong/span");
     }
 }
