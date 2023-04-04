@@ -1,12 +1,9 @@
-using System.Threading;
+using System;
 using NUnit.Framework;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Pages;
 using UI.Utilities;
-using System;
-using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 
 namespace UI.Steps;
 
@@ -14,13 +11,11 @@ namespace UI.Steps;
 public class ManageWorkAllocationSteps : ObjectFactory
 {
     private readonly ScenarioContext _scenarioContext;
-    SelectYourHearingListSteps selectYourHearingListSteps;
 
-    public ManageWorkAllocationSteps(ScenarioContext scenarioContext, SelectYourHearingListSteps selectYourHearingListSteps)
+    public ManageWorkAllocationSteps(ScenarioContext scenarioContext)
         : base(scenarioContext)
     {
         _scenarioContext = scenarioContext;
-        this.selectYourHearingListSteps = selectYourHearingListSteps;
     }
 
 
