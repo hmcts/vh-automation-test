@@ -104,6 +104,8 @@ namespace UI.Pages
         public static By AllocateHearingAllocateToCSO = By.XPath("//app-select[@placeholder='Select user']//input[@type='text']");
         public static By AllocateHearingSearchButton =
             By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
+
+        public static By AllocateHearingPageClick = By.XPath("//th[normalize-space()='Allocated officer']");
         public static By AllocateHearingCsoSelect = By.XPath("//div[@class='ng-option ng-option-marked']");
         
         

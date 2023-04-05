@@ -137,7 +137,7 @@ public class WorkAllocationManageTeam : ObjectFactory
     public static String GetRandomJusticeUserName()
     {
         Random randomGenerator = new Random();
-        var randomInt = randomGenerator.NextInt64(1000);
+        var randomInt = randomGenerator.NextInt64(100000);
         var manageTeamUserName = "auto.VH.TestUser" + randomInt + "@hearings.hmcts.net";
         return manageTeamUserName;
     }
@@ -219,5 +219,8 @@ public class WorkAllocationManageTeam : ObjectFactory
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCsoSelect);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCsoSelect).Click();
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingPageClick);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingPageClick).Click();
+
     }
 }
