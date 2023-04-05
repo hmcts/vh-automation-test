@@ -77,7 +77,7 @@ namespace UI.Pages
         public static By ManageTeamDeleteUserYesButton = By.XPath("//button[@id='btnConfirm']");
         public static By VerifyManageTeamDeleteUser = By.XPath("//span[@class='badge']");
         public static By ManageTeamRestoreUserButton =
-            By.XPath("//td[@class='govuk-table__cell']//fa-icon[@class='ng-fa-icon']");
+            By.CssSelector("#restoreButton_75084112-ce04-4ef3-5895-08db2bbc7eeb");
         public static By ManageTeamRestoreUserPopUpWindow = By.XPath("//div[@class='popup popup-small']");
         public static By VerifyManageTeamRestoreUserDetails =
             By.XPath(
