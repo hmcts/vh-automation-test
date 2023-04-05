@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -20,7 +20,7 @@
 		<None Remove="App.config" />
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Appium.WebDriver" Version="5.0.0-beta01" />
+    <PackageReference Include="Appium.WebDriver" Version="5.0.0-beta03" />
     <PackageReference Include="ExtentReports" Version="4.1.0" />
     <PackageReference Include="FluentAssertions" Version="6.8.0" />
     <PackageReference Include="libphonenumber-csharp" Version="8.13.7" />
