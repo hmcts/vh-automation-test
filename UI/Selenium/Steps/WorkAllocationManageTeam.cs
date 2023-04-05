@@ -211,8 +211,8 @@ public class WorkAllocationManageTeam : ObjectFactory
     [Then(@"I Select Allocate To User")]
     public void ThenISelectAllocateToUser()
     {
-        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingAllocateToCSO);
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingAllocateToCSO).Click();
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingAllocateToCSOArrow);
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingAllocateToCSOArrow).Click();
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingAllocateToCSO);
         //Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCSOSelectList).Click();
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingAllocateToCSO).SendKeys(_randomFirstName);

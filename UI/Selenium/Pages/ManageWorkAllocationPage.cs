@@ -101,7 +101,8 @@ namespace UI.Pages
         public static By AllocateHearings = By.Id("allocate-hearings");
         public static By AllocateHearingsEndDate = By.Id("to-date-entry");
         public static By AllocateHearingsFromDate = By.XPath("//input[@name='fromDate']");
-        public static By AllocateHearingAllocateToCSO = By.XPath("//app-select[@placeholder='Select user']//input[@type='text']");
+        public static By AllocateHearingAllocateToCSO = By.XPath("//div[@aria-expanded='true']//input[@type='text']");
+        public static By AllocateHearingAllocateToCSOArrow = By.CssSelector("app-select[placeholder='Select user'] span[class='ng-arrow-wrapper']");
         public static By AllocateHearingSearchButton =
             By.XPath("//button[@class='govuk-button govuk-!-margin-right-6']");
 
