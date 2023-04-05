@@ -53,7 +53,7 @@ namespace UI.Pages
             By.XPath("(//input[@id='search-team-member']//following::div/button)[1]");
         public static By SearchForTeamMember = By.CssSelector(".govuk-grid-column-one-third > .govuk-button");
         public static By ManageTeamNouserErrorMsg =
-            By.XPath("//div[@class='govuk-!-font-weight-bold vh-text-color-red']");
+            By.XPath("//div[contains(text(),'No users matching this search criteria were found.')]");
         public static By ManageTeamAddNewTeamMember = By.XPath("//button[normalize-space()='Add a team member']");
         public static By ManageTeamAddJusticeUserPopUp = By.XPath("//form[@class='ng-untouched ng-pristine ng-valid']");
 
