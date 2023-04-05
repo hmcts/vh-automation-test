@@ -42,6 +42,7 @@ public class WorkAllocationManageTeam : ObjectFactory
     [Then(@"I see no user found message and add new user button")]
     public void ThenISeeNoUserFoundMessageAndAddNewUserButton()
     {
+        ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.ManageTeamNouserErrorMsg);
         var errorMsgTextUserNotFoundActual = Driver.FindElement(ManageWorkAllocationPage.ManageTeamNouserErrorMsg).Text;
         var errorMsgTextUserNotFoundExpect =
             "No users matching this search criteria were found. Please check the search and try again. Or, add the team member.";
@@ -218,9 +219,11 @@ public class WorkAllocationManageTeam : ObjectFactory
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingAllocateToCSO).SendKeys(_randomFirstName);
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingCsoSelect);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingCsoSelect).Click();
-        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
         ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingPageClick);
         Driver.FindElement(ManageWorkAllocationPage.AllocateHearingPageClick).Click();
+        Driver.FindElement(ManageWorkAllocationPage.AllocateHearingSearchButton).Click();
+        //ExtensionMethods.WaitForElementVisible(Driver, ManageWorkAllocationPage.AllocateHearingPageClick);
+        //Driver.FindElement(ManageWorkAllocationPage.AllocateHearingPageClick).Click();
 
     }
 }
