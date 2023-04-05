@@ -132,7 +132,7 @@ public class WorkAllocationManageTeamEditUser : ObjectFactory
         Assert.IsTrue(Driver.FindElement(ManageWorkAllocationPage.ManageTeamRestoreUserPopUpWindow).Displayed);
         var verifyRestoreUserActual =
             Driver.FindElement(ManageWorkAllocationPage.VerifyManageTeamRestoreUserDetails).Text;
-        var verifyRestoreUserExpected = "You have selected to restore user:\r\n" + _ValidJusticeUserName + "";
+        var verifyRestoreUserExpected = "You have selected to restore user:auto_aw.CSOTestUser@hearings.reform.hmcts.net";
         Assert.AreEqual(verifyRestoreUserExpected, verifyRestoreUserActual);
     }
 }
