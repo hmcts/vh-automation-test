@@ -20,7 +20,7 @@ Scenario: End to End test
 	| Party     | Role               | Id                                  |
 	| Claimant  | Litigant in person | auto_vw.individual_60@hearings.reform.hmcts.net    |
 	| Claimant  | Representative     | auto_vw.representative_139@hearings.reform.hmcts.net |
-	| Defendant | Litigant in person | auto_vw.individual_134@hearings.reform.hmcts.net    |
+	| Defendant | Litigant in person | auto_vw.individual_137@hearings.reform.hmcts.net    |
 	| Defendant | Solicitor          | auto_vw.representative_157@hearings.reform.hmcts.net |
 
 	And With video Access points details
