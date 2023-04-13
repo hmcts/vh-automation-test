@@ -86,11 +86,20 @@ namespace UI.Steps
                     ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.ParticipantEmailTextfield, _scenarioContext);
                     _scenarioContext.UpdateElementName("ParticipantEmailTextfield");
                     _scenarioContext.UpdateActionName("SendKeys");
+                    TimeSpan emailListWaitTime = TimeSpan.FromSeconds(10);
+
                     ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.ParticipantEmailTextfield, _scenarioContext).SendKeys(participant.Id.Replace("hearings.reform.hmcts.net", "hmcts.net"));
                     if (!ExtensionMethods.IsElementVisible(Driver, ParticipantsPage.NewUserWarning, _scenarioContext))
                     {
-                        ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.EmailList, _scenarioContext, TimeSpan.FromSeconds(1));
+                        ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.EmailList, _scenarioContext, emailListWaitTime);
                     }
+
+                    
+                    // ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.ParticipantEmailTextfield, _scenarioContext).SendKeys(participant.Id.Replace("hearings.reform.hmcts.net", "hmcts.net"));
+                    // if (!ExtensionMethods.IsElementVisible(Driver, ParticipantsPage.NewUserWarning, _scenarioContext))
+                    // {
+                    //     ExtensionMethods.FindElementWithWait(Driver, ParticipantsPage.EmailList, _scenarioContext, TimeSpan.FromSeconds(1));
+                    // }
                     _scenarioContext["Hearing"] = _hearing;
                     new SelectElement(Driver.FindElement(ParticipantsPage.TitleDropdown)).SelectByText("Mr");
                     ExtensionMethods.SendKeys(Driver, Keys.Tab);
