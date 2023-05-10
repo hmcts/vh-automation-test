@@ -25,10 +25,22 @@ namespace UI.Steps
         [Given(@"I book the hearing")]
         public void GivenIBookTheHearing()
         {
+            TimeSpan timeout = TimeSpan.FromSeconds(90);
+
+            // _scenarioContext.UpdatePageName("Hearing summary");
+            // ExtensionMethods.FindElementWithWait(Driver, SummaryPage.BookButton, _scenarioContext, timeout).Click();
+            // ExtensionMethods.WaitForElementNotVisible(Driver, SummaryPage.DotLoader, timeout);
+            // if (ExtensionMethods.IsElementExists(Driver, SummaryPage.TryAgainButton, _scenarioContext))
+            // {
+            //     ExtensionMethods.FindElementWithWait(Driver, SummaryPage.TryAgainButton, _scenarioContext, timeout).Click();
+            //     wait.Until(ExpectedConditions.InvisibilityOfElementLocated(SummaryPage.DotLoader));
+            // }
+
+            
             _scenarioContext.UpdatePageName("Hearing summary");
             ExtensionMethods.FindElementWithWait(Driver, SummaryPage.BookButton, _scenarioContext).Click();
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(int.Parse(Config.OneMinuteElementWait)));
-            ExtensionMethods.WaitForElementNotVisible(Driver, SummaryPage.DotLoader, 60);
+            ExtensionMethods.WaitForElementNotVisible(Driver, SummaryPage.DotLoader, 90);
             if (ExtensionMethods.IsElementExists(Driver, SummaryPage.TryAgainButton, _scenarioContext))
             {
                 ExtensionMethods.FindElementWithWait(Driver, SummaryPage.TryAgainButton, _scenarioContext).Click();
