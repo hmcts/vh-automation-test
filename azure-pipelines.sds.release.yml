@@ -83,7 +83,7 @@ stages:
                   command: test
                   projects: "$(projectPath)/*.csproj"
                   arguments: "--configuration Release --filter TestCategory=Accessibility"
-                  publishTestResults: true 
+                  publishTestResults: true
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish Test Results Output
