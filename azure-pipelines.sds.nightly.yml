@@ -1,10 +1,9 @@
-
 trigger: none
 
 pr: none
 
 schedules:
-  - cron: '0 0 * * *'
+  - cron: "0 0 * * *"
     displayName: Daily midnight build
     always: true
     branches:
@@ -12,57 +11,90 @@ schedules:
         - master
 
 parameters:
-- name: runUITests
-  displayName: Run UI Tests
-  type: boolean
-  default: true
+  - name: runUITests
+    displayName: Run UI Tests
+    type: boolean
+    default: true
 
-- name: runApiTests
-  displayName: Run API Tests
-  type: boolean
-  default: false
+  - name: runApiTests
+    displayName: Run API Tests
+    type: boolean
+    default: false
 
-- name: environment
-  type: string
-  default: Dev
-  values:
-    - Dev
-    - Test
-    - Stg
-    - Prod
+  - name: environment
+    type: string
+    default: Dev
+    values:
+      - Dev
+      - Test
+      - Stg
+      - Prod
 
 pool:
-  name: 'VH Self Hosted'
+  name: "VH Self Hosted"
 
 stages:
+  ####################################################
+  # UI Testing. ######################################
+  - stage: Automation_Tests_${{ parameters.environment }}
+    displayName: Automation Tests ${{ parameters.environment }}
+    jobs:
+      - ${{ if eq(parameters.runUITests, true) }}:
+          - job: UI_Tests
+            displayName: UI Tests ${{ parameters.environment }}
+            variables:
+              - name: env
+                value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
+              - name: projectPath
+                value: "UI/Selenium"
+              - group: vh-automation-test-${{ parameters.environment }}
+              - group: Saucelabs
+              - group: KinlyConfiguration_${{ parameters.environment }}
+              - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
+                value: true
+              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
+                value: $(Saucelabs:Username)
+              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
+                value: $(Saucelabs:AccessKey)
+              - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
+                value: $(ConferencePhoneNumber)
+              - name: SystemConfiguration.LogLocation
+                value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
+              - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
+                value: $(Build.ArtifactStagingDirectory)/TestResults/
 
-####################################################
-# UI Testing. ######################################
-- stage: Automation_Tests_${{ parameters.environment }}
-  displayName: Automation Tests ${{ parameters.environment }}
-  jobs:
-  - ${{ if eq(parameters.runUITests, true) }}:
-    - job: UI_Tests
-      displayName: UI Tests ${{ parameters.environment }}
-      variables:
-      - name: env
-        value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
-      - name: projectPath
-        value: "UI/Selenium"
-      - group: vh-automation-test-${{ parameters.environment }}
-      steps:
+            steps:
+              # inserts variables to help create unique test names
+              - task: gitversion/setup@0
+                displayName: Install GitVersion
+                inputs:
+                  versionSpec: "5.11.1"
 
-      - task: FileTransform@1
-        displayName: Transform App Settings
-        inputs:
-          folderPath: $(projectPath)
-          fileType: json
-          targetFiles: appsettings.json
+              - task: gitversion/execute@0
+                displayName: Determine Version
 
-      - task: DotNetCoreCLI@2
-        displayName:  Run UI Tests
-        inputs:
-          command: test
-          projects: '$(projectPath)/*.csproj'
-          arguments: '--configuration Release'
-          publishTestResults: true
+              - task: FileTransform@1
+                displayName: Transform App Settings
+                inputs:
+                  folderPath: $(projectPath)
+                  fileType: json
+                  targetFiles: "**/appsettings.json"
+
+              - pwsh: |
+                  Get-Content "$(projectPath)/appsettings.json"
+                displayName: Print App Settings
+
+              - task: DotNetCoreCLI@2
+                displayName: Run UI Tests
+                continueOnError: true
+                inputs:
+                  command: test
+                  projects: "$(projectPath)/*.csproj"
+                  arguments: "--configuration Release --filter TestCategory=Accessibility"
+                  publishTestResults: true
+
+              - task: PublishBuildArtifacts@1
+                displayName: Publish Test Results Output
+                inputs:
+                  pathToPublish: "$(Build.ArtifactStagingDirectory)/TestResults/"
+                  artifactName: TestResultsOutput
