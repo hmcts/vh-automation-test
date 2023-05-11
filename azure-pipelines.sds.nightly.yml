@@ -41,6 +41,8 @@ stages:
     jobs:
       - ${{ if eq(parameters.runUITests, true) }}:
           - job: UI_Tests
+            timeoutInMinutes: 120
+            cancelTimeoutInMinutes: 3
             displayName: UI Tests ${{ parameters.environment }}
             variables:
               - name: env
