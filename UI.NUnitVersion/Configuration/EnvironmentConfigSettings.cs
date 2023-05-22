@@ -1,4 +1,4 @@
-﻿namespace UI.NUnit.Configuration
+﻿namespace UI.NUnitVersion.Configuration
 {
     ///<summary>
     /// Class to hold Environment related settings 

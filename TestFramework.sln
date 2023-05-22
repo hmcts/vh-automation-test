@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\Selenium\UI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.PageModels", "UI.PageModels\UI.PageModels.csproj", "{114F1A82-BEC7-4F02-A7CF-9787F5A2CC4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.NUnit", "UI.NUnit\UI.NUnit.csproj", "{54CFA1E7-05A0-416A-95FA-4B75C032DD86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.NUnitVersion", "UI.NUnitVersion\UI.NUnitVersion.csproj", "{54CFA1E7-05A0-416A-95FA-4B75C032DD86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
