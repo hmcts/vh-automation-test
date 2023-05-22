@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using RandomNameGenerator;
+using RandomFriendlyNameGenerator;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Pages;
@@ -12,10 +13,13 @@ namespace UI.Steps;
 [Binding]
 public class WorkAllocationManageTeam : ObjectFactory
 {
+    
     private readonly ScenarioContext _scenarioContext;
     public static String _justiceUserName = GetRandomJusticeUserName();
-    public static String _randomFirstName = NameGenerator.GenerateFirstName(Gender.Male);
-    public static String _randomLastName = NameGenerator.GenerateLastName();
+
+    public static String _randomFirstName =
+        NameGenerator.PersonNames.Get(1, NameGender.Male, NameComponents.FirstNameOnly).First();
+    public static String _randomLastName = NameGenerator.PersonNames.Get(1, NameGender.Male, NameComponents.LastNameOnly).First();
 
     public WorkAllocationManageTeam(ScenarioContext scenarioContext)
         : base(scenarioContext)

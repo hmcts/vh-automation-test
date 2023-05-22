@@ -1,11 +1,7 @@
 using System;
-using System.Threading;
-using MongoDB.Bson.Serialization.Serializers;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.DevTools.V107.Debugger;
 using OpenQA.Selenium.Support.UI;
-using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
 using TechTalk.SpecFlow;
 using TestFramework;
 using UI.Pages;

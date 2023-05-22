@@ -11,4 +11,5 @@ public class SauceLabsConfiguration
     public string SauceAccessKey { get; set; }
     public string SauceUrl { get; set; }
     public string Orientation { get; set; }
+    public bool ConsoleLogging { get; set; }
 }

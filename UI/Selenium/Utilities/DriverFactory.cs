@@ -170,18 +170,29 @@ namespace UI.Utilities
 
         public IWebDriver InitializeSauceDriver(SauceLabsOptions sauceLabsOptions, SauceLabsConfiguration config)
         {
-            var driverOptions = new ChromeOptions()
+            DriverOptions driverOptions = config.BrowserName.ToLower() switch
             {
-                PlatformName = "Windows 11",
-                BrowserVersion = "latest"
+                "firefox" => new FirefoxOptions(),
+                "edge" => new EdgeOptions(),
+                "safari" => new SafariOptions(),
+                "chrome" => new ChromeOptions(),
+                _ => new ChromeOptions()
             };
+            driverOptions.PlatformName = $"{config.PlatformName} {config.PlatformVersion}";
+            driverOptions.AcceptInsecureCertificates = true;
+
             driverOptions.AddAdditionalOption("username", config.SauceUsername);
             driverOptions.AddAdditionalOption("accessKey", config.SauceAccessKey);
-
-            var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
-                $"local-{Environment.MachineName}-{DateTime.Now:dd-mm-yy-hh-mm}" : 
-                GetBuildNameForSauceLabs(driverOptions);
             
+            var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
+                $"local-{Environment.UserName}-{Environment.MachineName}-{DateTime.Now:dd-mm-yy-hh-mm}" : 
+                GetBuildNameForSauceLabs(driverOptions);
+
+            var resolution = "1280x768";
+            if (config.PlatformName.ToLower() == "macos")
+            {
+                resolution = "1024x768";
+            }
             var sauceOptions = new Dictionary<string, object>
             {
                 {"build", buildName},
@@ -191,8 +202,15 @@ namespace UI.Utilities
                 {"maxDuration", sauceLabsOptions.MaxDurationInSeconds},
                 {"commandTimeout", sauceLabsOptions.CommandTimeoutInSeconds},
                 {"idleTimeout", sauceLabsOptions.IdleTimeoutInSeconds},
-                {"screenResolution", "1280x768"}
+                {"screenResolution", resolution}
             };
+            
+            
+            if (config.ConsoleLogging)
+            {
+                sauceOptions.Add("extendedDebugging", true);
+            }
+
             driverOptions.AddAdditionalOption("sauce:options", sauceOptions);
 
             var remoteUrl = new Uri($"http://{config.SauceUsername}:{config.SauceAccessKey}@{config.SauceUrl}");
