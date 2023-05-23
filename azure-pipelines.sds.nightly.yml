@@ -48,7 +48,7 @@ stages:
               - name: env
                 value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
               - name: projectPath
-                value: "UI/Selenium"
+                value: "UI.NUnitVersion"
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_${{ parameters.environment }}
@@ -92,7 +92,7 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=EndtoEndTest"
+                  arguments: "--configuration Release"
                   publishTestResults: true
 
               - task: PublishBuildArtifacts@1
