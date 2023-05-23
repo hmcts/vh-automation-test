@@ -1,13 +1,14 @@
 ﻿using OpenQA.Selenium;
 using UI.PageModels.Pages.Admin.Booking;
 using UI.PageModels.Pages.Video;
+using UI.Pages;
 
 namespace UI.PageModels.Pages.Admin
 {
     public class DashboardPage : VhPage
     {
 	    private readonly By _bookHearingButton = By.Id("bookHearingBtn");
-        
+	    private readonly By _workAllocationButton = By.Id("manageWorkAllocationBtn");
         public DashboardPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
         {
 	        WaitForApiSpinnerToDisappear();
@@ -23,6 +24,12 @@ namespace UI.PageModels.Pages.Admin
         {
 	        ClickElement(_bookHearingButton);
 	        return new HearingDetailsPage(Driver, DefaultWaitTime);
+        }
+        
+        public ManageWorkAllocationPage GoToManageWorkAllocation()
+        {
+	        ClickElement(_workAllocationButton);
+	        return new ManageWorkAllocationPage(Driver, DefaultWaitTime);
         }
     }
 }

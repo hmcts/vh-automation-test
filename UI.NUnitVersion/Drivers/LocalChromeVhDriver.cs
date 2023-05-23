@@ -29,6 +29,6 @@ public class LocalChromeVhDriver : IVhDriver
 
     public void PublishTestResult(bool passed)
     {
-        throw new NotSupportedException("Need to integrate with a local reporter (i.e. ExtentReports)");
+        //throw new NotSupportedException("Need to integrate with a local reporter (i.e. ExtentReports)");
     }
 }
