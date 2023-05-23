@@ -15,4 +15,11 @@
       <ProjectReference Include="..\TestFramework\TestFramework.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Pages\Admin\ChangePassword\" />
+      <Folder Include="Pages\Admin\DeleteAccount\" />
+      <Folder Include="Pages\Admin\EditParticipant\" />
+      <Folder Include="Pages\Admin\WorkAllocation\" />
+    </ItemGroup>
+
 </Project>

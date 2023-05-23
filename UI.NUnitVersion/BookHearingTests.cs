@@ -1,4 +1,5 @@
 using UI.NUnitVersion.Drivers;
+using UI.PageModels.Pages.Admin;
 
 namespace UI.NUnitVersion;
 
@@ -46,7 +47,7 @@ public class BookHearingTests
     {
         var driver = _vhDriver.GetDriver();
         driver.Navigate().GoToUrl(_envConfigSettings.AdminUrl);
-        var loginPage = new LoginPage(driver, _envConfigSettings.DefaultElementWait);
+        var loginPage = new AdminWebLoginPage(driver, _envConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(username, _envConfigSettings.UserPassword);
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
