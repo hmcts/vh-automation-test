@@ -1,5 +1,5 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Support.Extensions;
 
 namespace UI.PageModels.Pages
 {

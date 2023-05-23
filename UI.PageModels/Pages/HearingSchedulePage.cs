@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.Extensions;
 
 namespace UI.PageModels.Pages
 {
@@ -41,8 +43,7 @@ namespace UI.PageModels.Pages
         
         public void EnterHearingDate(DateTime date, int durationHour, int durationMinute)
 		{
-			// TODO: get culture info from config
-			var dateString = date.ToString(new CultureInfo("en-GB"));
+			var dateString = date.ToString(new CultureInfo(Locale).DateTimeFormat.ShortDatePattern);
 			EnterText(_hearingDate, dateString);
 			EnterText(_hearingStartTimeHour, date.ToString("HH"));
 			EnterText(_hearingStartTimeMinute, date.ToString("mm"));

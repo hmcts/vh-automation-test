@@ -27,6 +27,7 @@ namespace UI.PageModels.Pages
 
 		public LoginPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
 		{
+			WaitForElementToBeClickable(_nextBtn);
 		}
 
 		public DashboardPage Login(string username, string password)

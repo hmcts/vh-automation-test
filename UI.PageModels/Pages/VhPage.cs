@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using TestFramework;
@@ -9,6 +10,7 @@ public abstract class VhPage
 {
     protected IWebDriver Driver;
     protected int DefaultWaitTime;
+    protected string Locale = "en-GB";
     
     protected readonly By Spinner = By.Id("waitPopup");
 
@@ -16,6 +18,10 @@ public abstract class VhPage
     {
         Driver = driver;
         DefaultWaitTime = defaultWaitTime;
+        if (driver is RemoteWebDriver)
+        {
+            Locale = "en-US";
+        }
     }
 
     protected bool HasFormValidationError()

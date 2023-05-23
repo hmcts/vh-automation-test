@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Configuration;
-
 namespace UI.NUnitVersion.Configuration;
 
 public static class ConfigRootBuilder
