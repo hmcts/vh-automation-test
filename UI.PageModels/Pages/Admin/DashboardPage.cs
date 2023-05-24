@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using UI.PageModels.Pages.Admin.Booking;
+using UI.PageModels.Pages.Admin.WorkAllocation;
 using UI.PageModels.Pages.Video;
-using UI.Pages;
 
 namespace UI.PageModels.Pages.Admin
 {

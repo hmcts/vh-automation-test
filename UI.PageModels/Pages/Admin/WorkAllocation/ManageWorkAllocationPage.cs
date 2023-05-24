@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
 using OpenQA.Selenium;
-using TestFramework;
 using UI.PageModels.Pages.Video;
 
-namespace UI.Pages
+namespace UI.PageModels.Pages.Admin.WorkAllocation
 {
     ///<summary>
     ///   WorkAllocationPage

@@ -1,54 +1,14 @@
-using UI.NUnitVersion.Drivers;
-using UI.PageModels.Pages.Admin;
+namespace UI.NUnitVersion.Admin;
 
-namespace UI.NUnitVersion;
-
-public class BookHearingTests
+public class BookHearingTests : AdminWebUiTest
 {
-    private IVhDriver _vhDriver;
-    // private IWebDriver _driver;
-    private EnvironmentConfigSettings _envConfigSettings;
-    public string username = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
-    // private TestReporter _testReporter;
-
-    [OneTimeSetUp]
-    protected void OneTimeSetup()
-    {
-        // _testReporter = new TestReporter();
-        // _testReporter.SetupReport();
-    }
-    
-    [SetUp]
-    public void Setup()
-    {
-        var config = ConfigRootBuilder.Build();
-        // _testReporter.SetupTest(TestContext.CurrentContext.Test.Name);
-        _envConfigSettings = config.GetSection("SystemConfiguration:EnvironmentConfigSettings").Get<EnvironmentConfigSettings>();
-        // _driver = new LocalChromeVhDriver().GetDriver(); //BuildChromeDriver();
-        _vhDriver = new RemoteChromeVhDriver();
-    }
-    
-    [TearDown]
-    public void TearDown()
-    {
-        // _testReporter.ProcessTest();
-        _vhDriver.PublishTestResult(TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed);
-        _vhDriver.Terminate();
-    }
-    
-    [OneTimeTearDown]
-    protected void OneTimeTearDown()
-    {
-        // _testReporter.Flush();
-    }
-
     [Test]
     public void BookAHearing()
     {
-        var driver = _vhDriver.GetDriver();
-        driver.Navigate().GoToUrl(_envConfigSettings.AdminUrl);
-        var loginPage = new AdminWebLoginPage(driver, _envConfigSettings.DefaultElementWait);
-        var dashboardPage = loginPage.Login(username, _envConfigSettings.UserPassword);
+        var driver = VhDriver.GetDriver();
+        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(Username, EnvConfigSettings.UserPassword);
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
         createHearingPage.EnterHearingDetails("Test Hearing", "Test Case", "Civil", "Enforcement Hearing");
