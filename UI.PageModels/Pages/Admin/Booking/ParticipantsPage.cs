@@ -67,7 +67,7 @@ namespace UI.PageModels.Pages.Admin.Booking
 	        EnterText(_displayNameTextfield, displayName);
         }
         
-        public void AddNewParticipant(string party, string role, string contactEmail, string displayName, NewParticipantDto newParticipantDto, string? representing = null)
+        private void AddNewParticipant(string party, string role, string contactEmail, string displayName, NewParticipantDto newParticipantDto, string? representing = null)
 		{
 	        SelectDropDownByText(_partyDropdown, party);
 	        SelectDropDownByText(_roleDropdown, role);
@@ -99,7 +99,7 @@ namespace UI.PageModels.Pages.Admin.Booking
 	        AddExistingParticipant(party, role, contactEmail, displayName, representing);
         }
 
-        private void AddExistingParticipant(string party, string role, string contactEmail, string displayName, string representing = null)
+        private void AddExistingParticipant(string party, string role, string contactEmail, string displayName, string? representing = null)
         {
 	        SelectDropDownByText(_partyDropdown, party);
 	        SelectDropDownByText(_roleDropdown, role);
