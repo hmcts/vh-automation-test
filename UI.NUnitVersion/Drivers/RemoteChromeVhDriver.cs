@@ -81,7 +81,7 @@ public class RemoteChromeVhDriver : IVhDriver
     private string GetBuildNameForSauceLabs()
     {
         var attemptNumber = GetAttemptNumber();
-        var build = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Today:dd.MM.yyyy}     [ {_driverOptions.BrowserName} | {_driverOptions.PlatformName} | {_driverOptions.BrowserVersion} ] {attemptNumber}";
+        var build = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Now:dd-mm-yy-hh-mm}     [ {_driverOptions.BrowserName} | {_driverOptions.PlatformName} | {_driverOptions.BrowserVersion} ] {attemptNumber}";
         return build;
     }
     
