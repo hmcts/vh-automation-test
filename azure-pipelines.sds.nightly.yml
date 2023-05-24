@@ -95,8 +95,14 @@ stages:
                   arguments: "--configuration Release"
                   publishTestResults: true
 
-              - task: PublishBuildArtifacts@1
-                displayName: Publish Test Results Output
+              - task: PublishTestResults@2
+                displayName: Publish Test Results
                 inputs:
-                  pathToPublish: "$(Build.ArtifactStagingDirectory)/TestResults/"
-                  artifactName: TestResultsOutput
+                  testResultsFiles: "**/*TestResults.trx"
+                  testRunTitle: "UI Tests ${{ parameters.environment }}"
+
+              # - task: PublishBuildArtifacts@1
+              #   displayName: Publish Test Results Output
+              #   inputs:
+              #     pathToPublish: "$($(Agent.TempDirectory))/TestResults/"
+              #     artifactName: TestResultsOutput
