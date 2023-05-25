@@ -9,3 +9,4 @@ global using UI.PageModels.Pages.Admin;
 global using UI.NUnitVersion.Reporters;
 global using UI.PageModels.Pages;
 global using WebDriverManager.DriverConfigs.Impl;
+global using System.Globalization;
