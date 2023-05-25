@@ -19,19 +19,19 @@ public class BookHearingTests : AdminWebUiTest
             "Birmingham Civil and Family Justice Centre", "Room 1");
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails("Manual01Clerk01@hearings.reform.hmcts.net", "Judge Fudge", "");
+        assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
         
         var addParticipantPage = assignJudgePage.GoToNextPage();
         addParticipantPage.AddExistingIndividualParticipant("Claimant", "Litigant in person", "auto_vw.individual_60@hmcts.net", "Auto 1");
         addParticipantPage.AddExistingRepresentative("Claimant", "Representative", "auto_vw.representative_139@hmcts.net", "Auto 2", "Auto 1");
-        // addParticipantPage.AddExistingParticipant("Defendant", "Litigant in person", "auto_vw.individual_137@hmcts.net");
-        // addParticipantPage.AddExistingRepresentative("Defendant", "Representative", "auto_vw.representative_157@hmcts.net");
+        addParticipantPage.AddExistingIndividualParticipant("Defendant", "Litigant in person", "auto_vw.individual_137@hmcts.net", "Auto 3");
+        addParticipantPage.AddExistingRepresentative("Defendant", "Representative", "auto_vw.representative_157@hmcts.net", "Auto 4", "Auto 3");
         
         var videoAccessPointsPage = addParticipantPage.GoToNextPage();
         
         var otherInformationPage = videoAccessPointsPage.GoToNextPage();
         otherInformationPage.TurnOffAudioRecording();
-        otherInformationPage.EnterOtherInformation("SP test");
+        otherInformationPage.EnterOtherInformation("This is a test info");
         
         var summaryPage = otherInformationPage.GoToNextPage();
         var confirmationPage = summaryPage.ClickBookButton();
