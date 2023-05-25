@@ -48,7 +48,7 @@ stages:
               - name: env
                 value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
               - name: projectPath
-                value: "UI.NUnitVersion"
+                value: "UI/Selenium"
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_${{ parameters.environment }}
@@ -92,18 +92,11 @@ stages:
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release"
+                  arguments: "--configuration Release --filter TestCategory=EndtoEndTest"
                   publishTestResults: true
 
-              - task: PublishTestResults@2
-                displayName: Publish Test Results
+              - task: PublishBuildArtifacts@1
+                displayName: Publish Test Results Output
                 inputs:
-                  testResultsFiles: "**/*TestResults.trx"
-                  testRunTitle: "UI Tests ${{ parameters.environment }}"
-                  failTaskOnFailedTests: true
-
-              # - task: PublishBuildArtifacts@1
-              #   displayName: Publish Test Results Output
-              #   inputs:
-              #     pathToPublish: "$($(Agent.TempDirectory))/TestResults/"
-              #     artifactName: TestResultsOutput
+                  pathToPublish: "$(Build.ArtifactStagingDirectory)/TestResults/"
+                  artifactName: TestResultsOutput
