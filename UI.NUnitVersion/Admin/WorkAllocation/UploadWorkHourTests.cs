@@ -1,4 +1,4 @@
-namespace UI.NUnitVersion.Admin;
+namespace UI.NUnitVersion.Admin.WorkAllocation;
 
 public class UploadWorkHourTests : AdminWebUiTest
 {
