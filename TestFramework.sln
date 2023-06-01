@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwaggerJsonApi", "API\RestS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\Selenium\UI.csproj", "{07125A3F-3406-4847-92DD-78564B8C4772}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.PageModels", "UI.PageModels\UI.PageModels.csproj", "{114F1A82-BEC7-4F02-A7CF-9787F5A2CC4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.NUnitVersion", "UI.NUnitVersion\UI.NUnitVersion.csproj", "{54CFA1E7-05A0-416A-95FA-4B75C032DD86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,14 @@ Global
 		{07125A3F-3406-4847-92DD-78564B8C4772}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07125A3F-3406-4847-92DD-78564B8C4772}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07125A3F-3406-4847-92DD-78564B8C4772}.Release|Any CPU.Build.0 = Release|Any CPU
+		{114F1A82-BEC7-4F02-A7CF-9787F5A2CC4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{114F1A82-BEC7-4F02-A7CF-9787F5A2CC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{114F1A82-BEC7-4F02-A7CF-9787F5A2CC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{114F1A82-BEC7-4F02-A7CF-9787F5A2CC4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
