@@ -9,7 +9,7 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation
     ///   Page element definitions
     ///   Do not add logic here
     ///</summary>
-    public class ManageWorkAllocationPage : VhPage
+    public class ManageWorkAllocationPage : VhAdminWebPage
     {
         private readonly By _editAvailability = By.Id("edit-availability");
         private readonly By _manageWorkAllocation = By.Id("manageWorkAllocationBtn");
@@ -25,10 +25,9 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation
             By.XPath("//div[@id='non-working-hours-file-upload-error']//button[.='Upload']");
 
         private readonly By _teamWorkingHoursUploadedSuccessfully = By.CssSelector("div#file-upload-result > p");
-        // private readonly By _successFileUpload = By.CssSelector("#file-upload-result:nth-of-type(2) p");
-        // private readonly By _teamWorkingHoursUploadedSuccessfullyM = By.CssSelector("#file-upload-result > p");
-        // private readonly By _teamNonAvailabilityHoursUploadedSuccessfully =
-        //     By.CssSelector("div[id='file-upload-result'] p");
+
+        // Allocate hearings section
+        private readonly By _allocateHearingsSectionBtn = By.Id("allocate-hearings");
 
         public ManageWorkAllocationPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
         {
@@ -62,6 +61,48 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation
             File.Exists(filePath).Should().BeTrue();
             EnterText(_uploadNonAvailabilityCsvField, fullPath);
             ClickElement(_uploadNonAvailabilityHoursButton);
+        }
+        
+        public void AllocateJusticeUserToHearing(string caseNumber = "automation test", string justiceUserDisplaName = "automation allocation")
+        {
+            WaitForApiSpinnerToDisappear();
+            // open the section
+            ClickElement(_allocateHearingsSectionBtn);
+            
+            // enter the case number
+            var caseNumberField = By.Id("case-number-entry");
+            EnterText(caseNumberField, caseNumber);
+            
+            // search for hearings
+            var searchButton = By.Id("allocate-hearings-search-btn");
+            ClickElement(searchButton);
+            
+            // search for justice user
+            // var selectorDropdown = By.Id("select-menu");
+            // ClickElement(selectorDropdown);
+            //*[@id='select-menu']/div/div/div[2]/[@type='text']
+            var justiceUserSelectDropdown = By.XPath("//app-select[@id='select-cso-search-allocation']//input[@type='text']");
+            ClickElement(justiceUserSelectDropdown);
+            EnterText(justiceUserSelectDropdown, justiceUserDisplaName, false);
+
+            var firstName = justiceUserDisplaName.Split(" ")[0];
+            var dropDownSelector = By.XPath($"//input[@aria-label='User {firstName}']");
+            ClickElement(dropDownSelector);
+            var selectorArrowBtn =
+                By.XPath("//app-select[@id='select-cso-search-allocation']//span[@class='ng-arrow-wrapper']");
+            ClickElement(selectorArrowBtn);
+            
+            // click first checkbox on the results table list
+            var firstCheckbox = By.CssSelector("input[name='select-hearing_0']");
+            ClickElement(firstCheckbox);
+            
+            
+            var allocateButton = By.Id("confirm-allocation-btn");
+            ClickElement(allocateButton);
+            WaitForApiSpinnerToDisappear();
+
+            var actionsMessageContainer = By.Id("allocation-actions-message-container");
+            GetText(actionsMessageContainer).Should().Contain("Hearings have been updated");
         }
     }
 }

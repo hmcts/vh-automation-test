@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin
 {
@@ -7,7 +8,7 @@ namespace UI.PageModels.Pages.Admin
 	///   Page element definitions
 	///   Do not add logic here
 	///</summary>
-    public class BookingListPage
+    public class BookingListPage : VhAdminWebPage
     {
         public static By VideoHearingsTable => By.Id("vh-table");
         public static By HearingDateTitle => By.XPath($"//div[text()[contains(.,'{DateTime.Today.ToString("dd MMMM yyyy")}')]]");
@@ -27,5 +28,9 @@ namespace UI.PageModels.Pages.Admin
         public static By EndDate => By.Id("endDate");
         public static By CaseTypes => By.Id("caseTypes");
         public static By CaseTypeCheckbox(string caseType) => By.XPath($"//input[@aria-label='Case type {caseType}']");
+
+        public BookingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }

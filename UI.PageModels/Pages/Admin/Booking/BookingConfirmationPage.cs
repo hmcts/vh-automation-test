@@ -3,7 +3,7 @@ using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.Booking
 {
-    public class BookingConfirmationPage : VhPage
+    public class BookingConfirmationPage : VhAdminWebPage
     {
         private readonly By _viewBookingLink = By.XPath("//a[text()='View this booking']");
         private readonly By _bookAnotherHearingBtn = By.Id("btnBookAnotherHearing");
@@ -17,7 +17,7 @@ namespace UI.PageModels.Pages.Admin.Booking
                     "This is not the booking-confirmation page, the current url is: " + Driver.Url);
             }
         }
-        
+
         public void ClickViewBookingLink()
         {
             ClickElement(_viewBookingLink);
