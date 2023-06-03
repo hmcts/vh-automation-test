@@ -70,6 +70,21 @@ public abstract class VhPage
         return element.Text;
     }
     
+    
+    protected bool IsElementVisible(By locator)
+    {
+        try
+        {
+            var element = new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime)).Until(drv =>
+                drv.FindElement(locator));
+            return element != null;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+    
     protected void EnterText(By locator, string text, bool clearText = true)
     {
         WaitForElementToBeVisible(locator);

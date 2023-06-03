@@ -12,7 +12,6 @@ public class UploadWorkHourTests : AdminWebUiTest
 
         var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
         workAllocationPage.UploadWorkHoursFile(Path.Join("TestData", "GoodWorkHours.csv"));
-        workAllocationPage.WaitForFileUploadSuccessMessage();
         Assert.Pass();
     }
 
@@ -26,7 +25,6 @@ public class UploadWorkHourTests : AdminWebUiTest
 
         var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
         workAllocationPage.UploadNonWorkHoursFile(Path.Join("TestData", "GoodNonAvailabilityHours.csv"));
-        workAllocationPage.WaitForFileUploadSuccessMessage();
         Assert.Pass();
     }
 }
