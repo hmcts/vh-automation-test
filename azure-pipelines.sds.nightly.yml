@@ -66,6 +66,8 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
 
             steps:
+              - checkout: self
+
               # inserts variables to help create unique test names
               - task: gitversion/setup@0
                 displayName: Install GitVersion
