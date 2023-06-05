@@ -1,13 +1,8 @@
 ﻿using OpenQA.Selenium;
 
-namespace UI.PageModels.Pages.Video
+namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   ParticipantWaitingRoomPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public class ParticipantWaitingRoomPage
+    public class ParticipantWaitingRoomPage : VhPage
     {
         public static By StartVideoHearingButton => By.XPath("//button[contains(text(),'Start video hearing')]");
         public static By AcceptConsultationButton => By.Id("notification-toastr-invite-accept");
@@ -28,5 +23,9 @@ namespace UI.PageModels.Pages.Video
         public static By UnAvailableStatus => By.XPath("//label[contains(@class,'label-status--unavailable')]");
         public static By DisconnectedStatus => By.XPath("//label[contains(@class,'label-status--disconnected')]");
         public static By Returntovideohearinglist => By.Id("back-link");
+
+        public ParticipantWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }

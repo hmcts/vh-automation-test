@@ -1,15 +1,10 @@
 ﻿using OpenQA.Selenium;
 
-namespace UI.PageModels.Pages.Video
+namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   ParticipantHearingListPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public class ParticipantHearingListPage
+    public class ParticipantHearingListPage : VhPage
     {
-        public static By CheckEquipment = By.Id("check-equipment-btn");
+        private readonly By _checkEquipmentBtn = By.Id("check-equipment-btn");
         public static By HearingListPageTitle = By.XPath("//*[contains(text(), 'Video hearings for') or contains(text(),'Your video hearing') or contains(text(),'Your video hearings')]");
         public static By TestingYourEquipment = By.XPath("//*[contains(text(), ' Testing your equipment')]");
         public static By SignInTime(string conferenceId) => By.Id($"participant-sign-in-time-{conferenceId}");
@@ -31,5 +26,17 @@ namespace UI.PageModels.Pages.Video
         public static By IncomingStreamVideo => By.Id("incomingStream");
         public static By OutgoingStreamVideo => By.Id("outgoingStream");
         public static By Meter => By.Id("meter");
+
+        public ParticipantHearingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+            WaitForElementToBeClickable(_checkEquipmentBtn);
+        }
+        
+        public GetReadyForTheHearingIntroductionPage SelectHearing(string caseName)
+        {
+            var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");
+            ClickElement(selectHearingLocator);
+            return new GetReadyForTheHearingIntroductionPage(Driver, DefaultWaitTime);
+        }
     }
 }

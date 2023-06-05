@@ -1,14 +1,10 @@
 ﻿using OpenQA.Selenium;
 
-namespace UI.PageModels.Pages.Video
+namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   JudgeHearingListPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public  class JudgeHearingListPage
+    public  class JudgeHearingListPage : VhPage
     {
+        private readonly By _checkEquipmentBtn = By.Id("check-equipment-btn");
         public static By HealingListRow => By.XPath("//tr[@class='govuk-table__row']");
         public static By SelectButton(string caseId) => By.XPath($"//tr[contains(.,'{caseId}')]//button");
         public static By ButtonNext => By.Id("next");
@@ -20,5 +16,17 @@ namespace UI.PageModels.Pages.Video
         public static By VideoWorkingYes => By.Id("video-yes");
         public static By NextButton => By.Id("nextButton");
         public static By DeclareCheckbox => By.Id("declare");
+
+        public JudgeHearingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+            WaitForElementToBeClickable(_checkEquipmentBtn);
+        }
+        
+        public JudgeWaitingRoomPage SelectHearing(string caseName)
+        {
+            var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");
+            ClickElement(selectHearingLocator);
+            return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
+        }
     }
 }

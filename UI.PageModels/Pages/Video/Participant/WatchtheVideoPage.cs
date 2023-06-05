@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace UI.PageModels.Pages.Video
+namespace UI.PageModels.Pages.Video.Participant
 {
 	///<summary>
 	///   WatchtheVideoPage

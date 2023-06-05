@@ -57,7 +57,7 @@ public class RemoteChromeVhDriver : IVhDriver
         }
         return _driver;
     }
-    
+
     public void Terminate()
     {
         _driver?.Quit();

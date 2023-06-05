@@ -1,13 +1,13 @@
 ﻿using OpenQA.Selenium;
 
-namespace UI.PageModels.Pages.Video
+namespace UI.PageModels.Pages.Video.Participant
 {
 	///<summary>
-	///   TestingEquipmentPage
+	///   ConfirmEquipmentPage
 	///   Page element definitions
 	///   Do not add logic here
 	///</summary>
-    public class TestingEquipmentPage
+    public class ConfirmEquipmentPage
     {
         public static By ContinueBtn => By.Id("continue-btn");
     }
