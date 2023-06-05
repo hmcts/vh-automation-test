@@ -75,9 +75,8 @@ public abstract class VhPage
     {
         try
         {
-            var element = new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime)).Until(drv =>
-                drv.FindElement(locator));
-            return element != null;
+            var element = Driver.FindElement(locator);
+            return element.Displayed;
         }
         catch (Exception)
         {
@@ -131,7 +130,32 @@ public abstract class VhPage
     protected void ClickElement(By locator)
     {
         WaitForElementToBeClickable(locator);
-        Driver.FindElement(locator).Click();
+        try
+        {
+            Driver.FindElement(locator).Click();
+        }
+        catch (ElementClickInterceptedException ex)
+        {
+            if (ex.Message.Contains("id=\"waitPopup\""))
+            {
+                WaitForApiSpinnerToDisappear();
+                ClickElement(locator);
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
+    protected void SetCheckboxValue(By locator, bool checkedValue)
+    {
+        WaitForElementToBeClickable(locator);
+        var checkbox = Driver.FindElement(locator);
+        if (checkbox.Selected != checkedValue)
+        {
+            checkbox.Click();
+        }
     }
 
     protected void SelectDropDownByText(By locator, string text)

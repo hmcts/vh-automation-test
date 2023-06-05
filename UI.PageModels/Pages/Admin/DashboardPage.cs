@@ -52,12 +52,14 @@ namespace UI.PageModels.Pages.Admin
 
 		public HearingDetailsPage GoToBookANewHearing()
 		{
+			WaitForApiSpinnerToDisappear();
 			ClickElement(_bookHearingButton);
 			return new HearingDetailsPage(Driver, DefaultWaitTime);
 		}
 
 		public ManageWorkAllocationPage GoToManageWorkAllocation()
 		{
+			WaitForApiSpinnerToDisappear();
 			ClickElement(_workAllocationButton);
 			return new ManageWorkAllocationPage(Driver, DefaultWaitTime);
 		}
