@@ -88,7 +88,6 @@ stages:
 
               - task: DotNetCoreCLI@2
                 displayName: Run UI Tests
-                continueOnError: true
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
