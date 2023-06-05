@@ -92,10 +92,4 @@ stages:
                   projects: "$(projectPath)/*.csproj"
                   arguments: "--configuration Release"
                   publishTestResults: true
-
-              - task: PublishTestResults@2
-                displayName: Publish Test Results
-                inputs:
-                  testResultsFiles: "**/*.trx"
-                  testRunTitle: "UI Tests ${{ parameters.environment }}"
-                  failTaskOnFailedTests: true
+                  testRunTitle: "UI Tests ${{ parameters.environment }} - $(Build.BuildNumber)"
