@@ -62,6 +62,8 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
+              - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+                value: https://vh-admin-web-pr-1212.dev.platform.hmcts.net
 
             steps:
               # inserts variables to help create unique test names
