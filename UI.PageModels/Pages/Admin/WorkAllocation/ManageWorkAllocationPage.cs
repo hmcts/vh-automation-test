@@ -11,12 +11,14 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation
     public class ManageWorkAllocationPage : VhAdminWebPage
     {
         private readonly UploadHoursSection _uploadHoursSection;
+        private readonly EditHoursSection _editHoursSection;
         private readonly AllocateJusticeUserToHearingSection _allocateJusticeUserToHearingSection;
         private readonly ManageTeamSection _manageTeamSection;
         
         public ManageWorkAllocationPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
         {
             _uploadHoursSection = new UploadHoursSection(driver, defaultWaitTime);
+            _editHoursSection = new EditHoursSection(driver, defaultWaitTime);
             _allocateJusticeUserToHearingSection = new AllocateJusticeUserToHearingSection(driver, defaultWaitTime);
             _manageTeamSection = new ManageTeamSection(driver, defaultWaitTime);
             WaitForApiSpinnerToDisappear();
@@ -32,6 +34,18 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation
             _uploadHoursSection.UploadNonWorkHoursFile(filePath);
         }
 
+        public void EditWorkHourForUser(string username, DayOfWeek dayOfWeek, TimeOnly startTime, TimeOnly endTime)
+        {
+            _editHoursSection.EditWorkingHours(username, dayOfWeek, startTime, endTime);
+        }
+
+        public void AddNonAvailableDayForUser(string username, DateTime startDateTime, DateTime endDateTime)
+        {
+            _editHoursSection.FilterForNonAvailableDays(username, startDateTime);
+            _editHoursSection.AddNonAvailableDayForUser(username, startDateTime, endDateTime);
+        }
+        
+        
         public void AddTeamMember(string username, string firstName, string lastName, string contactTelephone,
             List<JusticeUserRoles> roles)
         {

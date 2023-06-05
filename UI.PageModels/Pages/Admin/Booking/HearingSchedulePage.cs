@@ -42,7 +42,7 @@ namespace UI.PageModels.Pages.Admin.Booking
 
 		private void EnterHearingDate(DateTime date, int durationHour, int durationMinute)
 		{
-			var dateString = date.ToString(new CultureInfo(Locale).DateTimeFormat.ShortDatePattern);
+			var dateString = GetLocaleDate(date);
 			EnterText(_hearingDate, dateString);
 			EnterText(_hearingStartTimeHour, date.ToString("HH"));
 			EnterText(_hearingStartTimeMinute, date.ToString("mm"));

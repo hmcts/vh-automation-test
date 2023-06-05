@@ -4,7 +4,7 @@ using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.WorkAllocation;
 
-public class UploadHoursSection : VhPage
+public class UploadHoursSection : VhAdminWebPage
 {
     // Upload working hours availability
     private readonly By _uploadHoursSectionBtn = By.Id("upload-availability");

@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using UI.PageModels.Dtos;
-using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.Booking
 {

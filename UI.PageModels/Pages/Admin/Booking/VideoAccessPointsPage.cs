@@ -3,7 +3,7 @@ using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.Booking
 {
-	public class VideoAccessPointsPage : VhPage
+	public class VideoAccessPointsPage : VhAdminWebPage
 	{
 		private static By DisplayName(int number) => By.Id($"displayName{number}");
 		private static By DefenceAdvocate(int number) => By.Id($"defenceAdvocate{number}");

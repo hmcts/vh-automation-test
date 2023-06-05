@@ -10,7 +10,8 @@ public enum JusticeUserRoles
     VhTeamLead,
     StaffMember
 }
-public class ManageTeamSection : VhPage
+
+public class ManageTeamSection : VhAdminWebPage
 {
     private readonly By _manageTeamSectionBtn = By.Id("manage-team");
 
@@ -105,8 +106,7 @@ public class ManageTeamSection : VhPage
             SetCheckboxValue(locator, hasRole);
         }
     }
-
-
+    
     public void EditExistingJusticeUserRole(string username, List<JusticeUserRoles> roles)
     {
         var row = GetRowForByUsername(username);
@@ -145,7 +145,7 @@ public class ManageTeamSection : VhPage
         WaitForApiSpinnerToDisappear();
     }
 
-    public IWebElement GetRowForByUsername(string username)
+    private IWebElement GetRowForByUsername(string username)
     {
         // the cell contains the username or is prefixed with Deleted
         var locator = By.XPath($"//tr[.//td[normalize-space()='{username}']] | //tr[.//td[normalize-space()='Deleted{username}']]");
@@ -155,13 +155,8 @@ public class ManageTeamSection : VhPage
 
     private void CheckSectionIsOpen()
     {
-        WaitForApiSpinnerToDisappear();
-
-        if (!IsElementVisible(_searchForUserBtn))
-        {
-            ClickElement(_manageTeamSectionBtn);
-            WaitForApiSpinnerToDisappear();
-        }
+        if (IsElementVisible(_searchForUserBtn)) return;
+        ClickElement(_manageTeamSectionBtn);
     }
 
     private void SaveForm()

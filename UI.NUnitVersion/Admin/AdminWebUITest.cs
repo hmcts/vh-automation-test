@@ -2,7 +2,7 @@ namespace UI.NUnitVersion.Admin;
 
 public abstract class AdminWebUiTest
 {
-    public readonly string Username = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
+    public readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
     protected EnvironmentConfigSettings EnvConfigSettings;
     protected IVhDriver VhDriver;
     // protected TestReporter _testReporter;

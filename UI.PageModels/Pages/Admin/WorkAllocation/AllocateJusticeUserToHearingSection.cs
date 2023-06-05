@@ -4,7 +4,7 @@ using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.WorkAllocation;
 
-public class AllocateJusticeUserToHearingSection : VhPage
+public class AllocateJusticeUserToHearingSection : VhAdminWebPage
 {
     private readonly By _allocateHearingsSectionBtn = By.Id("allocate-hearings");
     
