@@ -3,11 +3,13 @@ using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.Booking
 {
-    public class SummaryPage : VhPage
+    public class SummaryPage : VhAdminWebPage
     {
         private readonly By _bookButton = By.Id("bookButton");
         private readonly By _dotLoader = By.Id("dot-loader");
+
         private readonly By _tryAgainButton = By.Id("btnTryAgain");
+
         //private readonly By SuccessTitle = By.ClassName("govuk-panel__title");
         private readonly By _successTitle = By.XPath("//h1[text()[contains(.,'Your hearing booking was successful')]]");
 
@@ -22,7 +24,7 @@ namespace UI.PageModels.Pages.Admin.Booking
                     "This is not the summary page, the current url is: " + Driver.Url);
             }
         }
-        
+
         public BookingConfirmationPage ClickBookButton()
         {
             ClickElement(_bookButton);

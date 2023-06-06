@@ -1,9 +1,9 @@
 namespace UI.NUnitVersion.Admin.WorkAllocation;
 
-public class UploadWorkHourTests : AdminWebUiTest
+public class EditWorkHoursTests : AdminWebUiTest
 {
     [Test]
-    public void UploadValidWorkHours()
+    public void EditWorkHoursForExistingUser()
     {
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -11,12 +11,16 @@ public class UploadWorkHourTests : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
-        workAllocationPage.UploadWorkHoursFile(Path.Join("TestData", "GoodWorkHours.csv"));
+
+        var teamMemberUsername = "auto.vhoteamlead1@hearings.reform.hmcts.net";
+        workAllocationPage.EditWorkHourForUser(teamMemberUsername, DayOfWeek.Saturday, new TimeOnly(08, 00),
+            new TimeOnly(17, 00));
+        
         Assert.Pass();
     }
 
     [Test]
-    public void UploadValidNonAvailabilityHours()
+    public void AddNonAvailableHoursForExistingUser()
     {
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -24,7 +28,12 @@ public class UploadWorkHourTests : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
-        workAllocationPage.UploadNonWorkHoursFile(Path.Join("TestData", "GoodNonAvailabilityHours.csv"));
-        Assert.Pass();
+
+        var teamMemberUsername = "auto.vhoteamlead1@hearings.reform.hmcts.net";
+        
+        // should be be a date far far into the future to avoid clashing with other local tests
+        var startDateTime = DateTime.Today.AddDays(1).AddHours(10);
+        var endDateTime = startDateTime.AddHours(1);
+        workAllocationPage.AddNonAvailableDayForUser(teamMemberUsername, startDateTime, endDateTime);
     }
 }

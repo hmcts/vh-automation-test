@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages.Admin.WorkAllocation
@@ -9,59 +8,74 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation
     ///   Page element definitions
     ///   Do not add logic here
     ///</summary>
-    public class ManageWorkAllocationPage : VhPage
+    public class ManageWorkAllocationPage : VhAdminWebPage
     {
-        private readonly By _editAvailability = By.Id("edit-availability");
-        private readonly By _manageWorkAllocation = By.Id("manageWorkAllocationBtn");
-
-        // Upload working hours availability
-        private readonly By _uploadHoursSectionBtn = By.Id("upload-availability");
+        private readonly UploadHoursSection _uploadHoursSection;
+        private readonly EditHoursSection _editHoursSection;
+        private readonly AllocateJusticeUserToHearingSection _allocateJusticeUserToHearingSection;
+        private readonly ManageTeamSection _manageTeamSection;
         
-        private readonly By _uploadWorkHoursCsvFileField = By.XPath("//input[@id='working-hours-file-upload']");
-        private readonly By _uploadAvailabilityHoursButton =By.CssSelector("#working-hours-file-upload-error .govuk-button");
-        
-        private readonly By _uploadNonAvailabilityCsvField = By.CssSelector("#non-availability-hours-file-upload");
-        private readonly By _uploadNonAvailabilityHoursButton =
-            By.XPath("//div[@id='non-working-hours-file-upload-error']//button[.='Upload']");
-
-        private readonly By _teamWorkingHoursUploadedSuccessfully = By.CssSelector("div#file-upload-result > p");
-        // private readonly By _successFileUpload = By.CssSelector("#file-upload-result:nth-of-type(2) p");
-        // private readonly By _teamWorkingHoursUploadedSuccessfullyM = By.CssSelector("#file-upload-result > p");
-        // private readonly By _teamNonAvailabilityHoursUploadedSuccessfully =
-        //     By.CssSelector("div[id='file-upload-result'] p");
-
         public ManageWorkAllocationPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
         {
+            _uploadHoursSection = new UploadHoursSection(driver, defaultWaitTime);
+            _editHoursSection = new EditHoursSection(driver, defaultWaitTime);
+            _allocateJusticeUserToHearingSection = new AllocateJusticeUserToHearingSection(driver, defaultWaitTime);
+            _manageTeamSection = new ManageTeamSection(driver, defaultWaitTime);
             WaitForApiSpinnerToDisappear();
-            WaitForElementToBeClickable(_uploadHoursSectionBtn);
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="webdriver"></param>
-        /// <param name="filePath"></param>
+
         public void UploadWorkHoursFile(string filePath)
         {
-            ClickElement(_uploadHoursSectionBtn);
-            var fullPath = Path.GetFullPath(filePath);
-            File.Exists(filePath).Should().BeTrue();
-            EnterText(_uploadWorkHoursCsvFileField, fullPath);
-            ClickElement(_uploadAvailabilityHoursButton);
-        }
-        
-        public void WaitForFileUploadSuccessMessage()
-        {
-            WaitForElementToBeVisible(_teamWorkingHoursUploadedSuccessfully);
+            _uploadHoursSection.UploadWorkHoursFile(filePath);
         }
 
         public void UploadNonWorkHoursFile(string filePath)
         {
-            ClickElement(_uploadHoursSectionBtn);
-            var fullPath = Path.GetFullPath(filePath);
-            File.Exists(filePath).Should().BeTrue();
-            EnterText(_uploadNonAvailabilityCsvField, fullPath);
-            ClickElement(_uploadNonAvailabilityHoursButton);
+            _uploadHoursSection.UploadNonWorkHoursFile(filePath);
+        }
+
+        public void EditWorkHourForUser(string username, DayOfWeek dayOfWeek, TimeOnly startTime, TimeOnly endTime)
+        {
+            _editHoursSection.EditWorkingHours(username, dayOfWeek, startTime, endTime);
+        }
+
+        public void AddNonAvailableDayForUser(string username, DateTime startDateTime, DateTime endDateTime)
+        {
+            _editHoursSection.FilterForNonAvailableDays(username, startDateTime);
+            _editHoursSection.AddNonAvailableDayForUser(username, startDateTime, endDateTime);
+        }
+        
+        
+        public void AddTeamMember(string username, string firstName, string lastName, string contactTelephone,
+            List<JusticeUserRoles> roles)
+        {
+            _manageTeamSection.EnterUserToSearchFor(username);
+            _manageTeamSection.AddUserToTeam(username, firstName, lastName, contactTelephone, roles);
+        }
+        
+        public void RestoreTeamMember(string username)
+        {
+            _manageTeamSection.EnterUserToSearchFor(username);
+            _manageTeamSection.RestoreTeamMember(username);
+        }
+
+        public void EditTeamMember(string username, List<JusticeUserRoles> roles)
+        {
+            WaitForApiSpinnerToDisappear();
+            _manageTeamSection.EnterUserToSearchFor(username);
+            _manageTeamSection.EditExistingJusticeUserRole(username, roles);
+        }
+        
+        public void DeleteTeamMember(string username)
+        {
+            _manageTeamSection.EnterUserToSearchFor(username);
+            _manageTeamSection.DeleteExistingJusticeUser(username);
+        }
+
+        public void AllocateJusticeUserToHearing(string caseNumber = "automation test",
+            string justiceUserDisplayName = "automation allocation")
+        {
+            _allocateJusticeUserToHearingSection.AllocateJusticeUserToHearing(caseNumber, justiceUserDisplayName);
         }
     }
 }

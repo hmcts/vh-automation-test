@@ -86,16 +86,9 @@ stages:
 
               - task: DotNetCoreCLI@2
                 displayName: Run UI Tests
-                continueOnError: true
                 inputs:
                   command: test
                   projects: "$(projectPath)/*.csproj"
                   arguments: "--configuration Release"
                   publishTestResults: true
-
-              - task: PublishTestResults@2
-                displayName: Publish Test Results
-                inputs:
-                  testResultsFiles: "**/*.trx"
-                  testRunTitle: "UI Tests ${{ parameters.environment }}"
-                  failTaskOnFailedTests: true
+                  testRunTitle: "UI Tests ${{ parameters.environment }} - $(Build.BuildNumber)"
