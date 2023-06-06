@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public class ParticipantHearingListPage : VhPage
+    public class ParticipantHearingListPage : VhVideoWebPage
     {
         private readonly By _checkEquipmentBtn = By.Id("check-equipment-btn");
         public static By HearingListPageTitle = By.XPath("//*[contains(text(), 'Video hearings for') or contains(text(),'Your video hearing') or contains(text(),'Your video hearings')]");

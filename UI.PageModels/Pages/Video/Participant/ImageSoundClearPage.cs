@@ -2,15 +2,14 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   ImageSoundClearPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public class ImageSoundClearPage
+    public class ImageSoundClearPage : VhVideoWebPage
     {
         public static By VideoYesRadioButton => By.CssSelector("label.govuk-label.govuk-radios__label");
         public static By VideoNoRadioButton => By.Id("video-no");
         public static By Continue = By.Id("continue-btn");
+
+        public ImageSoundClearPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }

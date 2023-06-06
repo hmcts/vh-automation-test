@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public  class JudgeHearingListPage : VhPage
+    public  class JudgeHearingListPage : VhVideoWebPage
     {
         private readonly By _checkEquipmentBtn = By.Id("check-equipment-btn");
         public static By HealingListRow => By.XPath("//tr[@class='govuk-table__row']");

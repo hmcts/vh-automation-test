@@ -2,13 +2,12 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   ConfirmEquipmentPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public class ConfirmEquipmentPage
+    public class ConfirmEquipmentPage : VhVideoWebPage
     {
         public static By ContinueBtn => By.Id("continue-btn");
+
+        public ConfirmEquipmentPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }

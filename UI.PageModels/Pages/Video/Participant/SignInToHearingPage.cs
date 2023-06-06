@@ -2,14 +2,16 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   ConfirmEquipmentPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public class SignInToHearingPage
+    /// <summary>
+    /// Which page is this?
+    /// </summary>
+    public class SignInToHearingPage : VhVideoWebPage
     {
         public static By CheckEquipmentButton => By.Id("check-equipment-btn");
         public static By SignInToHearingButton => By.XPath("//button[contains(@id,'sign-into-hearing-btn-')]");
+
+        public SignInToHearingPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }

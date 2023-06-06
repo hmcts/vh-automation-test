@@ -2,12 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   CourtRulesPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-     public class CourtRulesPage : VhPage
+     public class CourtRulesPage : VhVideoWebPage
     {
        private readonly By _courtRulesContinueBtn = By.Id("nextButton");
 

@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public class ParticipantWaitingRoomPage : VhPage
+    public class ParticipantWaitingRoomPage : VhVideoWebPage
     {
         public static By StartVideoHearingButton => By.XPath("//button[contains(text(),'Start video hearing')]");
         public static By AcceptConsultationButton => By.Id("notification-toastr-invite-accept");

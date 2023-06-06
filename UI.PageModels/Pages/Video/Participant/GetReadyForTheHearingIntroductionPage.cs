@@ -5,7 +5,7 @@ namespace UI.PageModels.Pages.Video.Participant
     /// <summary>
     /// This page represents the 'introduction' page for the participant after selecting a hearing
     /// </summary>
-    public class GetReadyForTheHearingIntroductionPage : VhPage
+    public class GetReadyForTheHearingIntroductionPage : VhVideoWebPage
     {
         private readonly By _nextButton = By.Id("next");
 

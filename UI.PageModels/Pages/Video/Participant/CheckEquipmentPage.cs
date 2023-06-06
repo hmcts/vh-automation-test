@@ -7,7 +7,7 @@ namespace UI.PageModels.Pages.Video.Participant
 	///   Page element definitions
 	///   Do not add logic here
 	///</summary>
-    public class CheckEquipmentPage : VhPage
+    public class CheckEquipmentPage : VhVideoWebPage
     {
         private readonly By _continue = By.Id("continue-btn");
 

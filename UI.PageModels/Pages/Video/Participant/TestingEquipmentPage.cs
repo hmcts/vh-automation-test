@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public class TestingEquipmentPage : VhPage
+    public class TestingEquipmentPage : VhVideoWebPage
     {
         private readonly By _continueBtn = By.Id("continue-btn");
 

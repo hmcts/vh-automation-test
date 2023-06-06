@@ -3,11 +3,9 @@
 namespace UI.PageModels.Pages.Video.Participant
 {
 	///<summary>
-	///   HearingRoomPage
-	///   Page element definitions
-	///   Do not add logic here
+	///   This represents the hearing room (i.e. when the hearing is in progress)
 	///</summary>
-    public class HearingRoomPage
+    public class HearingRoomPage : VhVideoWebPage
     {
         public static By LabelStatusAvailable = By.XPath("//label[contains(@class, 'label-status--available')]");
         public static By ParticipantRole = By.XPath("//p[contains(@class, 'hearing-role-participant')]");
@@ -45,5 +43,9 @@ namespace UI.PageModels.Pages.Video.Participant
         public static By ChatSentMessageItem => By.ClassName("message-item message-item-sent");
         public static By ChatList => By.Id("chat-list");
         public static By JudgeMessageSent(string message) => By.XPath($"//div[text()[contains(.,'{message}')]]");
+
+        public HearingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }

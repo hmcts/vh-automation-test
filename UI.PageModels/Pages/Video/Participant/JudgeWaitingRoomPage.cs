@@ -2,12 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-	///<summary>
-	///   JudgeWaitingRoomPage
-	///   Page element definitions
-	///   Do not add logic here
-	///</summary>
-    public class JudgeWaitingRoomPage : VhPage
+    public class JudgeWaitingRoomPage : VhVideoWebPage
 	{
 		private readonly By _startHearingBtn = By.XPath("//button[normalize-space()='Start video hearing']");
         // public static readonly By ReturnToHearingRoomLink = By.XPath("//a[contains(text(),'Return to video hearing list')]");

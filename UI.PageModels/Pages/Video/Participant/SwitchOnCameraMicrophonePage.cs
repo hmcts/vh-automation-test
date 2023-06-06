@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public class SwitchOnCameraMicrophonePage : VhPage
+    public class SwitchOnCameraMicrophonePage : VhVideoWebPage
     {
         private readonly By _switchOnButton = By.Id("switch-on-btn");
         private readonly By _switchOnCameraMicrophoneTitle = By.XPath("//h1[normalize-space()='Your camera and microphone are switched on']");

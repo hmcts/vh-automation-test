@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public class StaffMemberHearingListPage : VhPage
+    public class StaffMemberHearingListPage : VhVideoWebPage
     {
         public static By HealingListRow => By.XPath("//tr[@class='govuk-table__row']");
 

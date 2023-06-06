@@ -2,7 +2,7 @@
 
 namespace UI.PageModels.Pages.Video.Participant
 {
-    public class SeeAndHearVideoPage : VhPage
+    public class SeeAndHearVideoPage : VhVideoWebPage
     {
         private readonly By _yesRadioButton = By.XPath("//label[normalize-space()='Yes']");
         private readonly By _continueBtn = By.Id("continue-btn");

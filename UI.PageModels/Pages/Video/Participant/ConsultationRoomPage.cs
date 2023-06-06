@@ -7,7 +7,7 @@ namespace UI.PageModels.Pages.Video.Participant
 	///   Page element definitions
 	///   Do not add logic here
 	///</summary>
-    public class ConsultationRoomPage
+    public class ConsultationRoomPage : VhVideoWebPage
     {
         public static By InviteParticipant(string name) => By.XPath($"//div[@class='participant-endpoint-row' and contains(.,'{name}')]//app-invite-participant");
         public static By InviteParticipants => By.ClassName("phone");
@@ -25,5 +25,8 @@ namespace UI.PageModels.Pages.Video.Participant
         public static By SelfViewButton => By.Id("selfViewButton");
         public static By MuteButton => By.Id("muteButton");
 
+        public ConsultationRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+        {
+        }
     }
 }
