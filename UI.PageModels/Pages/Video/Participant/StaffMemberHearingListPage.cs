@@ -1,13 +1,12 @@
 ﻿using OpenQA.Selenium;
 
-namespace UI.PageModels.Pages.Video.Participant
-{
-    public class StaffMemberHearingListPage : VhVideoWebPage
-    {
-        public static By HealingListRow => By.XPath("//tr[@class='govuk-table__row']");
+namespace UI.PageModels.Pages.Video.Participant;
 
-        public StaffMemberHearingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
-        {
-        }
+public class StaffMemberHearingListPage : VhVideoWebPage
+{
+    public StaffMemberHearingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    {
     }
+
+    public static By HealingListRow => By.XPath("//tr[@class='govuk-table__row']");
 }

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using UI.NUnitVersion.TestData;
 
 namespace UI.NUnitVersion.Admin.Booking;
 
@@ -7,16 +8,7 @@ public class BookHearingTests : AdminWebUiTest
     [Test]
     public void BookAHearing()
     {
-        var currentTime = DateTime.Now.ToString("M-d-yy-H-mm-ss");
-        var caseName = $"BookAHearing Automation Test {currentTime}";
-        var caseNumber = "Automation Test Hearing";
-        var caseType = "Civil";
-        var hearingType = "Enforcement Hearing";
-        var scheduledDateTime = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        var durationHour = 1;
-        var durationMinute = 30;
-        var venueName = "Birmingham Civil and Family Justice Centre";
-        var roomName = "Room 1";
+        var bookingDto = HearingTestData.CreateHearingDto();
         
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -29,30 +21,28 @@ public class BookHearingTests : AdminWebUiTest
         var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        
-        createHearingPage.EnterHearingDetails(caseNumber, caseName, caseType, hearingType);
+
+        createHearingPage.EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
+            bookingDto.HearingType);
         
         var hearingSchedulePage = createHearingPage.GoToNextPage();
 
-        hearingSchedulePage.EnterSingleDayHearingSchedule(scheduledDateTime, durationHour, durationMinute, venueName,
-            roomName);
+        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
+            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
         
-        var addParticipantPage = assignJudgePage.GoToNextPage();
-        addParticipantPage.AddExistingIndividualParticipant("Claimant", "Litigant in person", "auto_vw.individual_60@hmcts.net", "Auto 1");
-        addParticipantPage.AddExistingRepresentative("Claimant", "Representative", "auto_vw.representative_139@hmcts.net", "Auto 2", "Auto 1");
-        addParticipantPage.AddExistingIndividualParticipant("Defendant", "Litigant in person", "auto_vw.individual_137@hmcts.net", "Auto 3");
-        addParticipantPage.AddExistingRepresentative("Defendant", "Representative", "auto_vw.representative_157@hmcts.net", "Auto 4", "Auto 3");
+        var addParticipantPage = assignJudgePage.GoToParticipantsPage();
+        addParticipantPage.AddExistingParticipants(bookingDto.Participants);
         
-        var videoAccessPointsPage = addParticipantPage.GoToNextPage();
+        var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         
-        var otherInformationPage = videoAccessPointsPage.GoToNextPage();
+        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation("This is a test info");
         
-        var summaryPage = otherInformationPage.GoToNextPage();
+        var summaryPage = otherInformationPage.GoToSummaryPage();
         var confirmationPage = summaryPage.ClickBookButton();
         confirmationPage.ClickViewBookingLink();
 

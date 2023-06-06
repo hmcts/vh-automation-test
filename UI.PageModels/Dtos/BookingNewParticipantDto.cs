@@ -1,8 +1,12 @@
 namespace UI.PageModels.Dtos;
 
-public class NewParticipantDto
+/// <summary>
+///     This represents the required information when booking a hearing with a new participant
+/// </summary>
+public class BookingNewParticipantDto
 {
-    public NewParticipantDto(string title, string firstName, string lastName, string organisation, string telephone)
+    public BookingNewParticipantDto(string title, string firstName, string lastName, string organisation,
+        string telephone)
     {
         Title = title;
         FirstName = firstName;
