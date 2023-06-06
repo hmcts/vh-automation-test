@@ -15,7 +15,7 @@ public class HearingRoomPage : VhVideoWebPage
     public static By LeaveHearingButton = By.Id("leave-hearing-desktop");
     public static By ConfirmCloseHearingButton = By.Id("btnConfirmClose");
     public static By ButtonConfirmLeaveHearing = By.Id("btnConfirmLeave");
-    public static By PauseHearing = By.Id("pause-hearing-desktop");
+    
 
     public HearingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {

@@ -22,4 +22,10 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     {
         WaitForElementToBeClickable(_startHearingBtn);
     }
+
+    public JudgeHearingRoomPage StartHearing()
+    {
+        ClickElement(_startHearingBtn);
+        return new JudgeHearingRoomPage(Driver, DefaultWaitTime);
+    }
 }
