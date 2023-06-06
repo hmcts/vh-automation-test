@@ -18,7 +18,7 @@ public class RemoteChromeVhDriver : IVhDriver
         };
 
         var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
-            $"local-{Environment.MachineName}-{Environment.UserName}-{DateTime.Now:dd-mm-yy-hh-mm}" : 
+            BuildName.GetBuildNameForLocal() : 
             BuildName.GetBuildNameForSauceLabs(driverOptions.BrowserName, driverOptions.BrowserVersion, driverOptions.PlatformName);
 
         var sauceLabsConfiguration = envConfigSettings.SauceLabsConfiguration;
@@ -29,7 +29,7 @@ public class RemoteChromeVhDriver : IVhDriver
         var sauceOptions = new Dictionary<string, object>
         {
             {"build", buildName},
-            {"name", TestContext.CurrentContext.Test.Name},
+            {"name", TestContext.CurrentContext.Test.Name}, // maybe add a suffix to test name to indicate user
             {"timeZone", "London"},
             {"maxDuration", sauceLabsConfiguration.MaxDurationInSeconds},
             {"commandTimeout", sauceLabsConfiguration.CommandTimeoutInSeconds},

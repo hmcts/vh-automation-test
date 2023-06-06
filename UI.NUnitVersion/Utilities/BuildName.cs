@@ -1,15 +1,23 @@
 namespace UI.NUnitVersion.Utilities;
 
-public class BuildName
+public static class BuildName
 {
-    private static string _buildName;
+    private static string _buildNameSauceLabs;
+    private static string _buildNameLocal;
+    
     public static string GetBuildNameForSauceLabs(string browserName, string browserVersion, string platformName)
     {
-        if (!string.IsNullOrWhiteSpace(_buildName)) return _buildName;
-        // move this into a static file so only made once per run
+        if (!string.IsNullOrWhiteSpace(_buildNameSauceLabs)) return _buildNameSauceLabs;
         var attemptNumber = GetAttemptNumber();
-        _buildName = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Now:dd-mm-yy-hh-mm}     [ {browserName} | {platformName} | {browserVersion} ] {attemptNumber}";
-        return _buildName;
+        _buildNameSauceLabs = $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Now:dd-mm-yy-hh-mm}     [ {browserName} | {platformName} | {browserVersion} ] {attemptNumber}";
+        return _buildNameSauceLabs;
+    }
+
+    public static string GetBuildNameForLocal()
+    {
+        if(!string.IsNullOrWhiteSpace(_buildNameLocal)) return _buildNameLocal;
+        _buildNameLocal = $"local-{Environment.MachineName}-{Environment.UserName}-{DateTime.Now:dd-mm-yy-hh-mm}";
+        return _buildNameLocal;
     }
     
     private static string GetAttemptNumber()
