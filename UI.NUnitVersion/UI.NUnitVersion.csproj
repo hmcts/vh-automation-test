@@ -19,22 +19,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\UI.PageModels\UI.PageModels.csproj" />
+        <ProjectReference Include="..\UI.PageModels\UI.PageModels.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="TestData\GoodWorkHours.csv">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="TestData\GoodNonAvailabilityHours.csv">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
+        <EmbeddedResource Include="TestData\GoodWorkHours.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="TestData\GoodNonAvailabilityHours.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

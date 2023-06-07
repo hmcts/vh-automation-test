@@ -5,7 +5,5 @@ public class JusticeUserTests : AdminWebUiTest
     [Test]
     public void AddThenEditThenDeleteAndThenRestoreAJusticeUser()
     {
-
-
     }
 }

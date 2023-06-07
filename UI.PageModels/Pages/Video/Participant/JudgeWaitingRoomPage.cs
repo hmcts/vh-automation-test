@@ -4,28 +4,34 @@ namespace UI.PageModels.Pages.Video.Participant;
 
 public class JudgeWaitingRoomPage : VhVideoWebPage
 {
-    private readonly By _startHearingBtn = By.XPath("//button[normalize-space()='Start video hearing']");
-    // public static readonly By ReturnToHearingRoomLink = By.XPath("//a[contains(text(),'Return to video hearing list')]");
-    // public static readonly By HearingTitle = By.XPath("//*[contains(text(),'case number')]//ancestor::td");
-    // public static readonly By HearingDateTime = By.XPath("//span[contains(text(),'to')]/ancestor::td");
-    // public static readonly By ChooseCameraMicrophoneButton = By.Id("changeCameraButton");
-    // public static readonly By CloseChangeDeviceButton = By.Id("change-device-btn");
-    // public static readonly By ConfirmStartHearingButton = By.Id("btnConfirmStart");
-    // public static readonly By CancelStartHearingButton = By.Id("btnCancelStart");
-    // public static readonly By EnterPrivateConsultationButton = By.Id("joinPCButton");
-    // public static readonly By NumberOfJohsInConsultaionRoom = By.Id("numberOfJohsInConsultationBadge");
-    // private static readonly By NumberOfJohsInConsultationBadge = By.Id("numberOfJohsInConsultationBadge");
-    // public static By ResumeVideoHearing => By.XPath("//button[text()[contains(.,'Resume video hearing')]]");
-    // public static By ToastInviteAcceptButton => By.Id("notification-toastr-invite-accept");
+    private readonly By _confirmStartHearingButton = By.Id("btnConfirmStart");
+
+    private readonly By _startOrResumeHearingBtn =
+        By.XPath("//button[normalize-space()='Start video hearing' or normalize-space()='Resume video hearing']");
+    
+    private readonly By _enterConsultationRoomBtn = By.Id("joinPCButton");
 
     public JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
-        WaitForElementToBeClickable(_startHearingBtn);
+        // the start/resume hearing button is not available when a hearing is closed
+        WaitForElementToBeClickable(_enterConsultationRoomBtn);
     }
 
-    public JudgeHearingRoomPage StartHearing()
+    public JudgeHearingRoomPage StartOrResumeHearing()
     {
-        ClickElement(_startHearingBtn);
+        ClickElement(_startOrResumeHearingBtn);
+        ClickElement(_confirmStartHearingButton);
         return new JudgeHearingRoomPage(Driver, DefaultWaitTime);
+    }
+
+    public bool IsHearingClosed()
+    {
+        return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing is closed']"));
+    }
+
+    public int GetParticipantConnectedCount()
+    {
+        var connectedLabel = Driver.FindElements(By.XPath("//label[normalize-space()='Connected']"));
+        return connectedLabel.Count;
     }
 }

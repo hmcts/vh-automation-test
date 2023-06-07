@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentAssertions" Version="6.11.0" />
-      <PackageReference Include="Selenium.WebDriver" Version="4.9.1" />
+        <PackageReference Include="FluentAssertions" Version="6.11.0" />
+        <PackageReference Include="Selenium.WebDriver" Version="4.9.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TestFramework\TestFramework.csproj" />
+        <ProjectReference Include="..\TestFramework\TestFramework.csproj" />
     </ItemGroup>
 
 </Project>

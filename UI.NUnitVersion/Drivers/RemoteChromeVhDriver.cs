@@ -7,54 +7,61 @@ public class RemoteChromeVhDriver : IVhDriver
 {
     private RemoteWebDriver _driver;
 
-    public RemoteChromeVhDriver(string platform = "Windows 11", string browserVersion = "latest")
+    public RemoteChromeVhDriver(string platform = "Windows 11", string browserVersion = "latest",
+        string username = null)
     {
         var envConfigSettings = ConfigRootBuilder.Build().GetSection("SystemConfiguration:EnvironmentConfigSettings")
             .Get<EnvironmentConfigSettings>();
-        var driverOptions = new ChromeOptions
+        var chromeOptions = new ChromeOptions
         {
             PlatformName = platform,
             BrowserVersion = browserVersion
         };
 
-        var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null ? 
-            BuildName.GetBuildNameForLocal() : 
-            BuildName.GetBuildNameForSauceLabs(driverOptions.BrowserName, driverOptions.BrowserVersion, driverOptions.PlatformName);
+        chromeOptions.AddArguments("start-maximized");
+        chromeOptions.AddArgument("no-sandbox");
+        chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
+        chromeOptions.AddArguments("--use-fake-device-for-media-stream");
+
+        // this is the name for a build in SauceLabs
+        var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null
+            ? BuildName.GetBuildNameForLocal()
+            : BuildName.GetBuildNameForSauceLabs(chromeOptions.BrowserName, chromeOptions.BrowserVersion,
+                chromeOptions.PlatformName);
 
         var sauceLabsConfiguration = envConfigSettings.SauceLabsConfiguration;
-        
-        driverOptions.AddAdditionalOption("username", sauceLabsConfiguration.SauceUsername);
-        driverOptions.AddAdditionalOption("accessKey", sauceLabsConfiguration.SauceAccessKey);
+
+        chromeOptions.AddAdditionalOption("username", sauceLabsConfiguration.SauceUsername);
+        chromeOptions.AddAdditionalOption("accessKey", sauceLabsConfiguration.SauceAccessKey);
+
+        // this is the name for a test in a build in SauceLabs. Giving unique names to tests allows us to see them in SauceLabs
+        var testName = TestContext.CurrentContext.Test.Name;
+        if (!string.IsNullOrWhiteSpace(username)) testName += $"-{username}";
         
         var sauceOptions = new Dictionary<string, object>
         {
             {"build", buildName},
-            {"name", TestContext.CurrentContext.Test.Name}, // maybe add a suffix to test name to indicate user
+            {"name", testName}, // maybe add a suffix to test name to indicate user
             {"timeZone", "London"},
             {"maxDuration", sauceLabsConfiguration.MaxDurationInSeconds},
             {"commandTimeout", sauceLabsConfiguration.CommandTimeoutInSeconds},
             {"idleTimeout", sauceLabsConfiguration.IdleTimeoutInSeconds},
-            {"screenResolution", sauceLabsConfiguration.WindowsScreenResolution},
+            {"screenResolution", sauceLabsConfiguration.WindowsScreenResolution}
         };
-        driverOptions.AddAdditionalOption("sauce:options", sauceOptions);
-        
-        var remoteUrl = new Uri($"https://{sauceLabsConfiguration.SauceUsername}:{sauceLabsConfiguration.SauceAccessKey}@{sauceLabsConfiguration.SecureSauceUrl}");
-        var remoteDriver = new RemoteWebDriver(remoteUrl, driverOptions);
+
+        chromeOptions.AddAdditionalOption("sauce:options", sauceOptions);
+
+        var remoteUrl =
+            new Uri(
+                $"https://{sauceLabsConfiguration.SauceUsername}:{sauceLabsConfiguration.SauceAccessKey}@{sauceLabsConfiguration.SecureSauceUrl}");
+        var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions);
         remoteDriver.FileDetector = new LocalFileDetector();
         _driver = remoteDriver;
     }
 
-    public void CaptureScreenShot()
-    {
-        throw new NotImplementedException();
-    }
-
     public IWebDriver GetDriver()
     {
-        if (_driver == null)
-        {
-            throw new NullReferenceException("Driver has not been initialised");
-        }
+        if (_driver == null) throw new NullReferenceException("Driver has not been initialised");
         return _driver;
     }
 
@@ -76,6 +83,9 @@ public class RemoteChromeVhDriver : IVhDriver
             TestContext.WriteLine($"<{e.GetType().Name}> Failed to report test status to SauceLabs: {e.Message}");
         }
     }
-    
-    
+
+    public void CaptureScreenShot()
+    {
+        throw new NotImplementedException();
+    }
 }

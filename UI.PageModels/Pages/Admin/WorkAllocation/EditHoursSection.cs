@@ -43,10 +43,10 @@ public class EditHoursSection : VhAdminWebPage
         var startTimeTextBox = row.FindElement(By.XPath("td[2]/input"));
         var endTimeTextBox = row.FindElement(By.XPath("td[3]/input"));
 
-        startTimeTextBox.SendKeys(startTime.ToString("HHmm"));
-        endTimeTextBox.SendKeys(endTime.ToString("HHmm"));
+        startTimeTextBox.SendKeys(GetLocaleTime(startTime));
+        endTimeTextBox.SendKeys(GetLocaleTime(endTime));
         row.Click();
-
+        if (HasFormValidationError()) throw new Exception("Edit working hours form has validation errors");
         ClickElement(_saveWorkHoursBtn);
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_editWorkHoursSavedSuccess);

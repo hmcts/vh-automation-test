@@ -47,8 +47,6 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
         CheckSectionIsOpen();
 
         WaitForApiSpinnerToDisappear();
-        // open the section
-        ClickElement(_allocateHearingsSectionBtn);
 
         // enter the case number
         EnterText(_caseNumberField, caseNumber);

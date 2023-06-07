@@ -13,5 +13,6 @@ public abstract class VhVideoWebPage : VhPage
     public void SignOut()
     {
         ClickElement(_signOutMenuItemButton);
+        ClickElement(By.XPath("//*[@id='tilesHolder']/div"));
     }
 }

@@ -2,11 +2,6 @@
 
 namespace UI.PageModels.Pages.Video.Participant;
 
-/// <summary>
-///     ConsultationRoomPage
-///     Page element definitions
-///     Do not add logic here
-/// </summary>
 public class ConsultationRoomPage : VhVideoWebPage
 {
     public static By HearingListConsultationRooms = By.Id("ConsultationRooms");

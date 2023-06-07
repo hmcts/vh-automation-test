@@ -12,7 +12,8 @@ public abstract class VhPage
     protected readonly By Spinner = By.Id("waitPopup");
     protected int DefaultWaitTime;
     protected IWebDriver Driver;
-    protected string Locale = "en-GB";
+    protected static readonly string GbLocale = "en-GB";
+    protected string Locale = GbLocale;
 
     protected VhPage(IWebDriver driver, int defaultWaitTime)
     {
@@ -156,5 +157,10 @@ public abstract class VhPage
     protected string GetLocaleDate(DateTime date)
     {
         return date.ToString(new CultureInfo(Locale).DateTimeFormat.ShortDatePattern);
+    }
+
+    protected string GetLocaleTime(TimeOnly time)
+    {
+        return time.ToString(Locale == GbLocale ? "HHmm" : "hhmmtt");
     }
 }

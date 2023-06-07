@@ -1,3 +1,5 @@
+using WebDriverManager;
+
 namespace UI.NUnitVersion.Drivers;
 
 public class LocalChromeVhDriver : IVhDriver
@@ -6,16 +8,16 @@ public class LocalChromeVhDriver : IVhDriver
 
     public LocalChromeVhDriver()
     {
-        new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+        new DriverManager().SetUpDriver(new ChromeConfig());
         var cService = ChromeDriverService.CreateDefaultService();
-        ChromeOptions chromeOptions = new ChromeOptions();
+        var chromeOptions = new ChromeOptions();
         chromeOptions.AddArguments("start-maximized");
         chromeOptions.AddArgument("no-sandbox");
         chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
         chromeOptions.AddArguments("--use-fake-device-for-media-stream");
         _driver = new ChromeDriver(cService, chromeOptions);
     }
-    
+
     public IWebDriver GetDriver()
     {
         return _driver;

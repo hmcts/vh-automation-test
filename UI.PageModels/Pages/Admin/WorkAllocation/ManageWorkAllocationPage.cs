@@ -71,7 +71,7 @@ public class ManageWorkAllocationPage : VhAdminWebPage
         _manageTeamSection.DeleteExistingJusticeUser(username);
     }
 
-    public void AllocateJusticeUserToHearing(string caseNumber = "automation test",
+    public void AllocateJusticeUserToHearing(string caseNumber = "Automation Test Hearing",
         string justiceUserDisplayName = "automation allocation")
     {
         _allocateJusticeUserToHearingSection.AllocateJusticeUserToHearing(caseNumber, justiceUserDisplayName);

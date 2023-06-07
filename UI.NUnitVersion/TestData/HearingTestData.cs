@@ -1,3 +1,4 @@
+using UI.NUnitVersion.Utilities;
 using UI.PageModels.Dtos;
 
 namespace UI.NUnitVersion.TestData;
@@ -5,14 +6,15 @@ namespace UI.NUnitVersion.TestData;
 public static class HearingTestData
 {
     /// <summary>
-    /// Create a hearing with 4 participants, 2 claimants and 2 defendants
+    ///     Create a hearing with 4 participants, 2 claimants and 2 defendants
     /// </summary>
     /// <returns>a hearing with 4 participants, 2 claimants and 2 defendants</returns>
-    public static BookingDto CreateHearingDto()
+    public static BookingDto CreateHearingDto(bool remote = false)
     {
+        var date = DateUtil.GetNow(remote);
         var bookingDto = new BookingDto
         {
-            CaseName = $"BookAHearing Automation Test {DateTime.Now:M-d-yy-H-mm-ss}",
+            CaseName = $"BookAHearing Automation Test {date:M-d-yy-H-mm-ss}",
             CaseNumber = "Automation Test Hearing",
             CaseType = "Generic",
             HearingType = "Automated Test",
@@ -37,8 +39,9 @@ public static class HearingTestData
                 BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.LitigantInPerson,
                     "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3"),
                 BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
-                    "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net", "Auto 4",
-                    "Auto 3"),
+                    "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
+                    "Auto 4",
+                    "Auto 3")
             }
         };
         return bookingDto;
