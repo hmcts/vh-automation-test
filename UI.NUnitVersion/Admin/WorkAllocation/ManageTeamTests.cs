@@ -1,5 +1,3 @@
-using UI.PageModels.Pages.Admin.WorkAllocation;
-
 namespace UI.NUnitVersion.Admin.WorkAllocation;
 
 public class ManageTeamTests : AdminWebUiTest

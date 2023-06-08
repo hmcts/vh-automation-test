@@ -1,5 +1,3 @@
-using NUnit.Framework.Interfaces;
-
 namespace UI.NUnitVersion.Admin;
 
 public abstract class AdminWebUiTest

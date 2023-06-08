@@ -1,4 +1,3 @@
-using NUnit.Framework.Interfaces;
 using UI.NUnitVersion.Models;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;

@@ -1,5 +1,3 @@
-using UI.NUnitVersion.TestData;
-
 namespace UI.NUnitVersion.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
@@ -16,10 +14,10 @@ public class BookHearingTests : AdminWebUiTest
 
         // TODO: review how to get generic case types in lower environments since they are typically skipped
 
-        // var preBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
-        // var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
-        // var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
-        // var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
+        var preBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
+        var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
+        var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
+        var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
@@ -47,20 +45,18 @@ public class BookHearingTests : AdminWebUiTest
         var confirmationPage = summaryPage.ClickBookButton();
         confirmationPage.ClickViewBookingLink();
 
-        // TODO: review how to get generic case types in lower environments since they are typically skipped
+        dashboardPage = confirmationPage.GoToDashboardPage();
 
-        // dashboardPage = confirmationPage.GoToDashboardPage();
-
-        // var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
-        // var postBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
-        // var postBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
-        // var postBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
-        //
-        // postBookingUnallocatedHearingsToday.Should().Be(preBookingUnallocatedHearingsToday);
-        // postBookingUnallocatedHearingsTomorrow.Should().BeGreaterThan(preBookingUnallocatedHearingsTomorrow);
-        // postBookingUnallocatedHearingsNextSevenDays.Should().BeGreaterThan(preBookingUnallocatedHearingsNextSevenDays);
-        // postBookingUnallocatedHearingsNextThirtyDays.Should()
-        //     .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
+        var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
+        var postBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
+        var postBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
+        var postBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
+        
+        postBookingUnallocatedHearingsToday.Should().Be(preBookingUnallocatedHearingsToday);
+        postBookingUnallocatedHearingsTomorrow.Should().BeGreaterThan(preBookingUnallocatedHearingsTomorrow);
+        postBookingUnallocatedHearingsNextSevenDays.Should().BeGreaterThan(preBookingUnallocatedHearingsNextSevenDays);
+        postBookingUnallocatedHearingsNextThirtyDays.Should()
+            .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
 
         Assert.Pass();
     }

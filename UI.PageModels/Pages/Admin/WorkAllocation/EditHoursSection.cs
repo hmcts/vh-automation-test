@@ -67,8 +67,7 @@ public class EditHoursSection : VhAdminWebPage
     {
         CheckSectionIsOpen();
 
-        // skip until VIH-9944 has been fixed
-        // EnterUserToEditNonAvailableHours(username);
+        EnterUserToEditNonAvailableHours(username);
 
         ClickElement(_addNewNonAvailabilityBtn);
         var row = GetNewAddedNonAvailabilityRow();
