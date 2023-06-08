@@ -9,25 +9,22 @@ namespace UI.PageModels.Pages;
 
 public abstract class VhPage
 {
-    protected IWebDriver Driver;
-    protected int DefaultWaitTime;
-    protected string Locale = "en-GB";
-    
     protected readonly By Spinner = By.Id("waitPopup");
+    protected int DefaultWaitTime;
+    protected IWebDriver Driver;
+    protected static readonly string GbLocale = "en-GB";
+    protected string Locale = GbLocale;
 
     protected VhPage(IWebDriver driver, int defaultWaitTime)
     {
         Driver = driver;
         DefaultWaitTime = defaultWaitTime;
-        if (driver is RemoteWebDriver)
-        {
-            Locale = "en-US";
-        }
+        if (driver is RemoteWebDriver) Locale = "en-US";
     }
 
     protected bool HasFormValidationError()
     {
-        return Driver.FindElements(By.ClassName("govuk-error-summary")).Count > 0 || 
+        return Driver.FindElements(By.ClassName("govuk-error-summary")).Count > 0 ||
                Driver.FindElements(By.ClassName("govuk-error-message")).Count > 0;
     }
 
@@ -38,8 +35,8 @@ public abstract class VhPage
             drv.FindElement(locator));
         return element.Text;
     }
-    
-    
+
+
     protected bool IsElementVisible(By locator)
     {
         try
@@ -52,16 +49,13 @@ public abstract class VhPage
             return false;
         }
     }
-    
+
     protected void EnterText(By locator, string text, bool clearText = true)
     {
         WaitForElementToBeVisible(locator);
         var element = new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime)).Until(drv =>
             drv.FindElement(locator));
-        if (clearText)
-        {
-            element.ClearText();
-        }
+        if (clearText) element.ClearText();
 
         element.SendKeys(text);
     }
@@ -89,7 +83,7 @@ public abstract class VhPage
         new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
             .Until(ExpectedConditions.ElementIsVisible(locator));
     }
-    
+
     protected void WaitForElementToBeClickable(By locator)
     {
         new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
@@ -121,10 +115,7 @@ public abstract class VhPage
     {
         WaitForElementToBeClickable(locator);
         var checkbox = Driver.FindElement(locator);
-        if (checkbox.Selected != checkedValue)
-        {
-            checkbox.Click();
-        }
+        if (checkbox.Selected != checkedValue) checkbox.Click();
     }
 
     protected void SelectDropDownByText(By locator, string text)
@@ -156,7 +147,7 @@ public abstract class VhPage
         new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
             .Until(ExpectedConditions.ElementToBeClickable(locator));
     }
-    
+
     protected void WaitForElementToBeInvisible(By locator, int timeOut)
     {
         new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
@@ -166,5 +157,10 @@ public abstract class VhPage
     protected string GetLocaleDate(DateTime date)
     {
         return date.ToString(new CultureInfo(Locale).DateTimeFormat.ShortDatePattern);
+    }
+
+    protected string GetLocaleTime(TimeOnly time)
+    {
+        return time.ToString(Locale == GbLocale ? "HHmm" : "hhmmtt");
     }
 }

@@ -4,6 +4,7 @@ public class VideoWebParticipant
 {
     public string Username { get; set; }
     public JourneyType JourneyType { get; set; }
+    public VhVideoWebPage VhVideoWebPage { get; set; }
     public IVhDriver Driver { get; set; }
 }
 

@@ -15,13 +15,13 @@ public class VideoWebLoginPage : VhLoginPage
         EnterLoginDetails(username, password);
         return new JudgeHearingListPage(Driver, DefaultWaitTime);
     }
-    
+
     public ParticipantHearingListPage LogInAsParticipant(string username, string password)
     {
         EnterLoginDetails(username, password);
         return new ParticipantHearingListPage(Driver, DefaultWaitTime);
     }
-    
+
     public StaffMemberHearingListPage LogInAsStaffMember(string username, string password)
     {
         EnterLoginDetails(username, password);

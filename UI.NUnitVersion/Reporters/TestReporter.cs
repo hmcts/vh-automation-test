@@ -1,6 +1,5 @@
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
-using NUnit.Framework.Interfaces;
 using OpenQA.Selenium.Support.Extensions;
 
 namespace UI.NUnitVersion.Reporters;
@@ -9,7 +8,7 @@ public class TestReporter
 {
     private ExtentReports _extent;
     private ExtentTest _test;
-    private int imageCount = 0;
+    private int imageCount;
 
     public void SetupReport()
     {
@@ -26,7 +25,7 @@ public class TestReporter
     {
         _extent.Flush();
     }
-    
+
     public void SetupTest(string testName)
     {
         _test = _extent.CreateTest(testName);
@@ -57,13 +56,13 @@ public class TestReporter
         }
 
         _test.Log(logstatus, "Test ended with " + logstatus + stacktrace);
-        
+
         _extent.Flush();
     }
-    
+
     public void CaptureScreenshot(IWebDriver driver, string nodeName = null, string nodeDescription = null)
     {
-        imageCount+=1;
+        imageCount += 1;
         var testName = TestContext.CurrentContext.Test.Name;
         var imageFileName = $"{testName}_{imageCount}.png";
         Directory.CreateDirectory(Path.Join(TestContext.CurrentContext.TestDirectory, "images", testName));
@@ -71,13 +70,8 @@ public class TestReporter
             Path.Combine(Path.Join(TestContext.CurrentContext.TestDirectory, "images", testName, imageFileName));
         driver.TakeScreenshot().SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
         if (string.IsNullOrWhiteSpace(nodeName))
-        {
-            _test.AddScreenCaptureFromPath(screenshotFilePath);    
-        }
+            _test.AddScreenCaptureFromPath(screenshotFilePath);
         else
-        {
             _test.CreateNode(nodeName, nodeDescription).AddScreenCaptureFromPath(screenshotFilePath);
-        }
-
     }
 }
