@@ -16,8 +16,8 @@ public static class HearingTestData
         {
             CaseName = $"BookAHearing Automation Test {date:M-d-yy-H-mm-ss}",
             CaseNumber = "Automation Test Hearing",
-            CaseType = "Generic",
-            HearingType = "Automated Test",
+            CaseType = "Civil",
+            HearingType = "Enforcement Hearing",
             ScheduledDateTime = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30),
             DurationHour = 1,
             DurationMinute = 30,
