@@ -89,7 +89,7 @@ public abstract class VideoWebUiTest
         // https://video.hearings.reform.hmcts.net/vh-signin
         // https://video.hearings.reform.hmcts.net/ejud-signin
         // https://video.hearings.reform.hmcts.net/justice-signin
-        return $"{EnvConfigSettings.VideoUrl}vh-signin";
+        return $"{EnvConfigSettings.VideoUrl}/vh-signin";
     }
 
     private VideoWebLoginPage NavigateToVideoWeb(IWebDriver driver)
