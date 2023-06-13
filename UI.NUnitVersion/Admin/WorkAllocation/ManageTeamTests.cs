@@ -21,7 +21,7 @@ public class ManageTeamTests : AdminWebUiTest
 
         workAllocationPage.AddTeamMember(newUsername, firstName, lastName, contactTelephone, roles);
         TestContext.WriteLine("Successfully added a new user with username: " + newUsername);
-        var updatedRoles = new List<JusticeUserRoles> {JusticeUserRoles.Vho, JusticeUserRoles.StaffMember};
+        var updatedRoles = new List<JusticeUserRoles> {JusticeUserRoles.VhTeamLead};
         workAllocationPage.EditTeamMember(newUsername, updatedRoles);
         TestContext.WriteLine("Successfully edited a user with username: " + newUsername);
         workAllocationPage.DeleteTeamMember(newUsername);
