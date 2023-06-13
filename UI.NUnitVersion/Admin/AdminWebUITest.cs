@@ -21,6 +21,7 @@ public abstract class AdminWebUiTest
     [SetUp]
     protected virtual void Setup()
     {
+        Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         VhDriver = EnvConfigSettings.RunOnSaucelabs ? new RemoteChromeVhDriver() : new LocalChromeVhDriver();
         // _testReporter.SetupTest(TestContext.CurrentContext.Test.Name);
     }

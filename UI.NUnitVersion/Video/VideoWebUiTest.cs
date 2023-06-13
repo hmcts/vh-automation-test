@@ -32,6 +32,7 @@ public abstract class VideoWebUiTest
     [SetUp]
     protected virtual void Setup()
     {
+        Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         AdminWebDriver = CreateDriver("AdminWeb");
         // _testReporter.SetupTest(TestContext.CurrentContext.Test.Name);   
     }

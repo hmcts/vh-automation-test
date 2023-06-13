@@ -11,6 +11,7 @@ namespace UI.PageModels.Pages;
 
 public abstract class VhPage
 {
+    public const string VHTestNameKey = "VHTestName";
     protected readonly By Spinner = By.Id("waitPopup");
     protected int DefaultWaitTime;
     protected IWebDriver Driver;
@@ -39,7 +40,14 @@ public abstract class VhPage
         var axeBuilder = new AxeBuilder(Driver);
         axeBuilder.WithOutputFile(AccessibilityReportFilePath);
         var axeResult = axeBuilder.Analyze();
-        Driver.CreateAxeHtmlReport(axeResult,AccessibilityHtmlReportFilePath, ReportTypes.All);
+        var htmlFilePath = AccessibilityHtmlReportFilePath;
+        var stagingDir = Environment.GetEnvironmentVariable("BUILD_ARTIFACTSTAGINGDIRECTORY");
+        if (!string.IsNullOrEmpty(stagingDir))
+        {
+            var testName = Environment.GetEnvironmentVariable("VHTestName");
+            htmlFilePath = Path.Join(stagingDir, testName, "AccessibilityReport.html");
+        }
+        Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations | ReportTypes.Passes);
         axeResult.Violations.Where(x=> x.Impact != "minor").Should().BeEmpty();
     }
     
