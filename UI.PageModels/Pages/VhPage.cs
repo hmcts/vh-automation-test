@@ -44,8 +44,8 @@ public abstract class VhPage
         var stagingDir = Environment.GetEnvironmentVariable("BUILD_ARTIFACTSTAGINGDIRECTORY");
         if (!string.IsNullOrEmpty(stagingDir))
         {
-            var testName = Environment.GetEnvironmentVariable("VHTestName");
-            htmlFilePath = Path.Join(stagingDir, testName, "AccessibilityReport.html");
+            var testName = Environment.GetEnvironmentVariable(VHTestNameKey);
+            htmlFilePath = Path.Join(stagingDir, $"{testName}_AccessibilityReport.html");
         }
         Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations | ReportTypes.Passes);
         axeResult.Violations.Where(x=> x.Impact != "minor").Should().BeEmpty();
