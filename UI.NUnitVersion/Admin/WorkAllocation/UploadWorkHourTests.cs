@@ -3,6 +3,7 @@ namespace UI.NUnitVersion.Admin.WorkAllocation;
 public class UploadWorkHourTests : AdminWebUiTest
 {
     [Test]
+    [Category("a11y")]
     public void UploadValidWorkHours()
     {
         var driver = VhDriver.GetDriver();

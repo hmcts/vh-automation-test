@@ -21,6 +21,8 @@ public class DashboardPage : VhAdminWebPage
         if (!Driver.Url.EndsWith("dashboard"))
             throw new InvalidOperationException(
                 "This is not the dashboard page, the current url is: " + Driver.Url);
+        
+        
     }
 
     public int GetNumberOfUnallocatedHearingsToday()

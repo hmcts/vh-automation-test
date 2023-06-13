@@ -3,6 +3,7 @@ namespace UI.NUnitVersion.Admin.WorkAllocation;
 public class AllocateHearingTests : AdminWebUiTest
 {
     [Test]
+    [Category("a11y")]
     public void AllocateAJusticeUserToAHearing()
     {
         // should I book a hearing first?

@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.PageModels", "UI.PageMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.NUnitVersion", "UI.NUnitVersion\UI.NUnitVersion.csproj", "{54CFA1E7-05A0-416A-95FA-4B75C032DD86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Common", "UI.Common\UI.Common.csproj", "{E2288A7E-5D0D-46C1-B965-CAC5C998E5F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54CFA1E7-05A0-416A-95FA-4B75C032DD86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2288A7E-5D0D-46C1-B965-CAC5C998E5F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2288A7E-5D0D-46C1-B965-CAC5C998E5F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2288A7E-5D0D-46C1-B965-CAC5C998E5F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2288A7E-5D0D-46C1-B965-CAC5C998E5F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

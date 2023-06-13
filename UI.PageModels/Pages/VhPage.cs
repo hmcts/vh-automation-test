@@ -1,9 +1,11 @@
 using System.Globalization;
+using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using Selenium.Axe;
 using SeleniumExtras.WaitHelpers;
-using TestFramework;
+using UI.Common.Configuration;
 
 namespace UI.PageModels.Pages;
 
@@ -12,16 +14,33 @@ public abstract class VhPage
     protected readonly By Spinner = By.Id("waitPopup");
     protected int DefaultWaitTime;
     protected IWebDriver Driver;
+    protected bool AccessibilityCheck;
+    protected string AccessibilityReportFilePath;
     protected static readonly string GbLocale = "en-GB";
     protected string Locale = GbLocale;
 
     protected VhPage(IWebDriver driver, int defaultWaitTime)
     {
+        var config = ConfigRootBuilder.EnvConfigInstance();
         Driver = driver;
         DefaultWaitTime = defaultWaitTime;
+        AccessibilityCheck = config.EnableAccessibilityCheck;
+        AccessibilityReportFilePath = config.AccessibilityReportFilePath;
         if (driver is RemoteWebDriver) Locale = "en-US";
+        CheckAccessibility();
     }
 
+    
+
+    public void CheckAccessibility()
+    {
+        if(!AccessibilityCheck) return;
+        var axeBuilder = new AxeBuilder(Driver);
+        axeBuilder.WithOutputFile(AccessibilityReportFilePath);
+        var axeResult = axeBuilder.Analyze();
+        axeResult.Violations.Where(x=> x.Impact != "minor").Should().BeEmpty();
+    }
+    
     protected bool HasFormValidationError()
     {
         return Driver.FindElements(By.ClassName("govuk-error-summary")).Count > 0 ||
@@ -55,7 +74,7 @@ public abstract class VhPage
         WaitForElementToBeVisible(locator);
         var element = new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime)).Until(drv =>
             drv.FindElement(locator));
-        if (clearText) element.ClearText();
+        if (clearText) element.Clear();
 
         element.SendKeys(text);
     }
