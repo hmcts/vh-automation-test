@@ -97,7 +97,9 @@ stages:
           - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
             value: true
           - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityReportFilePath
-            value: $(Build.ArtifactStagingDirectory)/A11Y/axe-results.json
+            value: $(Build.ArtifactStagingDirectory)/axe-results.json
+          - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityHtmlReportFilePath
+            value: $(Build.ArtifactStagingDirectory)/axe-results.html
           - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
             value: $(Saucelabs:Username)
           - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
@@ -135,12 +137,12 @@ stages:
             inputs:
               command: test
               projects: "$(projectPath)/*.csproj"
-              arguments: "--configuration Release"
+              arguments: "--configuration Release --filter TestCategory=a11y"
               publishTestResults: true
               testRunTitle: "A11Y Tests ${{ parameters.environment }}"
 
           - task: PublishBuildArtifacts@1
             displayName: Publish A11Y Output
             inputs:
-              pathToPublish: "$(Build.ArtifactStagingDirectory)/A11Y/axe-results.json"
+              pathToPublish: "$(Build.ArtifactStagingDirectory)/"
               artifactName: A11Y_Report

@@ -16,8 +16,10 @@ public abstract class VhPage
     protected IWebDriver Driver;
     protected bool AccessibilityCheck;
     protected string AccessibilityReportFilePath;
+    protected string AccessibilityHtmlReportFilePath;
     protected static readonly string GbLocale = "en-GB";
     protected string Locale = GbLocale;
+    protected bool IsLoginPage => Driver.Url.Contains("login");
 
     protected VhPage(IWebDriver driver, int defaultWaitTime)
     {
@@ -26,18 +28,18 @@ public abstract class VhPage
         DefaultWaitTime = defaultWaitTime;
         AccessibilityCheck = config.EnableAccessibilityCheck;
         AccessibilityReportFilePath = config.AccessibilityReportFilePath;
+        AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
         if (driver is RemoteWebDriver) Locale = "en-US";
         CheckAccessibility();
     }
 
-    
-
-    public void CheckAccessibility()
+    private void CheckAccessibility()
     {
-        if(!AccessibilityCheck) return;
+        if(!AccessibilityCheck || IsLoginPage) return;
         var axeBuilder = new AxeBuilder(Driver);
         axeBuilder.WithOutputFile(AccessibilityReportFilePath);
         var axeResult = axeBuilder.Analyze();
+        Driver.CreateAxeHtmlReport(axeResult,AccessibilityHtmlReportFilePath, ReportTypes.All);
         axeResult.Violations.Where(x=> x.Impact != "minor").Should().BeEmpty();
     }
     
