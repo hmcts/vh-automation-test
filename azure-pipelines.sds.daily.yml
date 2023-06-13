@@ -19,7 +19,7 @@ parameters:
   - name: runA11yTests
     displayName: Run Accessibiliy Tests
     type: boolean
-    default: false
+    default: true
 
   - name: environment
     type: string
