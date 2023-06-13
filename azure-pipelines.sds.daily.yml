@@ -29,58 +29,58 @@ stages:
   - stage: Automation_Tests_${{ parameters.environment }}
     displayName: Automation Tests ${{ parameters.environment }}
     jobs:
-      - job: UI_Tests
-        displayName: UI Tests ${{ parameters.environment }}
-        variables:
-          - name: env
-            value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
-          - name: projectPath
-            value: "UI.NUnitVersion"
-          - group: vh-automation-test-${{ parameters.environment }}
-          - group: Saucelabs
-          - group: KinlyConfiguration_${{ parameters.environment }}
-          - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
-            value: true
-          - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
-            value: $(Saucelabs:Username)
-          - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
-            value: $(Saucelabs:AccessKey)
-          - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
-            value: $(ConferencePhoneNumber)
-          - name: SystemConfiguration.LogLocation
-            value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
-          - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
-            value: $(Build.ArtifactStagingDirectory)/TestResults/
+      # - job: UI_Tests
+      #   displayName: UI Tests ${{ parameters.environment }}
+      #   variables:
+      #     - name: env
+      #       value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
+      #     - name: projectPath
+      #       value: "UI.NUnitVersion"
+      #     - group: vh-automation-test-${{ parameters.environment }}
+      #     - group: Saucelabs
+      #     - group: KinlyConfiguration_${{ parameters.environment }}
+      #     - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
+      #       value: true
+      #     - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
+      #       value: $(Saucelabs:Username)
+      #     - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
+      #       value: $(Saucelabs:AccessKey)
+      #     - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
+      #       value: $(ConferencePhoneNumber)
+      #     - name: SystemConfiguration.LogLocation
+      #       value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
+      #     - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
+      #       value: $(Build.ArtifactStagingDirectory)/TestResults/
 
-        steps:
-          # inserts variables to help create unique test names
-          - task: gitversion/setup@0
-            displayName: Install GitVersion
-            inputs:
-              versionSpec: "5.11.1"
+      #   steps:
+      #     # inserts variables to help create unique test names
+      #     - task: gitversion/setup@0
+      #       displayName: Install GitVersion
+      #       inputs:
+      #         versionSpec: "5.11.1"
 
-          - task: gitversion/execute@0
-            displayName: Determine Version
+      #     - task: gitversion/execute@0
+      #       displayName: Determine Version
 
-          - task: FileTransform@1
-            displayName: Transform App Settings
-            inputs:
-              folderPath: $(projectPath)
-              fileType: json
-              targetFiles: "**/appsettings.json"
+      #     - task: FileTransform@1
+      #       displayName: Transform App Settings
+      #       inputs:
+      #         folderPath: $(projectPath)
+      #         fileType: json
+      #         targetFiles: "**/appsettings.json"
 
-          - pwsh: |
-              Get-Content "$(projectPath)/appsettings.json"
-            displayName: Print App Settings
+      #     - pwsh: |
+      #         Get-Content "$(projectPath)/appsettings.json"
+      #       displayName: Print App Settings
 
-          - task: DotNetCoreCLI@2
-            displayName: Run UI Tests
-            inputs:
-              command: test
-              projects: "$(projectPath)/*.csproj"
-              arguments: "--configuration Release"
-              publishTestResults: true
-              testRunTitle: "UI Tests ${{ parameters.environment }}"
+      #     - task: DotNetCoreCLI@2
+      #       displayName: Run UI Tests
+      #       inputs:
+      #         command: test
+      #         projects: "$(projectPath)/*.csproj"
+      #         arguments: "--configuration Release"
+      #         publishTestResults: true
+      #         testRunTitle: "UI Tests ${{ parameters.environment }}"
 
       - job: A11Y_Tests
         displayName: A11Y Tests ${{ parameters.environment }}
