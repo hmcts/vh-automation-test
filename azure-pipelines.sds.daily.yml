@@ -137,7 +137,7 @@ stages:
               projects: "$(projectPath)/*.csproj"
               arguments: "--configuration Release"
               publishTestResults: true
-              testRunTitle: "UI Tests ${{ parameters.environment }}"
+              testRunTitle: "A11Y Tests ${{ parameters.environment }}"
 
           - task: PublishBuildArtifacts@1
             displayName: Publish A11Y Output
