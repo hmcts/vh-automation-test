@@ -143,6 +143,7 @@ stages:
 
           - task: PublishBuildArtifacts@1
             displayName: Publish A11Y Output
+            condition: succeededOrFailed()
             inputs:
               pathToPublish: "$(Build.ArtifactStagingDirectory)/"
               artifactName: A11Y_Report
