@@ -6,6 +6,7 @@ namespace UI.NUnitVersion.Video;
 public class EndToEndTest : VideoWebUiTest
 {
     [Test]
+    [Category("a11y")]
     public void BookAHearingAndLogInAsJudgeAndParticipants()
     {
         var hearingDto = HearingTestData.CreateHearingDto();

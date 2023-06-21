@@ -8,11 +8,14 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.11.0" />
-        <PackageReference Include="Selenium.WebDriver" Version="4.9.1" />
+        <PackageReference Include="Selenium.Axe" Version="4.0.13" />
+        <PackageReference Include="Selenium.Support" Version="4.10.0" />
+        <PackageReference Include="Selenium.WebDriver" Version="4.10.0" />
+        <PackageReference Include="SeleniumExtras.WaitHelpers" Version="1.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\TestFramework\TestFramework.csproj" />
+      <ProjectReference Include="..\UI.Common\UI.Common.csproj" />
     </ItemGroup>
 
 </Project>

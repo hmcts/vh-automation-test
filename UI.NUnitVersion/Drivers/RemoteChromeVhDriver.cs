@@ -36,12 +36,13 @@ public class RemoteChromeVhDriver : IVhDriver
 
         // this is the name for a test in a build in SauceLabs. Giving unique names to tests allows us to see them in SauceLabs
         var testName = TestContext.CurrentContext.Test.Name;
+        if(envConfigSettings.EnableAccessibilityCheck) testName += "-Accessibility";
         if (!string.IsNullOrWhiteSpace(username)) testName += $"-{username}";
         
         var sauceOptions = new Dictionary<string, object>
         {
             {"build", buildName},
-            {"name", testName}, // maybe add a suffix to test name to indicate user
+            {"name", testName},
             {"timeZone", "London"},
             {"maxDuration", sauceLabsConfiguration.MaxDurationInSeconds},
             {"commandTimeout", sauceLabsConfiguration.CommandTimeoutInSeconds},

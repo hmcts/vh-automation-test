@@ -3,6 +3,7 @@ namespace UI.NUnitVersion.Admin.Booking;
 public class BookHearingTests : AdminWebUiTest
 {
     [Test]
+    [Category("a11y")]
     public void BookAHearing()
     {
         var bookingDto = HearingTestData.CreateHearingDto();
@@ -11,9 +12,7 @@ public class BookHearingTests : AdminWebUiTest
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
-
-        // TODO: review how to get generic case types in lower environments since they are typically skipped
-
+        
         var preBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
         var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
         var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();

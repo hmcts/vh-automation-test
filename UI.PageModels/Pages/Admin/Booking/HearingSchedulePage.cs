@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
 using OpenQA.Selenium;
 
 namespace UI.PageModels.Pages.Admin.Booking;
@@ -33,7 +33,8 @@ public class HearingSchedulePage : VhAdminWebPage
         var errors = Driver.FindElements(By.ClassName("govuk-error-message")).Select(x => x.Text);
         var message = string.Join("; ", errors);
 
-        Assert.IsFalse(HasFormValidationError(), $"Form has validation errors. {Environment.NewLine} {message}");
+        HasFormValidationError().Should().BeFalse($"Form has validation errors. {Environment.NewLine} {message}");
+        
         ClickElement(_nextButton);
         return new HearingAssignJudgePage(Driver, DefaultWaitTime);
     }

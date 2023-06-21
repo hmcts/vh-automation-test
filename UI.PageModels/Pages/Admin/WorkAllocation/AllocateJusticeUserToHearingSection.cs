@@ -11,6 +11,7 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
 
     // search filter fields
     private readonly By _caseNumberField = By.Id("case-number-entry");
+    private readonly By _isUnallocatedOnlyCheckbox = By.CssSelector("label[for='is-unallocated']");
 
     private readonly By _justiceUserSelectDropdownArrow =
         By.XPath("//app-select[@id='select-cso-search-allocation']//span[@class='ng-arrow-wrapper']");
@@ -26,7 +27,7 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
     {
     }
 
-    public void EnterSearchFilter(string caseNumber = "automation test")
+    public void EnterSearchFilter(string caseNumber = "automation test", bool unallocatedOnly = false)
     {
         CheckSectionIsOpen();
         WaitForApiSpinnerToDisappear();
@@ -36,23 +37,25 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
         // enter the case number
         EnterText(_caseNumberField, caseNumber);
 
+        if (unallocatedOnly)
+        {
+            ClickElement(_isUnallocatedOnlyCheckbox);
+        }
+
         // search for hearings
         ClickElement(_searchButton);
     }
 
 
     public void AllocateJusticeUserToHearing(string caseNumber = "automation test",
-        string justiceUserDisplayName = "automation allocation")
+        string justiceUserDisplayName = "automation allocation",
+        string justiceUserUsername = "automation.allocation@hearings.reform.hmcts.net")
     {
         CheckSectionIsOpen();
-
         WaitForApiSpinnerToDisappear();
 
         // enter the case number
-        EnterText(_caseNumberField, caseNumber);
-
-        // search for hearings
-        ClickElement(_searchButton);
+        EnterSearchFilter(caseNumber, true);
 
         ClickElement(_justiceUserSelectDropdownTextBox);
         EnterText(_justiceUserSelectDropdownTextBox, justiceUserDisplayName, false);
@@ -62,15 +65,21 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
         ClickElement(dropDownSelector);
 
         ClickElement(_justiceUserSelectDropdownArrow);
-
-        // click first checkbox on the results table list
         var firstCheckbox = By.CssSelector("input[name='select-hearing_0']");
         ClickElement(firstCheckbox);
+        
 
         ClickElement(_allocateHearingBtn);
         WaitForApiSpinnerToDisappear();
 
         GetText(_actionsMessageContainer).Should().Contain("Hearings have been updated");
+    }
+    
+    private IWebElement GetHearingCheckboxNotAllocatedToUser(string justiceUserUsername)
+    {
+        var row = Driver.FindElement(
+            By.XPath($"//tr[.//td[7][normalize-space()!='{justiceUserUsername}']]"));
+        return row.FindElement(By.XPath("//tbody/tr[2]/td[1]/input[1]"));;
     }
 
     private void CheckSectionIsOpen()

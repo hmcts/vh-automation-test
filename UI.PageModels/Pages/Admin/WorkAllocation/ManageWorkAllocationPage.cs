@@ -72,8 +72,8 @@ public class ManageWorkAllocationPage : VhAdminWebPage
     }
 
     public void AllocateJusticeUserToHearing(string caseNumber = "Automation Test Hearing",
-        string justiceUserDisplayName = "automation allocation")
+        string justiceUserDisplayName = "automation allocation", string justiceUserUsername = "automation.allocation@hearings.reform.hmcts.net")
     {
-        _allocateJusticeUserToHearingSection.AllocateJusticeUserToHearing(caseNumber, justiceUserDisplayName);
+        _allocateJusticeUserToHearingSection.AllocateJusticeUserToHearing(caseNumber, justiceUserDisplayName, justiceUserUsername);
     }
 }
