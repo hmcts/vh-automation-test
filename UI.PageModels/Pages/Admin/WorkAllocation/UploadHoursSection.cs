@@ -1,4 +1,3 @@
-using FluentAssertions;
 using OpenQA.Selenium;
 
 namespace UI.PageModels.Pages.Admin.WorkAllocation;
@@ -29,7 +28,7 @@ public class UploadHoursSection : VhAdminWebPage
     {
         ClickElement(_uploadHoursSectionBtn);
         var fullPath = Path.GetFullPath(filePath);
-        File.Exists(filePath).Should().BeTrue();
+        AssertFileExists(filePath);
         EnterText(_uploadWorkHoursCsvFileField, fullPath);
         ClickElement(_uploadAvailabilityHoursButton);
         WaitForFileUploadSuccessMessage();
@@ -39,10 +38,18 @@ public class UploadHoursSection : VhAdminWebPage
     {
         ClickElement(_uploadHoursSectionBtn);
         var fullPath = Path.GetFullPath(filePath);
-        File.Exists(filePath).Should().BeTrue();
+        AssertFileExists(filePath);
         EnterText(_uploadNonAvailabilityCsvField, fullPath);
         ClickElement(_uploadNonAvailabilityHoursButton);
         WaitForFileUploadSuccessMessage();
+    }
+    
+    private void AssertFileExists(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            throw new NotFoundException($"file not found: {filePath}");
+        }
     }
 
     public void WaitForFileUploadSuccessMessage()
