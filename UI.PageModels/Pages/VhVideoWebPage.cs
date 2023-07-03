@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages;
 
@@ -10,9 +11,10 @@ public abstract class VhVideoWebPage : VhPage
     {
     }
 
-    public void SignOut()
+    public VideoWebLogoutPage SignOut()
     {
         ClickElement(_signOutMenuItemButton);
         ClickElement(By.XPath("//*[@id='tilesHolder']/div"));
+        return new VideoWebLogoutPage(Driver, DefaultWaitTime);
     }
 }

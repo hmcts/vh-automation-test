@@ -9,16 +9,17 @@ public static class HearingTestData
     ///     Create a hearing with 4 participants, 2 claimants and 2 defendants
     /// </summary>
     /// <returns>a hearing with 4 participants, 2 claimants and 2 defendants</returns>
-    public static BookingDto CreateHearingDto(bool remote = false)
+    public static BookingDto CreateHearingDto(bool remote = false, DateTime? scheduledDateTime = null)
     {
         var date = DateUtil.GetNow(remote);
+        var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
         var bookingDto = new BookingDto
         {
             CaseName = $"BookAHearing Automation Test {date:M-d-yy-H-mm-ss}",
             CaseNumber = "Automation Test Hearing",
             CaseType = "Civil",
             HearingType = "Enforcement Hearing",
-            ScheduledDateTime = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30),
+            ScheduledDateTime = hearingDateTime,
             DurationHour = 1,
             DurationMinute = 30,
             VenueName = "Birmingham Civil and Family Justice Centre",

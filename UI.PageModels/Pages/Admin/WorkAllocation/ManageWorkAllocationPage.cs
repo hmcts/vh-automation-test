@@ -41,7 +41,7 @@ public class ManageWorkAllocationPage : VhAdminWebPage
     public void AddNonAvailableDayForUser(string username, DateTime startDateTime, DateTime endDateTime)
     {
         _editHoursSection.FilterForNonAvailableDays(username, startDateTime);
-        _editHoursSection.AddNonAvailableDayForUser(username, startDateTime, endDateTime);
+        _editHoursSection.AddNonAvailableDayForUser(username, startDateTime, endDateTime, searchForUser:false);
     }
 
 

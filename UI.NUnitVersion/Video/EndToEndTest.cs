@@ -9,10 +9,11 @@ public class EndToEndTest : VideoWebUiTest
     [Category("a11y")]
     public void BookAHearingAndLogInAsJudgeAndParticipants()
     {
-        var hearingDto = HearingTestData.CreateHearingDto();
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
+        var hearingDto = HearingTestData.CreateHearingDto(scheduledDateTime:hearingScheduledDateAndTime);
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
-        hearingDto.ScheduledDateTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
+        
         BookHearing(hearingDto);
 
         // loop through all participants in hearing and login as each one
