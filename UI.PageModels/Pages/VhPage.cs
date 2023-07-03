@@ -1,5 +1,3 @@
-using System.Globalization;
-using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -48,7 +46,10 @@ public abstract class VhPage
             htmlFilePath = Path.Join(stagingDir, $"{testName}_AccessibilityReport.html");
         }
         Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations | ReportTypes.Passes);
-        axeResult.Violations.Where(x=> x.Impact != "minor").Should().BeEmpty();
+        if (axeResult.Violations.Any(x => x.Impact != "minor"))
+        {
+            throw new Exception("Accessibility check failed. Please check the report for more details.");
+        }
     }
     
     protected bool HasFormValidationError()
@@ -185,7 +186,7 @@ public abstract class VhPage
 
     protected string GetLocaleDate(DateTime date)
     {
-        return date.ToString(new CultureInfo(Locale).DateTimeFormat.ShortDatePattern);
+        return date.ToString(Locale == GbLocale ? "dd/MM/yyyy" : "MM/dd/yyyy");
     }
 
     protected string GetLocaleTime(TimeOnly time)

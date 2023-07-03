@@ -16,6 +16,7 @@ public class EditHoursSection : VhAdminWebPage
 
     private readonly By _editNonAvailableHoursSavedSuccess =
         By.Id("edit-non-availability-successful-message-container");
+    private readonly By _editNonAvailableErrorMessage = By.Id("edit-non-availability-error-message-container");
 
     private readonly By _editWorkHoursSavedSuccess = By.Id("edit-upload-hours-success");
     private readonly By _editWorkingHoursBtn = By.Id("edit-individual-work-hours-button");
@@ -87,6 +88,10 @@ public class EditHoursSection : VhAdminWebPage
 
         ClickElement(_saveNonAvailableBtn);
         WaitForApiSpinnerToDisappear();
+        if (IsElementVisible(_editNonAvailableErrorMessage))
+        {
+            throw new InvalidOperationException("Edit non available hours form has validation errors", new Exception(GetText(_editNonAvailableErrorMessage)));
+        }
         WaitForElementToBeVisible(_editNonAvailableHoursSavedSuccess);
 
         if (!deletePostSave) return;

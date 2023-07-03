@@ -1,4 +1,3 @@
-using FluentAssertions;
 using OpenQA.Selenium;
 
 namespace UI.PageModels.Pages.Admin.WorkAllocation;
@@ -72,7 +71,10 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
         ClickElement(_allocateHearingBtn);
         WaitForApiSpinnerToDisappear();
 
-        GetText(_actionsMessageContainer).Should().Contain("Hearings have been updated");
+        if (!GetText(_actionsMessageContainer).Contains("Hearings have been updated"))
+        {
+            throw new Exception("Hearings have not been updated");
+        }
     }
     
     private IWebElement GetHearingCheckboxNotAllocatedToUser(string justiceUserUsername)

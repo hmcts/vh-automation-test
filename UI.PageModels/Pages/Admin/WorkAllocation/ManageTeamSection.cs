@@ -1,4 +1,3 @@
-using FluentAssertions;
 using OpenQA.Selenium;
 
 namespace UI.PageModels.Pages.Admin.WorkAllocation;
@@ -70,7 +69,10 @@ public class ManageTeamSection : VhAdminWebPage
 
         EnterUserToSearchFor(username);
         WaitForElementToBeVisible(_messagesContainer);
-        GetText(_messagesContainer).Should().Contain("No users matching this search criteria were found");
+        if (GetText(_messagesContainer).Contains("No users matching this search criteria were found"))
+        {
+            throw new InvalidOperationException($"No users matching {username} were found");
+        }
 
         ClickElement(_addUserBtn);
 
@@ -94,7 +96,8 @@ public class ManageTeamSection : VhAdminWebPage
 
     private void SelectRoles(List<JusticeUserRoles> roles)
     {
-        foreach (var justiceUserRole in Enum.GetValues<JusticeUserRoles>())
+        // TODO: refactor to check launch darkly for dom1 toggle. StaffMember is not available until DOM1 is on
+        foreach (var justiceUserRole in Enum.GetValues<JusticeUserRoles>().Except(new[] {JusticeUserRoles.StaffMember}))
         {
             var locator = By.Id($"role_{justiceUserRole.ToString()}");
             var hasRole = roles.Contains(justiceUserRole);
@@ -125,8 +128,7 @@ public class ManageTeamSection : VhAdminWebPage
         // check row has the deleted badge
         row = GetRowForByUsername(username);
         var deletedBadge = row.FindElement(By.XPath("//span[@class='badge']"));
-        deletedBadge.Should().NotBeNull();
-        deletedBadge.Text.Should().Be("Deleted");
+        if(deletedBadge?.Text != "Deleted") throw new Exception("User was not deleted");
     }
 
     public void RestoreTeamMember(string username)
