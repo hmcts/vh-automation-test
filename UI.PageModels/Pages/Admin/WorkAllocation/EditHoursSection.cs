@@ -64,11 +64,14 @@ public class EditHoursSection : VhAdminWebPage
     }
 
     public void AddNonAvailableDayForUser(string username, DateTime startDateTime, DateTime endDateTime,
-        bool deletePostSave = true)
+        bool deletePostSave = true, bool searchForUser = true)
     {
         CheckSectionIsOpen();
 
-        EnterUserToEditNonAvailableHours(username);
+        if (!searchForUser)
+        {
+            EnterUserToEditNonAvailableHours(username);
+        }
 
         ClickElement(_addNewNonAvailabilityBtn);
         var row = GetNewAddedNonAvailabilityRow();
