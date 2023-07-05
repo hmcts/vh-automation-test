@@ -28,6 +28,7 @@ public class RemoteChromeVhDriver : IVhDriver
             ? BuildName.GetBuildNameForLocal()
             : BuildName.GetBuildNameForSauceLabs(chromeOptions.BrowserName, chromeOptions.BrowserVersion,
                 chromeOptions.PlatformName);
+        if(envConfigSettings.EnableAccessibilityCheck) buildName += "-Accessibility";
 
         var sauceLabsConfiguration = envConfigSettings.SauceLabsConfiguration;
 
