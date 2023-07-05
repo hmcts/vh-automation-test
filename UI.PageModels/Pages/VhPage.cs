@@ -45,7 +45,7 @@ public abstract class VhPage
             var testName = Environment.GetEnvironmentVariable(VHTestNameKey);
             htmlFilePath = Path.Join(stagingDir, $"{testName}_AccessibilityReport.html");
         }
-        Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations | ReportTypes.Passes);
+        Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations);
         if (axeResult.Violations.Any(x => x.Impact != "minor"))
         {
             throw new Exception("Accessibility check failed. Please check the report for more details.");

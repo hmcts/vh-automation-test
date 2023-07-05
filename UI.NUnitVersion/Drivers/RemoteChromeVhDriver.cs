@@ -25,9 +25,10 @@ public class RemoteChromeVhDriver : IVhDriver
 
         // this is the name for a build in SauceLabs
         var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null
-            ? BuildName.GetBuildNameForLocal()
+            ? BuildName.GetBuildNameForLocal().Trim()
             : BuildName.GetBuildNameForSauceLabs(chromeOptions.BrowserName, chromeOptions.BrowserVersion,
-                chromeOptions.PlatformName);
+                chromeOptions.PlatformName).Trim();
+        if(envConfigSettings.EnableAccessibilityCheck) buildName += "-Accessibility";
 
         var sauceLabsConfiguration = envConfigSettings.SauceLabsConfiguration;
 

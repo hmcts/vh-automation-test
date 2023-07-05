@@ -69,9 +69,9 @@ public class ManageTeamSection : VhAdminWebPage
 
         EnterUserToSearchFor(username);
         WaitForElementToBeVisible(_messagesContainer);
-        if (GetText(_messagesContainer).Contains("No users matching this search criteria were found"))
+        if (!GetText(_messagesContainer).Contains("No users matching this search criteria were found"))
         {
-            throw new InvalidOperationException($"No users matching {username} were found");
+            throw new InvalidOperationException($"User matching {username} were found");
         }
 
         ClickElement(_addUserBtn);

@@ -6,7 +6,8 @@ public class BookHearingTests : AdminWebUiTest
     [Category("a11y")]
     public void BookAHearing()
     {
-        var bookingDto = HearingTestData.CreateHearingDto();
+        var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
+        var bookingDto = HearingTestData.CreateHearingDto(scheduledDateTime: date);
 
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
