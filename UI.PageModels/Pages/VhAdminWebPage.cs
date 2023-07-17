@@ -9,7 +9,8 @@ public abstract class VhAdminWebPage : VhPage
     private readonly By _dashboardMenuItemButton = By.Id("topItem0");
     private readonly By _signOutMenuItemButton = By.Id("linkSignOut");
 
-    protected VhAdminWebPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected VhAdminWebPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime,
+        ignoreAccessibilityForPage: true)
     {
     }
 

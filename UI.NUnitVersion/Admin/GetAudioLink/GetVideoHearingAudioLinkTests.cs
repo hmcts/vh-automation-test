@@ -11,7 +11,7 @@ public class GetVideoHearingAudioLinkTests : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var getAudioFilePage = dashboardPage.GoToGetAudioFileLink();
-        var caseNumber = "Kinly";
+        var caseNumber = "VIH 9831";
         getAudioFilePage.EnterVideoHearingCaseDetailsAndCopyLink(caseNumber);
         
         Assert.Pass();
