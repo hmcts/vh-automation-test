@@ -11,6 +11,8 @@ public abstract class VhAdminWebPage : VhPage
 
     protected VhAdminWebPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+        // no need to test for a11y for internal pages
+        IgnoreAccessibilityForPage = true;
     }
 
     public DashboardPage GoToDashboardPage()

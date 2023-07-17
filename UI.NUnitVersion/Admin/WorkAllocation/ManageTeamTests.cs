@@ -1,6 +1,5 @@
 namespace UI.NUnitVersion.Admin.WorkAllocation;
 
-[Category("a11y")]
 public class ManageTeamTests : AdminWebUiTest
 {
     [Test]

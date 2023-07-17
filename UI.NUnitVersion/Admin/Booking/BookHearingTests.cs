@@ -3,7 +3,6 @@ namespace UI.NUnitVersion.Admin.Booking;
 public class BookHearingTests : AdminWebUiTest
 {
     [Test]
-    [Category("a11y")]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
@@ -57,6 +56,8 @@ public class BookHearingTests : AdminWebUiTest
         postBookingUnallocatedHearingsNextSevenDays.Should().BeGreaterThan(preBookingUnallocatedHearingsNextSevenDays);
         postBookingUnallocatedHearingsNextThirtyDays.Should()
             .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
+        
+        dashboardPage.SignOut();
 
         Assert.Pass();
     }
