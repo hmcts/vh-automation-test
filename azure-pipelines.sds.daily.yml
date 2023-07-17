@@ -31,7 +31,7 @@ parameters:
       - Prod
 
 pool:
-  name: "VH Self Hosted"
+  vmImage: ubuntu-22.04
 
 stages:
   ####################################################
@@ -62,8 +62,31 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
+              - name: ApiClientConfiguration.BookingsApi.Url
+                value: https://vh-bookings-api.dev.platform.hmcts.net
 
             steps:
+              - task: AzureKeyVault@1
+                displayName: "Azure Key Vault: vh-infra-core-dev"
+                inputs:
+                  azureSubscription: "DTS-SHAREDSERVICES-DEV-Video Hearings"
+                  KeyVaultName: "vh-infra-core-dev"
+                  SecretsFilter: "azuread--tenantid"
+
+              - task: AzureKeyVault@1
+                displayName: "Azure Key Vault: vh-bookings-api-dev"
+                inputs:
+                  azureSubscription: "DTS-SHAREDSERVICES-DEV-Video Hearings"
+                  KeyVaultName: "vh-bookings-api-dev"
+                  SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri"
+
+              - bash: |
+                  echo "##vso[task.setvariable variable=ApiClientConfiguration.TenantId;issecret=false]$(azuread--tenantid)"
+                  echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientId;issecret=false]$(azuread--clientid)"
+                  echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientSecret;issecret=false]$(azuread--clientsecret)"
+                  echo "##vso[task.setvariable variable=ApiClientConfiguration.BookingsApi.ResourceId;issecret=false]$(azuread--identifieruri)"
+                displayName: Change api client secrets to variables
+
               # inserts variables to help create unique test names
               - task: gitversion/setup@0
                 displayName: Install GitVersion

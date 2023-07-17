@@ -1,13 +1,19 @@
+using BookingsApi.Contract.Requests;
+using UI.PageModels.Dtos;
+
 namespace UI.NUnitVersion.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
 {
+    private BookingDto _bookingDto;
+
     [Test]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        var bookingDto = HearingTestData.CreateHearingDto(scheduledDateTime: date);
-
+        _bookingDto = HearingTestData.CreateHearingDto(scheduledDateTime: date);
+        _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
+        
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
@@ -17,35 +23,35 @@ public class BookHearingTests : AdminWebUiTest
         var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
         var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
         var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
-
+        
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-
-        createHearingPage.EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
-            bookingDto.HearingType);
-
+        
+        createHearingPage.EnterHearingDetails(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType,
+            _bookingDto.HearingType);
+        
         var hearingSchedulePage = createHearingPage.GoToNextPage();
-
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
-            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
-
+        
+        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto.ScheduledDateTime, _bookingDto.DurationHour,
+            _bookingDto.DurationMinute, _bookingDto.VenueName, _bookingDto.RoomName);
+        
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
-
+        
         var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        addParticipantPage.AddExistingParticipants(bookingDto.Participants);
-
+        addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
+        
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-
+        
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation("This is a test info");
-
+        
         var summaryPage = otherInformationPage.GoToSummaryPage();
         var confirmationPage = summaryPage.ClickBookButton();
         confirmationPage.ClickViewBookingLink();
-
+        
         dashboardPage = confirmationPage.GoToDashboardPage();
-
+        
         var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
         var postBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
         var postBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
@@ -60,5 +66,20 @@ public class BookHearingTests : AdminWebUiTest
         dashboardPage.SignOut();
 
         Assert.Pass();
+    }
+
+    protected override async Task CleanUp()
+    {
+        // search for hearing by case number
+        var response = await BookingsApiClient.GetHearingsByTypesAsync(new GetHearingRequest()
+        {
+            CaseNumber = _bookingDto.CaseNumber
+        });
+
+        foreach (var hearing in response.Hearings.SelectMany(bookingsByDate => bookingsByDate.Hearings))
+        {
+            TestContext.WriteLine($"Removing Hearing {hearing.HearingId}");
+            await BookingsApiClient.RemoveHearingAsync(hearing.HearingId);
+        }
     }
 }
