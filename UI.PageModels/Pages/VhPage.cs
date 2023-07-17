@@ -21,11 +21,12 @@ public abstract class VhPage
     protected bool IsLoginPage => Driver.Url.Contains("login");
     protected bool IgnoreAccessibilityForPage = false;
 
-    protected VhPage(IWebDriver driver, int defaultWaitTime)
+    protected VhPage(IWebDriver driver, int defaultWaitTime, bool ignoreAccessibilityForPage = false)
     {
         var config = ConfigRootBuilder.EnvConfigInstance();
         Driver = driver;
         DefaultWaitTime = defaultWaitTime;
+        IgnoreAccessibilityForPage = ignoreAccessibilityForPage;
         AccessibilityCheck = config.EnableAccessibilityCheck;
         AccessibilityReportFilePath = config.AccessibilityReportFilePath;
         AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
