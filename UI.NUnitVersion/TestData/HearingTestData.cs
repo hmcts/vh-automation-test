@@ -47,4 +47,43 @@ public static class HearingTestData
         };
         return bookingDto;
     }
+
+    public static BookingDto CreateHearingEndPoint(bool remote = false, DateTime? scheduledDateTime = null)
+    {
+        var date = DateUtil.GetNow(remote);
+        var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
+        var bookingDto = new BookingDto
+        {
+            CaseName = $"BookAHearing Automation EndPoint {date:M-d-yy-H-mm-ss}",
+            CaseNumber = "BookAHearing Automation EndPoint",
+            CaseType = "Civil",
+            HearingType = "Enforcement Hearing",
+            ScheduledDateTime = hearingDateTime,
+            DurationHour = 1,
+            DurationMinute = 30,
+            VenueName = "Birmingham Civil and Family Justice Centre",
+            RoomName = "Room 1",
+            Judge = new BookingJudgeDto
+            {
+                Username = "auto_aw.judge_02@hearings.reform.hmcts.net",
+                DisplayName = "Auto Judge",
+                Phone = ""
+            },
+            Participants = new List<BookingExistingParticipantDto>
+            {
+                BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.LitigantInPerson,
+                    "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1"),
+                BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
+                    "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
+                    "Auto 2", "Auto 1"),
+                BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.LitigantInPerson,
+                    "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3"),
+                BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
+                    "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
+                    "EndPoint 4",
+                    "EndPoint 3")
+            }
+        };
+        return bookingDto;
+    }
 }
