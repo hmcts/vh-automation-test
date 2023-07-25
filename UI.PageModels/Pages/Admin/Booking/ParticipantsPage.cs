@@ -32,6 +32,10 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _roleDropdown = By.Id("role");
     private readonly By _titleDropdown = By.Id("title");
     private readonly By _updateParticipantLink = By.Id("updateParticipantBtn");
+    
+    private static By DisplayName(int number) => By.CssSelector($"#displayName{number}");
+    private static By DefenceAdvocate(int number) => By.CssSelector($"#defenceAdvocate{number}");
+    private static By RemoveDisplayName(int number) => By.Id($"removeDisplayName{number}");
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -153,5 +157,18 @@ public class ParticipantsPage : VhAdminWebPage
     {
         ClickElement(_nextButton);
         return new VideoAccessPointsPage(Driver, DefaultWaitTime);
+    }
+    
+    public SummaryPage GoToSummaryPage()
+    {
+        ClickElement(_nextButton);
+        return new SummaryPage(Driver, DefaultWaitTime);
+    }
+    
+    public void CompleteBookAVideoHearing(string displayName, string advocate)
+    {
+        EnterText(DisplayName(0), displayName);
+        SelectDropDownByText(DefenceAdvocate(0), advocate);
+        ClickElement(_nextButton);
     }
 }
