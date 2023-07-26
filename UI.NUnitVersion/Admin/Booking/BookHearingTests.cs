@@ -6,7 +6,7 @@ public class BookHearingTests : AdminWebUiTest
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        var bookingDto = HearingTestData.CreateHearingDto(scheduledDateTime: date);
+        var bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime: date);
 
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -35,6 +35,7 @@ public class BookHearingTests : AdminWebUiTest
         addParticipantPage.AddExistingParticipants(bookingDto.Participants);
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
+        videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
 
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();

@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using UI.PageModels.Dtos;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
@@ -11,11 +12,46 @@ public class VideoAccessPointsPage : VhAdminWebPage
     {
         WaitForElementToBeVisible(_addAnotherBtn);
     }
-
-    private static By DisplayName(int number) => By.Id($"displayName{number}");
-    private static By DefenceAdvocate(int number) => By.Id($"defenceAdvocate{number}");
+    
     private static By RemoveDisplayName(int number) => By.Id($"removeDisplayName{number}");
 
+    /// <summary>
+    /// Add a list of video access points to a hearing
+    /// </summary>
+    /// <param name="videoAccessPoints"></param>
+    public void AddVideoAccessPoints(List<VideoAccessPointsDto> videoAccessPoints)
+    {
+        for (var i = 0; i < videoAccessPoints.Count; i++)
+        {
+            var vap = videoAccessPoints[i];
+            AddVideoEndpoint(vap.DisplayName, vap.DefenceAdvocateDisplayName, i);
+            if (i < videoAccessPoints.Count - 1)
+            {
+                ClickElement(_addAnotherBtn);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Add a video access point to a hearing
+    /// </summary>
+    /// <param name="displayName">The display name for the access point</param>
+    /// <param name="defenceAdvocateDisplayName">The defence advocate to link to, if provided</param>
+    /// <param name="currentCount">The current number of endpoints already added to a hearing, excluding the one being added now</param>
+    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName, int currentCount = 0)
+    {
+        // enter the video endpoints display name, which is index based
+        var displayNameTextField = By.Id($"displayName{currentCount}");
+        EnterText(displayNameTextField, displayName);
+
+        if (!string.IsNullOrWhiteSpace(defenceAdvocateDisplayName))
+        {
+            // defence advocate selector
+            var defenceAdvocateSelector = By.Id($"defenceAdvocate{currentCount}");
+            SelectDropDownByText(defenceAdvocateSelector, defenceAdvocateDisplayName);
+        }
+    }
+    
     public OtherInfoPage GoToOtherInformationPage()
     {
         ClickElement(_nextButton);
