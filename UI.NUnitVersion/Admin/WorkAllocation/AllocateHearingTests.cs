@@ -13,7 +13,7 @@ public class AllocateHearingTests : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
-        manageWorkAllocationPage.AllocateJusticeUserToHearing();
+        manageWorkAllocationPage.AllocateJusticeUserToHearing(justiceUserDisplayName:"Auto VHoteamleader1", justiceUserUsername:"auto.vhoteamlead1@hearings.reform.hmcts.net");
 
         Assert.Pass();
     }
