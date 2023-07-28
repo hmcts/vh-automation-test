@@ -85,17 +85,11 @@ public class BookHearingTests : AdminWebUiTest
             EndDate = _bookingDto.ScheduledDateTime.Date,
             UnallocatedOnly = true
         };
-        bookingListPage.SearchForBooking(new BookingListQueryDto()
-        {
-            CaseNumber = queryDto.CaseNumber,
-            UnallocatedOnly = true,
-            StartDate = _bookingDto.ScheduledDateTime.Date,
-            EndDate = _bookingDto.ScheduledDateTime.Date,
-        });
+        bookingListPage.SearchForBooking(queryDto);
         var bookingDetailsPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
         bookingDetailsPage.GetAllocatedTo().Should().Be("Not Allocated");
-        bookingDetailsPage.GetQuickLinkJoinUrl().Should().NotBeNullOrWhiteSpace();
-        TestContext.WriteLine(bookingDetailsPage.GetQuickLinkJoinUrl());
+        bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl).Should().NotBeNullOrWhiteSpace();
+        TestContext.WriteLine(bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl));
         dashboardPage.SignOut();
         Assert.Pass();
     }

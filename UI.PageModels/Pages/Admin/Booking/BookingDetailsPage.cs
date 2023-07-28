@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
@@ -31,15 +32,41 @@ public class BookingDetailsPage : VhAdminWebPage
     public static By SpecificBookingCancelledStatus(string caseNumber) => By.XPath(
         $"//div[@class='govuk-grid-column-full' and contains(.,'{caseNumber}') and contains(.,'Cancelled')]");
 
-    public string GetQuickLinkJoinUrl()
+    public string GetQuickLinkJoinUrl(string videoWebUrl)
     {
         var quickLinkJoinUrlLocator = By.Id("conference_join_by_link_details");
         WaitForElementToBeVisible(quickLinkJoinUrlLocator);
         ClickElement(quickLinkJoinUrlLocator);
         
-        return new TextCopy.Clipboard().GetText() ?? throw new Exception("Quick link join url is null");
+        string quickjoinUrl = null;
+
+        var script = "return sessionStorage.getItem('SelectedHearingIdKey')";
+        if (Driver is IJavaScriptExecutor js)
+        {
+            var hearingId = (string) js.ExecuteScript(script);
+            quickjoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
+        }
+        // else if (Driver is ChromeDriver cd)
+        // {
+        //     var hearingId = (string) cd.ExecuteScript(script);
+        //     quickjoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
+        // }
+        // else if (Driver is RemoteWebDriver rwd)
+        // {
+        //     var hearingId = (string) rwd.ExecuteScript(script);
+        //     quickjoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
+        // }
+        else
+        {
+            quickjoinUrl = new TextCopy.Clipboard().GetText() ?? string.Empty;
+        }
+        if (!Uri.IsWellFormedUriString(quickjoinUrl, UriKind.Absolute))
+        {
+            throw new Exception("The quick link join url is not a valid url: " + quickjoinUrl);
+        }
+        return quickjoinUrl;
     }
-    
+
     public string GetAllocatedTo()
     {
         return GetText(By.XPath("//div[@id='allocated-to']//strong"));

@@ -94,7 +94,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         var summaryPage = otherInformationPage.GoToSummaryPage();
         var confirmationPage = summaryPage.ClickBookButton();
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
-        _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl();
+        _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
         TestContext.WriteLine(_quickLinkJoinUrl);
     }
 }
