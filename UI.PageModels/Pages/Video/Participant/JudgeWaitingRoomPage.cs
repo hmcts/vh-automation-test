@@ -29,6 +29,16 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing is closed']"));
     }
 
+    public string GetParticipantStatus(string fullName)
+    {
+        return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//label"));
+    }
+
+    public string GetVideoAccessPointStatus(string accessPointName)
+    {
+        return GetText(By.XPath($"//dt[normalize-space()='{accessPointName}']/following-sibling::dd//label"));
+    }
+
     public int GetParticipantConnectedCount()
     {
         var connectedLabel = Driver.FindElements(By.XPath("//label[normalize-space()='Connected']"));

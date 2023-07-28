@@ -13,5 +13,6 @@ public enum JourneyType
     Citizen,
     Representative,
     Judge,
-    Vho
+    Vho,
+    QuickLinkParticipant
 }

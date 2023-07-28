@@ -15,8 +15,9 @@ public class BookingConfirmationPage : VhAdminWebPage
                 "This is not the booking-confirmation page, the current url is: " + Driver.Url);
     }
 
-    public void ClickViewBookingLink()
+    public BookingDetailsPage ClickViewBookingLink()
     {
         ClickElement(_viewBookingLink);
+        return new BookingDetailsPage(Driver, DefaultWaitTime);
     }
 }

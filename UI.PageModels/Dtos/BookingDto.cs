@@ -5,6 +5,11 @@ namespace UI.PageModels.Dtos;
 /// </summary>
 public class BookingDto
 {
+    public BookingDto()
+    {
+        Participants = new List<BookingExistingParticipantDto>();
+        VideoAccessPoints = new List<VideoAccessPointsDto>();
+    }
     public string CaseName { get; set; }
     public string CaseNumber { get; set; }
     public string CaseType { get; set; }
@@ -14,6 +19,8 @@ public class BookingDto
     public int DurationMinute { get; set; }
     public string VenueName { get; set; }
     public string RoomName { get; set; }
+    public bool AudioRecording { get; set; } = true;
+    public string OtherInformation { get; set; }
     public List<BookingExistingParticipantDto> Participants { get; set; }
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public BookingJudgeDto Judge { get; set; }

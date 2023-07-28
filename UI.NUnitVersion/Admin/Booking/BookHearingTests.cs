@@ -1,12 +1,16 @@
+using UI.PageModels.Dtos;
+
 namespace UI.NUnitVersion.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
 {
+    private BookingDto _bookingDto;
+    
     [Test]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        var bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime: date);
+        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime: date);
 
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -20,30 +24,31 @@ public class BookHearingTests : AdminWebUiTest
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
-        createHearingPage.EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
-            bookingDto.HearingType);
+        createHearingPage.EnterHearingDetails(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType,
+            _bookingDto.HearingType);
 
         var hearingSchedulePage = createHearingPage.GoToNextPage();
 
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
-            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
+        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto.ScheduledDateTime, _bookingDto.DurationHour,
+            _bookingDto.DurationMinute, _bookingDto.VenueName, _bookingDto.RoomName);
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
 
         var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        addParticipantPage.AddExistingParticipants(bookingDto.Participants);
+        addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
+        videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
 
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
-        otherInformationPage.EnterOtherInformation("This is a test info");
+        otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
 
         var summaryPage = otherInformationPage.GoToSummaryPage();
+        summaryPage.ValidateSummaryPage(_bookingDto);
+        
         var confirmationPage = summaryPage.ClickBookButton();
-        confirmationPage.ClickViewBookingLink();
 
         dashboardPage = confirmationPage.GoToDashboardPage();
 
@@ -60,6 +65,40 @@ public class BookHearingTests : AdminWebUiTest
         
         dashboardPage.SignOut();
 
+        Assert.Pass();
+    }
+    
+    
+    [Test]
+    public void SearchForHearingViaBookingList()
+    {
+        var driver = VhDriver.GetDriver();
+        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+        
+        
+        var bookingListPage = dashboardPage.GoToBookingList();
+        var caseNumber = "SP Test Manual";
+        // var queryDto = new BookingListQueryDto()
+        // {
+        //     CaseNumber = _bookingDto.CaseNumber,
+        //     StartDate = _bookingDto.ScheduledDateTime.Date,
+        //     EndDate = _bookingDto.ScheduledDateTime.Date,
+        //     UnallocatedOnly = true
+        // };
+        bookingListPage.SearchForBooking(new BookingListQueryDto()
+        {
+            CaseNumber = caseNumber,
+            UnallocatedOnly = true,
+            StartDate = new DateTime(2023, 7, 28),
+            EndDate = new DateTime(2023, 7, 28),
+        });
+        var bookingDetailsPage = bookingListPage.ViewBookingDetails(caseNumber);
+        bookingDetailsPage.GetAllocatedTo().Should().Be("Not Allocated");
+        bookingDetailsPage.GetQuickLinkJoinUrl().Should().NotBeNullOrWhiteSpace();
+        TestContext.WriteLine(bookingDetailsPage.GetQuickLinkJoinUrl());
+        dashboardPage.SignOut();
         Assert.Pass();
     }
 }

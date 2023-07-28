@@ -1,6 +1,7 @@
 using UI.NUnitVersion.Models;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
+using UI.PageModels.Pages.Video.QuickLink;
 using UI.PageModels.Pages.Video.Vho;
 
 namespace UI.NUnitVersion.Video;
@@ -79,6 +80,14 @@ public abstract class VideoWebUiTest
         var participant = InitVideoWebParticipant(username);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsParticipant(username, password);
+    }
+
+    protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName)
+    {
+        var participant = InitVideoWebParticipant(displayName);
+        var driver = participant.Driver.GetDriver();
+        driver.Navigate().GoToUrl(quickLinkJoinUrl);
+        return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);
     }
 
     /// <summary>

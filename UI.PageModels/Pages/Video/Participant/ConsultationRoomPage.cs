@@ -31,4 +31,33 @@ public class ConsultationRoomPage : VhVideoWebPage
 
     public static By ParticipantDisplayName(string name) =>
         By.XPath($"//div[@class='participant-endpoint-row' and contains(.,'{name}')]");
+
+    /// <summary>
+    /// Leave the consultation room and return to the waiting room
+    /// </summary>
+    /// <returns>A waiting room instance</returns>
+    public ParticipantWaitingRoomPage LeaveConsultationRoom()
+    {
+        ClickElement(LeaveButtonDesktop);
+        ClickElement(ConfirmLeaveButton);
+        return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime);
+    }
+
+    /// <summary>
+    /// Check if the user has connected to consultation room
+    /// </summary>
+    /// <param name="displayName">The display name of the user to verify has connected</param>
+    /// <returns>true if the user is connected, else false</returns>
+    public bool IsParticipantConnected(string displayName)
+    {
+        var connectedStatus = By.XPath($"//span[normalize-space()='{displayName}'][contains(@class,'yellow')]");
+        try
+        {
+            WaitForElementToBeVisible(connectedStatus);
+            return true;
+        } catch (Exception)
+        {
+            return false;
+        }
+    }
 }

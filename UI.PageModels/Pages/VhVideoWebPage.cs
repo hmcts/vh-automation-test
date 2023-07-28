@@ -14,7 +14,12 @@ public abstract class VhVideoWebPage : VhPage
     public VideoWebLogoutPage SignOut()
     {
         ClickElement(_signOutMenuItemButton);
-        ClickElement(By.XPath("//*[@id='tilesHolder']/div"));
+        var confirmSignOut = By.XPath("//*[@id='tilesHolder']/div");
+        if (IsElementVisible(confirmSignOut))
+        {
+            ClickElement(confirmSignOut);
+        }
+
         return new VideoWebLogoutPage(Driver, DefaultWaitTime);
     }
 }

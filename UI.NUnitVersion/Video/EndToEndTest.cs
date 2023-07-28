@@ -1,6 +1,3 @@
-using UI.NUnitVersion.Utilities;
-using UI.PageModels.Dtos;
-
 namespace UI.NUnitVersion.Video;
 
 public class EndToEndTest : VideoWebUiTest
@@ -69,7 +66,7 @@ public class EndToEndTest : VideoWebUiTest
             bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
+        assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
 
         var addParticipantPage = assignJudgePage.GoToParticipantsPage();
         addParticipantPage.AddExistingParticipants(bookingDto.Participants);

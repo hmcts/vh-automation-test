@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
@@ -29,4 +30,16 @@ public class BookingDetailsPage : VhAdminWebPage
 
     public static By SpecificBookingCancelledStatus(string caseNumber) => By.XPath(
         $"//div[@class='govuk-grid-column-full' and contains(.,'{caseNumber}') and contains(.,'Cancelled')]");
+
+    public string GetQuickLinkJoinUrl()
+    {
+        ClickElement(By.Id("conference_join_by_link_details"));
+        
+        return new TextCopy.Clipboard().GetText() ?? throw new Exception("Quick link join url is null");
+    }
+    
+    public string GetAllocatedTo()
+    {
+        return GetText(By.XPath("//div[@id='allocated-to']//strong"));
+    }
 }
