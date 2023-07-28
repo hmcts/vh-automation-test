@@ -32,7 +32,8 @@ public class BookingExistingParticipantDto
     }
 
     public static BookingExistingParticipantDto Representative(GenericTestParty party, GenericTestRole role,
-        string contactEmail, string username, string displayName, string title, string firstName, string lastName, string representing)
+        string contactEmail, string username, string displayName, string title, string firstName, string lastName,
+        string representing)
     {
         return new BookingExistingParticipantDto
         {
