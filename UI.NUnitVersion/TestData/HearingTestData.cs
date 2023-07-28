@@ -23,12 +23,11 @@ public static class HearingTestData
             DurationMinute = 30,
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
-            Judge = new BookingJudgeDto
-            {
-                Username = "auto_aw.judge_02@hearings.reform.hmcts.net",
-                DisplayName = "Auto Judge",
-                Phone = ""
-            },
+            Judge = new BookingJudgeDto(
+                "auto_aw.judge_02@hearings.reform.hmcts.net",
+                "Auto Judge",
+                "")
+            ,
             AudioRecording = false,
             OtherInformation = "This is a test hearing"
         };
@@ -54,12 +53,10 @@ public static class HearingTestData
             DurationMinute = 30,
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
-            Judge = new BookingJudgeDto
-            {
-                Username = "auto_aw.judge_02@hearings.reform.hmcts.net",
-                DisplayName = "Auto Judge",
-                Phone = ""
-            },
+            Judge = new BookingJudgeDto(
+                "auto_aw.judge_02@hearings.reform.hmcts.net",
+                "Auto Judge",
+                ""),
             Participants = new List<BookingExistingParticipantDto>
             {
                 BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.LitigantInPerson,
