@@ -15,7 +15,7 @@ public class UploadHoursSection : VhAdminWebPage
     private readonly By _uploadNonAvailabilityCsvField = By.CssSelector("#non-availability-hours-file-upload");
 
     private readonly By _uploadNonAvailabilityHoursButton =
-        By.XPath("//div[@id='non-working-hours-file-upload-error']//button[.='Upload']");
+        By.XPath("//div[@id='non-working-hours-file-upload-error']//button[@class='govuk-button govuk-!-margin-left-6'][normalize-space()='Upload']");
 
     private readonly By _uploadWorkHoursCsvFileField = By.XPath("//input[@id='working-hours-file-upload']");
 

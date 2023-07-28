@@ -33,7 +33,9 @@ public class BookingDetailsPage : VhAdminWebPage
 
     public string GetQuickLinkJoinUrl()
     {
-        ClickElement(By.Id("conference_join_by_link_details"));
+        var quickLinkJoinUrlLocator = By.Id("conference_join_by_link_details");
+        WaitForElementToBeVisible(quickLinkJoinUrlLocator);
+        ClickElement(quickLinkJoinUrlLocator);
         
         return new TextCopy.Clipboard().GetText() ?? throw new Exception("Quick link join url is null");
     }

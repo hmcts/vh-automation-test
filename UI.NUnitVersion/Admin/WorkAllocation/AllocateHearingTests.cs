@@ -1,5 +1,6 @@
 namespace UI.NUnitVersion.Admin.WorkAllocation;
 
+[Category("Daily")]
 public class AllocateHearingTests : AdminWebUiTest
 {
     [Test]

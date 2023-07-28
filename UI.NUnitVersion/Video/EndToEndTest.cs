@@ -2,6 +2,7 @@ namespace UI.NUnitVersion.Video;
 
 public class EndToEndTest : VideoWebUiTest
 {
+    [Category("Daily")]
     [Test]
     [Category("a11y")]
     public void BookAHearingAndLogInAsJudgeAndParticipants()
@@ -18,7 +19,7 @@ public class EndToEndTest : VideoWebUiTest
         {
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
-            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword);
+            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
             var participantWaitingRoom = participantHearingList.SelectHearing(hearingDto.CaseName).GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()

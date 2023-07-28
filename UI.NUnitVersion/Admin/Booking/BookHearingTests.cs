@@ -1,5 +1,6 @@
 namespace UI.NUnitVersion.Admin.Booking;
 
+[Category("Daily")]
 public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
@@ -75,24 +76,23 @@ public class BookHearingTests : AdminWebUiTest
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
         
-        
+        // ideally need to make this test run independently of other tests
         var bookingListPage = dashboardPage.GoToBookingList();
-        var caseNumber = "SP Test Manual";
-        // var queryDto = new BookingListQueryDto()
-        // {
-        //     CaseNumber = _bookingDto.CaseNumber,
-        //     StartDate = _bookingDto.ScheduledDateTime.Date,
-        //     EndDate = _bookingDto.ScheduledDateTime.Date,
-        //     UnallocatedOnly = true
-        // };
+        var queryDto = new BookingListQueryDto()
+        {
+            CaseNumber = _bookingDto.CaseNumber,
+            StartDate = _bookingDto.ScheduledDateTime.Date,
+            EndDate = _bookingDto.ScheduledDateTime.Date,
+            UnallocatedOnly = true
+        };
         bookingListPage.SearchForBooking(new BookingListQueryDto()
         {
-            CaseNumber = caseNumber,
+            CaseNumber = queryDto.CaseNumber,
             UnallocatedOnly = true,
-            StartDate = new DateTime(2023, 7, 28),
-            EndDate = new DateTime(2023, 7, 28),
+            StartDate = _bookingDto.ScheduledDateTime.Date,
+            EndDate = _bookingDto.ScheduledDateTime.Date,
         });
-        var bookingDetailsPage = bookingListPage.ViewBookingDetails(caseNumber);
+        var bookingDetailsPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
         bookingDetailsPage.GetAllocatedTo().Should().Be("Not Allocated");
         bookingDetailsPage.GetQuickLinkJoinUrl().Should().NotBeNullOrWhiteSpace();
         TestContext.WriteLine(bookingDetailsPage.GetQuickLinkJoinUrl());

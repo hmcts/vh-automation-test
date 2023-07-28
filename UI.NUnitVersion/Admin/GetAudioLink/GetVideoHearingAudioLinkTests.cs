@@ -2,6 +2,7 @@ namespace UI.NUnitVersion.Admin.GetAudioLink;
 
 public class GetVideoHearingAudioLinkTests : AdminWebUiTest
 {
+    [Category("Daily")]
     [Test]
     public void GetAnAudioLinkForAVideoHearing()
     {
