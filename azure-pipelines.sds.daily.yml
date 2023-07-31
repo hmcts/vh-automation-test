@@ -107,6 +107,11 @@ stages:
                   Get-Content "$(projectPath)/appsettings.json"
                 displayName: Print App Settings
 
+              - bash: |
+                  sed -i "s|</configuration>|<packageSourceCredentials><vh-packages><add key=\"Username\" value=\"PAT\" /><add key=\"ClearTextPassword\" value=\"$(System.AccessToken)\" /></vh-packages></packageSourceCredentials></configuration>|" nuget.config
+                displayName: Add NuGet Feed Authentication
+                workingDirectory: $(Build.SourcesDirectory)
+
               - task: DotNetCoreCLI@2
                 displayName: Run UI Tests
                 inputs:
