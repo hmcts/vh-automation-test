@@ -45,11 +45,20 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeHearingRoomPage.AdmitParticipant(quickLinkName1); 
         judgeHearingRoomPage.AdmitParticipant(quickLinkName2);
         
-        ParticipantHearingRoomPage qlHr1 = qlWaitingRoomPage1.TransferToHearingRoom();
-        ParticipantHearingRoomPage qlHr2 = qlWaitingRoomPage2.TransferToHearingRoom();
+        var qlHearingRoom1 = qlWaitingRoomPage1.TransferToHearingRoom();
+        var qlHearingRoom2 = qlWaitingRoomPage2.TransferToHearingRoom();
         
         judgeHearingRoomPage.IsParticipantInHearing(quickLinkName1).Should().BeTrue();
         judgeHearingRoomPage.IsParticipantInHearing(quickLinkName2).Should().BeTrue();
+
+        judgeHearingRoomPage.DismissParticipant(quickLinkName1);
+        judgeHearingRoomPage.DismissParticipant(quickLinkName2);
+
+        qlWaitingRoomPage1 = qlHearingRoom1.TransferToWaitingRoom();
+        qlWaitingRoomPage2 = qlHearingRoom2.TransferToWaitingRoom();
+        
+        judgeHearingRoomPage.IsParticipantInHearing(quickLinkName1).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(quickLinkName2).Should().BeFalse();
         
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
