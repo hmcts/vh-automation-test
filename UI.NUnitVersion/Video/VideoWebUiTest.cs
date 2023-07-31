@@ -1,3 +1,4 @@
+using BookingsApi.Client;
 using UI.NUnitVersion.Models;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
@@ -9,6 +10,7 @@ namespace UI.NUnitVersion.Video;
 public abstract class VideoWebUiTest
 {
     public readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
+    protected BookingsApiClient BookingsApiClient;
 
     /// <summary>
     ///     This property is used to book a hearing and publish the success to the test reporter
@@ -23,11 +25,12 @@ public abstract class VideoWebUiTest
     protected Dictionary<string, VideoWebParticipant> ParticipantDrivers = new();
 
     [OneTimeSetUp]
-    public void OneTimeSetup()
+    public async Task OneTimeSetup()
     {
         var config = ConfigRootBuilder.Build();
         EnvConfigSettings = config.GetSection("SystemConfiguration:EnvironmentConfigSettings")
             .Get<EnvironmentConfigSettings>();
+        BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
     }
 
     [SetUp]
@@ -41,6 +44,7 @@ public abstract class VideoWebUiTest
     [TearDown]
     public void TearDown()
     {
+        CleanUp();
         var testResult = TestContext.CurrentContext.Result.Outcome.Status ==
                          TestStatus.Passed;
         AdminWebDriver.PublishTestResult(testResult);
@@ -53,7 +57,12 @@ public abstract class VideoWebUiTest
         });
         ParticipantDrivers.Clear();
     }
-
+    
+    protected virtual Task CleanUp()
+    {
+        return Task.CompletedTask;
+    }
+    
     protected JudgeHearingListPage LoginAsJudge(string username, string password)
     {
         var participant = InitVideoWebParticipant(username, JourneyType.Judge);

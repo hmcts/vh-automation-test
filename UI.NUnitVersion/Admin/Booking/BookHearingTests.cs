@@ -6,6 +6,7 @@ namespace UI.NUnitVersion.Admin.Booking;
 public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
+    private string _hearingIdString;
 
     [Test]
     public void BookAHearing()
@@ -50,6 +51,7 @@ public class BookHearingTests : AdminWebUiTest
         summaryPage.ValidateSummaryPage(_bookingDto);
         
         var confirmationPage = summaryPage.ClickBookButton();
+        _hearingIdString = confirmationPage.GetNewHearingId();
         dashboardPage = confirmationPage.GoToDashboardPage();
         
         var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
@@ -97,6 +99,15 @@ public class BookHearingTests : AdminWebUiTest
 
     protected override async Task CleanUp()
     {
+        if(_hearingIdString != null)
+        {
+            
+            var hearingId = Guid.Parse(_hearingIdString);
+            TestContext.WriteLine($"Removing Hearing {hearingId}");
+            await BookingsApiClient.RemoveHearingAsync(hearingId);
+            _hearingIdString = null;
+            return;
+        }
         // search for hearing by case number
         var response = await BookingsApiClient.GetHearingsByTypesAsync(new GetHearingRequest()
         {

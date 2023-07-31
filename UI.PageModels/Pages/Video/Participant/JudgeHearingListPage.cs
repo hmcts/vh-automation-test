@@ -14,6 +14,7 @@ public class JudgeHearingListPage : VhVideoWebPage
     public JudgeWaitingRoomPage SelectHearing(string caseName)
     {
         var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");
+        WaitForElementToBeVisible(selectHearingLocator, 60);
         ClickElement(selectHearingLocator);
         return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
     }

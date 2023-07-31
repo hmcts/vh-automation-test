@@ -38,33 +38,29 @@ public class BookingDetailsPage : VhAdminWebPage
         WaitForElementToBeVisible(quickLinkJoinUrlLocator);
         ClickElement(quickLinkJoinUrlLocator);
         
-        string quickjoinUrl = null;
+        string quickLinkJoinUrl;
 
-        var script = "return sessionStorage.getItem('SelectedHearingIdKey')";
+        // var script = "return sessionStorage.getItem('SelectedHearingIdKey')";
         if (Driver is IJavaScriptExecutor js)
         {
-            var hearingId = (string) js.ExecuteScript(script);
-            quickjoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
+            var hearingId = GetHearingId();
+            quickLinkJoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
         }
-        // else if (Driver is ChromeDriver cd)
-        // {
-        //     var hearingId = (string) cd.ExecuteScript(script);
-        //     quickjoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
-        // }
-        // else if (Driver is RemoteWebDriver rwd)
-        // {
-        //     var hearingId = (string) rwd.ExecuteScript(script);
-        //     quickjoinUrl = $"{videoWebUrl}/quickjoin/{hearingId}";
-        // }
         else
         {
-            quickjoinUrl = new TextCopy.Clipboard().GetText() ?? string.Empty;
+            quickLinkJoinUrl = new TextCopy.Clipboard().GetText() ?? string.Empty;
         }
-        if (!Uri.IsWellFormedUriString(quickjoinUrl, UriKind.Absolute))
+        if (!Uri.IsWellFormedUriString(quickLinkJoinUrl, UriKind.Absolute))
         {
-            throw new Exception("The quick link join url is not a valid url: " + quickjoinUrl);
+            throw new Exception("The quick link join url is not a valid url: " + quickLinkJoinUrl);
         }
-        return quickjoinUrl;
+        return quickLinkJoinUrl;
+    }
+
+    public string GetHearingId()
+    {
+        const string script = "return sessionStorage.getItem('SelectedHearingIdKey')";
+        return (string) (Driver as IJavaScriptExecutor)!.ExecuteScript(script) ?? string.Empty;
     }
 
     public string GetAllocatedTo()

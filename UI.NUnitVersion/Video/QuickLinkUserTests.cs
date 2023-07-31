@@ -5,6 +5,7 @@ namespace UI.NUnitVersion.Video;
 public class QuickLinkUserTests : VideoWebUiTest
 {
     private string _quickLinkJoinUrl;
+    private string? _hearingIdString;
 
     [Test]
     public void JoinAHearingAsAQuickLinkUser()
@@ -13,7 +14,6 @@ public class QuickLinkUserTests : VideoWebUiTest
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
-        
         BookHearing(hearingDto);
         
         // log in as judge and start the hearing
@@ -54,8 +54,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeHearingRoomPage.DismissParticipant(quickLinkName1);
         judgeHearingRoomPage.DismissParticipant(quickLinkName2);
 
-        qlWaitingRoomPage1 = qlHearingRoom1.TransferToWaitingRoom();
-        qlWaitingRoomPage2 = qlHearingRoom2.TransferToWaitingRoom();
+        qlHearingRoom1.TransferToWaitingRoom();
+        qlHearingRoom2.TransferToWaitingRoom();
         
         judgeHearingRoomPage.IsParticipantInHearing(quickLinkName1).Should().BeFalse();
         judgeHearingRoomPage.IsParticipantInHearing(quickLinkName2).Should().BeFalse();
@@ -112,8 +112,21 @@ public class QuickLinkUserTests : VideoWebUiTest
 
         var summaryPage = otherInformationPage.GoToSummaryPage();
         var confirmationPage = summaryPage.ClickBookButton();
+        _hearingIdString = confirmationPage.GetNewHearingId();
+        TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
         _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
         TestContext.WriteLine(_quickLinkJoinUrl);
+    }
+    
+    protected override async Task CleanUp()
+    {
+        if(_hearingIdString != null)
+        {
+            var hearingId = Guid.Parse(_hearingIdString);
+            await BookingsApiClient.RemoveHearingAsync(hearingId);
+            TestContext.WriteLine($"Removed Hearing {hearingId}");
+            _hearingIdString = null;
+        }
     }
 }

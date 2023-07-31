@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
 namespace UI.PageModels.Pages.Video.Participant;
 
@@ -22,20 +23,35 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     
     public void AdmitParticipant(string participantDisplayName)
     {
-        var admitButton = By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[2]//fa-icon");
-        ClickElement(admitButton);
+        OpenContextMenu(participantDisplayName);
+        ClickElement(ParticipantAdmitButton(participantDisplayName));
+        WaitForElementToBeVisible(ParticipantRemoteMuteButton(participantDisplayName), 60);
     }
     
     public void DismissParticipant(string participantDisplayName)
     {
-        var contextButton =
-            By.XPath(
-                $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[last()]//img[@alt='Context menu icon']");
-        var dismissButton = By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[last()]//a[normalize-space()='Dismiss participant']");
-        ClickElement(contextButton);
-        ClickElement(dismissButton);
-        var admitButton = By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[2]//fa-icon");
-        WaitForElementToBeVisible(admitButton);
+        OpenContextMenu(participantDisplayName);
+        ClickElement(ParticipantDismissButton(participantDisplayName));
+        WaitForElementToBeVisible(ParticipantAdmitIconButton(participantDisplayName));
+    }
+
+    private void OpenContextMenu(string participantDisplayName)
+    {
+        var contextLocator = ParticipantContextButton(participantDisplayName);
+        if (IsElementVisible(contextLocator))
+        {
+            ClickElement(ParticipantContextButton(participantDisplayName));    
+        }
+        else
+        {
+            var elem = Driver.FindElement(contextLocator);
+            ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView();", elem);
+            new Actions(Driver).ScrollToElement(Driver.FindElement(contextLocator)).Perform();
+            ClickElement(ParticipantContextButton(participantDisplayName));
+        }
+        
+        // wait for context menu to be visible
+        WaitForElementToBeVisible(By.XPath($"//app-judge-context-menu//strong[text()='{participantDisplayName}']"));
     }
 
     public bool IsParticipantInHearing(string participantDisplayName)
@@ -51,19 +67,31 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         ClickElement(_pauseHearing);
         return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
     }
-}
-
-public class ParticipantHearingRoomPage : VhVideoWebPage
-{
-    private readonly By _toggleAudioMuteBtn = By.XPath("//div[@id='toggle-audio-mute-img-desktop']//fa-icon[@class='ng-fa-icon']");
-
-    public ParticipantHearingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    
+    
+    private By ParticipantContextButton(string participantDisplayName)
     {
-        WaitForElementToBeVisible(_toggleAudioMuteBtn);
+        return By.XPath(
+            $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//img[@alt='Context menu icon']");
     }
-
-    public ParticipantWaitingRoomPage TransferToWaitingRoom()
+    
+    private By ParticipantAdmitButton(string participantDisplayName)
     {
-        return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime);
+        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//a[normalize-space()='Admit participant']");
+    }
+    
+    private By ParticipantDismissButton(string participantDisplayName)
+    {
+        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//a[normalize-space()='Dismiss participant']");
+    }
+    
+    private By ParticipantRemoteMuteButton(string participantDisplayName)
+    {
+        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=2]//fa-icon[@icon='microphone']");
+    }
+    
+    private By ParticipantAdmitIconButton(string participantDisplayName)
+    {
+        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=2]//fa-icon[@icon='sign-in-alt']");
     }
 }
