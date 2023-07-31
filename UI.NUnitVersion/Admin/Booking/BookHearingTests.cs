@@ -1,5 +1,3 @@
-using BookingsApi.Contract.Requests;
-
 namespace UI.NUnitVersion.Admin.Booking;
 
 [Category("Daily")]
@@ -70,54 +68,15 @@ public class BookHearingTests : AdminWebUiTest
         Assert.Pass();
     }
     
-    
-    [Test]
-    public void SearchForHearingViaBookingList()
-    {
-        var driver = VhDriver.GetDriver();
-        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
-        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
-        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
-        
-        // ideally need to make this test run independently of other tests
-        var bookingListPage = dashboardPage.GoToBookingList();
-        var queryDto = new BookingListQueryDto()
-        {
-            CaseNumber = _bookingDto.CaseNumber,
-            StartDate = _bookingDto.ScheduledDateTime.Date,
-            EndDate = _bookingDto.ScheduledDateTime.Date,
-            UnallocatedOnly = true
-        };
-        bookingListPage.SearchForBooking(queryDto);
-        var bookingDetailsPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
-        bookingDetailsPage.GetAllocatedTo().Should().Be("Not Allocated");
-        bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl).Should().NotBeNullOrWhiteSpace();
-        TestContext.WriteLine(bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl));
-        dashboardPage.SignOut();
-        Assert.Pass();
-    }
 
     protected override async Task CleanUp()
     {
         if(_hearingIdString != null)
         {
-            
             var hearingId = Guid.Parse(_hearingIdString);
             TestContext.WriteLine($"Removing Hearing {hearingId}");
             await BookingsApiClient.RemoveHearingAsync(hearingId);
             _hearingIdString = null;
-            return;
-        }
-        // search for hearing by case number
-        var response = await BookingsApiClient.GetHearingsByTypesAsync(new GetHearingRequest()
-        {
-            CaseNumber = _bookingDto.CaseNumber
-        });
-
-        foreach (var hearing in response.Hearings.SelectMany(bookingsByDate => bookingsByDate.Hearings))
-        {
-            TestContext.WriteLine($"Removing Hearing {hearing.HearingId}");
-            await BookingsApiClient.RemoveHearingAsync(hearing.HearingId);
         }
     }
 }

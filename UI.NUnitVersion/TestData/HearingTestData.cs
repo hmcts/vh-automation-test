@@ -92,4 +92,51 @@ public static class HearingTestData
         };
         return bookingDto;
     }
+
+    public static BookNewHearingRequest CreateNewRequestDtoWithOnlyAJudge(bool remote = false,
+        DateTime? scheduledDateTime = null)
+    {
+        var date = DateUtil.GetNow(remote);
+        var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
+        
+        var bookingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime: date);
+        var request = new BookNewHearingRequest()
+        {
+            Cases = new List<CaseRequest>()
+            {
+                {
+                    new()
+                    {
+                        Name = bookingDto.CaseName,
+                        Number = bookingDto.CaseNumber,
+                        IsLeadCase = true
+                    }
+                }
+            },
+            ScheduledDateTime = bookingDto.ScheduledDateTime,
+            ScheduledDuration = bookingDto.DurationHour = 90,
+            HearingRoomName = bookingDto.RoomName,
+            CreatedBy = "automated test framework",
+            HearingTypeName = bookingDto.HearingType,
+            CaseTypeName = bookingDto.CaseType,
+            OtherInformation = bookingDto.OtherInformation,
+            AudioRecordingRequired = bookingDto.AudioRecording,
+            HearingVenueName = bookingDto.VenueName,
+            Participants = new List<ParticipantRequest>()
+            {
+                new()
+                {
+                    FirstName = "Auto_AW",
+                    LastName = "Judge_02",
+                    DisplayName = bookingDto.Judge.DisplayName,
+                    Username = bookingDto.Judge.Username,
+                    CaseRoleName = "Judge",
+                    HearingRoleName = "Judge",
+                    TelephoneNumber = null,
+                    ContactEmail = bookingDto.Judge.Username
+                }
+            }
+        };
+        return request;
+    }
 }

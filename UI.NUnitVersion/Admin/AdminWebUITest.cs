@@ -45,6 +45,10 @@ public abstract class AdminWebUiTest
         // _testReporter.Flush();
     }
 
+    /// <summary>
+    /// Run ad-hoc clean up tasks for a test
+    /// </summary>
+    /// <returns></returns>
     protected virtual Task CleanUp()
     {
         return Task.CompletedTask;
