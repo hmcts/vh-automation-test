@@ -13,9 +13,13 @@ public class ParticipantHearingListPage : VhVideoWebPage
 
     public ParticipantHearingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+    }
+
+    protected override void ConfirmPageHasLoaded()
+    {
         WaitForElementToBeClickable(_checkEquipmentBtn);
     }
-    
+
     public GetReadyForTheHearingIntroductionPage SelectHearing(string caseName)
     {
         var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");

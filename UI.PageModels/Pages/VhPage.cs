@@ -36,6 +36,7 @@ public abstract class VhPage
 
     private void CheckAccessibility()
     {
+        ConfirmPageHasLoaded();
         if(!AccessibilityCheck || IsLoginPage || IgnoreAccessibilityForPage) return;
         var axeBuilder = new AxeBuilder(Driver);
         axeBuilder.WithOutputFile(AccessibilityReportFilePath);
@@ -52,6 +53,11 @@ public abstract class VhPage
         {
             throw new Exception("Accessibility check failed. Please check the report for more details.");
         }
+    }
+    
+    protected virtual void ConfirmPageHasLoaded()
+    {
+        // actions needed to wait for page to load
     }
     
     protected bool HasFormValidationError()

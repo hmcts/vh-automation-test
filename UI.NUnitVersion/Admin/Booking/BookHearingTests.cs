@@ -1,11 +1,11 @@
 namespace UI.NUnitVersion.Admin.Booking;
 
-[Category("Daily")]
 public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
     private string _hearingIdString;
 
+    [Category("Daily")]
     [Test]
     public void BookAHearing()
     {

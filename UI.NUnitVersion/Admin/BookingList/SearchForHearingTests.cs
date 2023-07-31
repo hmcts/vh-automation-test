@@ -4,6 +4,7 @@ public class SearchForHearingTests : AdminWebUiTest
 {
     private HearingDetailsResponse _hearing;
 
+    [Category("Daily")]
     [Test]
     public async Task SearchForHearingViaBookingList()
     {

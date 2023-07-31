@@ -13,6 +13,10 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+    }
+
+    protected override void ConfirmPageHasLoaded()
+    {
         // the start/resume hearing button is not available when a hearing is closed
         WaitForElementToBeClickable(_enterConsultationRoomBtn);
     }
