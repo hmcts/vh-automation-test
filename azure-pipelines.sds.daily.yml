@@ -31,7 +31,7 @@ parameters:
       - Prod
 
 pool:
-  vmImage: ubuntu-22.04
+  name: "VH Self Hosted"
 
 stages:
   ####################################################
