@@ -1,17 +1,12 @@
 using RestSharpApi.Hooks;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using TechTalk.SpecFlow;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using NUnit.Framework;
+using Microsoft.Identity.Client;
 using Bookings;
-using Notification;
 using User;
-using Video;
-using System.Collections.Generic;
 
 namespace RestSharpApi.Steps
 {
@@ -26,7 +21,7 @@ namespace RestSharpApi.Steps
             var _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GetServiceToServiceToken());
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GetServiceToServiceToken().Result);
             UserApiService = new UserApi(_client);
             UserApiService.BaseUrl = config.usersapi;
         }
@@ -45,19 +40,22 @@ namespace RestSharpApi.Steps
             _logger.Info($"Drop is {drop}");
         }
 
-        protected string GetServiceToServiceToken()
+        protected async Task<string> GetServiceToServiceToken()
         {
             AuthenticationResult result;
-            var credential = new ClientCredential(config.clientid, config._clientSecret);
-            var authContext = new AuthenticationContext($"{config._authority}{config._tenetid}");
+            var authority = $"{config._authority}{config._tenetid}";
+            var app =ConfidentialClientApplicationBuilder.Create(config.clientid).WithClientSecret(config._clientSecret)
+                .WithAuthority(authority).Build();
+            
             try
             {
-                result = authContext.AcquireTokenAsync(config.bookingsapiResourceId, credential).Result;
+                result = await app.AcquireTokenForClient(new[] {$"{config.bookingsapiResourceId}/.default"}).ExecuteAsync();
             }
-            catch (AdalException)
+            catch (MsalServiceException)
             {
                 throw new UnauthorizedAccessException();
             }
+
             return result.AccessToken;
         }
 
