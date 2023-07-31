@@ -11,7 +11,7 @@ public class BookHearingTests : AdminWebUiTest
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDto(scheduledDateTime: date);
+        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
         var driver = VhDriver.GetDriver();
@@ -41,7 +41,7 @@ public class BookHearingTests : AdminWebUiTest
         addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        
+        videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation("This is a test info");

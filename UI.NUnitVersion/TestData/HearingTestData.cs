@@ -47,4 +47,19 @@ public static class HearingTestData
         };
         return bookingDto;
     }
+    
+    /// <summary>
+    ///     Create a hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)
+    /// </summary>
+    /// <returns>hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)</returns>
+    public static BookingDto CreateHearingDtoWithEndpoints(bool remote = false, DateTime? scheduledDateTime = null)
+    {
+        var bookingDto = CreateHearingDto(remote, scheduledDateTime);
+        bookingDto.VideoAccessPoints = new List<VideoAccessPointsDto>
+        {
+            new("Claimant VAP", "Auto 2"),
+            new("Defendant VAP", "Auto 4")
+        };
+        return bookingDto;
+    }
 }

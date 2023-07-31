@@ -15,5 +15,6 @@ public class BookingDto
     public string VenueName { get; set; }
     public string RoomName { get; set; }
     public List<BookingExistingParticipantDto> Participants { get; set; }
+    public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public BookingJudgeDto Judge { get; set; }
 }
