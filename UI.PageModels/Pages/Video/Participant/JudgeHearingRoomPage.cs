@@ -22,8 +22,20 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     
     public void AdmitParticipant(string participantDisplayName)
     {
-        var admitButton = By.Id($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[2]//fa-icon");
+        var admitButton = By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[2]//fa-icon");
         ClickElement(admitButton);
+    }
+    
+    public void DismissParticipant(string participantDisplayName)
+    {
+        var contextButton =
+            By.XPath(
+                $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[last()]//img[@alt='Context menu icon']");
+        var dismissButton = By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[last()]//a[normalize-space()='Dismiss participant']");
+        ClickElement(contextButton);
+        ClickElement(dismissButton);
+        var admitButton = By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[2]//fa-icon");
+        WaitForElementToBeVisible(admitButton);
     }
 
     public bool IsParticipantInHearing(string participantDisplayName)
