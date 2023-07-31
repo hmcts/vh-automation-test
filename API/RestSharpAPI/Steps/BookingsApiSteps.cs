@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using TechTalk.SpecFlow;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using NUnit.Framework;
+using Microsoft.Identity.Client;
 using Bookings;
-using Notification;
-using User;
-using Video;
 using System.Collections.Generic;
 
 namespace RestSharpApi.Steps
@@ -38,7 +34,7 @@ namespace RestSharpApi.Steps
             var _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GetServiceToServiceToken());
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GetServiceToServiceToken().Result);
              BookingApiService = new BookingsApi(_client);
             BookingApiService.BaseUrl = config.bookingsapi;
             _scenarioContext = scenarioContext;
@@ -152,19 +148,22 @@ namespace RestSharpApi.Steps
             return _request;
         }
 
-        protected static string GetServiceToServiceToken()
+        protected static async Task<string> GetServiceToServiceToken()
         {
             AuthenticationResult result;
-            var credential = new ClientCredential(config.clientid, config._clientSecret);
-            var authContext = new AuthenticationContext($"{config._authority}{config._tenetid}");
+            var authority = $"{config._authority}{config._tenetid}";
+            var app =ConfidentialClientApplicationBuilder.Create(config.clientid).WithClientSecret(config._clientSecret)
+                .WithAuthority(authority).Build();
+            
             try
             {
-                result = authContext.AcquireTokenAsync(config.bookingsapiResourceId, credential).Result;
+                result = await app.AcquireTokenForClient(new[] {$"{config.bookingsapiResourceId}/.default"}).ExecuteAsync();
             }
-            catch (AdalException)
+            catch (MsalServiceException)
             {
                 throw new UnauthorizedAccessException();
             }
+
             return result.AccessToken;
         }
 
@@ -246,7 +245,7 @@ namespace RestSharpApi.Steps
             var _client2 = new HttpClient();
             _client2.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client2.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GetServiceToServiceToken());
+            _client2.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GetServiceToServiceToken().Result);
             BookingsApi BookingApiService2 = new BookingsApi(_client2);
             BookingApiService2.BaseUrl = config.bookingsapi;
             try

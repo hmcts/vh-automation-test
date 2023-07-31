@@ -21,6 +21,7 @@ public static class ConfigRootBuilder
 
     private static IConfigurationRoot? _instance;
     private static EnvironmentConfigSettings? _envConfigInstance;
+    private static ApiClientConfiguration? _apiClientConfigInstance;
 
     public static IConfigurationRoot Instance(string userSecretId = UserSecretId, bool useSecrets = true) =>
         _instance ??= Build(userSecretId, useSecrets);
@@ -30,5 +31,14 @@ public static class ConfigRootBuilder
         _envConfigInstance = new EnvironmentConfigSettings();
         Instance(userSecretId, useSecrets).GetSection("SystemConfiguration:EnvironmentConfigSettings").Bind(_envConfigInstance);
         return _envConfigInstance;
+    }
+
+    public static ApiClientConfiguration ApiClientConfigurationInstance(string userSecretId = UserSecretId,
+        bool useSecrets = true)
+    {
+        if (_apiClientConfigInstance != null) return _apiClientConfigInstance;
+        _apiClientConfigInstance = new ApiClientConfiguration();
+        Instance(userSecretId, useSecrets).GetSection("ApiClientConfiguration").Bind(_apiClientConfigInstance);
+        return _apiClientConfigInstance;
     }
 }
