@@ -56,4 +56,9 @@ public class ParticipantWaitingRoomPage : VhVideoWebPage
         ClickElement(_acceptConsultationButton);
         return new ConsultationRoomPage(Driver, DefaultWaitTime);
     }
+
+    public ParticipantHearingRoomPage TransferToHearingRoom()
+    {
+        return new ParticipantHearingRoomPage(Driver, DefaultWaitTime);
+    }
 }

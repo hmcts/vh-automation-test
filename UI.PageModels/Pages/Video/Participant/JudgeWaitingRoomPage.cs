@@ -28,6 +28,11 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     {
         return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing is closed']"));
     }
+    
+    public bool IsHearingPaused()
+    {
+        return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing paused']"));
+    }
 
     public string GetParticipantStatus(string fullName)
     {
