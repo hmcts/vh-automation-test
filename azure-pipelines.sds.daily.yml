@@ -44,6 +44,8 @@ stages:
             displayName: UI Tests ${{ parameters.environment }}
             variables:
               - template: pipelines/variables/shared.yaml
+                parameters:
+                  environment: ${{ parameters.environment }}
               - name: env
                 value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
               - name: projectPath
