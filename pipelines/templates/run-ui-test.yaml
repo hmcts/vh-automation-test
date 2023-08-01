@@ -16,7 +16,7 @@ parameters:
     displayName: Test Category
     type: string
     default: ""
-   - name: testRunTitle
+  - name: testRunTitle
     displayName: Test Run Title
     type: string
     default: "Test Results"
