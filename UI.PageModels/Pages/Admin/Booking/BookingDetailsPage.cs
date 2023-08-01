@@ -80,8 +80,19 @@ public class BookingDetailsPage : VhAdminWebPage
         participantsPage.AddExistingParticipants(participantsToAdd);
         return participantsPage.GoToVideoAccessPointsPage().GoToSummaryPage().ClickBookButton();
     }
+    
+    public BookingConfirmationPage UpdateSchedule(DateTime newDate, int durationHour, int durationMinute)
+    {
+        SwitchToEditMode();
+        ClickElement(By.Id("edit-linkhearing-schedule-id"));
+        var hearingSchedulePage = new HearingSchedulePage(Driver, DefaultWaitTime);
+        hearingSchedulePage.EnterHearingDateAndDuration(newDate, durationHour, durationMinute);
+        // in edit mode, next directs the user back to the summary page
+        hearingSchedulePage.GoToNextPage();
+        return new SummaryPage(Driver, DefaultWaitTime).ClickBookButton();
+    }
 
-    public void SwitchToEditMode()
+    private void SwitchToEditMode()
     {
         ClickElement(_editBookingButton);
         WaitForElementToBeVisible(By.XPath("//main[@id='main-content']//app-summary//app-breadcrumb"));

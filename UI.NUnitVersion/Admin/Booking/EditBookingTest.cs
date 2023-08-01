@@ -24,6 +24,26 @@ public class EditBookingTest : AdminWebUiTest
         Assert.Pass();
 
     }
+
+    [Test]
+    public void should_update_booking_schedule()
+    {
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(60);
+        var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime:hearingScheduledDateAndTime);
+        
+        TestContext.WriteLine(
+            $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
+        
+        var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
+
+        var newTime = hearingDto.ScheduledDateTime.AddMinutes(30);
+        var confirmationPage =
+            bookingDetailsPage.UpdateSchedule(newTime, hearingDto.DurationHour, hearingDto.DurationMinute);
+        
+        confirmationPage.IsBookingSuccessful().Should().BeTrue();
+
+        Assert.Pass();
+    }
     
     private BookingDetailsPage BookHearingAndGoToDetailsPage(BookingDto bookingDto)
     {
@@ -48,6 +68,7 @@ public class EditBookingTest : AdminWebUiTest
         var addParticipantPage = assignJudgePage.GoToParticipantsPage();
         addParticipantPage.AddExistingParticipants(bookingDto.Participants);
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
+        videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
