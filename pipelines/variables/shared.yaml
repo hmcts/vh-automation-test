@@ -1,9 +1,0 @@
-parameters:
-  - name: env
-    type: string
-    default: ""
-    
-variables:
-
-- name: subscriptionName
-    value: "DTS-SHAREDSERVICES-${{ upper(parameters.env) }}-Video Hearings"
