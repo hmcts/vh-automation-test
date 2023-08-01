@@ -33,6 +33,12 @@ public class BookingDetailsPage : VhAdminWebPage
     private By SpecificBookingCancelledStatus(string caseNumber) => By.XPath(
         $"//div[@class='govuk-grid-column-full' and contains(.,'{caseNumber}') and contains(.,'Cancelled')]");
 
+    /// <summary>
+    /// Get the quick link join url from the booking details page. This is the url that can be used to join the hearing directly.
+    /// </summary>
+    /// <param name="videoWebUrl">The video web url to use as a fallback since remote drivers do not allow keyboard access.</param>
+    /// <returns></returns>
+    /// <exception cref="Exception">When join url is not found</exception>
     public string GetQuickLinkJoinUrl(string videoWebUrl)
     {
         var quickLinkJoinUrlLocator = By.Id("conference_join_by_link_details");
@@ -60,17 +66,30 @@ public class BookingDetailsPage : VhAdminWebPage
         return quickLinkJoinUrl;
     }
 
+    /// <summary>
+    /// Get a string value of the hearing id
+    /// </summary>
+    /// <returns></returns>
     public string GetHearingId()
     {
         const string script = "return sessionStorage.getItem('SelectedHearingIdKey')";
         return (string) (Driver as IJavaScriptExecutor)!.ExecuteScript(script) ?? string.Empty;
     }
 
+    /// <summary>
+    /// Get the string value of the allocated CSO
+    /// </summary>
+    /// <returns></returns>
     public string GetAllocatedTo()
     {
         return GetText(By.XPath("//div[@id='allocated-to']//strong"));
     }
 
+    /// <summary>
+    /// Edit a hearing and add participants to it
+    /// </summary>
+    /// <param name="participantsToAdd"></param>
+    /// <returns></returns>
     public BookingConfirmationPage AddParticipantsToBooking(List<BookingExistingParticipantDto> participantsToAdd)
     {
         SwitchToEditMode();
@@ -81,6 +100,13 @@ public class BookingDetailsPage : VhAdminWebPage
         return participantsPage.GoToVideoAccessPointsPage().GoToSummaryPage().ClickBookButton();
     }
     
+    /// <summary>
+    /// Edit a hearing and the scheduled date and duration
+    /// </summary>
+    /// <param name="newDate"></param>
+    /// <param name="durationHour"></param>
+    /// <param name="durationMinute"></param>
+    /// <returns></returns>
     public BookingConfirmationPage UpdateSchedule(DateTime newDate, int durationHour, int durationMinute)
     {
         SwitchToEditMode();
