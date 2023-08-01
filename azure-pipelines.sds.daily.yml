@@ -72,7 +72,7 @@ stages:
                 parameters:
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
-                  testCategory: OneOff
+                  testCategory: Daily
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
                   subscriptionName: ${{ variables.subscriptionName }}
 
@@ -82,6 +82,8 @@ stages:
             variables:
               - name: env
                 value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
+              - name: subscriptionName
+                value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
               - name: projectPath
                 value: "UI.NUnitVersion"
               - group: vh-automation-test-${{ parameters.environment }}
@@ -109,60 +111,13 @@ stages:
                 value: "https://vh-bookings-api.${{ lower(replace(parameters.environment, 'stg', 'staging')) }}.platform.hmcts.net"
 
             steps:
-              - task: AzureKeyVault@1
-                displayName: "Azure Key Vault: vh-infra-core-dev"
-                inputs:
-                  azureSubscription: "DTS-SHAREDSERVICES-DEV-Video Hearings"
-                  KeyVaultName: "vh-infra-core-dev"
-                  SecretsFilter: "azuread--tenantid"
-
-              - task: AzureKeyVault@1
-                displayName: "Azure Key Vault: vh-bookings-api-dev"
-                inputs:
-                  azureSubscription: "DTS-SHAREDSERVICES-DEV-Video Hearings"
-                  KeyVaultName: "vh-bookings-api-dev"
-                  SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri"
-
-              - bash: |
-                  echo "##vso[task.setvariable variable=ApiClientConfiguration.TenantId;issecret=false]$(azuread--tenantid)"
-                  echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientId;issecret=false]$(azuread--clientid)"
-                  echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientSecret;issecret=false]$(azuread--clientsecret)"
-                  echo "##vso[task.setvariable variable=ApiClientConfiguration.BookingsApi.ResourceId;issecret=false]$(azuread--identifieruri)"
-                displayName: Change api client secrets to variables
-
-              # inserts variables to help create unique test names
-              - task: gitversion/setup@0
-                displayName: Install GitVersion
-                inputs:
-                  versionSpec: "5.11.1"
-
-              - task: gitversion/execute@0
-                displayName: Determine Version
-
-              - task: FileTransform@1
-                displayName: Transform App Settings
-                inputs:
-                  folderPath: $(projectPath)
-                  fileType: json
-                  targetFiles: "**/appsettings.json"
-
-              - pwsh: |
-                  Get-Content "$(projectPath)/appsettings.json"
-                displayName: Print App Settings
-
-              - bash: |
-                  sed -i "s|</configuration>|<packageSourceCredentials><vh-packages><add key=\"Username\" value=\"PAT\" /><add key=\"ClearTextPassword\" value=\"$(System.AccessToken)\" /></vh-packages></packageSourceCredentials></configuration>|" nuget.config
-                displayName: Add NuGet Feed Authentication
-                workingDirectory: $(Build.SourcesDirectory)
-
-              - task: DotNetCoreCLI@2
-                displayName: Run UI Tests
-                inputs:
-                  command: test
-                  projects: "$(projectPath)/*.csproj"
-                  arguments: "--configuration Release --filter TestCategory=a11y"
-                  publishTestResults: true
-                  testRunTitle: "A11Y Tests ${{ parameters.environment }}"
+              - template: pipelines/templates/run-ui-test.yaml
+                parameters:
+                  environment: ${{ parameters.environment }}
+                  projectPath: ${{ variables.projectPath }}
+                  testCategory: a11y
+                  testRunTitle: "UI Tests ${{ parameters.environment }}"
+                  subscriptionName: ${{ variables.subscriptionName }}
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish A11Y Output
