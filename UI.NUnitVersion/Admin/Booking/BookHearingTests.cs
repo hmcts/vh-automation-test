@@ -6,6 +6,7 @@ public class BookHearingTests : AdminWebUiTest
     private string _hearingIdString;
 
     [Category("Daily")]
+    [Category("OneOff")]
     [Test]
     public void BookAHearing()
     {

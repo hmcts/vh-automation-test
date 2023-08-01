@@ -1,0 +1,73 @@
+parameters:
+  - name: environment
+    displayName: Environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - aat
+      - demo
+      - prod
+  - name: projectPath
+    displayName: Project Path
+    type: string
+    default: "UI.NUnitVersion"
+  - name: testCategory
+    displayName: Test Category
+    type: string
+    default: ""
+   - name: testRunTitle
+    displayName: Test Run Title
+    type: string
+    default: "Test Results"
+
+steps:
+  - task: AzureKeyVault@1
+    displayName: "Azure Key Vault: vh-infra-core-${{ lower(parameters.env) }}"
+    inputs:
+      azureSubscription: "${{ variables.subscriptionName }}"
+      KeyVaultName: "vh-infra-core-${{ lower(parameters.env) }}"
+      SecretsFilter: "azuread--tenantid"
+
+  - task: AzureKeyVault@1
+    displayName: "Azure Key Vault: vh-bookings-api-dev"
+    inputs:
+      azureSubscription: "${{ variables.subscriptionName }}"
+      KeyVaultName: "vh-bookings-api-${{ lower(parameters.env) }}"
+      SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri"
+
+  - bash: |
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.TenantId;issecret=false]$(azuread--tenantid)"
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientId;issecret=false]$(azuread--clientid)"
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientSecret;issecret=false]$(azuread--clientsecret)"
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.BookingsApi.ResourceId;issecret=false]$(azuread--identifieruri)"
+    displayName: Change api client secrets to variables
+
+  # inserts variables to help create unique test names
+  - task: gitversion/setup@0
+    displayName: Install GitVersion
+    inputs:
+      versionSpec: "5.11.1"
+
+  - task: gitversion/execute@0
+    displayName: Determine Version
+
+  - task: FileTransform@1
+    displayName: Transform App Settings
+    inputs:
+      folderPath: ${{ parameters.projectpath }}
+      fileType: json
+      targetFiles: "**/appsettings.json"
+
+  - pwsh: |
+      Get-Content "${{ parameters.projectpath }}/appsettings.json"
+    displayName: Print App Settings
+
+  - task: DotNetCoreCLI@2
+    displayName: Run UI Tests
+    inputs:
+      command: test
+      projects: "${{ parameters.projectpath }}/*.csproj"
+      arguments: "--configuration Release --filter TestCategory=${{ parameters.testCategory }}"
+      publishTestResults: true
+      testRunTitle: "${{ parameters.testRunTitle }}"
