@@ -2,12 +2,12 @@ parameters:
   - name: environment
     displayName: Environment
     type: string
-    default: dev
+    default: Dev
     values:
-      - dev
-      - aat
-      - demo
-      - prod
+      - Dev
+      - Test
+      - Stg
+      - Prod
   - name: projectPath
     displayName: Project Path
     type: string

@@ -70,7 +70,7 @@ stages:
             steps:
               - template: pipelines/templates/run-ui-test.yaml
                 parameters:
-                  env: ${{ variables.env }}
+                  environment: ${{ variables.environment }}
                   projectPath: ${{ variables.projectPath }}
                   testCategory: OneOff
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
