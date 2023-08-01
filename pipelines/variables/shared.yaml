@@ -1,3 +1,8 @@
+parameters:
+  - name: env
+    type: string
+    default: ""
+    
 variables:
 
 - name: subscriptionName
