@@ -57,25 +57,34 @@ public static class HearingTestData
                 "auto_aw.judge_02@hearings.reform.hmcts.net",
                 "Auto Judge",
                 ""),
-            Participants = new List<BookingExistingParticipantDto>
-            {
-                BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.LitigantInPerson,
-                    "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
-                    "Mr", "Automation_Arnold", "Automation_Koelpin"),
-                BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
-                    "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
-                    "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1"),
-                BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.LitigantInPerson,
-                    "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
-                    "Mr", "Auto_VW", "Individual_137"),
-                BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
-                    "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
-                    "Auto 4", "Mr", "Automation_Torrance", "Automation_Moen", "Auto 3")
-            },
+            Participants = KnownParticipantsForTesting(),
             AudioRecording = false,
             OtherInformation = "This is a test hearing"
         };
         return bookingDto;
+    }
+
+    /// <summary>
+    /// 2 claimants (LIP and REP) and 2 defendants (LIP and REP)
+    /// </summary>
+    /// <returns></returns>
+    public static List<BookingExistingParticipantDto> KnownParticipantsForTesting()
+    {
+        return new List<BookingExistingParticipantDto>
+        {
+            BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.LitigantInPerson,
+                "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
+                "Mr", "Automation_Arnold", "Automation_Koelpin"),
+            BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
+                "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
+                "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1"),
+            BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.LitigantInPerson,
+                "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
+                "Mr", "Auto_VW", "Individual_137"),
+            BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
+                "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
+                "Auto 4", "Mr", "Automation_Torrance", "Automation_Moen", "Auto 3")
+        };
     }
     
     /// <summary>

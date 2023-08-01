@@ -52,9 +52,24 @@ public class VideoAccessPointsPage : VhAdminWebPage
         }
     }
     
+    /// <summary>
+    /// Click next and go to the other information page (only when in create mode)
+    /// </summary>
+    /// <returns></returns>
     public OtherInfoPage GoToOtherInformationPage()
     {
         ClickElement(_nextButton);
         return new OtherInfoPage(Driver, DefaultWaitTime);
+    }
+    
+    
+    /// <summary>
+    /// When in edit mode, the next button directs a user to the summary page
+    /// </summary>
+    /// <returns></returns>
+    public SummaryPage GoToSummaryPage()
+    {
+        ClickElement(_nextButton);
+        return new SummaryPage(Driver, DefaultWaitTime);
     }
 }

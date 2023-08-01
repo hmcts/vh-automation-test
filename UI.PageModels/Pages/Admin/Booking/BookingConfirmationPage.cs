@@ -20,6 +20,11 @@ public class BookingConfirmationPage : VhAdminWebPage
         const string script = "return sessionStorage.getItem('newHearingId')";
         return (string) (Driver as IJavaScriptExecutor)!.ExecuteScript(script) ?? string.Empty;
     }
+    
+    public bool IsBookingSuccessful()
+    {
+        return IsElementVisible(By.XPath("//h1[normalize-space()='Your hearing booking was successful']"));
+    }
 
     public BookingDetailsPage ClickViewBookingLink()
     {

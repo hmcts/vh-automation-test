@@ -149,6 +149,10 @@ public class ParticipantsPage : VhAdminWebPage
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
     }
 
+    /// <summary>
+    /// Go to the next page of the booking, which is the video access points page
+    /// </summary>
+    /// <returns></returns>
     public VideoAccessPointsPage GoToVideoAccessPointsPage()
     {
         ClickElement(_nextButton);
