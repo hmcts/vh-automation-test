@@ -23,17 +23,17 @@ parameters:
 
 steps:
   - task: AzureKeyVault@1
-    displayName: "Azure Key Vault: vh-infra-core-${{ lower(parameters.env) }}"
+    displayName: "Azure Key Vault: vh-infra-core-${{ lower(parameters.environment) }}"
     inputs:
       azureSubscription: "${{ variables.subscriptionName }}"
-      KeyVaultName: "vh-infra-core-${{ lower(parameters.env) }}"
+      KeyVaultName: "vh-infra-core-${{ lower(parameters.environment) }}"
       SecretsFilter: "azuread--tenantid"
 
   - task: AzureKeyVault@1
     displayName: "Azure Key Vault: vh-bookings-api-dev"
     inputs:
       azureSubscription: "${{ variables.subscriptionName }}"
-      KeyVaultName: "vh-bookings-api-${{ lower(parameters.env) }}"
+      KeyVaultName: "vh-bookings-api-${{ lower(parameters.environment) }}"
       SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri"
 
   - bash: |

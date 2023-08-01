@@ -46,7 +46,7 @@ stages:
               - name: env
                 value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
               - name: subscriptionName
-                value: "DTS-SHAREDSERVICES-${{ upper(parameters.env) }}-Video Hearings"
+                value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
               - name: projectPath
                 value: "UI.NUnitVersion"
               - group: vh-automation-test-${{ parameters.environment }}
