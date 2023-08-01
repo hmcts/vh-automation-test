@@ -74,6 +74,7 @@ stages:
                   projectPath: ${{ variables.projectPath }}
                   testCategory: OneOff
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
+                  subscriptionName: ${{ variables.subscriptionName }}
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
