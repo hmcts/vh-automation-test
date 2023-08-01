@@ -15,3 +15,9 @@ global using UI.PageModels.Pages;
 global using UI.Common.Configuration;
 global using WebDriverManager.DriverConfigs.Impl;
 global using System.Globalization;
+
+global using UI.NUnitVersion.Utilities;
+global using UI.PageModels.Dtos;
+
+global using BookingsApi.Contract.Requests;
+global using BookingsApi.Contract.Responses;

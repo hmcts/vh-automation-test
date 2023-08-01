@@ -36,6 +36,7 @@ public abstract class VhPage
 
     private void CheckAccessibility()
     {
+        ConfirmPageHasLoaded();
         if(!AccessibilityCheck || IsLoginPage || IgnoreAccessibilityForPage) return;
         var axeBuilder = new AxeBuilder(Driver);
         axeBuilder.WithOutputFile(AccessibilityReportFilePath);
@@ -52,6 +53,11 @@ public abstract class VhPage
         {
             throw new Exception("Accessibility check failed. Please check the report for more details.");
         }
+    }
+    
+    protected virtual void ConfirmPageHasLoaded()
+    {
+        // actions needed to wait for page to load
     }
     
     protected bool HasFormValidationError()
@@ -136,11 +142,23 @@ public abstract class VhPage
                 WaitForApiSpinnerToDisappear();
                 ClickElement(locator);
             }
+
+            if (ex.Message.Contains("<vh-toast"))
+            {
+                CloseAllToasts();
+                ClickElement(locator);
+            }
             else
             {
                 throw;
             }
         }
+    }
+
+    private void CloseAllToasts()
+    {
+        Driver.FindElements(By.Id("notification-toastr-participant-added-dismiss")).ToList()
+            .ForEach(x => x.Click());
     }
 
     protected void SetCheckboxValue(By locator, bool checkedValue)

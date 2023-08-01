@@ -11,10 +11,15 @@ public abstract class VhVideoWebPage : VhPage
     {
     }
 
-    public VideoWebLogoutPage SignOut()
+    public VideoWebLogoutPage SignOut(bool confirmSignOut = true)
     {
         ClickElement(_signOutMenuItemButton);
-        ClickElement(By.XPath("//*[@id='tilesHolder']/div"));
+        var confirmSignOutLocator = By.XPath("//*[@id='tilesHolder']/div");
+        if (confirmSignOut)
+        {
+            ClickElement(confirmSignOutLocator);
+        }
+
         return new VideoWebLogoutPage(Driver, DefaultWaitTime);
     }
 }

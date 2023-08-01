@@ -11,22 +11,12 @@ public class BookingExistingParticipantDto
     public string Username { get; set; }
     public string DisplayName { get; set; }
     public string Representing { get; set; }
+    public string Title { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
     public static BookingExistingParticipantDto Individual(GenericTestParty party, GenericTestRole role,
-        string contactEmail, string username, string displayName)
-    {
-        return new BookingExistingParticipantDto
-        {
-            Party = party,
-            Role = role,
-            Username = username,
-            ContactEmail = contactEmail,
-            DisplayName = displayName
-        };
-    }
-
-    public static BookingExistingParticipantDto Representative(GenericTestParty party, GenericTestRole role,
-        string contactEmail, string username, string displayName, string representing)
+        string contactEmail, string username, string displayName, string title, string firstName, string lastName)
     {
         return new BookingExistingParticipantDto
         {
@@ -35,20 +25,27 @@ public class BookingExistingParticipantDto
             Username = username,
             ContactEmail = contactEmail,
             DisplayName = displayName,
-            Representing = representing
+            Title = title,
+            FirstName = firstName,
+            LastName = lastName
         };
     }
-}
 
-public class VideoAccessPointsDto
-{
-    
-    public string DisplayName { get; set; }
-    public string DefenceAdvocateDisplayName { get; set; }
-    
-    public VideoAccessPointsDto(string displayName, string defenceAdvocateDisplayName)
+    public static BookingExistingParticipantDto Representative(GenericTestParty party, GenericTestRole role,
+        string contactEmail, string username, string displayName, string title, string firstName, string lastName,
+        string representing)
     {
-        DisplayName = displayName;
-        DefenceAdvocateDisplayName = defenceAdvocateDisplayName;
+        return new BookingExistingParticipantDto
+        {
+            Party = party,
+            Role = role,
+            Username = username,
+            ContactEmail = contactEmail,
+            DisplayName = displayName,
+            Representing = representing,
+            Title = title,
+            FirstName = firstName,
+            LastName = lastName
+        };
     }
 }

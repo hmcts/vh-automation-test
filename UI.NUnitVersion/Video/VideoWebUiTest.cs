@@ -1,6 +1,8 @@
+using BookingsApi.Client;
 using UI.NUnitVersion.Models;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
+using UI.PageModels.Pages.Video.QuickLink;
 using UI.PageModels.Pages.Video.Vho;
 
 namespace UI.NUnitVersion.Video;
@@ -8,6 +10,7 @@ namespace UI.NUnitVersion.Video;
 public abstract class VideoWebUiTest
 {
     public readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
+    protected BookingsApiClient BookingsApiClient;
 
     /// <summary>
     ///     This property is used to book a hearing and publish the success to the test reporter
@@ -22,11 +25,12 @@ public abstract class VideoWebUiTest
     protected Dictionary<string, VideoWebParticipant> ParticipantDrivers = new();
 
     [OneTimeSetUp]
-    public void OneTimeSetup()
+    public async Task OneTimeSetup()
     {
         var config = ConfigRootBuilder.Build();
         EnvConfigSettings = config.GetSection("SystemConfiguration:EnvironmentConfigSettings")
             .Get<EnvironmentConfigSettings>();
+        BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
     }
 
     [SetUp]
@@ -40,6 +44,7 @@ public abstract class VideoWebUiTest
     [TearDown]
     public void TearDown()
     {
+        CleanUp();
         var testResult = TestContext.CurrentContext.Result.Outcome.Status ==
                          TestStatus.Passed;
         AdminWebDriver.PublishTestResult(testResult);
@@ -52,33 +57,39 @@ public abstract class VideoWebUiTest
         });
         ParticipantDrivers.Clear();
     }
-
+    
+    protected virtual Task CleanUp()
+    {
+        return Task.CompletedTask;
+    }
+    
     protected JudgeHearingListPage LoginAsJudge(string username, string password)
     {
-        var participant = InitVideoWebParticipant(username);
+        var participant = InitVideoWebParticipant(username, JourneyType.Judge);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsJudge(username, password);
     }
 
     protected VhoVenueSelectionPage LoginAsVho(string username, string password)
     {
-        var participant = InitVideoWebParticipant(username);
+        var participant = InitVideoWebParticipant(username, JourneyType.Vho);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsVho(username, password);
     }
 
-    protected StaffMemberHearingListPage LoginAsStaffMember(string username, string password)
+    protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep)
     {
-        var participant = InitVideoWebParticipant(username);
-        var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
-        return loginPage.LogInAsStaffMember(username, password);
-    }
-
-    protected ParticipantHearingListPage LoginAsParticipant(string username, string password)
-    {
-        var participant = InitVideoWebParticipant(username);
+        var participant = InitVideoWebParticipant(username, isRep ? JourneyType.Representative : JourneyType.Citizen);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsParticipant(username, password);
+    }
+
+    protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName)
+    {
+        var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant);
+        var driver = participant.Driver.GetDriver();
+        driver.Navigate().GoToUrl(quickLinkJoinUrl);
+        return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);
     }
 
     /// <summary>
@@ -100,14 +111,14 @@ public abstract class VideoWebUiTest
         return new VideoWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
     }
 
-    private VideoWebParticipant InitVideoWebParticipant(string username)
+    private VideoWebParticipant InitVideoWebParticipant(string username, JourneyType journeyType)
     {
         var vhDriver = CreateDriver(username);
         var participant = new VideoWebParticipant
         {
             Driver = vhDriver,
             Username = username,
-            JourneyType = JourneyType.Judge
+            JourneyType = journeyType
         };
         ParticipantDrivers[username] = participant;
         return participant;
@@ -137,7 +148,7 @@ public abstract class VideoWebUiTest
         foreach (var videoWebParticipant in ParticipantDrivers.Values)
         {
             TestContext.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
-            videoWebParticipant.VhVideoWebPage.SignOut();
+            videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);
         }
     }
 }

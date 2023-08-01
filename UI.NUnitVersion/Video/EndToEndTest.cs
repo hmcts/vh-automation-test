@@ -1,10 +1,8 @@
-using UI.NUnitVersion.Utilities;
-using UI.PageModels.Dtos;
-
 namespace UI.NUnitVersion.Video;
 
 public class EndToEndTest : VideoWebUiTest
 {
+    [Category("Daily")]
     [Test]
     [Category("a11y")]
     public void BookAHearingAndLogInAsJudgeAndParticipants()
@@ -21,7 +19,7 @@ public class EndToEndTest : VideoWebUiTest
         {
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
-            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword);
+            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
             var participantWaitingRoom = participantHearingList.SelectHearing(hearingDto.CaseName).GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
@@ -69,7 +67,7 @@ public class EndToEndTest : VideoWebUiTest
             bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
+        assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
 
         var addParticipantPage = assignJudgePage.GoToParticipantsPage();
         addParticipantPage.AddExistingParticipants(bookingDto.Participants);

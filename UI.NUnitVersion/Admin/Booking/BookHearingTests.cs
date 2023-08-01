@@ -1,12 +1,11 @@
-using BookingsApi.Contract.Requests;
-using UI.PageModels.Dtos;
-
 namespace UI.NUnitVersion.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
+    private string _hearingIdString;
 
+    [Category("Daily")]
     [Test]
     public void BookAHearing()
     {
@@ -35,7 +34,7 @@ public class BookHearingTests : AdminWebUiTest
             _bookingDto.DurationMinute, _bookingDto.VenueName, _bookingDto.RoomName);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails("auto_aw.judge_02@hearings.reform.hmcts.net", "Auto Judge", "");
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
         
         var addParticipantPage = assignJudgePage.GoToParticipantsPage();
         addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
@@ -44,12 +43,13 @@ public class BookHearingTests : AdminWebUiTest
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
-        otherInformationPage.EnterOtherInformation("This is a test info");
+        otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
         
         var summaryPage = otherInformationPage.GoToSummaryPage();
-        var confirmationPage = summaryPage.ClickBookButton();
-        confirmationPage.ClickViewBookingLink();
+        summaryPage.ValidateSummaryPage(_bookingDto);
         
+        var confirmationPage = summaryPage.ClickBookButton();
+        _hearingIdString = confirmationPage.GetNewHearingId();
         dashboardPage = confirmationPage.GoToDashboardPage();
         
         var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
@@ -67,19 +67,16 @@ public class BookHearingTests : AdminWebUiTest
 
         Assert.Pass();
     }
+    
 
     protected override async Task CleanUp()
     {
-        // search for hearing by case number
-        var response = await BookingsApiClient.GetHearingsByTypesAsync(new GetHearingRequest()
+        if(_hearingIdString != null)
         {
-            CaseNumber = _bookingDto.CaseNumber
-        });
-
-        foreach (var hearing in response.Hearings.SelectMany(bookingsByDate => bookingsByDate.Hearings))
-        {
-            TestContext.WriteLine($"Removing Hearing {hearing.HearingId}");
-            await BookingsApiClient.RemoveHearingAsync(hearing.HearingId);
+            var hearingId = Guid.Parse(_hearingIdString);
+            TestContext.WriteLine($"Removing Hearing {hearingId}");
+            await BookingsApiClient.RemoveHearingAsync(hearingId);
+            _hearingIdString = null;
         }
     }
 }

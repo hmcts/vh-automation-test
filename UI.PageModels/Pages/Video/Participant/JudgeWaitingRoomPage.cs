@@ -13,6 +13,10 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+    }
+
+    protected override void ConfirmPageHasLoaded()
+    {
         // the start/resume hearing button is not available when a hearing is closed
         WaitForElementToBeClickable(_enterConsultationRoomBtn);
     }
@@ -27,6 +31,21 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     public bool IsHearingClosed()
     {
         return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing is closed']"));
+    }
+    
+    public bool IsHearingPaused()
+    {
+        return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing paused']"));
+    }
+
+    public string GetParticipantStatus(string fullName)
+    {
+        return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//label"));
+    }
+
+    public string GetVideoAccessPointStatus(string accessPointName)
+    {
+        return GetText(By.XPath($"//dt[normalize-space()='{accessPointName}']/following-sibling::dd//label"));
     }
 
     public int GetParticipantConnectedCount()

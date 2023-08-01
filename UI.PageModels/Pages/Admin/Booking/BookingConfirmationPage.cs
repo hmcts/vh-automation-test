@@ -15,8 +15,15 @@ public class BookingConfirmationPage : VhAdminWebPage
                 "This is not the booking-confirmation page, the current url is: " + Driver.Url);
     }
 
-    public void ClickViewBookingLink()
+    public string GetNewHearingId()
+    {
+        const string script = "return sessionStorage.getItem('newHearingId')";
+        return (string) (Driver as IJavaScriptExecutor)!.ExecuteScript(script) ?? string.Empty;
+    }
+
+    public BookingDetailsPage ClickViewBookingLink()
     {
         ClickElement(_viewBookingLink);
+        return new BookingDetailsPage(Driver, DefaultWaitTime);
     }
 }
