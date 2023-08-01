@@ -6,7 +6,6 @@ public class EditBookingTest : AdminWebUiTest
 {
     private string _hearingIdString;
 
-
     [Test]
     public void should_add_new_participant_after_booking()
     {
@@ -53,27 +52,7 @@ public class EditBookingTest : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-
-        createHearingPage.EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
-            bookingDto.HearingType);
-
-        var hearingSchedulePage = createHearingPage.GoToNextPage();
-
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
-            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
-
-        var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
-
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        addParticipantPage.AddExistingParticipants(bookingDto.Participants);
-        var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
-        otherInformationPage.TurnOffAudioRecording();
-        otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
-
-        var summaryPage = otherInformationPage.GoToSummaryPage();
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
