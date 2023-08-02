@@ -1,9 +1,4 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
-using UI.PageModels.Dtos;
-
-namespace UI.PageModels.Pages.Admin.Booking;
+﻿namespace UI.PageModels.Pages.Admin.Booking;
 
 public class BookingDetailsPage : VhAdminWebPage
 {
@@ -118,6 +113,40 @@ public class BookingDetailsPage : VhAdminWebPage
         return new SummaryPage(Driver, DefaultWaitTime).ClickBookButton();
     }
 
+    /// <summary>
+    /// Validate the confirmation page matches the details provided by the booking dto
+    /// </summary>
+    /// <param name="bookingDto"></param>
+    /// <exception cref="Exception">When an assertion fails</exception>
+    public void ValidateDetailsPage(BookingDto bookingDto)
+    {
+        for (var i = 0; i < bookingDto.VideoAccessPoints.Count-1; i++)
+        {
+            var endpoint = bookingDto.VideoAccessPoints[i];
+            CompareText(By.XPath($"//div[normalize-space()='{endpoint.DisplayName}']"), endpoint.DisplayName);
+            if (!string.IsNullOrWhiteSpace(endpoint.DefenceAdvocateDisplayName))
+            {
+                var linkToAdvocate =
+                    By.XPath(
+                        $"//div[normalize-space()='{endpoint.DisplayName}']/../child::div[contains(normalize-space(),'{endpoint.DefenceAdvocateDisplayName}')]//img[@alt='link to endpoint']");
+
+                if (!IsElementVisible(linkToAdvocate))
+                {
+                    throw new Exception($"Link icon between VAP {endpoint.DisplayName} and {endpoint.DefenceAdvocateDisplayName} is not visible");
+                }
+            }
+        }
+    }
+    
+    private void CompareText(By element, string expectedText)
+    {
+        var text = GetText(element);
+        if (!text.Equals(expectedText, StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new Exception($"Expected text: {expectedText} but was {text}");
+        }
+    }
+    
     private void SwitchToEditMode()
     {
         ClickElement(_editBookingButton);
