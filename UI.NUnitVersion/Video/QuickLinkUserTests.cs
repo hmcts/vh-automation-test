@@ -92,25 +92,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-
-        createHearingPage.EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
-            bookingDto.HearingType);
-
-        var hearingSchedulePage = createHearingPage.GoToNextPage();
-
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
-            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
-
-        var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
-
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
-        otherInformationPage.TurnOffAudioRecording();
-        otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
-
-        var summaryPage = otherInformationPage.GoToSummaryPage();
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");

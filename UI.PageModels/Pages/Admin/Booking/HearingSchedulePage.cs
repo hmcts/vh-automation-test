@@ -23,7 +23,7 @@ public class HearingSchedulePage : VhAdminWebPage
     public void EnterSingleDayHearingSchedule(DateTime date, int durationHour, int durationMinute, string venueName,
         string roomName)
     {
-        EnterHearingDate(date, durationHour, durationMinute);
+        EnterHearingDateAndDuration(date, durationHour, durationMinute);
         EnterHearingVenueAndRoom(venueName, roomName);
     }
 
@@ -41,7 +41,7 @@ public class HearingSchedulePage : VhAdminWebPage
         return new HearingAssignJudgePage(Driver, DefaultWaitTime);
     }
 
-    private void EnterHearingDate(DateTime date, int durationHour, int durationMinute)
+    public void EnterHearingDateAndDuration(DateTime date, int durationHour, int durationMinute)
     {
         var dateString = GetLocaleDate(date);
         EnterText(_hearingDate, dateString);

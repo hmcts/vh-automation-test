@@ -1,7 +1,4 @@
-﻿using OpenQA.Selenium;
-using UI.PageModels.Dtos;
-
-namespace UI.PageModels.Pages.Admin.Booking;
+﻿namespace UI.PageModels.Pages.Admin.Booking;
 
 public class SummaryPage : VhAdminWebPage
 {
@@ -45,8 +42,19 @@ public class SummaryPage : VhAdminWebPage
 
         for (var i = 0; i < bookingDto.VideoAccessPoints.Count-1; i++)
         {
-            CompareText(By.XPath($"//div[normalize-space()='{bookingDto.VideoAccessPoints[i].DisplayName}']"),
-                bookingDto.VideoAccessPoints[i].DisplayName);
+            var endpoint = bookingDto.VideoAccessPoints[i];
+            CompareText(By.XPath($"//div[normalize-space()='{endpoint.DisplayName}']"), endpoint.DisplayName);
+            if (!string.IsNullOrWhiteSpace(endpoint.DefenceAdvocateDisplayName))
+            {
+                var linkToAdvocate =
+                    By.XPath(
+                        $"//div[normalize-space()='{endpoint.DisplayName}']/../child::div[contains(normalize-space(),'{endpoint.DefenceAdvocateDisplayName}')]//img[@alt='link to endpoint']");
+
+                if (!IsElementVisible(linkToAdvocate))
+                {
+                    throw new Exception($"Link icon between VAP {endpoint.DisplayName} and {endpoint.DefenceAdvocateDisplayName} is not visible");
+                }
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(bookingDto.OtherInformation))
@@ -90,7 +98,7 @@ public class SummaryPage : VhAdminWebPage
         ClickElement(_bookButton);
         WaitForElementToBeVisible(Spinner);
         WaitForApiSpinnerToDisappear(90); // booking process can take a while. lower when process has been optimised
-        WaitForElementToBeVisible(_successTitle);
+        WaitForElementToBeVisible(By.TagName("app-booking-confirmation"));
         return new BookingConfirmationPage(Driver, DefaultWaitTime);
     }
 }

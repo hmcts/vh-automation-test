@@ -2,6 +2,8 @@ namespace UI.NUnitVersion.Video;
 
 public class EndToEndTest : VideoWebUiTest
 {
+    private string _hearingIdString;
+
     [Category("Daily")]
     [Test]
     [Category("a11y")]
@@ -58,28 +60,20 @@ public class EndToEndTest : VideoWebUiTest
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
-        createHearingPage.EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
-            bookingDto.HearingType);
-
-        var hearingSchedulePage = createHearingPage.GoToNextPage();
-
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
-            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
-
-        var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
-
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        addParticipantPage.AddExistingParticipants(bookingDto.Participants);
-
-        var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
-        otherInformationPage.TurnOffAudioRecording();
-        otherInformationPage.EnterOtherInformation("This is a test info");
-
-        var summaryPage = otherInformationPage.GoToSummaryPage();
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
         var confirmationPage = summaryPage.ClickBookButton();
+        _hearingIdString = confirmationPage.GetNewHearingId();
         confirmationPage.ClickViewBookingLink();
+    }
+    
+    protected override async Task CleanUp()
+    {
+        if(_hearingIdString != null)
+        {
+            var hearingId = Guid.Parse(_hearingIdString);
+            await BookingsApiClient.RemoveHearingAsync(hearingId);
+            TestContext.WriteLine($"Removed Hearing {hearingId}");
+            _hearingIdString = null;
+        }
     }
 }
