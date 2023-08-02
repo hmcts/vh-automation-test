@@ -90,7 +90,7 @@ public class SummaryPage : VhAdminWebPage
         ClickElement(_bookButton);
         WaitForElementToBeVisible(Spinner);
         WaitForApiSpinnerToDisappear(90); // booking process can take a while. lower when process has been optimised
-        WaitForElementToBeVisible(_successTitle);
+        WaitForElementToBeVisible(By.TagName("app-booking-confirmation"));
         return new BookingConfirmationPage(Driver, DefaultWaitTime);
     }
 }

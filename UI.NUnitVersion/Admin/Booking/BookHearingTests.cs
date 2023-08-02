@@ -50,6 +50,7 @@ public class BookHearingTests : AdminWebUiTest
         
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
+        confirmationPage.IsBookingSuccessful().Should().BeTrue();
         dashboardPage = confirmationPage.GoToDashboardPage();
         
         var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
