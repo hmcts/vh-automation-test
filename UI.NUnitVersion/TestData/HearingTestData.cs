@@ -2,6 +2,7 @@ namespace UI.NUnitVersion.TestData;
 
 public static class HearingTestData
 {
+    public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
     /// <summary>
     /// Create a hearing with only a judge
     /// </summary>
