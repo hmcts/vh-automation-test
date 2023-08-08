@@ -80,7 +80,6 @@ steps:
       publishTestResults: true
       testRunTitle: "${{ parameters.testRunTitle }}"
       ${{ if eq(parameters.testCategory, '') }}:
-        arguments: "--configuration Release --filter"
+        arguments: "--configuration Release"
       ${{ else }}:
         arguments: "--configuration Release --filter TestCategory=${{ parameters.testCategory }}"
-        
