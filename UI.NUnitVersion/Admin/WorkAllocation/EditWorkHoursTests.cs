@@ -4,8 +4,11 @@ namespace UI.NUnitVersion.Admin.WorkAllocation;
 public class EditWorkHoursTests : AdminWebUiTest
 {
     [Test]
-    public void EditWorkHoursForExistingUser()
+    public async Task EditWorkHoursForExistingUser()
     {
+        var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
+        await CreateVhTeamLeaderJusticeUserIfNotExist(teamMemberUsername);
+        
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
@@ -13,7 +16,7 @@ public class EditWorkHoursTests : AdminWebUiTest
 
         var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
 
-        var teamMemberUsername = "auto.vhoteamlead1@hearings.reform.hmcts.net";
+        
         workAllocationPage.EditWorkHourForUser(teamMemberUsername, DayOfWeek.Saturday, new TimeOnly(08, 00),
             new TimeOnly(17, 00));
 
@@ -21,16 +24,17 @@ public class EditWorkHoursTests : AdminWebUiTest
     }
 
     [Test]
-    public void AddNonAvailableHoursForExistingUser()
+    public async Task AddNonAvailableHoursForExistingUser()
     {
+        var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
+        await CreateVhTeamLeaderJusticeUserIfNotExist(teamMemberUsername);
+        
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
-
-        var teamMemberUsername = "auto.vhoteamlead1@hearings.reform.hmcts.net";
 
         // should be be a date far far into the future to avoid clashing with other local tests
         var startDateTime = DateTime.Today.AddDays(1).AddHours(10);

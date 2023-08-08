@@ -1,4 +1,5 @@
 using BookingsApi.Client;
+using BookingsApi.Contract.Requests.Enums;
 
 namespace UI.NUnitVersion.Admin;
 
@@ -52,5 +53,37 @@ public abstract class AdminWebUiTest
     protected virtual Task CleanUp()
     {
         return Task.CompletedTask;
+    }
+
+    protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
+    {
+        var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);
+        var justiceUser = matchedUsers.FirstOrDefault(x=> x.ContactEmail.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+        if (justiceUser == null)
+        {
+            justiceUser = await BookingsApiClient.AddJusticeUserAsync(new AddJusticeUserRequest()
+            {
+                Username = username,
+                ContactEmail = username,
+                ContactTelephone = null,
+                FirstName = "Auto",
+                LastName = "VHoteamleader",
+                Roles = new List<JusticeUserRole>()
+                {
+                    JusticeUserRole.VhTeamLead
+                },
+                CreatedBy = "automation test framework"
+            });
+        }
+
+        if (justiceUser.Deleted)
+        {
+            await BookingsApiClient.RestoreJusticeUserAsync(new RestoreJusticeUserRequest()
+            {
+                Id = justiceUser.Id, Username = justiceUser.Username
+            });
+        }
+
+        return justiceUser;
     }
 }
