@@ -60,10 +60,24 @@ public abstract class VhPage
         // actions needed to wait for page to load
     }
     
+    /// <summary>
+    /// Check if the page has any validation errors (i.e. is the govuk-error-summary class present)
+    /// </summary>
+    /// <returns></returns>
     protected bool HasFormValidationError()
     {
         return Driver.FindElements(By.ClassName("govuk-error-summary")).Count > 0 ||
                Driver.FindElements(By.ClassName("govuk-error-message")).Count > 0;
+    }
+
+    /// <summary>
+    /// Get all error messages on the page with the class govuk-error-message
+    /// </summary>
+    /// <returns></returns>
+    protected string GetValidationErrors()
+    {
+        var errors = Driver.FindElements(By.ClassName("govuk-error-message")).Select(x => x.Text);
+        return string.Join("; ", errors);
     }
 
     protected string GetText(By locator)

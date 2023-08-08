@@ -143,7 +143,8 @@ public class ParticipantsPage : VhAdminWebPage
 
         if (HasFormValidationError())
         {
-            throw new InvalidOperationException("Form validation error");
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
         }
         
         ClickAddParticipantAndWait();
