@@ -70,7 +70,7 @@ stages:
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
               - name: ApiClientConfiguration.BookingsApi.Url
-                value: "https://vh-bookings-api.${{ lower(replace(parameters.environment, 'stg', 'staging')) }}.platform.hmcts.net"
+                value: ${{ variables.bookingsApiUrl }}
 
             steps:
               - template: pipelines/templates/run-ui-test.yaml
