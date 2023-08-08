@@ -74,10 +74,12 @@ public abstract class AdminWebUiTest
                 },
                 CreatedBy = "automation test framework"
             });
+            TestContext.WriteLine($"Created user {justiceUser.ContactEmail}");
         }
 
         if (justiceUser.Deleted)
         {
+            TestContext.WriteLine("Restoring deleted user {justiceUser.ContactEmail}");
             await BookingsApiClient.RestoreJusticeUserAsync(new RestoreJusticeUserRequest()
             {
                 Id = justiceUser.Id, Username = justiceUser.Username
