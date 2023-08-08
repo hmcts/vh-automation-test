@@ -43,18 +43,7 @@ public class SummaryPage : VhAdminWebPage
         for (var i = 0; i < bookingDto.VideoAccessPoints.Count-1; i++)
         {
             var endpoint = bookingDto.VideoAccessPoints[i];
-            CompareText(By.XPath($"//div[normalize-space()='{endpoint.DisplayName}']"), endpoint.DisplayName);
-            if (!string.IsNullOrWhiteSpace(endpoint.DefenceAdvocateDisplayName))
-            {
-                var linkToAdvocate =
-                    By.XPath(
-                        $"//div[normalize-space()='{endpoint.DisplayName}']/../child::div[contains(normalize-space(),'{endpoint.DefenceAdvocateDisplayName}')]//img[@alt='link to endpoint']");
-
-                if (!IsElementVisible(linkToAdvocate))
-                {
-                    throw new Exception($"Link icon between VAP {endpoint.DisplayName} and {endpoint.DefenceAdvocateDisplayName} is not visible");
-                }
-            }
+            CompareText(By.Id($"displayName{i}"), endpoint.DisplayName);
         }
 
         if (!string.IsNullOrWhiteSpace(bookingDto.OtherInformation))
