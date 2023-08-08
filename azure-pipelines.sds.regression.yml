@@ -1,0 +1,60 @@
+trigger: none
+
+pr: none
+
+parameters:
+  - name: environment
+    type: string
+    default: Dev
+    values:
+      - Dev
+      - Test
+      - Stg
+
+pool:
+  name: "VH Self Hosted"
+
+stages:
+  ####################################################
+  # UI Testing. ######################################
+  - stage: Automation_Tests_${{ parameters.environment }}
+    displayName: Automation Tests ${{ parameters.environment }}
+    jobs:
+      - job: UI_Tests
+        displayName: UI Tests ${{ parameters.environment }}
+        variables:
+          - template: variables/${{ lower(parameters.environment) }}.yaml
+          - template: variables/shared.yaml
+          - name: env
+            value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
+          - name: subscriptionName
+            value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
+          - group: vh-automation-test-${{ parameters.environment }}
+          - group: Saucelabs
+          - group: KinlyConfiguration_${{ parameters.environment }}
+          - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
+            value: true
+          - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
+            value: $(Saucelabs:Username)
+          - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
+            value: $(Saucelabs:AccessKey)
+          - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
+            value: $(ConferencePhoneNumber)
+          - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+            value: ${{ variables.adminWebUrl }}
+          - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
+            value: ${{ variables.videoWebUrl }}
+          - name: SystemConfiguration.LogLocation
+            value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
+          - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
+            value: $(Build.ArtifactStagingDirectory)/TestResults/
+          - name: ApiClientConfiguration.BookingsApi.Url
+            value: ${{ variables.bookingsApiUrl }}
+
+        steps:
+          - template: pipelines/templates/run-ui-test.yaml
+            parameters:
+              environment: ${{ parameters.environment }}
+              projectPath: ${{ variables.projectPath }}
+              testRunTitle: "UI Tests ${{ parameters.environment }}"
+              subscriptionName: ${{ variables.subscriptionName }}

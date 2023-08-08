@@ -29,12 +29,10 @@ public class HearingSchedulePage : VhAdminWebPage
 
     public HearingAssignJudgePage GoToNextPage()
     {
-        var errors = Driver.FindElements(By.ClassName("govuk-error-message")).Select(x => x.Text);
-        var message = string.Join("; ", errors);
-
         if (HasFormValidationError())
         {
-            throw new InvalidOperationException($"Form has validation errors.", new Exception(message));
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
         }
 
         ClickElement(_nextButton);

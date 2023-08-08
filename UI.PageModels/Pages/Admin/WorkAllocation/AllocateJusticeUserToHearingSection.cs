@@ -73,7 +73,7 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
 
         if (!GetText(_actionsMessageContainer).Contains("Hearings have been updated"))
         {
-            throw new Exception("Hearings have not been updated");
+            throw new InvalidOperationException("Hearings have not been updated");
         }
     }
     

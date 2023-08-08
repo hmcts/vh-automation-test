@@ -47,7 +47,7 @@ public class EditHoursSection : VhAdminWebPage
         startTimeTextBox.SendKeys(GetLocaleTime(startTime));
         endTimeTextBox.SendKeys(GetLocaleTime(endTime));
         row.Click();
-        if (HasFormValidationError()) throw new Exception("Edit working hours form has validation errors");
+        if (HasFormValidationError()) throw new InvalidOperationException("Edit working hours form has validation errors");
         ClickElement(_saveWorkHoursBtn);
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_editWorkHoursSavedSuccess);
@@ -93,7 +93,7 @@ public class EditHoursSection : VhAdminWebPage
         WaitForApiSpinnerToDisappear();
         if (IsElementVisible(_editNonAvailableErrorMessage))
         {
-            throw new InvalidOperationException("Edit non available hours form has validation errors", new Exception(GetText(_editNonAvailableErrorMessage)));
+            throw new InvalidOperationException("Edit non available hours form has validation errors", new InvalidOperationException(GetText(_editNonAvailableErrorMessage)));
         }
         WaitForElementToBeVisible(_editNonAvailableHoursSavedSuccess);
 

@@ -1,0 +1,9 @@
+variables:
+  - name: env
+    value: stg
+  - name: adminWebUrl
+    value: "https://admin.staging.hearings.reform.hmcts.net"
+  - name: videoWebUrl
+    value: "https://video.staging.hearings.reform.hmcts.net"
+  - name: bookingsApiUrl
+    value: "https://vh-bookings-api.staging.platform.hmcts.net/"

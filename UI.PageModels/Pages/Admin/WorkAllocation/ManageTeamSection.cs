@@ -91,7 +91,7 @@ public class ManageTeamSection : VhAdminWebPage
         SelectRoles(roles);
 
         SaveForm();
-        if (HasFormValidationError()) throw new Exception("Add Justice User Form has validation error");
+        if (HasFormValidationError()) throw new InvalidOperationException("Add Justice User Form has validation error");
     }
 
     private void SelectRoles(List<JusticeUserRoles> roles)
@@ -128,7 +128,7 @@ public class ManageTeamSection : VhAdminWebPage
         // check row has the deleted badge
         row = GetRowForByUsername(username);
         var deletedBadge = row.FindElement(By.XPath("//span[@class='badge']"));
-        if(deletedBadge?.Text != "Deleted") throw new Exception("User was not deleted");
+        if(deletedBadge?.Text != "Deleted") throw new InvalidOperationException("User was not deleted");
     }
 
     public void RestoreTeamMember(string username)

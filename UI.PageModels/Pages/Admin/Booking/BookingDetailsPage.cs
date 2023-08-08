@@ -55,7 +55,7 @@ public class BookingDetailsPage : VhAdminWebPage
 
         if (!Uri.IsWellFormedUriString(quickLinkJoinUrl, UriKind.Absolute))
         {
-            throw new Exception("The quick link join url is not a valid url: " + quickLinkJoinUrl);
+            throw new InvalidOperationException("The quick link join url is not a valid url: " + quickLinkJoinUrl);
         }
 
         return quickLinkJoinUrl;
@@ -132,7 +132,7 @@ public class BookingDetailsPage : VhAdminWebPage
 
                 if (!IsElementVisible(linkToAdvocate))
                 {
-                    throw new Exception($"Link icon between VAP {endpoint.DisplayName} and {endpoint.DefenceAdvocateDisplayName} is not visible");
+                    throw new InvalidOperationException($"Link icon between VAP {endpoint.DisplayName} and {endpoint.DefenceAdvocateDisplayName} is not visible");
                 }
             }
         }
@@ -143,7 +143,7 @@ public class BookingDetailsPage : VhAdminWebPage
         var text = GetText(element);
         if (!text.Equals(expectedText, StringComparison.InvariantCultureIgnoreCase))
         {
-            throw new Exception($"Expected text: {expectedText} but was {text}");
+            throw new InvalidOperationException($"Expected text: {expectedText} but was {text}");
         }
     }
     

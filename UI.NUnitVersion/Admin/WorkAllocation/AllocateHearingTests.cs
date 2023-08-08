@@ -8,6 +8,9 @@ public class AllocateHearingTests : AdminWebUiTest
     [Test]
     public async Task AllocateAJusticeUserToAHearing()
     {
+        var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
+        var justiceUser = await CreateVhTeamLeaderJusticeUserIfNotExist(teamMemberUsername);
+        
         await BookBasicHearing();
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -17,8 +20,8 @@ public class AllocateHearingTests : AdminWebUiTest
         var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
         manageWorkAllocationPage.AllocateJusticeUserToHearing(
             caseNumber: _hearing.Cases[0].Number,
-            justiceUserDisplayName: "Auto VHoteamleader1",
-            justiceUserUsername: "auto.vhoteamlead1@hearings.reform.hmcts.net");
+            justiceUserDisplayName: justiceUser.FullName,
+            justiceUserUsername: justiceUser.Username);
 
         Assert.Pass();
     }

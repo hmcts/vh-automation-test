@@ -1,0 +1,9 @@
+variables:
+  - name: env
+    value: "dev"
+  - name: adminWebUrl
+    value: "https://vh-admin-web.dev.platform.hmcts.net"
+  - name: videoWebUrl
+    value: "https://vh-video-web.dev.platform.hmcts.net"
+  - name: bookingsApiUrl
+    value: "https://vh-bookings-api.dev.platform.hmcts.net/"
