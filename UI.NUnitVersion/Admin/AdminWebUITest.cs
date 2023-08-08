@@ -17,9 +17,7 @@ public abstract class AdminWebUiTest
     [OneTimeSetUp]
     protected virtual async Task OneTimeSetup()
     {
-        var config = ConfigRootBuilder.Build();
-        EnvConfigSettings = config.GetSection("SystemConfiguration:EnvironmentConfigSettings")
-            .Get<EnvironmentConfigSettings>();
+        EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
         TestDataConfig = ConfigRootBuilder.TestDataConfigurationInstance();
         // _testReporter = new TestReporter();

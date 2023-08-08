@@ -7,7 +7,7 @@ public static class ConfigRootBuilder
 {
     private const string UserSecretId = "e6b90eee-2685-42f6-972e-6d17e1b85a3b";
 
-    public static IConfigurationRoot Build(string userSecretId = UserSecretId, bool useSecrets = true)
+    private static IConfigurationRoot Build(string userSecretId = UserSecretId, bool useSecrets = true)
     {
         var builder = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
@@ -25,7 +25,7 @@ public static class ConfigRootBuilder
     private static ApiClientConfiguration? _apiClientConfigInstance;
     private static TestDataConfiguration? _testDataConfigurationInstance;
 
-    public static IConfigurationRoot Instance(string userSecretId = UserSecretId, bool useSecrets = true) =>
+    private static IConfigurationRoot Instance(string userSecretId = UserSecretId, bool useSecrets = true) =>
         _instance ??= Build(userSecretId, useSecrets);
     
     public static EnvironmentConfigSettings EnvConfigInstance(string userSecretId = UserSecretId, bool useSecrets = true){
