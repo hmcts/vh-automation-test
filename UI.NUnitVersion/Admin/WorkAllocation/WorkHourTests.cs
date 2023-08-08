@@ -1,9 +1,38 @@
 namespace UI.NUnitVersion.Admin.WorkAllocation;
 
 [Category("Daily")]
-public class EditWorkHoursTests : AdminWebUiTest
+public class WorkHourTests : AdminWebUiTest
 {
     [Test]
+    [Order(1)]
+    public void UploadValidWorkHours()
+    {
+        var driver = VhDriver.GetDriver();
+        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+
+        var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
+        workAllocationPage.UploadWorkHoursFile(Path.Join("TestData", "GoodWorkHours.csv"));
+        Assert.Pass();
+    }
+
+    [Test]
+    [Order(1)]
+    public void UploadValidNonAvailabilityHours()
+    {
+        var driver = VhDriver.GetDriver();
+        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+
+        var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
+        workAllocationPage.UploadNonWorkHoursFile(Path.Join("TestData", "GoodNonAvailabilityHours.csv"));
+        Assert.Pass();
+    }
+    
+    [Test]
+    [Order(2)]
     public async Task EditWorkHoursForExistingUser()
     {
         var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
@@ -24,6 +53,7 @@ public class EditWorkHoursTests : AdminWebUiTest
     }
 
     [Test]
+    [Order(2)]
     public async Task AddNonAvailableHoursForExistingUser()
     {
         var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
