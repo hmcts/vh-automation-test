@@ -34,7 +34,7 @@ public class HearingSchedulePage : VhAdminWebPage
 
         if (HasFormValidationError())
         {
-            throw new InvalidOperationException($"Form has validation errors.", new Exception(message));
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
         }
 
         ClickElement(_nextButton);

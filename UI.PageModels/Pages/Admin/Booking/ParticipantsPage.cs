@@ -89,6 +89,11 @@ public class ParticipantsPage : VhAdminWebPage
 
         if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
 
+        if (HasFormValidationError())
+        {
+            throw new InvalidOperationException("Form validation error");
+        }
+
         ClickAddParticipantAndWait();
     }
 
@@ -136,6 +141,11 @@ public class ParticipantsPage : VhAdminWebPage
 
         if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
 
+        if (HasFormValidationError())
+        {
+            throw new InvalidOperationException("Form validation error");
+        }
+        
         ClickAddParticipantAndWait();
     }
 

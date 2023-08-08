@@ -34,7 +34,7 @@ steps:
       SecretsFilter: "azuread--tenantid"
 
   - task: AzureKeyVault@1
-    displayName: "Azure Key Vault: vh-bookings-api-dev"
+    displayName: "Azure Key Vault: vh-bookings-api-${{ lower(parameters.environment) }}"
     inputs:
       azureSubscription: "${{ parameters.subscriptionName }}"
       KeyVaultName: "vh-bookings-api-${{ lower(parameters.environment) }}"

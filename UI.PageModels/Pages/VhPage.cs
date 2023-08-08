@@ -51,7 +51,7 @@ public abstract class VhPage
         Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations);
         if (axeResult.Violations.Any(x => x.Impact != "minor"))
         {
-            throw new Exception("Accessibility check failed. Please check the report for more details.");
+            throw new InvalidOperationException("Accessibility check failed. Please check the report for more details.");
         }
     }
     

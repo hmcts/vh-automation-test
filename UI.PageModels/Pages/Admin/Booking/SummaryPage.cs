@@ -78,7 +78,7 @@ public class SummaryPage : VhAdminWebPage
         var text = GetText(element);
         if (!text.Equals(expectedText, StringComparison.InvariantCultureIgnoreCase))
         {
-            throw new Exception($"Expected text: {expectedText} but was {text}");
+            throw new InvalidOperationException($"Expected text: {expectedText} but was {text}");
         }
     }
 

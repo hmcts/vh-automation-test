@@ -30,7 +30,7 @@ public class GetAudioFilePage : VhAdminWebPage
         WaitForApiSpinnerToDisappear();
         if (IsElementVisible(_getLinkErrorMessage))
         {
-            throw new Exception($"There was an error getting the link for case number {caseNumber}. The linked error message appeared: {GetText(_getLinkErrorMessage)}");
+            throw new InvalidOperationException($"There was an error getting the link for case number {caseNumber}. The linked error message appeared: {GetText(_getLinkErrorMessage)}");
         }
         ClickElement(_copyLinkButton);
         WaitForElementToBeVisible(_linkCopiedMessage);
