@@ -77,6 +77,10 @@ steps:
     inputs:
       command: test
       projects: "${{ parameters.projectpath }}/*.csproj"
-      arguments: "--configuration Release --filter TestCategory=${{ parameters.testCategory }}"
       publishTestResults: true
       testRunTitle: "${{ parameters.testRunTitle }}"
+      ${{ if eq(parameters.testCategory, '') }}:
+        arguments: "--configuration Release --filter"
+      ${{ else }}:
+        arguments: "--configuration Release --filter TestCategory=${{ parameters.testCategory }}"
+        
