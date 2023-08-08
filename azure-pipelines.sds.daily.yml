@@ -28,7 +28,6 @@ parameters:
       - Dev
       - Test
       - Stg
-      - Prod
 
 pool:
   name: "VH Self Hosted"
@@ -43,12 +42,14 @@ stages:
           - job: UI_Tests
             displayName: UI Tests ${{ parameters.environment }}
             variables:
+              - template: variables/${{ lower(parameters.environment) }}.yaml
+              - template: variables/shared.yaml
               - name: env
                 value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
               - name: subscriptionName
                 value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
-              - name: projectPath
-                value: "UI.NUnitVersion"
+              # - name: projectPath
+              #   value:  ${{ variables.projectPath }}
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_${{ parameters.environment }}
@@ -60,6 +61,10 @@ stages:
                 value: $(Saucelabs:AccessKey)
               - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
                 value: $(ConferencePhoneNumber)
+              - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+                value: ${{ variables.adminWebUrl }}
+              - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
+                value: ${{ variables.videoWebUrl }}
               - name: SystemConfiguration.LogLocation
                 value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
@@ -103,6 +108,10 @@ stages:
                 value: $(Saucelabs:AccessKey)
               - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
                 value: $(ConferencePhoneNumber)
+              - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+                value: ${{ variables.adminWebUrl }}
+              - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
+                value: ${{ variables.videoWebUrl }}
               - name: SystemConfiguration.LogLocation
                 value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
