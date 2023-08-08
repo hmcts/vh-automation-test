@@ -7,3 +7,5 @@ variables:
     value: "https://video.staging.hearings.reform.hmcts.net"
   - name: bookingsApiUrl
     value: "https://vh-bookings-api.staging.platform.hmcts.net/"
+  - name: audioLinkCaseNumber
+    value: "Test Test Tuesday"

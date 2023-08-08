@@ -1,5 +1,6 @@
 using BookingsApi.Client;
 using BookingsApi.Contract.Requests.Enums;
+using UI.NUnitVersion.Configuration;
 
 namespace UI.NUnitVersion.Admin;
 
@@ -7,6 +8,7 @@ public abstract class AdminWebUiTest
 {
     public readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
     protected EnvironmentConfigSettings EnvConfigSettings;
+    protected TestDataConfiguration TestDataConfig;
     protected BookingsApiClient BookingsApiClient;
 
     protected IVhDriver VhDriver;
@@ -19,6 +21,7 @@ public abstract class AdminWebUiTest
         EnvConfigSettings = config.GetSection("SystemConfiguration:EnvironmentConfigSettings")
             .Get<EnvironmentConfigSettings>();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
+        TestDataConfig = ConfigRootBuilder.TestDataConfigurationInstance();
         // _testReporter = new TestReporter();
         // _testReporter.SetupReport();
     }
