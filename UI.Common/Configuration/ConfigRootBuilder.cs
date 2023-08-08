@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using UI.NUnitVersion.Configuration;
 
 namespace UI.Common.Configuration;
 
@@ -6,7 +7,7 @@ public static class ConfigRootBuilder
 {
     private const string UserSecretId = "e6b90eee-2685-42f6-972e-6d17e1b85a3b";
 
-    public static IConfigurationRoot Build(string userSecretId = UserSecretId, bool useSecrets = true)
+    private static IConfigurationRoot Build(string userSecretId = UserSecretId, bool useSecrets = true)
     {
         var builder = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
@@ -22,8 +23,9 @@ public static class ConfigRootBuilder
     private static IConfigurationRoot? _instance;
     private static EnvironmentConfigSettings? _envConfigInstance;
     private static ApiClientConfiguration? _apiClientConfigInstance;
+    private static TestDataConfiguration? _testDataConfigurationInstance;
 
-    public static IConfigurationRoot Instance(string userSecretId = UserSecretId, bool useSecrets = true) =>
+    private static IConfigurationRoot Instance(string userSecretId = UserSecretId, bool useSecrets = true) =>
         _instance ??= Build(userSecretId, useSecrets);
     
     public static EnvironmentConfigSettings EnvConfigInstance(string userSecretId = UserSecretId, bool useSecrets = true){
@@ -40,5 +42,14 @@ public static class ConfigRootBuilder
         _apiClientConfigInstance = new ApiClientConfiguration();
         Instance(userSecretId, useSecrets).GetSection("ApiClientConfiguration").Bind(_apiClientConfigInstance);
         return _apiClientConfigInstance;
+    }
+    
+    public static TestDataConfiguration TestDataConfigurationInstance(string userSecretId = UserSecretId,
+        bool useSecrets = true)
+    {
+        if (_testDataConfigurationInstance != null) return _testDataConfigurationInstance;
+        _testDataConfigurationInstance = new TestDataConfiguration();
+        Instance(userSecretId, useSecrets).GetSection("TestDataConfiguration").Bind(_testDataConfigurationInstance);
+        return _testDataConfigurationInstance;
     }
 }

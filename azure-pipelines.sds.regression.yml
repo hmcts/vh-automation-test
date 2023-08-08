@@ -50,6 +50,8 @@ stages:
             value: $(Build.ArtifactStagingDirectory)/TestResults/
           - name: ApiClientConfiguration.BookingsApi.Url
             value: ${{ variables.bookingsApiUrl }}
+          - name: TestDataConfiguration.AudioLinkCaseNumber
+            value: ${{ variables.audioLinkCaseNumber }}
 
         steps:
           - template: pipelines/templates/run-ui-test.yaml

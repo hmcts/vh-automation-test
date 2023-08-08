@@ -27,9 +27,7 @@ public abstract class VideoWebUiTest
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        var config = ConfigRootBuilder.Build();
-        EnvConfigSettings = config.GetSection("SystemConfiguration:EnvironmentConfigSettings")
-            .Get<EnvironmentConfigSettings>();
+        EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
     }
 

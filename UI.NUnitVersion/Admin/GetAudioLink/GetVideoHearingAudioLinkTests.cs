@@ -12,7 +12,7 @@ public class GetVideoHearingAudioLinkTests : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var getAudioFilePage = dashboardPage.GoToGetAudioFileLink();
-        var caseNumber = "VIH 9831";
+        var caseNumber = TestDataConfig.AudioLinkCaseNumber;
         getAudioFilePage.EnterVideoHearingCaseDetailsAndCopyLink(caseNumber);
         
         Assert.Pass();

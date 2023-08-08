@@ -10,8 +10,7 @@ public class RemoteChromeVhDriver : IVhDriver
     public RemoteChromeVhDriver(string platform = "Windows 11", string browserVersion = "latest",
         string username = null)
     {
-        var envConfigSettings = ConfigRootBuilder.Build().GetSection("SystemConfiguration:EnvironmentConfigSettings")
-            .Get<EnvironmentConfigSettings>();
+        var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         var chromeOptions = new ChromeOptions
         {
             PlatformName = platform,
@@ -27,7 +26,7 @@ public class RemoteChromeVhDriver : IVhDriver
         var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null
             ? BuildName.GetBuildNameForLocal().Trim()
             : BuildName.GetBuildNameForSauceLabs(chromeOptions.BrowserName, chromeOptions.BrowserVersion,
-                chromeOptions.PlatformName).Trim();
+                chromeOptions.PlatformName, GetEnvName()).Trim();
         if(envConfigSettings.EnableAccessibilityCheck) buildName += "-Accessibility";
 
         var sauceLabsConfiguration = envConfigSettings.SauceLabsConfiguration;
@@ -60,7 +59,28 @@ public class RemoteChromeVhDriver : IVhDriver
         remoteDriver.FileDetector = new LocalFileDetector();
         _driver = remoteDriver;
     }
+    
+    private string GetEnvName()
+    {
+        var apiClientConfiguration = ConfigRootBuilder.ApiClientConfigurationInstance();
+        if (apiClientConfiguration.BookingsApi.ResourceId.Contains(".dev."))
+        {
+            return "Dev";
+        }
+        
+        if (apiClientConfiguration.BookingsApi.ResourceId.Contains(".test."))
+        {
+            return "Test";
+        }
 
+        if (apiClientConfiguration.BookingsApi.ResourceId.Contains(".staging."))
+        {
+            return "Staging";
+        }
+
+        return null;
+    }
+    
     public IWebDriver GetDriver()
     {
         if (_driver == null) throw new NullReferenceException("Driver has not been initialised");

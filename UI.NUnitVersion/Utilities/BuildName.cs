@@ -5,12 +5,12 @@ public static class BuildName
     private static string _buildNameSauceLabs;
     private static string _buildNameLocal;
 
-    public static string GetBuildNameForSauceLabs(string browserName, string browserVersion, string platformName)
+    public static string GetBuildNameForSauceLabs(string browserName, string browserVersion, string platformName, string environmentName = "Dev")
     {
         if (!string.IsNullOrWhiteSpace(_buildNameSauceLabs)) return _buildNameSauceLabs;
         var attemptNumber = GetAttemptNumber();
         _buildNameSauceLabs =
-            $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Now:dd-mm-yy-hh-mm}     [ {browserName} | {platformName} | {browserVersion} ] {attemptNumber}";
+            $"{GetBuildDefinition()}{GetGitVersionNumber()} {DateTime.Now:dd-mm-yy-hh-mm}  [ {environmentName} | {browserName} | {platformName} | {browserVersion} ] {attemptNumber}";
         return _buildNameSauceLabs;
     }
 
