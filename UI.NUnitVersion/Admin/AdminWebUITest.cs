@@ -85,6 +85,8 @@ public abstract class AdminWebUiTest
                 Id = justiceUser.Id, Username = justiceUser.Username
             });
         }
+        
+        TestContext.WriteLine($"Using justice user for test {justiceUser.ContactEmail}");
 
         return justiceUser;
     }
