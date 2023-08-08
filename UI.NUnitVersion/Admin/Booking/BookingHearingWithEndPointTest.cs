@@ -9,6 +9,7 @@ public class BookingHearingWithEndPointTest : AdminWebUiTest
     public void BookAHearingEndPoint()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
+        //CreateHearingEnPoint Participant date for end point
         var bookingDto = HearingTestData.CreateHearingEndPoint(scheduledDateTime: date);
         
         var driver = VhDriver.GetDriver();
