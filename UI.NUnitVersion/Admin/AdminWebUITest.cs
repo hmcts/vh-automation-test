@@ -58,7 +58,8 @@ public abstract class AdminWebUiTest
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
         var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);
-        var justiceUser = matchedUsers.FirstOrDefault(x=> x.ContactEmail.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+        var justiceUser = matchedUsers.FirstOrDefault(x =>
+            x.ContactEmail.Equals(username, StringComparison.InvariantCultureIgnoreCase));
         if (justiceUser == null)
         {
             justiceUser = await BookingsApiClient.AddJusticeUserAsync(new AddJusticeUserRequest()
@@ -85,7 +86,17 @@ public abstract class AdminWebUiTest
                 Id = justiceUser.Id, Username = justiceUser.Username
             });
         }
-        
+
+        if (!justiceUser.IsVhTeamLeader)
+        {
+            TestContext.WriteLine("Updated justice user to be a Team Leader");
+            await BookingsApiClient.EditJusticeUserAsync(new EditJusticeUserRequest()
+            {
+                Id = justiceUser.Id, Username = justiceUser.Username,
+                Roles = new List<JusticeUserRole>() {JusticeUserRole.VhTeamLead}
+            });
+        }
+
         TestContext.WriteLine($"Using justice user for test {justiceUser.ContactEmail}");
 
         return justiceUser;
