@@ -61,7 +61,7 @@ stages:
                 parameters:
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
-                  testCategory: Once
+                  testCategory: Daily
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
                   subscriptionName: ${{ variables.subscriptionName }}
 
