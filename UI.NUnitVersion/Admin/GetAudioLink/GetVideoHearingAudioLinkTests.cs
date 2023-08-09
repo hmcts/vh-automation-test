@@ -3,6 +3,7 @@ namespace UI.NUnitVersion.Admin.GetAudioLink;
 public class GetVideoHearingAudioLinkTests : AdminWebUiTest
 {
     [Category("Daily")]
+    [Category("Once")]
     [Test]
     public void GetAnAudioLinkForAVideoHearing()
     {
@@ -14,7 +15,7 @@ public class GetVideoHearingAudioLinkTests : AdminWebUiTest
         var getAudioFilePage = dashboardPage.GoToGetAudioFileLink();
         var caseNumber = TestDataConfig.AudioLinkCaseNumber;
         getAudioFilePage.EnterVideoHearingCaseDetailsAndCopyLink(caseNumber);
-        
+
         Assert.Pass();
     }
 }
