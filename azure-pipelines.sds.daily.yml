@@ -44,31 +44,11 @@ stages:
             variables:
               - template: variables/${{ lower(parameters.environment) }}.yaml
               - template: variables/shared.yaml
-              - name: env
-                value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
-              - name: subscriptionName
-                value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
-              # - name: projectPath
-              #   value:  ${{ variables.projectPath }}
+                parameters:
+                  environment: ${{ parameters.environment }}
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_${{ parameters.environment }}
-              - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
-                value: true
-              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
-                value: $(Saucelabs:Username)
-              - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
-                value: $(Saucelabs:AccessKey)
-              - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
-                value: $(ConferencePhoneNumber)
-              - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
-                value: ${{ variables.adminWebUrl }}
-              - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
-                value: ${{ variables.videoWebUrl }}
-              - name: SystemConfiguration.LogLocation
-                value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
-              - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
-                value: $(Build.ArtifactStagingDirectory)/TestResults/
               - name: ApiClientConfiguration.BookingsApi.Url
                 value: ${{ variables.bookingsApiUrl }}
               - name: TestDataConfiguration.AudioLinkCaseNumber
@@ -87,12 +67,10 @@ stages:
           - job: A11Y_Tests
             displayName: A11Y Tests ${{ parameters.environment }}
             variables:
-              - name: env
-                value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
-              - name: subscriptionName
-                value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
-              - name: projectPath
-                value: "UI.NUnitVersion"
+              - template: variables/${{ lower(parameters.environment) }}.yaml
+              - template: variables/shared.yaml
+                parameters:
+                  environment: ${{ parameters.environment }}
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_${{ parameters.environment }}

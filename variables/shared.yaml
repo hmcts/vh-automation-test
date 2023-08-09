@@ -1,3 +1,29 @@
+parameters:
+  - name: environment
+    type: string
+    default: "Dev"
+
 variables:
   - name: projectPath
     value: "UI.NUnitVersion"
+  - name: env
+    value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
+  - name: subscriptionName
+    value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
+  - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
+    value: true
+  - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
+    value: $(Saucelabs:Username)
+  - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
+    value: $(Saucelabs:AccessKey)
+  - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
+    value: $(ConferencePhoneNumber)
+  - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+    value: ${{ variables.adminWebUrl }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
+    value: ${{ variables.videoWebUrl }}
+
+  - name: SystemConfiguration.LogLocation
+    value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
+  - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
+    value: $(Build.ArtifactStagingDirectory)/TestResults/
