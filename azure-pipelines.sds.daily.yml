@@ -29,7 +29,7 @@ parameters:
       - Test
       - Stg
 
-name: ${{ parameters.environment }}_UI_Tests_$(Date:yyyyMMdd)$(Rev:.r)
+name: ${{ parameters.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
   name: "VH Self Hosted"
