@@ -55,6 +55,9 @@ steps:
 
   - task: gitversion/execute@0
     displayName: Determine Version
+    inputs:
+      useConfigFile: true
+      configFilePath: "GitVersion.yml"
 
   - task: FileTransform@1
     displayName: Transform App Settings
