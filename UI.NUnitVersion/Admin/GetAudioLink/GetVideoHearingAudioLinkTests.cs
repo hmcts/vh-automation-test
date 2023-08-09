@@ -14,7 +14,7 @@ public class GetVideoHearingAudioLinkTests : AdminWebUiTest
         var getAudioFilePage = dashboardPage.GoToGetAudioFileLink();
         var caseNumber = TestDataConfig.AudioLinkCaseNumber;
         getAudioFilePage.EnterVideoHearingCaseDetailsAndCopyLink(caseNumber);
-        
+
         Assert.Pass();
     }
 }
