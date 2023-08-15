@@ -151,7 +151,7 @@ public abstract class VhPage
         }
         catch (ElementClickInterceptedException ex)
         {
-            if (ex.Message.Contains("id=\"waitPopup\""))
+            if (ex.Message.Contains("waitPopup"))
             {
                 WaitForApiSpinnerToDisappear();
                 ClickElement(locator);
@@ -171,7 +171,7 @@ public abstract class VhPage
 
     private void CloseAllToasts()
     {
-        Driver.FindElements(By.Id("notification-toastr-participant-added-dismiss")).ToList()
+        Driver.FindElements(By.XPath($"(//*[contains(@id,'notification-toastr-')])")).ToList()
             .ForEach(x => x.Click());
     }
 
