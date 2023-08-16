@@ -109,7 +109,7 @@ public static class HearingTestData
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
         
-        var bookingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime: date);
+        var bookingDto = CreateHearingDtoWithOnlyAJudge(scheduledDateTime: hearingDateTime);
         var request = new BookNewHearingRequest()
         {
             Cases = new List<CaseRequest>()

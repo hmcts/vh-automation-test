@@ -16,7 +16,11 @@ public class ParticipantWaitingRoomPage : VhVideoWebPage
 
     public ParticipantWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
-        WaitForElementToBeClickable(_startPrivateConsultationBtn);
+    }
+
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_startPrivateConsultationBtn, 60);
     }
 
     private readonly By StartVideoHearingButton = By.XPath("//button[contains(text(),'Start video hearing')]");
