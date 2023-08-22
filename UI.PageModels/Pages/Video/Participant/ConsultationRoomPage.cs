@@ -10,6 +10,11 @@ public class ConsultationRoomPage : VhVideoWebPage
     {
     }
 
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(LeaveButtonDesktop);
+    }
+
     public static By InviteParticipants => By.ClassName("phone");
     public static By ParticipantsTick => By.CssSelector(".member-group+.member-group .yellow fa-icon");
     public static By ConfirmLeaveButton => By.Id("consultation-leave-button");

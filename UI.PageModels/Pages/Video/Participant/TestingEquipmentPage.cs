@@ -1,12 +1,14 @@
-﻿using OpenQA.Selenium;
-
-namespace UI.PageModels.Pages.Video.Participant;
+﻿namespace UI.PageModels.Pages.Video.Participant;
 
 public class TestingEquipmentPage : VhVideoWebPage
 {
     private readonly By _continueBtn = By.Id("continue-btn");
 
     public TestingEquipmentPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    {
+    }
+    
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForElementToBeClickable(_continueBtn);
     }

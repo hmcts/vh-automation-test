@@ -10,6 +10,9 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     private readonly By _pauseHearing = By.Id("pause-hearing-desktop");
 
     public JudgeHearingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    { }
+    
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForElementToBeInvisible(_pauseHearing, DefaultWaitTime);
     }

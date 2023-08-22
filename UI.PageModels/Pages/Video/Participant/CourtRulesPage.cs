@@ -10,6 +10,11 @@ public class CourtRulesPage : VhVideoWebPage
     {
     }
 
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_courtRulesContinueBtn);
+    }
+
     public DeclarationPage AcceptCourtRules()
     {
         ClickElement(_courtRulesContinueBtn);

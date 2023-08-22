@@ -6,6 +6,7 @@ public class EditBookingTest : AdminWebUiTest
 {
     private string _hearingIdString;
 
+    [Category("Daily")]
     [Test]
     public void should_add_new_participant_after_booking()
     {

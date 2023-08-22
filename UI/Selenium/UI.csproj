@@ -48,7 +48,7 @@
     <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
     <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
     <PackageReference Include="TextCopy" Version="6.2.0" />
-    <PackageReference Include="WebDriverManager" Version="2.16.1" />
+    <PackageReference Include="WebDriverManager" Version="2.17.1" />
   </ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings.json">

@@ -12,6 +12,11 @@ public class GetReadyForTheHearingIntroductionPage : VhVideoWebPage
     public GetReadyForTheHearingIntroductionPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
     }
+    
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_nextButton);
+    }
 
     public CheckEquipmentPage GoToEquipmentCheck()
     {
