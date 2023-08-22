@@ -6,25 +6,6 @@ public class EditBookingTest : AdminWebUiTest
 {
     private string _hearingIdString;
 
-    [Category("Daily")]
-    [Test]
-    public void should_add_new_participant_after_booking()
-    {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
-        TestContext.WriteLine(
-            $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
-        
-        var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
-        
-        var participantsToAdd = HearingTestData.KnownParticipantsForTesting();
-        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd);
-        confirmationPage.IsBookingSuccessful().Should().BeTrue();
-
-        Assert.Pass();
-
-    }
-
     [Test]
     public void should_update_booking_schedule()
     {

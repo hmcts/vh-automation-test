@@ -14,6 +14,8 @@ public class BookingExistingParticipantDto
     public string Title { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    
+    public string FullName => $"{Title} {FirstName} {LastName}";
 
     public static BookingExistingParticipantDto Individual(GenericTestParty party, GenericTestRole role,
         string contactEmail, string username, string displayName, string title, string firstName, string lastName)
