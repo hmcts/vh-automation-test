@@ -14,7 +14,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     
     protected override void ConfirmPageHasLoaded()
     {
-        WaitForElementToBeInvisible(_pauseHearing, DefaultWaitTime);
+        WaitForElementToBeVisible(_pauseHearing, DefaultWaitTime);
     }
 
     public JudgeWaitingRoomPage CloseHearing()

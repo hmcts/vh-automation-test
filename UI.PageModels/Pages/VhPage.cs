@@ -31,6 +31,7 @@ public abstract class VhPage
         AccessibilityReportFilePath = config.AccessibilityReportFilePath;
         AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
         if (driver is RemoteWebDriver) Locale = "en-US";
+        ConfirmPageHasLoaded();
         CheckAccessibility();
     }
 
@@ -49,7 +50,7 @@ public abstract class VhPage
             htmlFilePath = Path.Join(stagingDir, $"{testName}_AccessibilityReport.html");
         }
         Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations);
-        if (axeResult.Violations.Any(x => x.Impact != "minor"))
+        if (Array.Exists(axeResult.Violations, x => x.Impact != "minor"))
         {
             throw new InvalidOperationException("Accessibility check failed. Please check the report for more details.");
         }
@@ -135,6 +136,12 @@ public abstract class VhPage
         new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
             .Until(ExpectedConditions.ElementIsVisible(locator));
     }
+    
+    protected void WaitForElementToBeVisible(By locator, int timeOut)
+    {
+        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
+            .Until(ExpectedConditions.ElementIsVisible(locator));
+    }
 
     protected void WaitForElementToBeClickable(By locator)
     {
@@ -142,6 +149,12 @@ public abstract class VhPage
             .Until(ExpectedConditions.ElementToBeClickable(locator));
     }
 
+    protected void WaitForElementToBeClickable(By locator, int timeOut)
+    {
+        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
+            .Until(ExpectedConditions.ElementToBeClickable(locator));
+    }
+    
     protected void ClickElement(By locator)
     {
         WaitForElementToBeClickable(locator);
@@ -199,18 +212,7 @@ public abstract class VhPage
         var selectElement = new SelectElement(Driver.FindElement(locator));
         selectElement.SelectByIndex(index);
     }
-
-    protected void WaitForElementToBeVisible(By locator, int timeOut)
-    {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-            .Until(ExpectedConditions.ElementIsVisible(locator));
-    }
-
-    protected void WaitForElementToBeClickable(By locator, int timeOut)
-    {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-            .Until(ExpectedConditions.ElementToBeClickable(locator));
-    }
+    
 
     protected void WaitForElementToBeInvisible(By locator, int timeOut)
     {

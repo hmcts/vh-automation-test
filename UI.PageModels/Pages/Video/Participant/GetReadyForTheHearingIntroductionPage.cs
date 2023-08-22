@@ -15,7 +15,7 @@ public class GetReadyForTheHearingIntroductionPage : VhVideoWebPage
     
     protected override void ConfirmPageHasLoaded()
     {
-        WaitForElementToBeClickable(_nextButton);
+        WaitForElementToBeClickable(_nextButton, 60); // cold start sometimes takes a while
     }
 
     public CheckEquipmentPage GoToEquipmentCheck()

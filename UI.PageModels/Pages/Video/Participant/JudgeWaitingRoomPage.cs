@@ -42,6 +42,12 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     {
         return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//label"));
     }
+    
+    public void WaitForParticipantToBeConnected(string fullName)
+    {
+        var path = $"//dt[normalize-space()='{fullName}']/following-sibling::dd//label[normalize-space()='Connected']";
+        WaitForElementToBeVisible(By.XPath(path));
+    }
 
     public string GetVideoAccessPointStatus(string accessPointName)
     {
@@ -52,5 +58,12 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     {
         var connectedLabel = Driver.FindElements(By.XPath("//label[normalize-space()='Connected']"));
         return connectedLabel.Count;
+    }
+
+    public void ClearParticipantAddedNotification(string displayName)
+    {
+        var path =
+            $"//div[descendant::span[text() = '{displayName}'] and descendant::span[text() = 'Participant has been added to the hearing.']]/following-sibling::div//button[.='OK']";
+        ClickElement(By.XPath(path));
     }
 }
