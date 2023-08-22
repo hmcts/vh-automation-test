@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-
-namespace UI.PageModels.Pages.Video.QuickLink;
+﻿namespace UI.PageModels.Pages.Video.QuickLink;
 
 /// <summary>
 ///     This represents the Quick Link Join Your Hearing page.

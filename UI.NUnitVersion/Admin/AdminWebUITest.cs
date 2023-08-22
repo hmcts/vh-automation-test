@@ -1,5 +1,5 @@
 using BookingsApi.Client;
-using BookingsApi.Contract.Requests.Enums;
+using BookingsApi.Contract.V1.Requests.Enums;
 using UI.NUnitVersion.Configuration;
 
 namespace UI.NUnitVersion.Admin;

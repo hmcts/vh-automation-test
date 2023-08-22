@@ -1,5 +1,3 @@
-using OpenQA.Selenium;
-
 namespace UI.PageModels.Pages.Video.Participant;
 
 public class SeeAndHearVideoPage : VhVideoWebPage
@@ -9,6 +7,11 @@ public class SeeAndHearVideoPage : VhVideoWebPage
 
     public SeeAndHearVideoPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+    }
+    
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_yesRadioButton);
     }
 
     public CourtRulesPage SelectYesToVisualAndAudioClarity()

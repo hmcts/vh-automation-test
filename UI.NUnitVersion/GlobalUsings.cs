@@ -4,7 +4,6 @@ global using FluentAssertions;
 global using NUnit.Framework.Interfaces;
 global using UI.NUnitVersion.TestData;
 global using UI.PageModels.Pages.Admin.WorkAllocation;
-global using Microsoft.Extensions.Configuration;
 global using NUnit.Framework;
 
 global using OpenQA.Selenium;
@@ -20,5 +19,5 @@ global using System.Globalization;
 global using UI.NUnitVersion.Utilities;
 global using UI.PageModels.Dtos;
 
-global using BookingsApi.Contract.Requests;
-global using BookingsApi.Contract.Responses;
+global using BookingsApi.Contract.V1.Requests;
+global using BookingsApi.Contract.V1.Responses;

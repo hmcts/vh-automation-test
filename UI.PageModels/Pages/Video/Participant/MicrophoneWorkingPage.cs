@@ -10,6 +10,11 @@ public class MicrophoneWorkingPage : VhPage
     public MicrophoneWorkingPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
     }
+    
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_microphoneYesRadioButton);
+    }
 
     public SeeAndHearVideoPage SelectMicrophoneYes()
     {

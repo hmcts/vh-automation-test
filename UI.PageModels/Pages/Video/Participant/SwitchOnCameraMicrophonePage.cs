@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-
-namespace UI.PageModels.Pages.Video.Participant;
+﻿namespace UI.PageModels.Pages.Video.Participant;
 
 public class SwitchOnCameraMicrophonePage : VhVideoWebPage
 {
@@ -12,6 +10,11 @@ public class SwitchOnCameraMicrophonePage : VhVideoWebPage
 
     public SwitchOnCameraMicrophonePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+    }
+    
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_switchOnButton);
     }
 
     public TestingEquipmentPage SwitchOnCameraMicrophone()

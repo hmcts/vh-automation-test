@@ -1,5 +1,4 @@
-﻿using OpenQA.Selenium;
-using UI.PageModels.Pages.Video.Participant;
+﻿using UI.PageModels.Pages.Video.Participant;
 
 namespace UI.PageModels.Pages.Video.QuickLink;
 

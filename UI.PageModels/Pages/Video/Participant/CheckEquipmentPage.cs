@@ -10,6 +10,11 @@ public class CheckEquipmentPage : VhVideoWebPage
     {
     }
 
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeClickable(_continue);
+    }
+
     public SwitchOnCameraMicrophonePage GoToSwitchOnCameraMicrophonePage()
     {
         ClickElement(_continue);
