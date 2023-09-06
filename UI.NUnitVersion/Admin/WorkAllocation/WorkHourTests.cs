@@ -70,5 +70,18 @@ public class WorkHourTests : AdminWebUiTest
         var startDateTime = DateTime.Today.AddDays(1).AddHours(10);
         var endDateTime = startDateTime.AddHours(1);
         workAllocationPage.AddNonAvailableDayForUser(teamMemberUsername, startDateTime, endDateTime);
+        
+        Assert.Pass();
+    }
+
+    protected override async Task CleanUp()
+    {
+        var username = WorkAllocationTestData.JusticeUserUsername;
+        var nonAvailableHours = await BookingsApiClient.GetVhoNonAvailabilityHoursAsync(username);
+        foreach (var nonAvailability in nonAvailableHours.Where(x=> x.StartTime > DateTime.Today))
+        {
+            await BookingsApiClient.DeleteVhoNonAvailabilityHoursAsync(username, nonAvailability.Id);
+        }
+        TestContext.WriteLine($"Removed justice user {username} non availability hours");
     }
 }
