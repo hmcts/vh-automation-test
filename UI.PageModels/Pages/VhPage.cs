@@ -169,8 +169,7 @@ public abstract class VhPage
                 WaitForApiSpinnerToDisappear();
                 ClickElement(locator);
             }
-
-            if (ex.Message.Contains("<vh-toast"))
+            else if (ex.Message.Contains("<vh-toast"))
             {
                 CloseAllToasts();
                 ClickElement(locator);
