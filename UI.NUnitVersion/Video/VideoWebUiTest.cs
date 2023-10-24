@@ -37,9 +37,9 @@ public abstract class VideoWebUiTest
     [SetUp]
     protected virtual void Setup()
     {
-        //Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
-        //AdminWebDriver = CreateDriver("AdminWeb");
-        // _testReporter.SetupTest(TestContext.CurrentContext.Test.Name);   
+        Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
+        AdminWebDriver = CreateDriver("AdminWeb");
+        //_testReporter.SetupTest(TestContext.CurrentContext.Test.Name);   
     }
 
     [TearDown]
@@ -47,11 +47,11 @@ public abstract class VideoWebUiTest
     {
         CleanUp();
         var testResult = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
-        /*
+   
         AdminWebDriver.PublishTestResult(testResult);
         AdminWebDriver.Terminate();
         AdminWebDriver = null;
-        */
+        
         ParticipantDrivers.Values.ToList().ForEach(x =>
         {
             x.Driver.PublishTestResult(testResult);
