@@ -7,6 +7,7 @@ public class ApiClientConfiguration
     public string ClientId { get;set; }
     public string ClientSecret { get;set; }
     public ApiClientDetails BookingsApi { get;set; }
+    public ApiClientDetails VideoApi { get;set; }
 }
 
 public class ApiClientDetails

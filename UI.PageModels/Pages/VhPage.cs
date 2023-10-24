@@ -31,13 +31,11 @@ public abstract class VhPage
         AccessibilityReportFilePath = config.AccessibilityReportFilePath;
         AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
         if (driver is RemoteWebDriver) Locale = "en-US";
-        ConfirmPageHasLoaded();
         CheckAccessibility();
     }
 
     private void CheckAccessibility()
     {
-        ConfirmPageHasLoaded();
         if(!AccessibilityCheck || IsLoginPage || IgnoreAccessibilityForPage) return;
         var axeBuilder = new AxeBuilder(Driver);
         axeBuilder.WithOutputFile(AccessibilityReportFilePath);

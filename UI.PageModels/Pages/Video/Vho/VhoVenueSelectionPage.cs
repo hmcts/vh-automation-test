@@ -8,12 +8,7 @@ public class VhoVenueSelectionPage : VhVideoWebPage
     public VhoVenueSelectionPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
     }
-
-    protected override void ConfirmPageHasLoaded()
-    {
-        WaitForDropdownListToPopulate(By.XPath("//ng-select[@id='venue-allocation-list']"));
-    }
-
+    
     public CommandCentrePage SelectHearingsByVenues(List<string> venues)
     {
         var input = By.XPath("//ng-select[@id='venue-allocation-list']//input[@type='text']");

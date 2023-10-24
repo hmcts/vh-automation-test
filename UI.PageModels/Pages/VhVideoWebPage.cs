@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages;
@@ -21,5 +20,15 @@ public abstract class VhVideoWebPage : VhPage
         }
 
         return new VideoWebLogoutPage(Driver, DefaultWaitTime);
+    }
+
+    public void OpenChatWithVHO() => ClickElement(By.XPath("//img[@id='open-chat-arrow']"));
+
+    public void SendAMessageToVHO(string message)
+    {
+        var textArea = By.XPath("//textarea[@id='new-message-box']");
+        EnterText(textArea, message, false);
+        var sendButton = By.XPath("//button[@id='send-message-btn']");
+        ClickElement(sendButton);
     }
 }

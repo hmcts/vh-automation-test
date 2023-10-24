@@ -149,4 +149,25 @@ public static class HearingTestData
         };
         return request;
     }
+    
+    public static BookNewHearingRequest CreateNewRequestDtoWithKnownParticipants(bool remote = false, DateTime? scheduledDateTime = null, params BookingExistingParticipantDto[] existingParticipantDtos)
+    {
+        var request = CreateNewRequestDtoWithOnlyAJudge(remote, scheduledDateTime);
+        request.ScheduledDuration = 5;
+        foreach (var participant in existingParticipantDtos)
+        {
+            request.Participants.Add(new ParticipantRequest
+            {
+                FirstName = participant.FirstName,
+                LastName = participant.LastName,
+                DisplayName = participant.DisplayName,
+                Username = participant.Username,
+                CaseRoleName = participant.Party.ToString(),
+                HearingRoleName = participant.Role == GenericTestRole.LitigantInPerson ? "Litigant in person" : participant.Role.ToString(),
+                ContactEmail = participant.ContactEmail,
+                TelephoneNumber = "1234567890"
+            });
+        }
+        return request;
+    }
 }
