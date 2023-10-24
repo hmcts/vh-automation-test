@@ -44,7 +44,7 @@ public class VhoDashboard : VideoWebUiTest
         var vhoVenueSelectionPage = LoginAsVho(HearingTestData.VhOfficerUsername, EnvConfigSettings.UserPassword);
  
         // CSO will be able to see hearings at selected venue(s)
-        // OR selected CSO(s) TODO: Need to add this functionality in setup and allocated the created hearing to a CSO
+        // OR selected CSO(s) TODO: This can be done with further enhancement, but will require additional work in Setup to allocate the created hearing to a cso
         var commandCentrePage = vhoVenueSelectionPage.SelectHearingsByVenues(new List<string> { _hearing.HearingVenueName});
        
         // Hearings will be displayed in chronological order as per VIH-10224
