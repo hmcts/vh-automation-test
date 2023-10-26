@@ -11,7 +11,8 @@ public class ParticipantWaitingRoomPage : VhVideoWebPage
     private readonly By _joinPrivateMeetingButton = By.Id("openJoinPCButton");
     private readonly By _acceptConsultationButton = By.Id("notification-toastr-invite-accept");
     private readonly By _continueJoiningPrivateMeetingButton = By.Id("continue-btn");
-
+    private readonly By openChatButton = By.XPath("//img[@id='open-chat-arrow']");
+    private readonly By closeChatButton = By.XPath("//img[@id='close-chat-arrow']");
     public ParticipantWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
     }
@@ -63,4 +64,21 @@ public class ParticipantWaitingRoomPage : VhVideoWebPage
     {
         return new ParticipantHearingRoomPage(Driver, DefaultWaitTime);
     }
+
+    public ParticipantWaitingRoomPage OpenChatWithVHO()
+    {
+        if(!IsElementVisible(closeChatButton) && IsElementVisible(openChatButton))
+            ClickElement(openChatButton);
+        return this;
+    } 
+    
+    public ParticipantWaitingRoomPage SendAMessageToVHO(string message)
+    {
+        var textArea = By.XPath("//textarea[@id='new-message-box']");
+        EnterText(textArea, message, false);
+        var sendButton = By.XPath("//button[@id='send-new-message-btn']");
+        ClickElement(sendButton);
+        return this;
+    }
+
 }

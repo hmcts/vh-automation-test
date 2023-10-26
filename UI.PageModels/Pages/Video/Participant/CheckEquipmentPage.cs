@@ -12,11 +12,12 @@ public class CheckEquipmentPage : VhVideoWebPage
 
     protected override void ConfirmPageHasLoaded()
     {
-        WaitForElementToBeClickable(_continue);
+        WaitForElementToBeVisible(By.XPath("//h1[contains(text(), 'confirm your equipment is working')]"));
     }
 
     public SwitchOnCameraMicrophonePage GoToSwitchOnCameraMicrophonePage()
     {
+        ConfirmPageHasLoaded();
         ClickElement(_continue);
         return new SwitchOnCameraMicrophonePage(Driver, DefaultWaitTime);
     }

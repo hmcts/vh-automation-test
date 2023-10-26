@@ -20,9 +20,9 @@ public class ParticipantHearingListPage : VhVideoWebPage
         WaitForElementToBeClickable(_checkEquipmentBtn);
     }
 
-    public GetReadyForTheHearingIntroductionPage SelectHearing(string caseName)
+    public GetReadyForTheHearingIntroductionPage SelectHearing(string conferenceID)
     {
-        var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");
+        var selectHearingLocator = By.XPath($"//button[contains(@id, '{conferenceID}')]");
         WaitForElementToBeVisible(selectHearingLocator, 60);
         ClickElement(selectHearingLocator);
         return new GetReadyForTheHearingIntroductionPage(Driver, DefaultWaitTime);

@@ -12,11 +12,12 @@ public class CourtRulesPage : VhVideoWebPage
 
     protected override void ConfirmPageHasLoaded()
     {
-        WaitForElementToBeClickable(_courtRulesContinueBtn);
+        WaitForElementToBeVisible(By.XPath("//h1[contains(text(), 'Court rules')]"));
     }
 
     public DeclarationPage AcceptCourtRules()
     {
+        ConfirmPageHasLoaded();
         ClickElement(_courtRulesContinueBtn);
         return new DeclarationPage(Driver, DefaultWaitTime);
     }

@@ -8,10 +8,9 @@ using VideoApi.Client;
 
 namespace UI.NUnitVersion.Video;
 
-public abstract class VideoWebUiTest
+public abstract class VideoWebUiTest : CommonUiTest
 {
     public readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
-    protected BookingsApiClient BookingsApiClient;
     protected VideoApiClient VideoApiClient;
 
     /// <summary>
@@ -39,7 +38,7 @@ public abstract class VideoWebUiTest
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         AdminWebDriver = CreateDriver("AdminWeb");
-        //_testReporter.SetupTest(TestContext.CurrentContext.Test.Name);   
+        
     }
 
     [TearDown]
@@ -74,7 +73,7 @@ public abstract class VideoWebUiTest
 
     protected VhoVenueSelectionPage LoginAsVho(string username, string password)
     {
-        var participant = InitVideoWebParticipant(username, JourneyType.Vho);
+        var participant = InitVideoWebVho(username);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsVho(username, password);
     }
@@ -125,6 +124,19 @@ public abstract class VideoWebUiTest
         ParticipantDrivers[username] = participant;
         return participant;
     }
+    
+    private VideoWebParticipant InitVideoWebVho(string username)
+    {
+        var vhDriver = CreateDriver(username);
+        var participant = new VideoWebParticipant
+        {
+            Driver = vhDriver,
+            Username = username,
+            JourneyType = JourneyType.Vho
+        };
+        return participant;
+    }
+    
 
     private IVhDriver CreateDriver(string username = null)
     {
