@@ -52,6 +52,6 @@ public class CommandCentreInstantMessaging : CommandCentrePage
         // CSO will be able to receive a reply to the IM
         var messagesReceived = GetMessagesReceived();
         if(!messagesReceived.Last().Text.Contains(messageToCso))
-            throw new ValidationException("The message sent by the participant was received by the CSO");
+            throw new ValidationException("The message sent by the participant was not received by the CSO");
     }
 }

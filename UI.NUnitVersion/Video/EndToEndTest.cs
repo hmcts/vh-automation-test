@@ -131,7 +131,6 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: _conference.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
-        AdminWebDriver.Terminate();
     }
     
     protected override async Task CleanUp()

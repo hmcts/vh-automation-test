@@ -36,6 +36,7 @@ public abstract class VhPage
 
     private void CheckAccessibility()
     {
+        ConfirmPageHasLoaded();
         if(!AccessibilityCheck || IsLoginPage || IgnoreAccessibilityForPage) return;
         var axeBuilder = new AxeBuilder(Driver);
         axeBuilder.WithOutputFile(AccessibilityReportFilePath);
