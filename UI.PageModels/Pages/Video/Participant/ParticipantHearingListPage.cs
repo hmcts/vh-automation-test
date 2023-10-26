@@ -20,7 +20,7 @@ public class ParticipantHearingListPage : VhVideoWebPage
         WaitForElementToBeClickable(_checkEquipmentBtn);
     }
 
-    public GetReadyForTheHearingIntroductionPage SelectHearing(string conferenceID)
+    public GetReadyForTheHearingIntroductionPage SelectHearing(Guid conferenceID)
     {
         var selectHearingLocator = By.XPath($"//button[contains(@id, '{conferenceID}')]");
         WaitForElementToBeVisible(selectHearingLocator, 60);

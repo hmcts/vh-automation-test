@@ -49,7 +49,7 @@ public class EndToEndTest : VideoWebUiTest
             var participantPassword = EnvConfigSettings.UserPassword;
             var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
             var participantWaitingRoom = participantHearingList
-                .SelectHearing(_conference.Id.ToString()).GoToEquipmentCheck()
+                .SelectHearing(_conference.Id).GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
                 .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();
