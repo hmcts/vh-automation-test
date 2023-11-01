@@ -1,4 +1,3 @@
-using BookingsApi.Client;
 using UI.NUnitVersion.Models;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
@@ -73,7 +72,7 @@ public abstract class VideoWebUiTest : CommonUiTest
 
     protected VhoVenueSelectionPage LoginAsVho(string username, string password)
     {
-        var participant = InitVideoWebVho(username);
+        var participant = InitVideoWebParticipant(username, JourneyType.Vho);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsVho(username, password);
     }
@@ -125,19 +124,6 @@ public abstract class VideoWebUiTest : CommonUiTest
         return participant;
     }
     
-    private VideoWebParticipant InitVideoWebVho(string username)
-    {
-        var vhDriver = CreateDriver(username);
-        var participant = new VideoWebParticipant
-        {
-            Driver = vhDriver,
-            Username = username,
-            JourneyType = JourneyType.Vho
-        };
-        return participant;
-    }
-    
-
     private IVhDriver CreateDriver(string username = null)
     {
         return EnvConfigSettings.RunOnSaucelabs

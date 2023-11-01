@@ -25,11 +25,10 @@ public class CommandCentrePage : VhVideoWebPage
         return new VhoVenueSelectionPage(Driver, DefaultWaitTime);
     }
 
-    public CommandCentrePage SelectConferenceFromList(string conferenceId)
+    public void SelectConferenceFromList(string conferenceId)
     {
         var element = By.XPath($"//div[@id='{conferenceId}-summary']");
         ClickElement(element);
-        return this;
     }
 
     public ReadOnlyCollection<IWebElement> GetAllConferencesStartTimes() => Driver.FindElements(By.XPath("//app-vho-hearing-list//div[contains(@id, '-time')]"));
@@ -57,10 +56,9 @@ public class CommandCentrePage : VhVideoWebPage
         return new CommandCentreHearing(Driver, _defaultWaitTime);
     }
 
-    public CommandCentrePage ReloadPage()
+    public void ReloadPage()
     {
         Driver.Navigate().Refresh();
-        return this;
     } 
     
     public void ValidateHearingsAreInChronologicalOrder()

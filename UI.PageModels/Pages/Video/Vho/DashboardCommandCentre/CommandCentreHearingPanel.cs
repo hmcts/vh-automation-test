@@ -32,7 +32,11 @@ public class CommandCentreHearing: CommandCentrePage
         var participantStatus = ParticipantStatus(testParticipantId);
         //Can be slow to propagate the status change
         if (participantStatus == "Not signed in")
-            ReloadPage().SelectConferenceFromList(conferenceId).ClickHearingsButton();
+        {
+            ReloadPage();
+            SelectConferenceFromList(conferenceId);
+            ClickHearingsButton();
+        }
         
         if (!(ParticipantStatus(testParticipantId) == "Available" || ParticipantStatus(testParticipantId) == "Joining"))
             throw new ValidationException("Participant state is not set to 'Available' or 'Joining' after login");
@@ -47,19 +51,25 @@ public class CommandCentreHearing: CommandCentrePage
     public void ValidateLiveHearingStatusScenario(string conferenceId)
     {
         if(HearingStatus() == "Not Started")
-            ReloadPage()
-                .SelectConferenceFromList(conferenceId)
-                .ClickHearingsButton();
+        {
+            ReloadPage();
+            SelectConferenceFromList(conferenceId);
+            ClickHearingsButton();
+        }
+            
         if (HearingStatus() != "In Session")
             throw new ValidationException("Hearing state is not set to 'In Session' after start");
     }   
     
     public void ValidatePausedHearingStatusScenario(string conferenceId)
     {
-        if(HearingStatus() == "In Session")
-            ReloadPage()
-                .SelectConferenceFromList(conferenceId)
-                .ClickHearingsButton();
+        if (HearingStatus() == "In Session")
+        {
+            ReloadPage();
+            SelectConferenceFromList(conferenceId);
+            ClickHearingsButton();
+        }
+        
         if (HearingStatus() != "Paused")
             throw new ValidationException("Hearing state is not set to 'Paused' after pause");
     }

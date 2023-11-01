@@ -13,7 +13,7 @@ public class EndToEndTest : VideoWebUiTest
     [Category("Daily")]
     [Test]
     [Category("a11y")]
-    public async Task BookAHearingAndLogInAsJudgeParticipantsAndVHOAndMonitorFromDashboard()
+    public async Task BookAHearingAndLogInAsJudgeParticipantsAndVhoAndMonitorFromDashboard()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDto(scheduledDateTime:hearingScheduledDateAndTime);
@@ -21,9 +21,10 @@ public class EndToEndTest : VideoWebUiTest
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         await BookHearing(hearingDto);
-        
+
         //Login
         var vhoVenueSelectionPage = LoginAsVho(HearingTestData.VhOfficerUsername, EnvConfigSettings.UserPassword);
+        ParticipantDrivers[HearingTestData.VhOfficerUsername].VhVideoWebPage = vhoVenueSelectionPage;
  
         // vho will be able to see hearings at selected venue(s) OR selected vho(s)
         // // VHO will go back to venue selection then select a hearing to monitor based on the allocated CSO
@@ -99,8 +100,8 @@ public class EndToEndTest : VideoWebUiTest
         judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
 
         // sign out of each hearing
+
         SignOutAllUsers();
-        
         Assert.Pass();
     }
 
