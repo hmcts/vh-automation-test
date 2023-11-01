@@ -7,5 +7,7 @@ variables:
     value: "https://vh-video-web.dev.platform.hmcts.net"
   - name: bookingsApiUrl
     value: "https://vh-bookings-api.dev.platform.hmcts.net/"
+  - name: videoApiUrl
+    value: "https://vh-video-api.dev.platform.hmcts.net/"
   - name: audioLinkCaseNumber
     value: "VIH 9831"

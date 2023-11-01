@@ -1,16 +1,16 @@
-using BookingsApi.Client;
 using UI.NUnitVersion.Models;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
 using UI.PageModels.Pages.Video.QuickLink;
 using UI.PageModels.Pages.Video.Vho;
+using VideoApi.Client;
 
 namespace UI.NUnitVersion.Video;
 
-public abstract class VideoWebUiTest
+public abstract class VideoWebUiTest : CommonUiTest
 {
     public readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
-    protected BookingsApiClient BookingsApiClient;
+    protected VideoApiClient VideoApiClient;
 
     /// <summary>
     ///     This property is used to book a hearing and publish the success to the test reporter
@@ -29,6 +29,7 @@ public abstract class VideoWebUiTest
     {
         EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
+        VideoApiClient = await VhApiClientFactory.CreateVideoApiClient();
     }
 
     [SetUp]
@@ -36,18 +37,19 @@ public abstract class VideoWebUiTest
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         AdminWebDriver = CreateDriver("AdminWeb");
-        // _testReporter.SetupTest(TestContext.CurrentContext.Test.Name);   
+        
     }
 
     [TearDown]
     public void TearDown()
     {
         CleanUp();
-        var testResult = TestContext.CurrentContext.Result.Outcome.Status ==
-                         TestStatus.Passed;
+        var testResult = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
+   
         AdminWebDriver.PublishTestResult(testResult);
         AdminWebDriver.Terminate();
         AdminWebDriver = null;
+        
         ParticipantDrivers.Values.ToList().ForEach(x =>
         {
             x.Driver.PublishTestResult(testResult);
@@ -121,7 +123,7 @@ public abstract class VideoWebUiTest
         ParticipantDrivers[username] = participant;
         return participant;
     }
-
+    
     private IVhDriver CreateDriver(string username = null)
     {
         return EnvConfigSettings.RunOnSaucelabs

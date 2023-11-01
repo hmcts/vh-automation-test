@@ -31,7 +31,6 @@ public abstract class VhPage
         AccessibilityReportFilePath = config.AccessibilityReportFilePath;
         AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
         if (driver is RemoteWebDriver) Locale = "en-US";
-        ConfirmPageHasLoaded();
         CheckAccessibility();
     }
 

@@ -17,7 +17,8 @@ public class DeclarationPage : VhVideoWebPage
     public static By DeclarationContinueBtn => By.Id("nextButton");
 
     public ParticipantWaitingRoomPage AcceptDeclaration()
-    {
+    {        
+        ConfirmPageHasLoaded();
         ClickElement(DeclarationCheckBox);
         ClickElement(DeclarationContinueBtn);
         return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime);

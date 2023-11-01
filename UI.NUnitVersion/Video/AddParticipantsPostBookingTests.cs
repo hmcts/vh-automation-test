@@ -17,11 +17,12 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
-        
+        var conference = VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false).Result;
+
         // log in as judge, go to waiting room and wait for alerts
         var judgeUsername = hearingDto.Judge.Username;
         var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
-        var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(hearingDto.CaseName);
+        var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
         
         var participantsToAdd = new List<BookingExistingParticipantDto>(){HearingTestData.KnownParticipantsForTesting()[0]};
@@ -35,7 +36,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
             var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
-            var participantWaitingRoom = participantHearingList.SelectHearing(hearingDto.CaseName).GoToEquipmentCheck()
+            var participantWaitingRoom = participantHearingList.SelectHearing(conference.Id).GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
                 .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();

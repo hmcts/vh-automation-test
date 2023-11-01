@@ -9,6 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="BookingsApi.Client" Version="1.46.5" />
+        <PackageReference Include="FluentAssertions" Version="6.11.0" />
         <PackageReference Include="Selenium.Axe" Version="4.0.13" />
         <PackageReference Include="Selenium.Support" Version="4.10.0" />
         <PackageReference Include="Selenium.WebDriver" Version="4.10.0" />
@@ -19,5 +21,7 @@
     <ItemGroup>
       <ProjectReference Include="..\UI.Common\UI.Common.csproj" />
     </ItemGroup>
+
+
 
 </Project>

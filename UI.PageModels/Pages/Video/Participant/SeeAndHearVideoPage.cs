@@ -16,6 +16,7 @@ public class SeeAndHearVideoPage : VhVideoWebPage
 
     public CourtRulesPage SelectYesToVisualAndAudioClarity()
     {
+        ConfirmPageHasLoaded();
         ClickElement(_yesRadioButton);
         ClickElement(_continueBtn);
         return new CourtRulesPage(Driver, DefaultWaitTime);

@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using UI.PageModels.Pages.Video;
 
 namespace UI.PageModels.Pages;

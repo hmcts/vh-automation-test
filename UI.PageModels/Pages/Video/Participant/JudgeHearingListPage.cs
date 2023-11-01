@@ -12,10 +12,9 @@ public class JudgeHearingListPage : VhVideoWebPage
         WaitForElementToBeClickable(_checkEquipmentBtn);
     }
 
-    public JudgeWaitingRoomPage SelectHearing(string caseName)
+    public JudgeWaitingRoomPage SelectHearing(Guid conferenceId)
     {
-        var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");
-        WaitForElementToBeVisible(selectHearingLocator, 60);
+        var selectHearingLocator = By.XPath($"//button[contains(@id,'{conferenceId}')]");
         ClickElement(selectHearingLocator);
         return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
     }
