@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using UI.PageModels.Pages.Video.Participant;
 using UI.PageModels.Pages.Video.Vho;
 
@@ -22,10 +21,10 @@ public class VideoWebLoginPage : VhLoginPage
         return new ParticipantHearingListPage(Driver, DefaultWaitTime);
     }
 
-    public StaffMemberHearingListPage LogInAsStaffMember(string username, string password)
+    public StaffMemberVenueListPage LogInAsStaffMember(string username, string password)
     {
         EnterLoginDetails(username, password);
-        return new StaffMemberHearingListPage(Driver, DefaultWaitTime);
+        return new StaffMemberVenueListPage(Driver, DefaultWaitTime);
     }
 
     public VhoVenueSelectionPage LogInAsVho(string username, string password)

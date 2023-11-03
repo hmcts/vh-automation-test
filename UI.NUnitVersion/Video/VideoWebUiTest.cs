@@ -69,6 +69,13 @@ public abstract class VideoWebUiTest : CommonUiTest
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsJudge(username, password);
     }
+    
+    protected PageModels.Pages.Video.Participant.StaffMemberVenueListPage LoginAsStaffMember(string username, string password)
+    {
+        var participant = InitVideoWebParticipant(username, JourneyType.StaffMember);
+        var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
+        return loginPage.LogInAsStaffMember(username, password);
+    }
 
     protected VhoVenueSelectionPage LoginAsVho(string username, string password)
     {
@@ -151,4 +158,8 @@ public abstract class VideoWebUiTest : CommonUiTest
             videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);
         }
     }
+}
+
+public class StaffMemberVenueListPage
+{
 }
