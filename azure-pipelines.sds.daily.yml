@@ -86,6 +86,8 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/axe-results.html
               - name: ApiClientConfiguration.BookingsApi.Url
                 value: ${{ variables.bookingsApiUrl }}
+              - name: ApiClientConfiguration.VideoApi.Url
+                value: ${{ variables.videoApiUrl }}
 
             steps:
               - template: pipelines/templates/run-ui-test.yaml

@@ -11,9 +11,10 @@ public class EndToEndTest : VideoWebUiTest
     private JusticeUserResponse _justiceUser;
 
     [Category("Daily")]
-    [Test]
     [Category("a11y")]
-    public async Task BookAHearingAndLogInAsJudgeParticipantsAndVhoAndMonitorFromDashboard()
+    [Test]
+    [Description("Book a hearing. Allocate to a CSO. Log in as a judge, and 4 participants. Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
+    public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDto(scheduledDateTime:hearingScheduledDateAndTime);

@@ -69,6 +69,13 @@ public abstract class VideoWebUiTest : CommonUiTest
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsJudge(username, password);
     }
+    
+    protected StaffMemberVenueListPage LoginAsStaffMember(string username, string password)
+    {
+        var participant = InitVideoWebParticipant(username, JourneyType.StaffMember);
+        var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
+        return loginPage.LogInAsStaffMember(username, password);
+    }
 
     protected VhoVenueSelectionPage LoginAsVho(string username, string password)
     {

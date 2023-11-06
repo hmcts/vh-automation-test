@@ -2,9 +2,20 @@
 
 public class StaffMemberHearingListPage : VhVideoWebPage
 {
+    private readonly By _checkEquipmentBtn = By.Id("check-equipment-btn");
+
     public StaffMemberHearingListPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    { }
+
+    protected override void ConfirmPageHasLoaded()
     {
+        WaitForElementToBeClickable(_checkEquipmentBtn);
     }
 
-    public static By HealingListRow => By.XPath("//tr[@class='govuk-table__row']");
+    public JudgeWaitingRoomPage SelectHearing(Guid conferenceId)
+    {
+        var selectHearingLocator = By.XPath($"//button[contains(@id,'{conferenceId}')]");
+        ClickElement(selectHearingLocator);
+        return new StaffMemberWaitingRoomPage(Driver, DefaultWaitTime);
+    }
 }
