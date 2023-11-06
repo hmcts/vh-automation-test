@@ -70,7 +70,7 @@ public abstract class VideoWebUiTest : CommonUiTest
         return loginPage.LogInAsJudge(username, password);
     }
     
-    protected PageModels.Pages.Video.Participant.StaffMemberVenueListPage LoginAsStaffMember(string username, string password)
+    protected StaffMemberVenueListPage LoginAsStaffMember(string username, string password)
     {
         var participant = InitVideoWebParticipant(username, JourneyType.StaffMember);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
@@ -158,8 +158,4 @@ public abstract class VideoWebUiTest : CommonUiTest
             videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);
         }
     }
-}
-
-public class StaffMemberVenueListPage
-{
 }
