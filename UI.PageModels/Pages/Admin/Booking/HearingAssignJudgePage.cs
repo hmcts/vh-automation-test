@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-
-namespace UI.PageModels.Pages.Admin.Booking;
+﻿namespace UI.PageModels.Pages.Admin.Booking;
 
 public class HearingAssignJudgePage : VhAdminWebPage
 {
