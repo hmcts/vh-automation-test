@@ -138,12 +138,12 @@ public class EndToEndTest : VideoWebUiTest
         _justiceUser = await CreateVhTeamLeaderJusticeUserIfNotExist(teamMemberUsername);
         _conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false);
         
-        // var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
-        //
-        // manageWorkAllocationPage.AllocateJusticeUserToHearing(
-        //     caseNumber: _conference.CaseNumber,
-        //     justiceUserDisplayName: _justiceUser.FullName,
-        //     justiceUserUsername: _justiceUser.Username);
+        var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
+        
+        manageWorkAllocationPage.AllocateJusticeUserToHearing(
+            caseNumber: _conference.CaseNumber,
+            justiceUserDisplayName: _justiceUser.FullName,
+            justiceUserUsername: _justiceUser.Username);
     }
     
     protected override async Task CleanUp()
