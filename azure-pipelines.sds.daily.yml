@@ -53,6 +53,8 @@ stages:
               - group: KinlyConfiguration_${{ parameters.environment }}
               - name: ApiClientConfiguration.BookingsApi.Url
                 value: ${{ variables.bookingsApiUrl }}
+              - name: ApiClientConfiguration.VideoApi.Url
+                value: ${{ variables.videoApiUrl }}
               - name: TestDataConfiguration.AudioLinkCaseNumber
                 value: ${{ variables.audioLinkCaseNumber }}
 
