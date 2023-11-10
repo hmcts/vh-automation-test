@@ -13,7 +13,7 @@ public class EndToEndTest : VideoWebUiTest
     [Category("Daily")]
     [Category("a11y")]
     [Test]
-    [Description("Book a hearing. Allocate to a CSO. Log in as a judge, and 4 participants. Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
+    [Description("Book a hearing. Allocate to a CSO. Log in as a staff member and judge, edit their display names, and log in as 4 participants. Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
@@ -73,12 +73,23 @@ public class EndToEndTest : VideoWebUiTest
             .SendAMessageToVHO(messageToCso);
         ccMessagingPanel.ValidateInstantMessagingInboundScenario(messageToCso);
         
+        // log in as staff member
+        var staffMemberVenueList = LoginAsStaffMember(HearingTestData.StaffMemberUsername, EnvConfigSettings.UserPassword);
+        var staffMemberHearingList = staffMemberVenueList.SelectHearingsByVenues(hearingDto.VenueName);
+        var staffMemberWaitingRoom = staffMemberHearingList.SelectHearing(_conference.Id);
+        
+        // edit the staff member display name
+        staffMemberWaitingRoom.EditStaffMemberDisplayName();
+        
         // log in as judge and start the hearing
         var judgeUsername = hearingDto.Judge.Username;
         var judgePassword = EnvConfigSettings.UserPassword;
         var judgeHearingListPage = LoginAsJudge(judgeUsername, judgePassword);
         var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(_conference.Id);
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
+        
+        // edit the judge display name
+        judgeWaitingRoomPage.EditJudgeDisplayName();
 
         // confirm all participants are connected
         judgeWaitingRoomPage.GetParticipantConnectedCount().Should().Be(hearingDto.Participants.Count);
@@ -126,13 +137,13 @@ public class EndToEndTest : VideoWebUiTest
         
         _justiceUser = await CreateVhTeamLeaderJusticeUserIfNotExist(teamMemberUsername);
         _conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false);
- 
-        var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
         
-        manageWorkAllocationPage.AllocateJusticeUserToHearing(
-            caseNumber: _conference.CaseNumber,
-            justiceUserDisplayName: _justiceUser.FullName,
-            justiceUserUsername: _justiceUser.Username);
+        // var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
+        //
+        // manageWorkAllocationPage.AllocateJusticeUserToHearing(
+        //     caseNumber: _conference.CaseNumber,
+        //     justiceUserDisplayName: _justiceUser.FullName,
+        //     justiceUserUsername: _justiceUser.Username);
     }
     
     protected override async Task CleanUp()

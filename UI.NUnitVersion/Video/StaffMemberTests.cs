@@ -1,11 +1,9 @@
-using UI.PageModels.Pages.Admin.Booking;
-
 namespace UI.NUnitVersion.Video;
 
 public class StaffMemberTests : VideoWebUiTest
 {
     [Category("Daily")]
-    [Description("Book a hearing. Log into hearing with a staffmember account. Start and stop the hearing.")]
+    [Description("Book a hearing. Log into hearing with a staffmember account. Edit their display name. Start and stop the hearing.")]
     [Test]
     public async Task LogIntoHearingWithStaffMember()
     {
@@ -18,6 +16,9 @@ public class StaffMemberTests : VideoWebUiTest
         var staffMemberVenueList = LoginAsStaffMember(HearingTestData.StaffMemberUsername, EnvConfigSettings.UserPassword);
         var staffMemberHearingList = staffMemberVenueList.SelectHearingsByVenues(hearing.HearingVenueName);
         var statffMemberWaitingRoom = staffMemberHearingList.SelectHearing(conference.Id);
+        
+        // edit display name
+        statffMemberWaitingRoom.EditStaffMemberDisplayName();
 
         var smHearingRoomPage = statffMemberWaitingRoom.StartOrResumeHearing();
         statffMemberWaitingRoom = smHearingRoomPage.CloseHearing();

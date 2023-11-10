@@ -10,6 +10,12 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         By.XPath("//button[normalize-space()='Start video hearing' or normalize-space()='Resume video hearing']");
     
     private readonly By _enterConsultationRoomBtn = By.Id("joinPCButton");
+    private readonly By _editJudgeDisplayNameLink = By.Id("edit-judge-link");
+    private readonly By _editJudgeDisplayNameTextBox = By.Id("new-judge-name");
+    private readonly By _editJudgeDisplayNameSaveButton = By.Id("editJudgeDisplayName");
+    private readonly By _editStaffMemberDisplayNameLink = By.Id("edit-staff-member-link");
+    private readonly By _editStaffMemberDisplayNameTextBox = By.Id("new-staff-member-name");
+    private readonly By _editStaffMemberDisplayNameSaveButton = By.Id("editStaffmemberDisplayName");
 
     public JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -65,5 +71,21 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         var path =
             $"//div[descendant::span[text() = '{displayName}'] and descendant::span[text() = 'Participant has been added to the hearing.']]/following-sibling::div//button[.='OK']";
         ClickElement(By.XPath(path));
+    }
+
+    public void EditStaffMemberDisplayName()
+    {
+        ClickElement(_editStaffMemberDisplayNameLink);
+        const string newName = "Edited Staff Member Name";
+        EnterText(_editStaffMemberDisplayNameTextBox, newName);
+        ClickElement(_editStaffMemberDisplayNameSaveButton);
+    }
+
+    public void EditJudgeDisplayName()
+    {
+        ClickElement(_editJudgeDisplayNameLink);
+        const string newName = "Edited Judge Name";
+        EnterText(_editJudgeDisplayNameTextBox, newName);
+        ClickElement(_editJudgeDisplayNameSaveButton);
     }
 }
