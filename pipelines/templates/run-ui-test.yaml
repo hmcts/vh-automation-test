@@ -52,10 +52,11 @@ steps:
     inputs:
       azureSubscription: "${{ parameters.subscriptionName }}"
       KeyVaultName: "vh-video-api-${{ lower(parameters.environment) }}"
-      SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri"
+      SecretsFilter: "azuread--identifieruri"
 
   - bash: |
-      echo "##vso[task.setvariable variable=ApiClientConfiguration.VideoApi.ResourceId;issecret=false]$(azuread--identifieruri)"
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.VideoApi.ResourceId;issecret=false]$(azuread--identifieruri)"]
+      echo $(ApiClientConfiguration.VideoApi.ResourceId)
     displayName: Change Video API client secrets to variables
 
   # inserts variables to help create unique test names
