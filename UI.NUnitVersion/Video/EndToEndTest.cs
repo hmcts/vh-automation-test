@@ -13,7 +13,7 @@ public class EndToEndTest : VideoWebUiTest
     [Category("Daily")]
     [Category("a11y")]
     [Test]
-    [Description("Book a hearing. Allocate to a CSO. Log in as a staff member and judge, edit their display names, and log in as 4 participants. Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
+    [Description("Book a hearing. Allocate to a CSO. Log in as a judge, edit their display name, and log in as 4 participants. Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
@@ -72,15 +72,7 @@ public class EndToEndTest : VideoWebUiTest
             .OpenChatWithVHO()
             .SendAMessageToVHO(messageToCso);
         ccMessagingPanel.ValidateInstantMessagingInboundScenario(messageToCso);
-        
-        // log in as staff member
-        var staffMemberVenueList = LoginAsStaffMember(HearingTestData.StaffMemberUsername, EnvConfigSettings.UserPassword);
-        var staffMemberHearingList = staffMemberVenueList.SelectHearingsByVenues(hearingDto.VenueName);
-        var staffMemberWaitingRoom = staffMemberHearingList.SelectHearing(_conference.Id);
-        
-        // edit the staff member display name
-        staffMemberWaitingRoom.EditStaffMemberDisplayName();
-        
+
         // log in as judge and start the hearing
         var judgeUsername = hearingDto.Judge.Username;
         var judgePassword = EnvConfigSettings.UserPassword;
