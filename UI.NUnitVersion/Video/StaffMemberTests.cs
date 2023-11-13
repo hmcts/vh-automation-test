@@ -1,11 +1,9 @@
-using UI.PageModels.Pages.Admin.Booking;
-
 namespace UI.NUnitVersion.Video;
 
 public class StaffMemberTests : VideoWebUiTest
 {
     [Category("Daily")]
-    [Description("Book a hearing. Log into hearing with a staffmember account. Start and stop the hearing.")]
+    [Description("Book a hearing. Log into hearing with a staffmember account. Edit their display name. Start and stop the hearing.")]
     [Test]
     public async Task LogIntoHearingWithStaffMember()
     {
@@ -18,8 +16,15 @@ public class StaffMemberTests : VideoWebUiTest
         var staffMemberVenueList = LoginAsStaffMember(HearingTestData.StaffMemberUsername, EnvConfigSettings.UserPassword);
         var staffMemberHearingList = staffMemberVenueList.SelectHearingsByVenues(hearing.HearingVenueName);
         var statffMemberWaitingRoom = staffMemberHearingList.SelectHearing(conference.Id);
+        
+        // edit display name
+        const string newDisplayName = "Edited Staff Member Name";
+        statffMemberWaitingRoom.EditStaffMemberDisplayName(newDisplayName);
+        var updatedDisplayName = statffMemberWaitingRoom.GetStaffMemberDisplayNameInWaitingRoom();
+        updatedDisplayName.Should().BeEquivalentTo(newDisplayName);
 
         var smHearingRoomPage = statffMemberWaitingRoom.StartOrResumeHearing();
+        statffMemberWaitingRoom.ParticipantExistsInHearingRoom(newDisplayName).Should().BeTrue();
         statffMemberWaitingRoom = smHearingRoomPage.CloseHearing();
         statffMemberWaitingRoom.IsHearingClosed().Should().BeTrue();
         Assert.Pass();
