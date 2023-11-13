@@ -18,9 +18,12 @@ namespace UI.NUnitVersion.Video
             var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
         
             // edit display name
-            judgeWaitingRoomPage.EditJudgeDisplayName();
+            const string newDisplayName = "Edited Judge Name";
+            judgeWaitingRoomPage.EditJudgeDisplayName(newDisplayName);
+            judgeWaitingRoomPage.ParticipantExistsInWaitingRoom(newDisplayName).Should().BeTrue();
 
             var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
+            judgeWaitingRoomPage.ParticipantExistsInHearingRoom(newDisplayName).Should().BeTrue();
             judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
             judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
             Assert.Pass();

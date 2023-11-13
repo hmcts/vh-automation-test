@@ -73,19 +73,37 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         ClickElement(By.XPath(path));
     }
 
-    public void EditStaffMemberDisplayName()
+    public void EditStaffMemberDisplayName(string newName = "Edited Staff Member Name")
     {
         ClickElement(_editStaffMemberDisplayNameLink);
-        const string newName = "Edited Staff Member Name";
         EnterText(_editStaffMemberDisplayNameTextBox, newName);
         ClickElement(_editStaffMemberDisplayNameSaveButton);
     }
 
-    public void EditJudgeDisplayName()
+    public void EditJudgeDisplayName(string newName = "Edited Judge Name")
     {
         ClickElement(_editJudgeDisplayNameLink);
-        const string newName = "Edited Judge Name";
         EnterText(_editJudgeDisplayNameTextBox, newName);
         ClickElement(_editJudgeDisplayNameSaveButton);
+    }
+
+    public string GetStaffMemberDisplayNameInWaitingRoom()
+    {
+        var nameElement = Driver.FindElement(By.XPath("//dt[contains(@id,'name-staff-member')]"));
+        var name = ((IJavaScriptExecutor)Driver).ExecuteScript("return arguments[0].firstChild.textContent;", nameElement).ToString();
+        return name?.Trim() ?? string.Empty;
+    }
+
+    public bool ParticipantExistsInWaitingRoom(string displayName)
+    {
+        var htmlElement = Driver.FindElement(By.CssSelector("app-judge-participant-status-list"));
+        var htmlContent = htmlElement.GetAttribute("outerHTML");
+        
+        return htmlContent.Contains(displayName);
+    }
+
+    public bool ParticipantExistsInHearingRoom(string displayName)
+    {
+        return IsElementVisible(By.XPath($"//div[@class='panel-container-list participants-grid']//div[@apptooltip]//span[@class='wrap-anywhere' and text()='{displayName}']"));
     }
 }

@@ -18,9 +18,13 @@ public class StaffMemberTests : VideoWebUiTest
         var statffMemberWaitingRoom = staffMemberHearingList.SelectHearing(conference.Id);
         
         // edit display name
-        statffMemberWaitingRoom.EditStaffMemberDisplayName();
+        const string newDisplayName = "Edited Staff Member Name";
+        statffMemberWaitingRoom.EditStaffMemberDisplayName(newDisplayName);
+        var updatedDisplayName = statffMemberWaitingRoom.GetStaffMemberDisplayNameInWaitingRoom();
+        updatedDisplayName.Should().BeEquivalentTo(newDisplayName);
 
         var smHearingRoomPage = statffMemberWaitingRoom.StartOrResumeHearing();
+        statffMemberWaitingRoom.ParticipantExistsInHearingRoom(newDisplayName).Should().BeTrue();
         statffMemberWaitingRoom = smHearingRoomPage.CloseHearing();
         statffMemberWaitingRoom.IsHearingClosed().Should().BeTrue();
         Assert.Pass();
