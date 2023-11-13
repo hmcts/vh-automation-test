@@ -63,17 +63,17 @@ public class RemoteChromeVhDriver : IVhDriver
     private string GetEnvName()
     {
         var apiClientConfiguration = ConfigRootBuilder.ApiClientConfigurationInstance();
-        if (apiClientConfiguration.BookingsApi.ResourceId.Contains(".dev."))
+        if (apiClientConfiguration.BookingsApiResourceId.Contains(".dev."))
         {
             return "Dev";
         }
         
-        if (apiClientConfiguration.BookingsApi.ResourceId.Contains(".test."))
+        if (apiClientConfiguration.BookingsApiResourceId.Contains(".test."))
         {
             return "Test";
         }
 
-        if (apiClientConfiguration.BookingsApi.ResourceId.Contains(".staging."))
+        if (apiClientConfiguration.BookingsApiResourceId.Contains(".staging."))
         {
             return "Staging";
         }
