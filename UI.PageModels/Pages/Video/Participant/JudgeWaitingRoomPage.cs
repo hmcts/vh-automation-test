@@ -10,6 +10,12 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         By.XPath("//button[normalize-space()='Start video hearing' or normalize-space()='Resume video hearing']");
     
     private readonly By _enterConsultationRoomBtn = By.Id("joinPCButton");
+    private readonly By _editJudgeDisplayNameLink = By.Id("edit-judge-link");
+    private readonly By _editJudgeDisplayNameTextBox = By.Id("new-judge-name");
+    private readonly By _editJudgeDisplayNameSaveButton = By.Id("editJudgeDisplayName");
+    private readonly By _editStaffMemberDisplayNameLink = By.Id("edit-staff-member-link");
+    private readonly By _editStaffMemberDisplayNameTextBox = By.Id("new-staff-member-name");
+    private readonly By _editStaffMemberDisplayNameSaveButton = By.Id("editStaffmemberDisplayName");
 
     public JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -65,5 +71,39 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         var path =
             $"//div[descendant::span[text() = '{displayName}'] and descendant::span[text() = 'Participant has been added to the hearing.']]/following-sibling::div//button[.='OK']";
         ClickElement(By.XPath(path));
+    }
+
+    public void EditStaffMemberDisplayName(string newName = "Edited Staff Member Name")
+    {
+        ClickElement(_editStaffMemberDisplayNameLink);
+        EnterText(_editStaffMemberDisplayNameTextBox, newName);
+        ClickElement(_editStaffMemberDisplayNameSaveButton);
+    }
+
+    public void EditJudgeDisplayName(string newName = "Edited Judge Name")
+    {
+        ClickElement(_editJudgeDisplayNameLink);
+        EnterText(_editJudgeDisplayNameTextBox, newName);
+        ClickElement(_editJudgeDisplayNameSaveButton);
+    }
+
+    public string GetStaffMemberDisplayNameInWaitingRoom()
+    {
+        var nameElement = Driver.FindElement(By.XPath("//dt[contains(@id,'name-staff-member')]"));
+        var name = ((IJavaScriptExecutor)Driver).ExecuteScript("return arguments[0].firstChild.textContent;", nameElement).ToString();
+        return name?.Trim() ?? string.Empty;
+    }
+
+    public bool ParticipantExistsInWaitingRoom(string displayName)
+    {
+        var htmlElement = Driver.FindElement(By.CssSelector("app-judge-participant-status-list"));
+        var htmlContent = htmlElement.GetAttribute("outerHTML");
+        
+        return htmlContent.Contains(displayName);
+    }
+
+    public bool ParticipantExistsInHearingRoom(string displayName)
+    {
+        return IsElementVisible(By.XPath($"//div[@class='panel-container-list participants-grid']//div[@apptooltip]//span[@class='wrap-anywhere' and text()='{displayName}']"));
     }
 }
