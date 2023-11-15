@@ -15,7 +15,7 @@ public static class VhApiClientFactory
         var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("bearer", apiToken);
-        return VideoApiClient.GetClient(apiClientConfiguration.VideoApi.Url, httpClient);
+        return VideoApiClient.GetClient(apiClientConfiguration.VideoApiUrl, httpClient);
     }
     
     public static async Task<BookingsApiClient> CreateBookingsApiClient()
@@ -26,7 +26,7 @@ public static class VhApiClientFactory
         var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("bearer", apiToken);
-        return BookingsApiClient.GetClient(apiClientConfiguration.BookingsApi.Url, httpClient);
+        return BookingsApiClient.GetClient(apiClientConfiguration.BookingsApiUrl, httpClient);
     }
     
     private static async Task<string> GenerateBookingsApiToken(ApiClientConfiguration apiClientConfiguration)
@@ -35,7 +35,7 @@ public static class VhApiClientFactory
             .GetClientAccessToken(
                 apiClientConfiguration.ClientId,
                 apiClientConfiguration.ClientSecret, 
-                apiClientConfiguration.BookingsApi.ResourceId);
+                apiClientConfiguration.BookingsApiResourceId);
     }
         
     private static async Task<string> GenerateVideoApiToken(ApiClientConfiguration apiClientConfiguration)
@@ -44,6 +44,6 @@ public static class VhApiClientFactory
             .GetClientAccessToken(
                 apiClientConfiguration.ClientId,
                 apiClientConfiguration.ClientSecret, 
-                apiClientConfiguration.VideoApi.ResourceId);
+                apiClientConfiguration.VideoApiResourceId);
     }
 }

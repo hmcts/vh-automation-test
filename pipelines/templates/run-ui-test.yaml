@@ -44,8 +44,20 @@ steps:
       echo "##vso[task.setvariable variable=ApiClientConfiguration.TenantId;issecret=false]$(azuread--tenantid)"
       echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientId;issecret=false]$(azuread--clientid)"
       echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientSecret;issecret=false]$(azuread--clientsecret)"
-      echo "##vso[task.setvariable variable=ApiClientConfiguration.BookingsApi.ResourceId;issecret=false]$(azuread--identifieruri)"
-    displayName: Change api client secrets to variables
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.BookingsApiResourceId;issecret=false]$(azuread--identifieruri)"
+    displayName: Change Bookings API client secrets to variables
+
+  - task: AzureKeyVault@1
+    displayName: "Azure Key Vault: vh-video-api-${{ lower(parameters.environment) }}"
+    inputs:
+      azureSubscription: "${{ parameters.subscriptionName }}"
+      KeyVaultName: "vh-video-api-${{ lower(parameters.environment) }}"
+      SecretsFilter: "azuread--identifieruri"
+
+  - bash: |
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.VideoApiResourceId;issecret=false]$(azuread--identifieruri)"
+      echo "$(ApiClientConfiguration.VideoApi.ResourceId)"
+    displayName: Change Video API client secrets to variables
 
   # inserts variables to help create unique test names
   - task: gitversion/setup@0

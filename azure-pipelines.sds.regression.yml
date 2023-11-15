@@ -32,9 +32,9 @@ stages:
           - group: vh-automation-test-${{ parameters.environment }}
           - group: Saucelabs
           - group: KinlyConfiguration_${{ parameters.environment }}
-          - name: ApiClientConfiguration.BookingsApi.Url
+          - name: ApiClientConfiguration.BookingsApiUrl
             value: ${{ variables.bookingsApiUrl }}
-          - name: ApiClientConfiguration.VideoApi.Url
+          - name: ApiClientConfiguration.VideoApiUrl
             value: ${{ variables.videoApiUrl }}
           - name: TestDataConfiguration.AudioLinkCaseNumber
             value: ${{ variables.audioLinkCaseNumber }}
