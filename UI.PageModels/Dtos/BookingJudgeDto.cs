@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace UI.PageModels.Dtos;
 
 public class BookingJudgeDto
@@ -7,9 +9,14 @@ public class BookingJudgeDto
         Username = username;
         DisplayName = displayName;
         Phone = phone;
+        
     }
+    
 
     public string Username { get; set; }
     public string DisplayName { get; set; }
     public string Phone { get; set; }
+    
+
+
 }

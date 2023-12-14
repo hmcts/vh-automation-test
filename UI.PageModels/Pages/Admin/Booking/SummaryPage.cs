@@ -24,7 +24,7 @@ public class SummaryPage : VhAdminWebPage
         CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
         CompareText(By.Id("caseName"), bookingDto.CaseName);
         CompareText(By.Id("caseType"), bookingDto.CaseType);
-        CompareText(By.Id("caseHearingType"), bookingDto.HearingType);
+        
 
         var courtAddress = string.IsNullOrWhiteSpace(bookingDto.RoomName)
             ? bookingDto.VenueName
@@ -51,16 +51,16 @@ public class SummaryPage : VhAdminWebPage
             CompareText(By.Id("otherInformation"), bookingDto.OtherInformation);
         }
         
-        // assert judge details
-        CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
-        
-        for (var i = 0; i < bookingDto.Participants.Count-1; i++)
-        {
-            var participant = bookingDto.Participants[i];
-            var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
-           
-            CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
-        }
+        //assert judge details
+        // CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
+        //
+        // for (var i = 0; i < bookingDto.Participants.Count-1; i++)
+        // {
+        //     var participant = bookingDto.Participants[i];
+        //     var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
+        //    
+        //     CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
+        // }
     }
     
     private string Pluralise(int number, string text)

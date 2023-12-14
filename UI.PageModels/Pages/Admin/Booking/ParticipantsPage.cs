@@ -37,13 +37,13 @@ public class ParticipantsPage : VhAdminWebPage
     {
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeClickable(_nextButton);
-        WaitForDropdownListToPopulate(_partyDropdown);
+        //WaitForDropdownListToPopulate(_partyDropdown);
     }
 
     public void AddNewIndividualParticipant(string party, string role, string contactEmail, string displayName,
         BookingNewParticipantDto bookingNewParticipantDto)
     {
-        SelectDropDownByText(_partyDropdown, party);
+        //SelectDropDownByText(_partyDropdown, party);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -56,10 +56,10 @@ public class ParticipantsPage : VhAdminWebPage
         EnterText(_displayNameTextfield, displayName);
     }
 
-    public void AddNewRepresentative(string party, string role, string contactEmail, string displayName,
+    public void AddNewRepresentative(/*string party,*/ string role, string contactEmail, string displayName,
         string representing, BookingNewParticipantDto bookingNewParticipantDto)
     {
-        SelectDropDownByText(_partyDropdown, party);
+        //SelectDropDownByText(_partyDropdown, party);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -75,7 +75,7 @@ public class ParticipantsPage : VhAdminWebPage
     private void AddNewParticipant(string party, string role, string contactEmail, string displayName,
         BookingNewParticipantDto bookingNewParticipantDto, string? representing = null)
     {
-        SelectDropDownByText(_partyDropdown, party);
+        //SelectDropDownByText(_partyDropdown, party);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -117,22 +117,31 @@ public class ParticipantsPage : VhAdminWebPage
                     break;
             }
     }
-
-    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, string displayName)
+    public void AddExistingIndividualParticipant(string? party = null, string? role = null, string? contactEmail = null, 
+        string? displayName = null)
     {
         AddExistingParticipant(party, role, contactEmail, displayName);
     }
-
-    public void AddExistingRepresentative(string party, string role, string contactEmail, string displayName,
+    
+    public void AddExistingIndividualParticipantEjudge(string role, string contactEmail, 
+        string displayName,
         string representing)
+    {
+        AddExistingParticipantss(role, contactEmail, displayName, representing);
+    }
+
+    public void AddExistingRepresentative(string? party = null, string? role = null, 
+        string? contactEmail = null, string? displayName = null,
+        string? representing = null)
     {
         AddExistingParticipant(party, role, contactEmail, displayName, representing);
     }
 
-    private void AddExistingParticipant(string party, string role, string contactEmail, string displayName,
+    private void AddExistingParticipant(string? party = null, string? role = null, string? contactEmail = null, 
+        string? displayName = null,
         string? representing = null)
     {
-        SelectDropDownByText(_partyDropdown, party);
+        //SelectDropDownByText(_partyDropdown, party);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
 
@@ -149,6 +158,88 @@ public class ParticipantsPage : VhAdminWebPage
         
         ClickAddParticipantAndWait();
     }
+    
+    private void AddExistingParticipantV2 ( string? role = null, string? contactEmail = null, 
+        string? displayName = null,
+        string? representing = null)
+    {
+        
+        SelectDropDownByText(_roleDropdown, role);
+        EnterText(_participantEmailTextfield, contactEmail);
+
+        ClickElement(_emailList);
+        EnterText(_displayNameTextfield, displayName);
+
+        if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
+
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    
+    private void AddExistingParticipantssxx(string role, string contactEmail, 
+        string displayName,
+        string representing)
+    {
+        SelectDropDownByText(_roleDropdown, role);
+        EnterText(_participantEmailTextfield, contactEmail);
+
+        ClickElement(_emailList);
+        EnterText(_displayNameTextfield, displayName);
+
+        if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
+
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    
+    private void AddExistingParticipantss(string role, string contactEmail, string displayName, string representing)
+    {
+        try
+        {
+            WaitForElementVisible(Driver, _roleDropdown);
+            SelectDropDownByText(_roleDropdown, role);
+            EnterText(_participantEmailTextfield, contactEmail);
+
+            // Wait for the email list to be clickable before clicking
+            WaitForElementToBeClickable(_emailList);
+            ClickElement(_emailList);
+
+            EnterText(_displayNameTextfield, displayName);
+
+            if (!string.IsNullOrWhiteSpace(representing))
+            {
+                // Wait for representingTextfield to be visible before entering text
+                WaitForElementToBeVisible(_representingTextfield);
+                EnterText(_representingTextfield, representing);
+            }
+
+            if (HasFormValidationError())
+            {
+                var message = GetValidationErrors();
+                throw new InvalidOperationException($"Form has validation errors. Details: {message}");
+            }
+
+            ClickAddParticipantAndWait();
+        }
+        catch (Exception ex)
+        {
+            // Log the exception details for debugging
+            Console.WriteLine($"An error occurred while adding an existing participant: {ex.Message}");
+            // Re-throw the exception to maintain the original error context
+            throw;
+        }
+    }
+
 
     private void ClickAddParticipantAndWait()
     {
