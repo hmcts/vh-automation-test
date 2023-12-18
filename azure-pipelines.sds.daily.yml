@@ -68,7 +68,7 @@ stages:
                   subscriptionName: ${{ variables.subscriptionName }}
               
               - task: PublishBuildArtifacts@1
-                displayName: Publish A11Y Output
+                displayName: Publish UI Test Output
                 condition: succeededOrFailed()
                 inputs:
                   pathToPublish: "$(Agent.TempDirectory)/"
@@ -91,7 +91,7 @@ stages:
                   Write-Output $res
 
                   echo "##vso[task.setvariable variable=testSummaryUI]$($res)" #set the testsummary to environment variable
-                displayName: Get results
+                displayName: Get results from trx
                 condition: always()
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
