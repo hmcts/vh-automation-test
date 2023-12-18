@@ -66,6 +66,20 @@ stages:
                   testCategory: Daily
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
                   subscriptionName: ${{ variables.subscriptionName }}
+              
+              - powershell: |
+                  #get the path of the trx file from the output folder.
+                  $path = Get-ChildItem -Path $(Agent.TempDirectory)\TestResults -Recurse -ErrorAction SilentlyContinue -Filter *.trx |  Where-Object { $_.Extension -eq '.trx' }
+
+                  $appConfigFile = $path.FullName  #path to test result trx file 
+
+                  $appConfig = New-Object XML 
+                  $appConfig.Load($appConfigFile) 
+                  $testsummary = $appConfig.DocumentElement.ResultSummary.Counters | select total, passed, failed, aborted
+
+                  echo $testsummary   # check testsummary
+
+                  echo "##vso[task.setvariable variable=testSummary]$($testsummary)" #set the testsummary to environment variable
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
