@@ -76,7 +76,7 @@ stages:
               
               - powershell: |
                   #get the path of the trx file from the output folder.
-                  $file = Get-ChildItem -Path $(Agent.TempDirectory)\UI_Report -Recurse  -Filter *.trx 
+                  $file = Get-ChildItem -Path $(Agent.TempDirectory)\ -Recurse  -Filter *.trx 
 
                   [xml]$data = Get-Content $file.FullName
 
