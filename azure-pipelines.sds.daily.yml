@@ -80,6 +80,8 @@ stages:
                   echo $testsummary   # check testsummary
 
                   echo "##vso[task.setvariable variable=testSummary]$($testsummary)" #set the testsummary to environment variable
+                displayName: Get results
+                condition: always()
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
