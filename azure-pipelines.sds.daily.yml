@@ -131,5 +131,5 @@ stages:
                 displayName: Publish A11Y Output
                 condition: succeededOrFailed()
                 inputs:
-                  pathToPublish: "$(Build.ArtifactStagingDirectory)/"
+                  pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
