@@ -67,6 +67,13 @@ stages:
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
                   subscriptionName: ${{ variables.subscriptionName }}
               
+              - task: PublishBuildArtifacts@1
+                displayName: Publish A11Y Output
+                condition: succeededOrFailed()
+                inputs:
+                  pathToPublish: "$(Agent.TempDirectory)/"
+                  artifactName: UI_Report
+              
               - powershell: |
                   #get the path of the trx file from the output folder.
                   $path = Get-ChildItem -Path $(Agent.TempDirectory)\TestResults -Recurse -ErrorAction SilentlyContinue -Filter *.trx |  Where-Object { $_.Extension -eq '.trx' }
