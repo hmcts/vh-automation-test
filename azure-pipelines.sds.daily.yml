@@ -75,11 +75,7 @@ stages:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: UI_Report
               
-<<<<<<< HEAD
-              - ${{ if eq(Build.SourceBranchName, "master")}}:
-=======
               - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
->>>>>>> master
                 
                 - template: pipelines/templates/get-results-from-trx.yaml
                   parameters:
