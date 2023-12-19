@@ -20,6 +20,6 @@ steps:
       Write-Output $res
 
       echo "##vso[task.setvariable variable=testSummaryUI]$($res)" #set the testsummary to environment variable
-    displayName: "Get results from ${{parameter.name}} trx"
+    displayName: "Get results from ${{parameters.name}} trx"
     name: TRX_${{parameters.name}}
     condition: always()
