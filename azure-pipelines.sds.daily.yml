@@ -108,6 +108,7 @@ stages:
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl
                 value: ${{ variables.videoApiUrl }}
+              - group: slack
 
             steps:
               - template: pipelines/templates/run-ui-test.yaml
