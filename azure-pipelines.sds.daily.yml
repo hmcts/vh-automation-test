@@ -81,7 +81,7 @@ stages:
 
               - template: pipelines/templates/send-results-to-slack.yaml
                 parameters:
-                  results: $(TRX_UI.testSummary)
+                  results: $(testSummary)
                   triggerID: $(triggerID)
 
 
@@ -131,5 +131,5 @@ stages:
                   
               - template: pipelines/templates/send-results-to-slack.yaml
                 parameters:
-                  results: $(TRX_A11y.testSummary)
+                  results: $(testSummary)
                   triggerID: $(triggerID)
