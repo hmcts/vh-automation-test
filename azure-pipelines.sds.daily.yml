@@ -74,25 +74,8 @@ stages:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: UI_Report
               
-              - powershell: |
-                  #get the path of the trx file from the output folder.
-                  $file = Get-ChildItem -Path $(Agent.TempDirectory)\ -Recurse  -Filter *.trx 
-
-                  [xml]$data = Get-Content $file.FullName
-
-                  $outcome = $data.TestRun.ResultSummary.outcome
-                  $executed = $data.TestRun.ResultSummary.Counters.executed
-                  $passed = $data.TestRun.ResultSummary.Counters.passed
-                  $aborted = $data.TestRun.ResultSummary.Counters.aborted
-                  $failed = $data.TestRun.ResultSummary.Counters.failed
-
-                  $res = "$outcome [ 👀 $executed | ✔ $passed | ❌ $failed | 😭 $aborted ]"
-
-                  Write-Output $res
-
-                  echo "##vso[task.setvariable variable=testSummaryUI]$($res)" #set the testsummary to environment variable
-                displayName: Get results from trx
-                condition: always()
+              - template: pipelines/templates/get-results-from-trx.yaml
+                name: get-results-ui
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
@@ -133,3 +116,6 @@ stages:
                 inputs:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
+                  
+              - template: pipelines/templates/get-results-from-trx.yaml
+                name: get-results-ui
