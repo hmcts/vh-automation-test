@@ -12,3 +12,5 @@ steps:
       $triggerID = "${{ parameters.triggerID }}"
       $uri = "https://hooks.slack.com/triggers/$triggerID"
       Invoke-WebRequest -Uri $uri -Method POST -Body ($params|ConvertTo-Json) -ContentType "application/json"
+    condition: always()
+    displayName: post to Slack
