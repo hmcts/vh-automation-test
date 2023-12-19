@@ -1,0 +1,30 @@
+parameters:
+  - name: results
+    type: string
+  - name: triggerID
+    type: string
+  - name: details
+    type: string
+  - name: type
+    type: string
+  - name: env
+    type: string
+
+
+steps:
+  - powershell: |
+      $buildlink = "$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)"
+      $tidyLink = $buildLink -replace " ", "%20"
+      $params = @{
+                "env"="${{ parameters.env }}"
+                "type"="${{ parameters.type }}"
+                "results"="${{ parameters.results }}";
+                "details"="${{ parameters.details }}";
+                "branch"="$(Build.SourceBranchName)"
+                "link"="$tidyLink";
+                }
+      $triggerID = "${{ parameters.triggerID }}"
+      $uri = "https://hooks.slack.com/triggers/$triggerID"
+      Invoke-WebRequest -Uri $uri -Method POST -Body ($params|ConvertTo-Json) -ContentType "application/json"
+    condition: always()
+    displayName: post to Slack
