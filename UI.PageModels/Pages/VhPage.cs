@@ -241,7 +241,7 @@ public abstract class VhPage
     
     public bool WaitForElementVisible(IWebDriver driver, By by)
     {
-        var timerCheck = TimeSpan.FromSeconds(1);
+        var timerCheck = TimeSpan.FromSeconds(2);
         var stopWatch = Stopwatch.StartNew();
         do
         {
@@ -249,7 +249,7 @@ public abstract class VhPage
             {
                 WaitForElementToBeClickable(by);
             }
-            MilliTimeOut(100);
+            MilliTimeOut(200);
         } while (stopWatch.Elapsed < timerCheck);
         return driver.FindElement(by).Displayed;
     }

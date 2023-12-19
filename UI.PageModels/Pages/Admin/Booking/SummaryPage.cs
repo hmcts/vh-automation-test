@@ -52,15 +52,15 @@ public class SummaryPage : VhAdminWebPage
         }
         
         //assert judge details
-        // CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
-        //
-        // for (var i = 0; i < bookingDto.Participants.Count-1; i++)
-        // {
-        //     var participant = bookingDto.Participants[i];
-        //     var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
-        //    
-        //     CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
-        // }
+        CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
+        
+        for (var i = 0; i < bookingDto.Participants.Count-1; i++)
+        {
+            var participant = bookingDto.Participants[i];
+            var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
+           
+            CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
+        }
     }
     
     private string Pluralise(int number, string text)

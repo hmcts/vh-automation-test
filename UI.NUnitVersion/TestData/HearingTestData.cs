@@ -26,7 +26,7 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
-                "aaron.becker.jp@ejudiciary.net",
+                "vhs.william.craig@ejudiciary.net",
                 "Auto Judge",
                 "")
             ,
@@ -57,7 +57,7 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
-                "aaron.becker.jp@ejudiciary.net",
+                "vhs.william.craig@ejudiciary.net",
                 "Auto eJudge",
                 ""),
             Participants = KnownParticipantsForTesting(),
@@ -89,7 +89,7 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
-                "auto_aw.judge_02@hearings.reform.hmcts.net",
+                "vhs.william.craig@ejudiciary.net",
                 "Auto Judge",
                 ""),
             Participants = KnownParticipantsForTesting(),
