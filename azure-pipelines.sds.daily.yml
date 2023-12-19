@@ -75,7 +75,7 @@ stages:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: UI_Report
               
-              - ${{ if eq(Build.SourceBranchName, "master")}}:
+              - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
                 
                 - template: pipelines/templates/get-results-from-trx.yaml
                   parameters:
@@ -131,7 +131,7 @@ stages:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
 
-              - ${{ if eq(Build.SourceBranchName, "master")}}:
+              - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
 
                 - template: pipelines/templates/get-results-from-trx.yaml
                   parameters:
