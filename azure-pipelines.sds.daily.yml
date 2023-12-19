@@ -75,17 +75,19 @@ stages:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: UI_Report
               
-              - template: pipelines/templates/get-results-from-trx.yaml
-                parameters:
-                    name: UI
+              - ${{ if eq(Build.SourceBranchName, "master")}}:
+                
+                - template: pipelines/templates/get-results-from-trx.yaml
+                  parameters:
+                      name: UI
 
-              - template: pipelines/templates/send-results-to-slack.yaml
-                parameters:
-                  env: ${{ parameters.environment }}
-                  results: $(testOutcome)
-                  details: $(testSummary)
-                  triggerID: $(triggerID)
-                  type: UI Tests
+                - template: pipelines/templates/send-results-to-slack.yaml
+                  parameters:
+                    env: ${{ parameters.environment }}
+                    results: $(testOutcome)
+                    details: $(testSummary)
+                    triggerID: $(triggerID)
+                    type: UI Tests
 
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
@@ -129,14 +131,16 @@ stages:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
 
-              - template: pipelines/templates/get-results-from-trx.yaml
-                parameters:
-                    name: A11y
+              - ${{ if eq(Build.SourceBranchName, "master")}}:
+
+                - template: pipelines/templates/get-results-from-trx.yaml
+                  parameters:
+                      name: A11y
                   
-              - template: pipelines/templates/send-results-to-slack.yaml
-                parameters:
-                  env: ${{ parameters.environment }}
-                  results: $(testOutcome)
-                  details: $(testSummary)
-                  triggerID: $(triggerID)
-                  type: A11y Tests
+                - template: pipelines/templates/send-results-to-slack.yaml
+                  parameters:
+                    env: ${{ parameters.environment }}
+                    results: $(testOutcome)
+                    details: $(testSummary)
+                    triggerID: $(triggerID)
+                    type: A11y Tests
