@@ -19,7 +19,7 @@ steps:
                 "results"="${{ parameters.results }}";
                 "details"="${{ parameters.details }}";
                 "branch"="$(Build.SourceBranchName)"
-                "link"="$(Build.BuildUri)";
+                "link"="$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)";
                 }
       $triggerID = "${{ parameters.triggerID }}"
       $uri = "https://hooks.slack.com/triggers/$triggerID"
