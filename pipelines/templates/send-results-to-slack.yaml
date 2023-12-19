@@ -8,6 +8,7 @@ steps:
   - powershell: |
       $params = @{
                 "results"="${{ parameters.results }}";
+                "link"="${Build.BuildUri)";
                 }
       $triggerID = "${{ parameters.triggerID }}"
       $uri = "https://hooks.slack.com/triggers/$triggerID"
