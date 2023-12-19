@@ -83,6 +83,7 @@ stages:
                 parameters:
                   results: $(testSummary)
                   triggerID: $(triggerID)
+                  type: UI Tests
 
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
@@ -134,3 +135,4 @@ stages:
                 parameters:
                   results: $(testSummary)
                   triggerID: $(triggerID)
+                  type: A11y Tests

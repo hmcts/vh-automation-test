@@ -15,7 +15,7 @@ steps:
       $aborted = $data.TestRun.ResultSummary.Counters.aborted
       $failed = $data.TestRun.ResultSummary.Counters.failed
 
-      $res = "$outcome \n[ TESTED: $executed | PASSED: $passed | FAILED: $failed | ABORTED: $aborted ]"
+      $res = "$outcome [ TESTED: $executed | PASSED: $passed | FAILED: $failed | ABORTED: $aborted ]"
 
       Write-Output $res
 

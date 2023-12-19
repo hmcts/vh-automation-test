@@ -3,12 +3,15 @@ parameters:
     type: string
   - name: triggerID
     type: string
+  - name: type
+    type: string
 
 steps:
   - powershell: |
-      $params = @{
+      $params = @
+                "type"="${{ parameters.type }}"
                 "results"="${{ parameters.results }}";
-                "link"="${Build.BuildUri)";
+                "link"="$(Build.BuildUri)";
                 }
       $triggerID = "${{ parameters.triggerID }}"
       $uri = "https://hooks.slack.com/triggers/$triggerID"
