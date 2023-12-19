@@ -3,14 +3,22 @@ parameters:
     type: string
   - name: triggerID
     type: string
+  - name: details
+    type: string
   - name: type
     type: string
+  - name: env
+    type: string
+
 
 steps:
   - powershell: |
-      $params = @
+      $params = @{
+                "env"="${{ parameters.env }}"
                 "type"="${{ parameters.type }}"
                 "results"="${{ parameters.results }}";
+                "details"="${{ parameters.details }}";
+                "branch"="$(Build.SourceBranchName)"
                 "link"="$(Build.BuildUri)";
                 }
       $triggerID = "${{ parameters.triggerID }}"

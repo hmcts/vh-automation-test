@@ -133,6 +133,8 @@ stages:
                   
               - template: pipelines/templates/send-results-to-slack.yaml
                 parameters:
-                  results: $(testSummary)
+                  env: ${{ parameters.environment }}
+                  results: $(testOutcome)
+                  details: $(testSummary)
                   triggerID: $(triggerID)
                   type: A11y Tests
