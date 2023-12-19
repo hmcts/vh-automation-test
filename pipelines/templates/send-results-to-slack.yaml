@@ -13,13 +13,15 @@ parameters:
 
 steps:
   - powershell: |
+      $buildlink = "$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)"
+      $tidyLink = $buildLink -replace " ", "%20"
       $params = @{
                 "env"="${{ parameters.env }}"
                 "type"="${{ parameters.type }}"
                 "results"="${{ parameters.results }}";
                 "details"="${{ parameters.details }}";
                 "branch"="$(Build.SourceBranchName)"
-                "link"="$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)";
+                "link"="$tidyLink";
                 }
       $triggerID = "${{ parameters.triggerID }}"
       $uri = "https://hooks.slack.com/triggers/$triggerID"
