@@ -1,0 +1,14 @@
+parameters:
+  - name: results
+    type: string
+  - name: triggerID
+    type: string
+
+steps:
+  - powershell: |
+      $params = @{
+                "results"="${{ parameters.results }}";
+                }
+      $triggerID = "${{ parameters.triggerID }}"
+      $uri = "https://hooks.slack.com/triggers/$triggerID"
+      Invoke-WebRequest -Uri $uri -Method POST -Body ($params|ConvertTo-Json) -ContentType "application/json"

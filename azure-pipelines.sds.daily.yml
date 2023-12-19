@@ -57,6 +57,7 @@ stages:
                 value: ${{ variables.videoApiUrl }}
               - name: TestDataConfiguration.AudioLinkCaseNumber
                 value: ${{ variables.audioLinkCaseNumber }}
+              - group: slack
 
             steps:
               - template: pipelines/templates/run-ui-test.yaml
@@ -77,6 +78,12 @@ stages:
               - template: pipelines/templates/get-results-from-trx.yaml
                 parameters:
                     name: UI
+
+              - template: pipelines/templates/send-results-to-slack.yaml
+                parameters:
+                  results: $(TRX_UI.testSummary)
+                  triggerID: $(triggerID)
+
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
@@ -122,3 +129,7 @@ stages:
                 parameters:
                     name: A11y
                   
+              - template: pipelines/templates/send-results-to-slack.yaml
+                parameters:
+                  results: $(TRX_A11y.testSummary)
+                  triggerID: $(triggerID)
