@@ -75,7 +75,8 @@ stages:
                   artifactName: UI_Report
               
               - template: pipelines/templates/get-results-from-trx.yaml
-                name: get-results-ui
+                parameters:
+                    name: UI
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
@@ -116,6 +117,8 @@ stages:
                 inputs:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
-                  
+
               - template: pipelines/templates/get-results-from-trx.yaml
-                name: get-results-ui
+                parameters:
+                    name: A11y
+                  
