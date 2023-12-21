@@ -89,9 +89,17 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
-                "vhs.william.craig@ejudiciary.net",
+                "auto_aw.judge_02@hearings.reform.hmcts.net",
                 "Auto Judge",
                 ""),
+            // AdditionalJudges = new List<BookingJudgeDto>
+            // {
+            //     // Additional VHS eJudge 1
+            //     new BookingJudgeDto(
+            //         "vhs.william.craig@ejudiciary.net",
+            //         " Auto Judge ",
+            //         ""),
+
             Participants = KnownParticipantsForTesting(),
             AudioRecording = false,
             OtherInformation = "This is a test hearing"

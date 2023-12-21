@@ -24,4 +24,7 @@ public class BookingDto
     public List<BookingExistingParticipantDto> Participants { get; set; }
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public BookingJudgeDto Judge { get; set; }
+    
+    
+    public List<BookingJudgeDto> AdditionalJudges { get; set; }
 }
