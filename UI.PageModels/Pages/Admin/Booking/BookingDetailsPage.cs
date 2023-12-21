@@ -85,14 +85,15 @@ public class BookingDetailsPage : VhAdminWebPage
     /// </summary>
     /// <param name="participantsToAdd"></param>
     /// <returns></returns>
-    public BookingConfirmationPage AddParticipantsToBooking(List<BookingExistingParticipantDto> participantsToAdd)
+    public BookingConfirmationPage AddParticipantsToBooking(List<BookingExistingParticipantDto> participantsToAdd, bool useParty)
     {
         SwitchToEditMode();
         var participantsBreadcrumbLocator = By.XPath("//app-breadcrumb//div//ol//li//a[text()='Participants']");
         ClickElement(participantsBreadcrumbLocator);
-        var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime);
+        var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime, useParty);
         participantsPage.AddExistingParticipants(participantsToAdd);
         return participantsPage.GoToVideoAccessPointsPage().GoToSummaryPage().ClickBookButton();
+        
     }
     
     /// <summary>

@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using UI.PageModels.Dtos;
 using UI.PageModels.Extensions;
 
@@ -33,17 +35,38 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _titleDropdown = By.Id("title");
     private readonly By _updateParticipantLink = By.Id("updateParticipantBtn");
 
-    public ParticipantsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool? useParty = null) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeClickable(_nextButton);
-        //WaitForDropdownListToPopulate(_partyDropdown);
+        if (useParty != null)
+        {
+            WaitForDropdownListToPopulate(_partyDropdown);
+        }
+       
     }
+    
+    // public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
+    // {
+    //     WaitForApiSpinnerToDisappear();
+    //     WaitForElementToBeClickable(_nextButton);
+    //     if (useParty)
+    //     {
+    //         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(defaultWaitTime));
+    //         wait.Until(ExpectedConditions.ElementIsVisible(_partyDropdown));
+    //         WaitForDropdownListToPopulate(_partyDropdown);
+    //     }
+    // }
+
 
     public void AddNewIndividualParticipant(string party, string role, string contactEmail, string displayName,
         BookingNewParticipantDto bookingNewParticipantDto)
     {
-        //SelectDropDownByText(_partyDropdown, party);
+        if (!string.IsNullOrEmpty(party))
+        {
+            SelectDropDownByText(_partyDropdown, party);
+        }
+       
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -56,10 +79,13 @@ public class ParticipantsPage : VhAdminWebPage
         EnterText(_displayNameTextfield, displayName);
     }
 
-    public void AddNewRepresentative(/*string party,*/ string role, string contactEmail, string displayName,
+    public void AddNewRepresentative(string party, string role, string contactEmail, string displayName,
         string representing, BookingNewParticipantDto bookingNewParticipantDto)
-    {
-        //SelectDropDownByText(_partyDropdown, party);
+    { 
+        if (!string.IsNullOrEmpty(party))
+        {
+            SelectDropDownByText(_partyDropdown, party);
+        }
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -75,7 +101,11 @@ public class ParticipantsPage : VhAdminWebPage
     private void AddNewParticipant(string party, string role, string contactEmail, string displayName,
         BookingNewParticipantDto bookingNewParticipantDto, string? representing = null)
     {
-        //SelectDropDownByText(_partyDropdown, party);
+        if (!string.IsNullOrEmpty(party))
+        {
+            SelectDropDownByText(_partyDropdown, party);
+        }
+        
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -117,8 +147,8 @@ public class ParticipantsPage : VhAdminWebPage
                     break;
             }
     }
-    public void AddExistingIndividualParticipant(string? party = null, string? role = null, string? contactEmail = null, 
-        string? displayName = null)
+    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, 
+        string displayName)
     {
         AddExistingParticipant(party, role, contactEmail, displayName);
     }
@@ -141,7 +171,7 @@ public class ParticipantsPage : VhAdminWebPage
         string? displayName = null,
         string? representing = null)
     {
-        //SelectDropDownByText(_partyDropdown, party);
+        SelectDropDownByText(_partyDropdown, party);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
 
@@ -201,7 +231,7 @@ public class ParticipantsPage : VhAdminWebPage
         
         ClickAddParticipantAndWait();
     }
-    
+     
     private void AddExistingParticipantss(string role, string contactEmail, string displayName, string representing)
     {
         try

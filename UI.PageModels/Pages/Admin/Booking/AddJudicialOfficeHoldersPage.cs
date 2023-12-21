@@ -68,11 +68,11 @@ public class AddJudicialOfficeHoldersPage : VhAdminWebPage
     /// Note: if this booking is in edit mode, the next button will navigate to the summary page instead 
     /// </summary>
     /// <returns></returns>
-    public ParticipantsPage GoToParticipantsPage()
-    {
-        ClickElement(By.Id("nextButtonToParticipants"));
-        return new ParticipantsPage(Driver, DefaultWaitTime);
-    }
+    // public ParticipantsPage GoToParticipantsPage()
+    // {
+    //     ClickElement(By.Id("nextButtonToParticipants"));
+    //     return new ParticipantsPage(Driver, DefaultWaitTime);
+    // }
 
     
 }

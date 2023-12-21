@@ -33,21 +33,21 @@ public class HearingAssignJudgePage : VhAdminWebPage
     public void AssignPresidingJudgeDetails(string judgeEmail, string judgeDisplayName)
     {
         EnterText(_eJudgeEmail, judgeEmail);
-        Thread.Sleep(3000);
         //WaitForElementToBeVisible(Spinner); // wait 2 seconds before search starts
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
-        Thread.Sleep(1000);
         if (!string.IsNullOrWhiteSpace(judgeDisplayName)) EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
     }
 
     public ParticipantsPage GoToParticipantsPage()
     {
-        Thread.Sleep(2000);
+        WaitForElementVisible(Driver, _nextButtonEJudge);
         ClickElement(_nextButtonEJudge);
-        return new ParticipantsPage(Driver, DefaultWaitTime);
+        bool useParty = true;
+        return new ParticipantsPage(Driver, DefaultWaitTime, useParty);
     }
+    
 
     public void ClickSaveEJudgeButton()
     {
