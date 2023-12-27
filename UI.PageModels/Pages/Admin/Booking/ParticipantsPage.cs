@@ -1,10 +1,7 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
-using UI.PageModels.Dtos;
-using UI.PageModels.Extensions;
+﻿using UI.PageModels.Extensions;
 
 namespace UI.PageModels.Pages.Admin.Booking;
+
 
 public class ParticipantsPage : VhAdminWebPage
 {
@@ -39,9 +36,22 @@ public class ParticipantsPage : VhAdminWebPage
     {
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeClickable(_nextButton);
-        if (useParty != null)
+        if (useParty != null && useParty == true)
         {
-            WaitForDropdownListToPopulate(_partyDropdown);
+             WaitForDropdownListToPopulate(_partyDropdown);
+            // foreach (var participantDto in HearingTestData.KnownParticipantsForTesting())
+            /*{
+                addParticipantPage.AddExistingIndividualParticipantEjudge(
+                    participantDto.Role.ToString(), participantDto.ContactEmail, 
+                    participantDto.DisplayName, participantDto.Representing);     
+                
+            }   */
+            AddExistingParticipant();
+        }
+        else
+        {
+            WaitForDropdownListToPopulate(_partyDropdown); 
+            AddExistingIndividualParticipantEjudge();
         }
        
     }
@@ -153,9 +163,9 @@ public class ParticipantsPage : VhAdminWebPage
         AddExistingParticipant(party, role, contactEmail, displayName);
     }
     
-    public void AddExistingIndividualParticipantEjudge(string role, string contactEmail, 
-        string displayName,
-        string representing)
+    public void AddExistingIndividualParticipantEjudge(string? role = null, string? contactEmail = null, 
+        string? displayName = null,
+        string? representing = null)
     {
         AddExistingParticipantss(role, contactEmail, displayName, representing);
     }

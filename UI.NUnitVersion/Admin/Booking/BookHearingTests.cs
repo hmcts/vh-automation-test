@@ -10,7 +10,7 @@ public class BookHearingTests : AdminWebUiTest
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime: date);
+        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername:"auto_aw.judge_02@hearings.reform.hmcts.net", scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
         var driver = VhDriver.GetDriver();

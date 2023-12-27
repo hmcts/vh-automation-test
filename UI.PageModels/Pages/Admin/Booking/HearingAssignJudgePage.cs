@@ -8,7 +8,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _eJudgeEmail = By.Id("judiciaryEmailInput");
     private readonly By _judgePhoneFld = By.Id("judgePhoneFld");
     private readonly By _nextButton = By.Id("nextButton");
-    private readonly By _nextButtonEJudge = By.Id("nextButtonToParticipants");
+    private readonly By _nextButtonEJudge = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
     
@@ -29,6 +29,26 @@ public class HearingAssignJudgePage : VhAdminWebPage
 
         if (!string.IsNullOrWhiteSpace(judgePhone)) EnterText(_judgePhoneFld, judgePhone);
     }
+    
+    // public ParticipantsPage GoToParticipantsPage()
+    // {
+    //     ClickElement(_nextButton);
+    //     return new ParticipantsPage(Driver, DefaultWaitTime);
+    // }
+    
+    // public ParticipantsPage GoToParticipantsPage()
+    // {
+    //     ClickElement(_nextButton);
+    //     return new ParticipantsPage(Driver, DefaultWaitTime);
+    // }
+    //
+    // public ParticipantsPage GoToParticipantsPageWithParty()
+    // {
+    //     WaitForElementVisible(Driver, _nextButtonEJudge);
+    //     ClickElement(_nextButtonEJudge);
+    //     bool useParty = true;
+    //     return new ParticipantsPage(Driver, DefaultWaitTime, useParty);
+    // }
     
     public void AssignPresidingJudgeDetails(string judgeEmail, string judgeDisplayName)
     {
