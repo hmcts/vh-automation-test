@@ -107,13 +107,13 @@ public static class HearingTestData
     {
         return new List<BookingExistingParticipantDto>
         {
-            BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Appellant,
+            BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
                 "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
                 "Mr", "Automation_Arnold", "Automation_Koelpin"),
             BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
                 "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
                 "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1"),
-            BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.Appellant,
+            BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.Witness,
                 "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
                 "Mr", "Auto_VW", "Individual_137"),
             BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,

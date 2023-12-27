@@ -12,6 +12,10 @@ public class BookingHearingV2Tests : AdminWebUiTest
     [Test]
     public void BookAHearingV2()
     {
+        //First check feature toggle value, if not using V2 API then skip test
+        if(!FeatureToggles.UseV2Api())
+            Assert.Ignore("Not using V2 feature toggle, this scenario is not enabled for testing");
+        
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername:"vhs.william.craig@ejudiciary.net",scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
@@ -41,26 +45,9 @@ public class BookingHearingV2Tests : AdminWebUiTest
         assignJudgePage.ClickSaveEJudgeButton();
         assignJudgePage.ClickNextEJudgeButton();
 
-        var addParticipantPage = new ParticipantsPage(driver, 30);
-        foreach (var participantDto in HearingTestData.KnownParticipantsForTesting())
-        {
-            addParticipantPage.AddExistingIndividualParticipantEjudge(
-                    participantDto.Role.ToString(), participantDto.ContactEmail, 
-                    participantDto.DisplayName, participantDto.Representing);      
-        }
+        var addParticipantPage = new ParticipantsPage(driver, 30, false);
         
-        // var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        // var addParticipantPage = assignJudgePage.GoToParticipantsPageWithParty();
-        //
-        // foreach (var participantDto in HearingTestData.KnownParticipantsForTesting())
-        // {
-        //     addParticipantPage.AddExistingIndividualParticipantEjudge(
-        //         participantDto.Role.ToString(), 
-        //         participantDto.ContactEmail, 
-        //         participantDto.DisplayName, 
-        //         participantDto.Representing);      
-        // }
-
+        addParticipantPage.AddExistingParticipantsV2(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);

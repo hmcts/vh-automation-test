@@ -12,6 +12,7 @@ public class EnvironmentConfigSettings : SystemConfigSettings
     public string VideoUrl { get; set; }
     public string AdminUrl { get; set; }
     public string UKConferencePhoneNumber { get; set; }
+    public string LaunchDarklyKey { get; set; }
 
     // public string ApiUrl { get; set; }
     // public string SoapApiUrl { get; set; }

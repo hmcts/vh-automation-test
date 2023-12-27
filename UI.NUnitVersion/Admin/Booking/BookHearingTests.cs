@@ -7,8 +7,12 @@ public class BookHearingTests : AdminWebUiTest
 
     [Category("Daily")]
     [Test]
-    public void BookAHearing()
+    public void BookAHearingV1()
     {
+        //First check feature toggle value, if using V2 API then skip test
+        if(FeatureToggles.UseV2Api())
+            Assert.Ignore("Using V2 feature toggle, this scenario is not enabled for testing");
+        
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername:"auto_aw.judge_02@hearings.reform.hmcts.net", scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
