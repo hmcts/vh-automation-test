@@ -138,6 +138,7 @@ public class ParticipantsPage : VhAdminWebPage
     
     public void AddExistingParticipantsV2(List<BookingExistingParticipantDto> bookingDtoParticipants)
     {
+        Thread.Sleep(1000); 
         foreach (var participantDto in bookingDtoParticipants)
         {
             AddExistingParticipantV2(
