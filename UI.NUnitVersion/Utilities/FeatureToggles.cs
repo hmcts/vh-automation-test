@@ -24,7 +24,7 @@ public static class FeatureToggles
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         var config = LaunchDarkly.Sdk.Server.Configuration.Builder(envConfigSettings.LaunchDarklyKey)
             .Logging(Components.Logging(Logs.ToWriter(Console.Out)).Level(LogLevel.Warn)).Build();
-        _context = Context.Builder(LdUser).Name(envConfigSettings.Environment).Build();
+        _context = Context.Builder(LdUser).Name(envConfigSettings.Environment.ToLower()).Build();
         _ldClient = new LdClient(config);
     }
 

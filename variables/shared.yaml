@@ -22,6 +22,8 @@ variables:
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
     value: ${{ variables.videoWebUrl }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.LaunchDarklyKey
+    value: ${{ SDK-Key }}
 
   - name: SystemConfiguration.LogLocation
     value: $(Build.ArtifactStagingDirectory)/TestResults/Logs

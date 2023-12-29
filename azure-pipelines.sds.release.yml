@@ -41,6 +41,7 @@ stages:
                 value: "UI/Selenium"
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
+              - group: FeatureFlags_${{ parameters.environment }}
               - group: KinlyConfiguration_${{ parameters.environment }}
               - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
                 value: true
