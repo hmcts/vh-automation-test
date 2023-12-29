@@ -58,6 +58,7 @@ stages:
                 value: ${{ variables.videoApiUrl }}
               - name: TestDataConfiguration.AudioLinkCaseNumber
                 value: ${{ variables.audioLinkCaseNumber }}
+              - group: slack
 
             steps:
               - template: pipelines/templates/run-ui-test.yaml
@@ -67,6 +68,28 @@ stages:
                   testCategory: Daily
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
                   subscriptionName: ${{ variables.subscriptionName }}
+              
+              - task: PublishBuildArtifacts@1
+                displayName: Publish UI Test Output
+                condition: succeededOrFailed()
+                inputs:
+                  pathToPublish: "$(Agent.TempDirectory)/"
+                  artifactName: UI_Report
+              
+              - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
+                
+                - template: pipelines/templates/get-results-from-trx.yaml
+                  parameters:
+                      name: UI
+
+                - template: pipelines/templates/send-results-to-slack.yaml
+                  parameters:
+                    env: ${{ parameters.environment }}
+                    results: $(testOutcome)
+                    details: $(testSummary)
+                    triggerID: $(triggerID)
+                    type: UI Tests
+
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
@@ -92,6 +115,7 @@ stages:
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl
                 value: ${{ variables.videoApiUrl }}
+              - group: slack
 
             steps:
               - template: pipelines/templates/run-ui-test.yaml
@@ -106,5 +130,19 @@ stages:
                 displayName: Publish A11Y Output
                 condition: succeededOrFailed()
                 inputs:
-                  pathToPublish: "$(Build.ArtifactStagingDirectory)/"
+                  pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
+
+              - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
+
+                - template: pipelines/templates/get-results-from-trx.yaml
+                  parameters:
+                      name: A11y
+                  
+                - template: pipelines/templates/send-results-to-slack.yaml
+                  parameters:
+                    env: ${{ parameters.environment }}
+                    results: $(testOutcome)
+                    details: $(testSummary)
+                    triggerID: $(triggerID)
+                    type: A11y Tests
