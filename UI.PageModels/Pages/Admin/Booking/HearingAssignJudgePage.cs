@@ -25,46 +25,28 @@ public class HearingAssignJudgePage : VhAdminWebPage
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
-        if (!string.IsNullOrWhiteSpace(judgeDisplayName)) EnterText(_judgeDisplayNameFld, judgeDisplayName);
+        if (!string.IsNullOrWhiteSpace(judgeDisplayName)) 
+            EnterText(_judgeDisplayNameFld, judgeDisplayName);
 
-        if (!string.IsNullOrWhiteSpace(judgePhone)) EnterText(_judgePhoneFld, judgePhone);
+        if (!string.IsNullOrWhiteSpace(judgePhone)) 
+            EnterText(_judgePhoneFld, judgePhone);
     }
     
-    // public ParticipantsPage GoToParticipantsPage()
-    // {
-    //     ClickElement(_nextButton);
-    //     return new ParticipantsPage(Driver, DefaultWaitTime);
-    // }
-    
-    // public ParticipantsPage GoToParticipantsPage()
-    // {
-    //     ClickElement(_nextButton);
-    //     return new ParticipantsPage(Driver, DefaultWaitTime);
-    // }
-    //
-    // public ParticipantsPage GoToParticipantsPageWithParty()
-    // {
-    //     WaitForElementVisible(Driver, _nextButtonEJudge);
-    //     ClickElement(_nextButtonEJudge);
-    //     bool useParty = true;
-    //     return new ParticipantsPage(Driver, DefaultWaitTime, useParty);
-    // }
-    
-    public void AssignPresidingJudgeDetails(string judgeEmail, string judgeDisplayName)
+    public void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName)
     {
         EnterText(_eJudgeEmail, judgeEmail);
         //WaitForElementToBeVisible(Spinner); // wait 2 seconds before search starts
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
-        if (!string.IsNullOrWhiteSpace(judgeDisplayName)) EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
+        if (!string.IsNullOrWhiteSpace(judgeDisplayName)) 
+            EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
     }
 
-    public ParticipantsPage GoToParticipantsPage()
+    public ParticipantsPage GoToParticipantsPage(bool useParty = true)
     {
         WaitForElementVisible(Driver, _nextButtonEJudge);
         ClickElement(_nextButtonEJudge);
-        bool useParty = true;
         return new ParticipantsPage(Driver, DefaultWaitTime, useParty);
     }
     
@@ -74,6 +56,4 @@ public class HearingAssignJudgePage : VhAdminWebPage
         WaitForElementToBeVisible(_saveEJudge);
         ClickElement(_saveEJudge);
     }
-
-    public void ClickNextEJudgeButton() { ClickElement(_nextButtonEJudge); }
 }

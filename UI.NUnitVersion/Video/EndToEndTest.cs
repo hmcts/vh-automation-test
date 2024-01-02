@@ -17,7 +17,7 @@ public class EndToEndTest : VideoWebUiTest
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDto(judgeUsername:"Auto Judge", scheduledDateTime:hearingScheduledDateAndTime);
+        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.Judge, scheduledDateTime:hearingScheduledDateAndTime);
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
