@@ -38,13 +38,14 @@ steps:
     inputs:
       azureSubscription: "${{ parameters.subscriptionName }}"
       KeyVaultName: "vh-bookings-api-${{ lower(parameters.environment) }}"
-      SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri"
+      SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri, launchdarkly--sdkkey"
 
   - bash: |
       echo "##vso[task.setvariable variable=ApiClientConfiguration.TenantId;issecret=false]$(azuread--tenantid)"
       echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientId;issecret=false]$(azuread--clientid)"
       echo "##vso[task.setvariable variable=ApiClientConfiguration.ClientSecret;issecret=false]$(azuread--clientsecret)"
       echo "##vso[task.setvariable variable=ApiClientConfiguration.BookingsApiResourceId;issecret=false]$(azuread--identifieruri)"
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.LaunchDarklyKey;issecret=false]$(launchdarkly--sdkkey)"
     displayName: Change Bookings API client secrets to variables
 
   - task: AzureKeyVault@1

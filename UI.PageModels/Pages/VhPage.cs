@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -121,6 +122,7 @@ public abstract class VhPage
 
     protected void WaitForDropdownListToPopulate(By locator)
     {
+        Thread.Sleep(2000);
         new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
             .Until<SelectElement?>(drv =>
                 {
@@ -195,18 +197,22 @@ public abstract class VhPage
 
     protected void SelectDropDownByText(By locator, string text)
     {
+        WaitForElementToBeVisible(locator, DefaultWaitTime);
+        WaitForElementToBeClickable(locator);
         var selectElement = new SelectElement(Driver.FindElement(locator));
         selectElement.SelectByText(text);
     }
 
     protected void SelectDropDownByValue(By locator, string value)
     {
+        WaitForElementToBeClickable(locator);
         var selectElement = new SelectElement(Driver.FindElement(locator));
         selectElement.SelectByValue(value);
     }
 
     protected void SelectDropDownByIndex(By locator, int index)
     {
+        WaitForElementToBeClickable(locator);
         var selectElement = new SelectElement(Driver.FindElement(locator));
         selectElement.SelectByIndex(index);
     }
@@ -226,5 +232,45 @@ public abstract class VhPage
     protected string GetLocaleTime(TimeOnly time)
     {
         return time.ToString(Locale == GbLocale ? "HHmm" : "hhmmtt");
+    }
+
+    public static void MilliTimeOut(double timeOut)
+    {
+        Thread.Sleep(TimeSpan.FromMilliseconds(timeOut));
+    }
+    
+    public bool WaitForElementVisible(IWebDriver driver, By by)
+    {
+        var timerCheck = TimeSpan.FromSeconds(2);
+        var stopWatch = Stopwatch.StartNew();
+        do
+        {
+            if (driver.FindElement(by).Displayed)
+            {
+                WaitForElementToBeClickable(by);
+            }
+            MilliTimeOut(200);
+        } while (stopWatch.Elapsed < timerCheck);
+        return driver.FindElement(by).Displayed;
+    }
+    
+    public IWebElement WaitForSingleCondition(IWebDriver driver, By by)
+    {
+        driver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(DefaultWaitTime);
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(DefaultWaitTime))
+        {
+            PollingInterval = TimeSpan.FromMilliseconds(500),
+            Message = $"Element {by} not found"
+        };
+        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
+        return wait.Until(ElementDisplayed(by));
+    }
+
+    private static Func<IWebDriver, IWebElement> ElementDisplayed(By element)
+    {
+        return ((x)=>
+        {
+            return x.FindElement(element);
+        });
     }
 }

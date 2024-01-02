@@ -4,13 +4,15 @@ public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
+    public static string EJUD_Judge = "vhs.william.craig@ejudiciary.net";
+    public static string Judge = "auto_aw.judge_02@hearings.reform.hmcts.net";
     /// <summary>
     /// Create a hearing with only a judge
     /// </summary>
     /// <param name="remote"></param>
     /// <param name="scheduledDateTime">a hearing with a judge and zero participants</param>
     /// <returns></returns>
-    public static BookingDto CreateHearingDtoWithOnlyAJudge(bool remote = false, DateTime? scheduledDateTime = null)
+    public static BookingDto CreateHearingDtoWithOnlyAJudge(bool ejud = false, bool remote = false, DateTime? scheduledDateTime = null)
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
@@ -26,7 +28,7 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
-                "auto_aw.judge_02@hearings.reform.hmcts.net",
+                ejud ? EJUD_Judge : Judge,
                 "Auto Judge",
                 "")
             ,
@@ -40,7 +42,7 @@ public static class HearingTestData
     ///     Create a hearing with 4 participants, 2 claimants and 2 defendants
     /// </summary>
     /// <returns>a hearing with 4 participants, 2 claimants and 2 defendants</returns>
-    public static BookingDto CreateHearingDto(bool remote = false, DateTime? scheduledDateTime = null)
+    public static BookingDto CreateHearingDto(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null)
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
@@ -56,7 +58,7 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
-                "auto_aw.judge_02@hearings.reform.hmcts.net",
+                judgeUsername,
                 "Auto Judge",
                 ""),
             Participants = KnownParticipantsForTesting(),
@@ -74,13 +76,13 @@ public static class HearingTestData
     {
         return new List<BookingExistingParticipantDto>
         {
-            BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.LitigantInPerson,
+            BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
                 "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
                 "Mr", "Automation_Arnold", "Automation_Koelpin"),
             BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
                 "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
                 "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1"),
-            BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.LitigantInPerson,
+            BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.Witness,
                 "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
                 "Mr", "Auto_VW", "Individual_137"),
             BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
@@ -93,9 +95,9 @@ public static class HearingTestData
     ///     Create a hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)
     /// </summary>
     /// <returns>hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)</returns>
-    public static BookingDto CreateHearingDtoWithEndpoints(bool remote = false, DateTime? scheduledDateTime = null)
+    public static BookingDto CreateHearingDtoWithEndpoints(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null)
     {
-        var bookingDto = CreateHearingDto(remote, scheduledDateTime);
+        var bookingDto = CreateHearingDto(judgeUsername: judgeUsername, remote, scheduledDateTime);
         bookingDto.VideoAccessPoints = new List<VideoAccessPointsDto>
         {
             new("Claimant VAP", "Auto 2"),
@@ -109,8 +111,8 @@ public static class HearingTestData
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
-        
-        var bookingDto = CreateHearingDtoWithOnlyAJudge(scheduledDateTime: hearingDateTime);
+
+        var bookingDto = CreateHearingDtoWithOnlyAJudge(ejud: FeatureToggles.UseV2Api(), scheduledDateTime: hearingDateTime);
         var request = new BookNewHearingRequest()
         {
             Cases = new List<CaseRequest>()

@@ -9,8 +9,11 @@ public class BookHearingTests : AdminWebUiTest
     [Test]
     public void BookAHearing()
     {
+        var v2Flag = FeatureToggles.UseV2Api();
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime: date);
+        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(
+            judgeUsername: FeatureToggles.UseV2Api() ? HearingTestData.EJUD_Judge : HearingTestData.Judge, 
+            scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
         var driver = VhDriver.GetDriver();
@@ -25,19 +28,36 @@ public class BookHearingTests : AdminWebUiTest
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
         
-        createHearingPage.EnterHearingDetails(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType,
-            _bookingDto.HearingType);
+        if(v2Flag)
+            createHearingPage.EnterHearingDetailsV2(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType);
+        else
+            createHearingPage.EnterHearingDetails(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType, _bookingDto.HearingType);
         
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
-        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto.ScheduledDateTime, _bookingDto.DurationHour,
-            _bookingDto.DurationMinute, _bookingDto.VenueName, _bookingDto.RoomName);
+        hearingSchedulePage.EnterSingleDayHearingSchedule(
+            _bookingDto.ScheduledDateTime, 
+            _bookingDto.DurationHour,
+            _bookingDto.DurationMinute, 
+            _bookingDto.VenueName, 
+            _bookingDto.RoomName);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
+
+        if (v2Flag)
+        {
+            assignJudgePage.AssignPresidingJudiciaryDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName);
+            assignJudgePage.ClickSaveEJudgeButton();
+        }
+        else
+            assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
+            
+        var addParticipantPage = assignJudgePage.GoToParticipantsPage(useParty: !v2Flag);
         
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
+        if(v2Flag)
+            addParticipantPage.AddExistingParticipantsV2(_bookingDto.Participants);
+        else
+            addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);

@@ -4,6 +4,7 @@ namespace UI.PageModels.Dtos;
 
 public enum GenericTestRole
 {
+    Appellant,
     Barrister,
     Expert,
     Intermediary,

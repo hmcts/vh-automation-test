@@ -49,6 +49,7 @@ stages:
                 parameters:
                   environment: ${{ parameters.environment }}
               - group: vh-automation-test-${{ parameters.environment }}
+              - group: FeatureFlags_${{ parameters.environment }}
               - group: Saucelabs
               - group: KinlyConfiguration_${{ parameters.environment }}
               - name: ApiClientConfiguration.BookingsApiUrl
@@ -100,6 +101,7 @@ stages:
                   environment: ${{ parameters.environment }}
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
+              - group: FeatureFlags_${{ parameters.environment }}
               - group: KinlyConfiguration_${{ parameters.environment }}
               - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
                 value: true

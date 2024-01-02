@@ -24,7 +24,8 @@ public class VideoAccessPointsPage : VhAdminWebPage
         for (var i = 0; i < videoAccessPoints.Count; i++)
         {
             var vap = videoAccessPoints[i];
-            AddVideoEndpoint(vap.DisplayName, vap.DefenceAdvocateDisplayName, i);
+            
+            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName,i);
             if (i < videoAccessPoints.Count - 1)
             {
                 ClickElement(_addAnotherBtn);

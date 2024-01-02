@@ -10,7 +10,7 @@ public class EditBookingTest : AdminWebUiTest
     public void should_update_booking_schedule()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(60);
-        var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(scheduledDateTime:hearingScheduledDateAndTime);
+        var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername:"auto_aw.judge_02@hearings.reform.hmcts.net",scheduledDateTime:hearingScheduledDateAndTime);
         
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");

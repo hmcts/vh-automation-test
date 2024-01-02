@@ -2,6 +2,7 @@ namespace UI.Common.Configuration;
 
 public class ApiClientConfiguration
 {
+    public string LaunchDarklyKey { get; set; }
     public string Authority { get;set; }
     public string TenantId { get;set; }
     public string ClientId { get;set; }

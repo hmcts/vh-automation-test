@@ -26,7 +26,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
         
         var participantsToAdd = new List<BookingExistingParticipantDto>(){HearingTestData.KnownParticipantsForTesting()[0]};
-        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd);
+        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd, useParty: true);
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         

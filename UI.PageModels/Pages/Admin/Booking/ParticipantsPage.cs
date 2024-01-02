@@ -1,8 +1,9 @@
-﻿using OpenQA.Selenium;
-using UI.PageModels.Dtos;
+﻿using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using UI.PageModels.Extensions;
 
 namespace UI.PageModels.Pages.Admin.Booking;
+
 
 public class ParticipantsPage : VhAdminWebPage
 {
@@ -33,17 +34,28 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _titleDropdown = By.Id("title");
     private readonly By _updateParticipantLink = By.Id("updateParticipantBtn");
 
-    public ParticipantsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    
+    public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeClickable(_nextButton);
-        WaitForDropdownListToPopulate(_partyDropdown);
+        if (useParty)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(defaultWaitTime));
+            wait.Until(ExpectedConditions.ElementIsVisible(_partyDropdown));
+            WaitForDropdownListToPopulate(_partyDropdown);
+        }
     }
+
 
     public void AddNewIndividualParticipant(string party, string role, string contactEmail, string displayName,
         BookingNewParticipantDto bookingNewParticipantDto)
     {
-        SelectDropDownByText(_partyDropdown, party);
+        if (!string.IsNullOrEmpty(party))
+        {
+            SelectDropDownByText(_partyDropdown, party);
+        }
+       
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -58,8 +70,11 @@ public class ParticipantsPage : VhAdminWebPage
 
     public void AddNewRepresentative(string party, string role, string contactEmail, string displayName,
         string representing, BookingNewParticipantDto bookingNewParticipantDto)
-    {
-        SelectDropDownByText(_partyDropdown, party);
+    { 
+        if (!string.IsNullOrEmpty(party))
+        {
+            SelectDropDownByText(_partyDropdown, party);
+        }
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -75,7 +90,11 @@ public class ParticipantsPage : VhAdminWebPage
     private void AddNewParticipant(string party, string role, string contactEmail, string displayName,
         BookingNewParticipantDto bookingNewParticipantDto, string? representing = null)
     {
-        SelectDropDownByText(_partyDropdown, party);
+        if (!string.IsNullOrEmpty(party))
+        {
+            SelectDropDownByText(_partyDropdown, party);
+        }
+        
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
         WaitForElementToBeVisible(_newUserWarning);
@@ -107,9 +126,8 @@ public class ParticipantsPage : VhAdminWebPage
                         participant.ContactEmail,
                         participant.DisplayName, participant.Representing);
                     break;
-                case GenericTestRole.Witness:
                 case GenericTestRole.Interpreter:
-                    throw new NotImplementedException("Adding witness/interpreter is not implemented");
+                    throw new NotImplementedException("Adding interpreter is not implemented");
                 default:
                     AddExistingIndividualParticipant(participant.Party.GetDescription(),
                         participant.Role.GetDescription(), participant.ContactEmail,
@@ -117,20 +135,32 @@ public class ParticipantsPage : VhAdminWebPage
                     break;
             }
     }
-
-    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, string displayName)
+    
+    public void AddExistingParticipantsV2(List<BookingExistingParticipantDto> bookingDtoParticipants)
+    {
+        Thread.Sleep(3000); 
+        foreach (var participantDto in bookingDtoParticipants)
+        {
+            AddExistingParticipantV2(
+                participantDto.Role.ToString(), participantDto.ContactEmail, 
+                participantDto.DisplayName, participantDto.Representing);      
+        }
+    }
+    
+    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, 
+        string displayName)
     {
         AddExistingParticipant(party, role, contactEmail, displayName);
     }
 
-    public void AddExistingRepresentative(string party, string role, string contactEmail, string displayName,
-        string representing)
+    public void AddExistingRepresentative(string? party = null, string? role = null, 
+        string? contactEmail = null, string? displayName = null,
+        string? representing = null)
     {
         AddExistingParticipant(party, role, contactEmail, displayName, representing);
     }
 
-    private void AddExistingParticipant(string party, string role, string contactEmail, string displayName,
-        string? representing = null)
+    private void AddExistingParticipant(string party, string role, string contactEmail, string displayName, string? representing = null)
     {
         SelectDropDownByText(_partyDropdown, party);
         SelectDropDownByText(_roleDropdown, role);
@@ -149,7 +179,26 @@ public class ParticipantsPage : VhAdminWebPage
         
         ClickAddParticipantAndWait();
     }
+    
+    private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null)
+    {
+        SelectDropDownByText(_roleDropdown, role);
+        EnterText(_participantEmailTextfield, contactEmail);
 
+        ClickElement(_emailList);
+        EnterText(_displayNameTextfield, displayName);
+
+        if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
+
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    
     private void ClickAddParticipantAndWait()
     {
         Thread.Sleep(

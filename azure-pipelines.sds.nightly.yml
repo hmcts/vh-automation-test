@@ -64,6 +64,8 @@ stages:
                 value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
               - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
                 value: $(Build.ArtifactStagingDirectory)/TestResults/
+              - name: SystemConfiguration.EnvironmentConfigSettings.LaunchDarklyKey
+                value: ${{ SDK-Key }}
 
             steps:
               - checkout: self

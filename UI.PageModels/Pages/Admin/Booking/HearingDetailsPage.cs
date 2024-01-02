@@ -34,6 +34,16 @@ public class HearingDetailsPage : VhAdminWebPage
         SelectDropDownByText(_caseType, caseType);
         SelectDropDownByText(_hearingType, hearingType);
     }
+    
+    public void EnterHearingDetailsV2(string caseNumber, string caseName, string caseType)
+    {
+        WaitForApiSpinnerToDisappear();
+        EnterText(_caseName, caseName);
+        EnterText(_caseNumber, caseNumber);
+        WaitForDropdownListToPopulate(_caseType);
+        SelectDropDownByText(_caseType, caseType);
+        
+    }
 
     /// <summary>
     /// Go to the next page or the booking journey, the hearing schedule page
