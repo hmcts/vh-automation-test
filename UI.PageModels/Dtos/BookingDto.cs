@@ -21,6 +21,8 @@ public class BookingDto
     public string RoomName { get; set; }
     public bool AudioRecording { get; set; } = true;
     public string OtherInformation { get; set; }
+    
+    public BookingDto AddAJudgeWarning { get; set; }
     public List<BookingExistingParticipantDto> Participants { get; set; }
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public BookingJudgeDto Judge { get; set; }
