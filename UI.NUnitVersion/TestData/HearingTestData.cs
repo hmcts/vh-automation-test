@@ -4,7 +4,6 @@ public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
-    public static string EJUD_Judge = "vhs.william.craig@ejudiciary.net";
     public static string Judge = "auto_aw.judge_02@hearings.reform.hmcts.net";
     /// <summary>
     /// Create a hearing with only a judge
@@ -12,7 +11,7 @@ public static class HearingTestData
     /// <param name="remote"></param>
     /// <param name="scheduledDateTime">a hearing with a judge and zero participants</param>
     /// <returns></returns>
-    public static BookingDto CreateHearingDtoWithOnlyAJudge(bool ejud = false, bool remote = false, DateTime? scheduledDateTime = null)
+    public static BookingDto CreateHearingDtoWithOnlyAJudge(bool remote = false, DateTime? scheduledDateTime = null)
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
@@ -27,11 +26,7 @@ public static class HearingTestData
             DurationMinute = 30,
             VenueName = "Birmingham Civil and Family Justice Centre",
             RoomName = "Room 1",
-            Judge = new BookingJudgeDto(
-                ejud ? EJUD_Judge : Judge,
-                "Auto Judge",
-                "")
-            ,
+            Judge = new BookingJudgeDto(Judge, "Auto Judge", ""),
             AudioRecording = false,
             OtherInformation = "This is a test hearing"
         };
@@ -112,7 +107,7 @@ public static class HearingTestData
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
 
-        var bookingDto = CreateHearingDtoWithOnlyAJudge(ejud: FeatureToggles.UseV2Api(), scheduledDateTime: hearingDateTime);
+        var bookingDto = CreateHearingDtoWithOnlyAJudge(scheduledDateTime: hearingDateTime);
         var request = new BookNewHearingRequest()
         {
             Cases = new List<CaseRequest>()

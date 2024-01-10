@@ -2,6 +2,7 @@ using UI.PageModels.Pages.Video.Participant;
 
 namespace UI.NUnitVersion.Video;
 
+[Category("Daily")]
 public class QuickLinkUserTests : VideoWebUiTest
 {
     private string _quickLinkJoinUrl;
@@ -103,7 +104,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");

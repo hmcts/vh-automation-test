@@ -43,8 +43,9 @@ public class HearingAssignJudgePage : VhAdminWebPage
             EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
     }
 
-    public ParticipantsPage GoToParticipantsPage(bool useParty = true)
+    public ParticipantsPage GoToParticipantsPage(bool isV2)
     {
+        var useParty = !isV2;
         WaitForElementVisible(Driver, _nextButtonEJudge);
         ClickElement(_nextButtonEJudge);
         return new ParticipantsPage(Driver, DefaultWaitTime, useParty);

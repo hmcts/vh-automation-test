@@ -119,7 +119,7 @@ public class EndToEndTest : VideoWebUiTest
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();

@@ -1,7 +1,4 @@
-﻿using OpenQA.Selenium;
-using UI.PageModels.Dtos;
-
-namespace UI.PageModels.Pages.Admin.Booking;
+﻿namespace UI.PageModels.Pages.Admin.Booking;
 
 public class HearingDetailsPage : VhAdminWebPage
 {
@@ -60,20 +57,35 @@ public class HearingDetailsPage : VhAdminWebPage
     /// </summary>
     /// <param name="bookingDto">A DTO representing a booking</param>
     /// <returns>the summary page</returns>
-    public SummaryPage EnterHearingDetails(BookingDto bookingDto)
+    public SummaryPage EnterHearingDetails(BookingDto bookingDto, bool isV2)
     {
-        EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType,
-            bookingDto.HearingType);
+        if(isV2)
+            EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
+        else
+            EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType, bookingDto.HearingType);
+        
         var hearingSchedulePage = GoToNextPage();
 
         hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
             bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
 
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage();
-        addParticipantPage.AddExistingParticipants(bookingDto.Participants);
+        if (isV2)
+        {
+            assignJudgePage.AssignPresidingJudiciaryDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName);
+            assignJudgePage.ClickSaveEJudgeButton();
+        }
+        else
+            assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
+
+        var addParticipantPage = assignJudgePage.GoToParticipantsPage(isV2);
+        
+        if(isV2)
+            addParticipantPage.AddExistingParticipantsV2(bookingDto.Participants);
+        else
+            addParticipantPage.AddExistingParticipants(bookingDto.Participants);
+        
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
