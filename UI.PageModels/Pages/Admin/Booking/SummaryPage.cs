@@ -132,7 +132,9 @@ public class SummaryPage : VhAdminWebPage
     public BookingConfirmationPage ClickBookButton()
     {
         ClickElement(_bookButton);
-        WaitForElementToBeVisible(Spinner);
+        if(IsElementVisible(Spinner))
+            WaitForElementToBeVisible(Spinner);
+        
         WaitForApiSpinnerToDisappear(90); // booking process can take a while. lower when process has been optimised
         WaitForElementToBeVisible(By.TagName("app-booking-confirmation"));
         return new BookingConfirmationPage(Driver, DefaultWaitTime);
