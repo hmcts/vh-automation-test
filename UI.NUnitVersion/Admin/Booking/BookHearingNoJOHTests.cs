@@ -47,7 +47,6 @@ public class BookHearingNoJOHTests : AdminWebUiTest
         if (v2Flag)
         {
             assignJudgePage.ClickContinueWithoutJudiciary();
-           
         }
         else
             assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
