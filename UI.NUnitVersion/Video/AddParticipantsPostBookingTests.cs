@@ -11,6 +11,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Test]
     public void should_add_new_participant_after_booking()
     {
+        var isV2 = FeatureToggles.UseV2Api();
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
         TestContext.WriteLine(
@@ -26,7 +27,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
         
         var participantsToAdd = new List<BookingExistingParticipantDto>(){HearingTestData.KnownParticipantsForTesting()[0]};
-        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd, useParty: true);
+        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd, !isV2);
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         
@@ -36,10 +37,12 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
             var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
-            var participantWaitingRoom = participantHearingList.SelectHearing(conference.Id).GoToEquipmentCheck()
+            var participantWaitingRoom = participantHearingList
+                .SelectHearing(conference.Id)
+                .GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
-                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();
+                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
             // store the participant driver in a dictionary so we can access it later to sign out
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
             
@@ -50,9 +53,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
 
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         foreach (var participant in participantsToAdd)
-        {
-            judgeHearingRoomPage.IsParticipantInHearing(participant.FullName).Should().BeTrue();
-        }
+            judgeHearingRoomPage.AdmitParticipant(participant.DisplayName);
         
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();

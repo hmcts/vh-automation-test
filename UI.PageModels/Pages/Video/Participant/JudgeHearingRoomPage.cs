@@ -27,7 +27,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     public void AdmitParticipant(string participantDisplayName)
     {
         OpenContextMenu(participantDisplayName);
-        ClickElement(ParticipantAdmitButton(participantDisplayName));
+        ClickElement(ParticipantAdmitButton());
         WaitForElementToBeVisible(ParticipantRemoteMuteButton(participantDisplayName), 60);
     }
     
@@ -78,9 +78,9 @@ public class JudgeHearingRoomPage : VhVideoWebPage
             $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//img[@alt='Context menu icon']");
     }
     
-    private By ParticipantAdmitButton(string participantDisplayName)
+    private By ParticipantAdmitButton()
     {
-        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//a[normalize-space()='Admit participant']");
+        return By.XPath("//a[contains(@id, 'judge-context-menu-participant')]");
     }
     
     private By ParticipantDismissButton(string participantDisplayName)

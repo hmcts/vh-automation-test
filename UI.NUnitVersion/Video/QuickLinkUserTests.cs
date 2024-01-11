@@ -27,10 +27,10 @@ public class QuickLinkUserTests : VideoWebUiTest
         var quickLinkName1 = $"QL Auto Join 1 {Guid.NewGuid():N}";
         var quickLinkName2 = $"QL Auto Join 2 {Guid.NewGuid():N}";
         
-        var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, hearingDto.CaseName);
+        var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, conference.Id.ToString());
         judgeWaitingRoomPage.ClearParticipantAddedNotification(quickLinkName1);
         
-        var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, hearingDto.CaseName);
+        var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, conference.Id.ToString());
         judgeWaitingRoomPage.ClearParticipantAddedNotification(quickLinkName2);
 
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quickLinkName1);
@@ -81,12 +81,12 @@ public class QuickLinkUserTests : VideoWebUiTest
         Assert.Pass();
     }
 
-    private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string caseName)
+    private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string conferenceId)
     {
         var quickLinkJoinHearingPage = LoginAsQuickLinkUser(_quickLinkJoinUrl, qlName);
         quickLinkJoinHearingPage.EnterQuickLinkUserDetails(qlName, true);
         var quickLinkHearingListPage = quickLinkJoinHearingPage.Continue();
-        var page = quickLinkHearingListPage.SelectHearing(caseName).GoToEquipmentCheck()
+        var page = quickLinkHearingListPage.SelectHearing(conferenceId).GoToEquipmentCheck()
             .GoToSwitchOnCameraMicrophonePage()
             .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
             .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();

@@ -68,9 +68,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public void ClearParticipantAddedNotification(string displayName)
     {
-        var path =
-            $"//div[descendant::span[text() = '{displayName}'] and descendant::span[text() = 'Participant has been added to the hearing.']]/following-sibling::div//button[.='OK']";
-        ClickElement(By.XPath(path));
+        ClickElement(By.Id("notification-toastr-participant-added-dismiss"));
     }
 
     public void EditStaffMemberDisplayName(string newName = "Edited Staff Member Name")
