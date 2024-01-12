@@ -9,7 +9,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Category("Daily")]
     [Description("Book a hearing with a judge and add a participant after booking. Check if the notification appears and if the user joins the judge in the hearing when a hearing is started.")]
     [Test]
-    public void should_add_new_participant_after_booking()
+    public async Task should_add_new_participant_after_booking()
     {
         var isV2 = FeatureToggles.UseV2Api();
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
@@ -18,7 +18,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
-        var conference = VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false).Result;
+        var conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false);
 
         // log in as judge, go to waiting room and wait for alerts
         var judgeUsername = hearingDto.Judge.Username;
@@ -31,6 +31,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         
+        var participantsInConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
         // loop through all participants in hearing and login as each one
         foreach (var participant in hearingDto.Participants)
         {
@@ -53,7 +54,10 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
 
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         foreach (var participant in participantsToAdd)
-            judgeHearingRoomPage.AdmitParticipant(participant.DisplayName);
+        {
+            var p = participantsInConference.First(x => x.Username == participant.Username);
+            judgeHearingRoomPage.AdmitParticipant(p.DisplayName, p.Id.ToString());
+        }
         
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
