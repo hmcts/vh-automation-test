@@ -2,13 +2,14 @@ using UI.PageModels.Pages.Video.Participant;
 
 namespace UI.NUnitVersion.Video;
 
+[Category("Daily")]
 public class QuickLinkUserTests : VideoWebUiTest
 {
     private string _quickLinkJoinUrl;
     private string _hearingIdString;
 
     [Test]
-    public void JoinAHearingAsAQuickLinkUser()
+    public async Task JoinAHearingAsAQuickLinkUser()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
@@ -26,50 +27,54 @@ public class QuickLinkUserTests : VideoWebUiTest
         var quickLinkName1 = $"QL Auto Join 1 {Guid.NewGuid():N}";
         var quickLinkName2 = $"QL Auto Join 2 {Guid.NewGuid():N}";
         
-        var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, hearingDto.CaseName);
+        var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, conference.Id.ToString());
         judgeWaitingRoomPage.ClearParticipantAddedNotification(quickLinkName1);
         
-        var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, hearingDto.CaseName);
+        var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, conference.Id.ToString());
         judgeWaitingRoomPage.ClearParticipantAddedNotification(quickLinkName2);
 
-        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quickLinkName1);
-        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quickLinkName2);
+        var particiantsFromConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
+        var quicklink1 = particiantsFromConference.First(x => x.DisplayName == quickLinkName1);
+        var quicklink2 = particiantsFromConference.First(x => x.DisplayName == quickLinkName2);
         
-        var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation(new List<string>() {quickLinkName2});
+        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink1.DisplayName);
+        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink2.DisplayName);
+        
+        var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation(new List<string>() {quicklink2.DisplayName});
         var ql2ConsultationPage = qlWaitingRoomPage2.AcceptPrivateConsultation();
         
-        ql1ConsultationPage.IsParticipantConnected(quickLinkName2).Should().BeTrue();
-        ql2ConsultationPage.IsParticipantConnected(quickLinkName1).Should().BeTrue();
+        ql1ConsultationPage.IsParticipantConnected(quicklink2.DisplayName).Should().BeTrue();
+        ql2ConsultationPage.IsParticipantConnected(quicklink1.DisplayName).Should().BeTrue();
         
-        judgeWaitingRoomPage.GetParticipantStatus(quickLinkName1).Should().BeEquivalentTo("In Consultation");
-        judgeWaitingRoomPage.GetParticipantStatus(quickLinkName2).Should().BeEquivalentTo("In Consultation");
+        judgeWaitingRoomPage.GetParticipantStatus(quicklink1.DisplayName).Should().BeEquivalentTo("In Consultation");
+        judgeWaitingRoomPage.GetParticipantStatus(quicklink2.DisplayName).Should().BeEquivalentTo("In Consultation");
         
         // need to set the original waiting room object to the current page else the driver will not be able to navigate sign out
         qlWaitingRoomPage1 = ql1ConsultationPage.LeaveConsultationRoom();
         qlWaitingRoomPage2 = ql2ConsultationPage.LeaveConsultationRoom();
 
-        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quickLinkName1);
-        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quickLinkName2);
+        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink1.DisplayName);
+        judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink2.DisplayName);
         
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
 
-        judgeHearingRoomPage.AdmitParticipant(quickLinkName1); 
-        judgeHearingRoomPage.AdmitParticipant(quickLinkName2);
+        judgeHearingRoomPage.AdmitParticipant(quicklink1.DisplayName, quicklink1.Id.ToString()); 
+        judgeHearingRoomPage.AdmitParticipant(quicklink2.DisplayName, quicklink2.Id.ToString());
         
         var qlHearingRoom1 = qlWaitingRoomPage1.TransferToHearingRoom();
         var qlHearingRoom2 = qlWaitingRoomPage2.TransferToHearingRoom();
         
-        judgeHearingRoomPage.IsParticipantInHearing(quickLinkName1).Should().BeTrue();
-        judgeHearingRoomPage.IsParticipantInHearing(quickLinkName2).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink1.DisplayName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink2.DisplayName).Should().BeTrue();
 
-        judgeHearingRoomPage.DismissParticipant(quickLinkName1);
-        judgeHearingRoomPage.DismissParticipant(quickLinkName2);
+        judgeHearingRoomPage.DismissParticipant(quicklink1.DisplayName);
+        judgeHearingRoomPage.DismissParticipant(quicklink2.DisplayName);
 
         qlHearingRoom1.TransferToWaitingRoom();
         qlHearingRoom2.TransferToWaitingRoom();
         
-        judgeHearingRoomPage.IsParticipantInHearing(quickLinkName1).Should().BeFalse();
-        judgeHearingRoomPage.IsParticipantInHearing(quickLinkName2).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink1.DisplayName).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink2.DisplayName).Should().BeFalse();
         
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
@@ -80,12 +85,12 @@ public class QuickLinkUserTests : VideoWebUiTest
         Assert.Pass();
     }
 
-    private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string caseName)
+    private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string conferenceId)
     {
         var quickLinkJoinHearingPage = LoginAsQuickLinkUser(_quickLinkJoinUrl, qlName);
         quickLinkJoinHearingPage.EnterQuickLinkUserDetails(qlName, true);
         var quickLinkHearingListPage = quickLinkJoinHearingPage.Continue();
-        var page = quickLinkHearingListPage.SelectHearing(caseName).GoToEquipmentCheck()
+        var page = quickLinkHearingListPage.SelectHearing(conferenceId).GoToEquipmentCheck()
             .GoToSwitchOnCameraMicrophonePage()
             .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
             .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();
@@ -103,7 +108,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");

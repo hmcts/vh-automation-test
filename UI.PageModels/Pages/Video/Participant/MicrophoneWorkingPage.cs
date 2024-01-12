@@ -7,7 +7,7 @@ public class MicrophoneWorkingPage : VhPage
     private readonly By _continueBtn = By.Id("continue-btn");
     private readonly By _microphoneYesRadioButton = By.XPath("//label[normalize-space()='Yes']");
 
-    public MicrophoneWorkingPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    public MicrophoneWorkingPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime, useAltLocator:false)
     {
     }
     

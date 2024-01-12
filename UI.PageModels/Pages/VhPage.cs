@@ -21,8 +21,9 @@ public abstract class VhPage
     protected string Locale = GbLocale;
     protected bool IsLoginPage => Driver.Url.Contains("login");
     protected bool IgnoreAccessibilityForPage = false;
+    protected bool UseAltLocator;
 
-    protected VhPage(IWebDriver driver, int defaultWaitTime, bool ignoreAccessibilityForPage = false)
+    protected VhPage(IWebDriver driver, int defaultWaitTime, bool useAltLocator, bool ignoreAccessibilityForPage = false)
     {
         var config = ConfigRootBuilder.EnvConfigInstance();
         Driver = driver;
@@ -31,6 +32,7 @@ public abstract class VhPage
         AccessibilityCheck = config.EnableAccessibilityCheck;
         AccessibilityReportFilePath = config.AccessibilityReportFilePath;
         AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
+        UseAltLocator = useAltLocator;
         if (driver is RemoteWebDriver) Locale = "en-US";
         CheckAccessibility();
     }

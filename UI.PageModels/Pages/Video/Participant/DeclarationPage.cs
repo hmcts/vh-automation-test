@@ -16,11 +16,11 @@ public class DeclarationPage : VhVideoWebPage
     public static By DeclarationCheckBox => By.CssSelector("label.govuk-label.govuk-checkboxes__label");
     public static By DeclarationContinueBtn => By.Id("nextButton");
 
-    public ParticipantWaitingRoomPage AcceptDeclaration()
-    {        
+    public ParticipantWaitingRoomPage AcceptDeclaration(bool isParticipantWithLimitedControls = false)
+    {
         ConfirmPageHasLoaded();
         ClickElement(DeclarationCheckBox);
         ClickElement(DeclarationContinueBtn);
-        return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime);
+        return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime, isParticipantWithLimitedControls);
     }
 }

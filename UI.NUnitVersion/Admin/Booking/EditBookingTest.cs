@@ -2,6 +2,7 @@ using UI.PageModels.Pages.Admin.Booking;
 
 namespace UI.NUnitVersion.Admin.Booking;
 
+[Category("Daily")]
 public class EditBookingTest : AdminWebUiTest
 {
     private string _hearingIdString;
@@ -34,7 +35,7 @@ public class EditBookingTest : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
