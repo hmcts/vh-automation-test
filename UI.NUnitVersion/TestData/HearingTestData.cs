@@ -4,7 +4,7 @@ public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
-    public static string EJUD_Judge = "vhs.william.craig@ejudiciary.net";
+    public static string EJUD_Judge = "vhs.Phil.Debrah@ejudiciary.net";
     public static string Judge = "auto_aw.judge_02@hearings.reform.hmcts.net";
     /// <summary>
     /// Create a hearing with only a judge
