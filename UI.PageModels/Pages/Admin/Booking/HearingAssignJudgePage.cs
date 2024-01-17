@@ -12,6 +12,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
     private readonly By _contWithoutJOH = By.XPath("//button[@id='nextButtonToParticipants']");
+    //By.XPath("//*[@id='nextButtonToParticipants']
     
 
     public HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
