@@ -1,5 +1,4 @@
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
+
 using UI.PageModels.Pages.Admin.Booking;
 
 namespace UI.NUnitVersion.Admin.Booking;
@@ -16,7 +15,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var v2Flag = FeatureToggles.UseV2Api();
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(
-            judgeUsername: FeatureToggles.UseV2Api() ? HearingTestData.EJUD_Judge : HearingTestData.Judge, 
+            judgeUsername: HearingTestData.Judge, 
             scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
@@ -55,7 +54,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         else
             assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
             
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage(useParty: !v2Flag);
+        var addParticipantPage = assignJudgePage.GoToParticipantsPage(v2Flag);
         
         if(v2Flag)
             addParticipantPage.AddExistingParticipantsV2(_bookingDto.Participants);
