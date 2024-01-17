@@ -1,4 +1,6 @@
-﻿namespace UI.PageModels.Pages.Admin.Booking;
+﻿using NUnit.Framework;
+
+namespace UI.PageModels.Pages.Admin.Booking;
 
 public class SummaryPage : VhAdminWebPage
 {
@@ -11,6 +13,12 @@ public class SummaryPage : VhAdminWebPage
 
     private readonly By _tryAgainButton = By.Id("btnTryAgain");
 
+    //addAJudgeWarning 
+        
+    private readonly By _addAjudgeWarning = By.ClassName("div[role='region']");
+    private readonly By _addANoJudgeWarning = By.CssSelector("h2[id = govuk-notification-banner-title]");
+   
+
     public SummaryPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForElementToBeClickable(_bookButton);
@@ -18,12 +26,14 @@ public class SummaryPage : VhAdminWebPage
             throw new InvalidOperationException(
                 "This is not the summary page, the current url is: " + Driver.Url);
     }
+    
 
     public void ValidateSummaryPage(BookingDto bookingDto)
     {
         CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
         CompareText(By.Id("caseName"), bookingDto.CaseName);
         CompareText(By.Id("caseType"), bookingDto.CaseType);
+        
         
 
         var courtAddress = string.IsNullOrWhiteSpace(bookingDto.RoomName)
@@ -61,7 +71,44 @@ public class SummaryPage : VhAdminWebPage
            
             CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
         }
+        
     }
+    
+    public void ValidateSummaryNoJudgePage(BookingDto bookingDto)
+    {
+        CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
+        CompareText(By.Id("caseName"), bookingDto.CaseName);
+        CompareText(By.Id("caseType"), bookingDto.CaseType);
+
+        var courtAddress = string.IsNullOrWhiteSpace(bookingDto.RoomName)
+            ? bookingDto.VenueName
+            : $"{bookingDto.VenueName}, {bookingDto.RoomName}";
+        CompareText(By.Id("courtAddress"), courtAddress);
+
+        var hearingDate = $"{bookingDto.ScheduledDateTime:dddd dd MMMM yyyy, HH:mmtt}";
+        CompareText(By.Id("hearingDate"), hearingDate);
+        var duration =
+            $"listed for {Pluralise(bookingDto.DurationHour, "hour")} {Pluralise(bookingDto.DurationMinute, "minute")}"
+                .Trim();
+        CompareText(By.Id("hearingDuration"), duration);
+        
+        CompareText(By.Id("audioRecording"), bookingDto.AudioRecording ? "Yes" : "No");
+
+        for (var i = 0; i < bookingDto.VideoAccessPoints.Count-1; i++)
+        {
+            var endpoint = bookingDto.VideoAccessPoints[i];
+            CompareText(By.Id($"displayName{i}"), endpoint.DisplayName);
+        }
+
+        if (!string.IsNullOrWhiteSpace(bookingDto.OtherInformation))
+        {
+            CompareText(By.Id("otherInformation"), bookingDto.OtherInformation);
+        }
+        
+        Assert.AreEqual("Important", Driver.FindElement(_addANoJudgeWarning).Text);
+    }
+    
+    
     
     private string Pluralise(int number, string text)
     {
@@ -85,7 +132,9 @@ public class SummaryPage : VhAdminWebPage
     public BookingConfirmationPage ClickBookButton()
     {
         ClickElement(_bookButton);
-        WaitForElementToBeVisible(Spinner);
+        if(IsElementVisible(Spinner))
+            WaitForElementToBeVisible(Spinner);
+        
         WaitForApiSpinnerToDisappear(90); // booking process can take a while. lower when process has been optimised
         WaitForElementToBeVisible(By.TagName("app-booking-confirmation"));
         return new BookingConfirmationPage(Driver, DefaultWaitTime);

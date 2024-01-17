@@ -11,6 +11,8 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _nextButtonEJudge = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
+    private readonly By _contWithoutJOH = By.XPath("//button[@id='nextButtonToParticipants']");
+    //By.XPath("//*[@id='nextButtonToParticipants']
     
 
     public HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
@@ -56,5 +58,11 @@ public class HearingAssignJudgePage : VhAdminWebPage
     {
         WaitForElementToBeVisible(_saveEJudge);
         ClickElement(_saveEJudge);
+    }
+
+    public void ClickContinueWithoutJudiciary()
+    {
+        WaitForElementToBeVisible(_contWithoutJOH);
+        ClickElement(_contWithoutJOH);
     }
 }
