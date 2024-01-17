@@ -24,11 +24,11 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
     }
     
-    public void AdmitParticipant(string participantDisplayName)
+    public void AdmitParticipant(string displayName, string participantId)
     {
-        OpenContextMenu(participantDisplayName);
-        ClickElement(ParticipantAdmitButton(participantDisplayName));
-        WaitForElementToBeVisible(ParticipantRemoteMuteButton(participantDisplayName), 60);
+        OpenContextMenu(displayName);
+        ClickElement(ParticipantAdmitButton(participantId));
+        WaitForElementToBeVisible(ParticipantRemoteMuteButton(displayName), 60);
     }
     
     public void DismissParticipant(string participantDisplayName)
@@ -42,9 +42,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     {
         var contextLocator = ParticipantContextButton(participantDisplayName);
         if (IsElementVisible(contextLocator))
-        {
             ClickElement(ParticipantContextButton(participantDisplayName));    
-        }
         else
         {
             var elem = Driver.FindElement(contextLocator);
@@ -78,9 +76,9 @@ public class JudgeHearingRoomPage : VhVideoWebPage
             $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//img[@alt='Context menu icon']");
     }
     
-    private By ParticipantAdmitButton(string participantDisplayName)
+    private By ParticipantAdmitButton(string participantId)
     {
-        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//a[normalize-space()='Admit participant']");
+        return By.XPath($"//a[contains(@id, 'judge-context-menu-participant-{participantId}')]");
     }
     
     private By ParticipantDismissButton(string participantDisplayName)

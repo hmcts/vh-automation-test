@@ -54,7 +54,7 @@ public class EndToEndTest : VideoWebUiTest
                 .SelectHearing(_conference.Id).GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
-                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();
+                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
             // store the participant driver in a dictionary so we can access it later to sign out
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
         }
@@ -119,7 +119,7 @@ public class EndToEndTest : VideoWebUiTest
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();

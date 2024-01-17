@@ -3,23 +3,24 @@
 public class ParticipantWaitingRoomPage : VhVideoWebPage
 {
     public static string ParticipantWaitingRoomClosedTitle = "This hearing has finished. You may now sign out";
-
-    public static string ParticipantWaitingRoomPausedTitle =
-        "The judge will restart the hearing when they are ready. Please stay near your screen";
-
+    public static string ParticipantWaitingRoomPausedTitle = "The judge will restart the hearing when they are ready. Please stay near your screen";
+    private readonly By _chooseCameraAndMicButton = By.Id("changeCameraButton");
     private readonly By _startPrivateConsultationBtn = By.Id("openStartPCButton");
     private readonly By _joinPrivateMeetingButton = By.Id("openJoinPCButton");
     private readonly By _acceptConsultationButton = By.Id("notification-toastr-invite-accept");
     private readonly By _continueJoiningPrivateMeetingButton = By.Id("continue-btn");
     private readonly By openChatButton = By.XPath("//img[@id='open-chat-arrow']");
     private readonly By closeChatButton = By.XPath("//img[@id='close-chat-arrow']");
-    public ParticipantWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    public ParticipantWaitingRoomPage(IWebDriver driver, int defaultWaitTime, bool isParticipantWithLimitedControls = false) : base(driver, defaultWaitTime, isParticipantWithLimitedControls)
     {
     }
 
     protected override void ConfirmPageHasLoaded()
     {
-        WaitForElementToBeClickable(_startPrivateConsultationBtn, 60);
+        if(UseAltLocator)
+            WaitForElementToBeVisible(_chooseCameraAndMicButton, 10);
+        else
+            WaitForElementToBeClickable(_startPrivateConsultationBtn, 60);
     }
 
     private readonly By StartVideoHearingButton = By.XPath("//button[contains(text(),'Start video hearing')]");

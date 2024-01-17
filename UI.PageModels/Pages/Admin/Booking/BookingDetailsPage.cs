@@ -91,7 +91,11 @@ public class BookingDetailsPage : VhAdminWebPage
         var participantsBreadcrumbLocator = By.XPath("//app-breadcrumb//div//ol//li//a[text()='Participants']");
         ClickElement(participantsBreadcrumbLocator);
         var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime, useParty);
-        participantsPage.AddExistingParticipants(participantsToAdd);
+        if(useParty)
+            participantsPage.AddExistingParticipants(participantsToAdd);
+        else
+            participantsPage.AddExistingParticipantsV2(participantsToAdd);
+        
         return participantsPage.GoToVideoAccessPointsPage().GoToSummaryPage().ClickBookButton();
         
     }

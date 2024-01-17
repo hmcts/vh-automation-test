@@ -14,9 +14,9 @@ public class QuickLinkHearingListPage : VhVideoWebPage
     {
     }
     
-    public GetReadyForTheHearingIntroductionPage SelectHearing(string caseName)
+    public GetReadyForTheHearingIntroductionPage SelectHearing(string conferenceId)
     {
-        var selectHearingLocator = By.XPath($"//tr[contains(.,'{caseName}')]//button");
+        var selectHearingLocator = By.XPath($"//button[@id=\"sign-into-hearing-btn-{conferenceId}\"]");
         ClickElement(selectHearingLocator);
         return new GetReadyForTheHearingIntroductionPage(Driver, DefaultWaitTime);
     }

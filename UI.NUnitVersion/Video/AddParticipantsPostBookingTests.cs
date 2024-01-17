@@ -9,15 +9,16 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Category("Daily")]
     [Description("Book a hearing with a judge and add a participant after booking. Check if the notification appears and if the user joins the judge in the hearing when a hearing is started.")]
     [Test]
-    public void should_add_new_participant_after_booking()
+    public async Task should_add_new_participant_after_booking()
     {
+        var isV2 = FeatureToggles.UseV2Api();
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
-        var conference = VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false).Result;
+        var conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false);
 
         // log in as judge, go to waiting room and wait for alerts
         var judgeUsername = hearingDto.Judge.Username;
@@ -26,20 +27,23 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
         
         var participantsToAdd = new List<BookingExistingParticipantDto>(){HearingTestData.KnownParticipantsForTesting()[0]};
-        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd, useParty: true);
+        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd, !isV2);
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         
+        var participantsInConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
         // loop through all participants in hearing and login as each one
         foreach (var participant in hearingDto.Participants)
         {
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
             var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
-            var participantWaitingRoom = participantHearingList.SelectHearing(conference.Id).GoToEquipmentCheck()
+            var participantWaitingRoom = participantHearingList
+                .SelectHearing(conference.Id)
+                .GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
                 .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
-                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();
+                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
             // store the participant driver in a dictionary so we can access it later to sign out
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
             
@@ -51,7 +55,8 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         foreach (var participant in participantsToAdd)
         {
-            judgeHearingRoomPage.IsParticipantInHearing(participant.FullName).Should().BeTrue();
+            var p = participantsInConference.First(x => x.Username == participant.Username);
+            judgeHearingRoomPage.AdmitParticipant(p.DisplayName, p.Id.ToString());
         }
         
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
@@ -68,7 +73,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto);
+        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");

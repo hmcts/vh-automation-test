@@ -147,8 +147,7 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
     
-    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, 
-        string displayName)
+    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, string displayName)
     {
         AddExistingParticipant(party, role, contactEmail, displayName);
     }
