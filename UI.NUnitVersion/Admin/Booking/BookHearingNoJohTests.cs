@@ -4,14 +4,14 @@ using UI.PageModels.Pages.Admin.Booking;
 
 namespace UI.NUnitVersion.Admin.Booking;
 
-public class BookHearingNoJOHTests : AdminWebUiTest
+public class BookHearingNoJohTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
     private string _hearingIdString;
 
     [Category("Daily")]
     [Test]
-    public void BookAHearingNoJOH()
+    public void BookAHearingNoJoh()
     {
         var v2Flag = FeatureToggles.UseV2Api();
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
@@ -75,34 +75,16 @@ public class BookHearingNoJOHTests : AdminWebUiTest
         
         //CLick View this Booking
         
-        //driver.FindElement(By.XPath("//*[@id=\"main-content\"]/app-booking-confirmation/div/div/div[1]/a")).Click();
-        driver.FindElement(By.XPath("//*[@id='main-content']/app-booking-confirmation/div/div/div[1]/a")).Click();
-        //Edit
-        //driver.FindElement(By.XPath("//button[@id='edit-button']")).Click();
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        IWebElement editButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//button[@id='edit-button']")));
-
-        //JOH
-        //driver.FindElement((By.LinkText("Judicial Office Holder"))).Click();
-        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        var element = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id='main-content']/app-summary/app-breadcrumb/div/ol/li[3]/a")));
-        element.Click();
-
-        //driver.FindElement(By.XPath("//*[@id=\"main-content\"]/app-summary/app-breadcrumb/div/ol/li[3]/a")).Click();
+        var viewThisBooking = new BookingConfirmationPage(driver, 20);
+        viewThisBooking.ClickViewBookingLink();
+        viewThisBooking.editHearing();
+        viewThisBooking.AddNewNoJoh();
         
         assignJudgePage.AssignPresidingJudiciaryDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName);
         assignJudgePage.ClickSaveEJudgeButton();
-        
-        //var viewBookingPage = new BookingConfirmationPage(IWebDriver: base );
-        //viewBookingPage.ClickViewBookingLink();
-        
-        //var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
-        //return bookingDetailsPage;
-        
-        //Next
-        driver.FindElement(By.XPath("//*[@id='nextButtonToParticipants']")).Click();
-        //save
-        driver.FindElement(By.XPath("//*[@id='bookButton']")).Click();
+        viewThisBooking.NextParticipantPage();
+        var saveNewJoh = new SummaryPage(driver, 20);
+        saveNewJoh.ClickBookButton();
         
         _hearingIdString = confirmationPage.GetNewHearingId();
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
