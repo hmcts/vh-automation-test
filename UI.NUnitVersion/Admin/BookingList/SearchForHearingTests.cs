@@ -38,15 +38,6 @@ public class SearchForHearingTests : AdminWebUiTest
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         var request = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: date);
         _hearing = await BookingsApiClient.BookNewHearingAsync(request);
-    }
-
-    protected override async Task CleanUp()
-    {
-        if (_hearing != null)
-        {
-            TestContext.WriteLine($"Removing Hearing {_hearing.Id}");
-            await BookingsApiClient.RemoveHearingAsync(_hearing.Id);
-            _hearing = null;
-        }
+        TestHearingIds.Add(_hearing.Id.ToString());
     }
 }

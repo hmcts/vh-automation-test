@@ -14,7 +14,16 @@ public class HearingDetailsPage : VhAdminWebPage
             throw new InvalidOperationException(
                 "This is not the HearingDetails page, the current url is: " + Driver.Url);
     }
-
+    
+    public void EnterHearingDetailsV2(string caseNumber, string caseName, string caseType)
+    {
+        WaitForApiSpinnerToDisappear();
+        EnterText(_caseNumber, caseNumber);
+        EnterText(_caseName, caseName);
+        WaitForDropdownListToPopulate(_caseType);
+        SelectDropDownByText(_caseType, caseType);
+        
+    }
     /// <summary>
     /// Enter the case details, case type and hearing type
     /// </summary>
@@ -25,33 +34,13 @@ public class HearingDetailsPage : VhAdminWebPage
     public void EnterHearingDetails(string caseNumber, string caseName, string caseType, string hearingType)
     {
         WaitForApiSpinnerToDisappear();
-        EnterText(_caseName, caseName);
         EnterText(_caseNumber, caseNumber);
+        EnterText(_caseName, caseName);
         WaitForDropdownListToPopulate(_caseType);
         SelectDropDownByText(_caseType, caseType);
         SelectDropDownByText(_hearingType, hearingType);
     }
     
-    public void EnterHearingDetailsV2(string caseNumber, string caseName, string caseType)
-    {
-        WaitForApiSpinnerToDisappear();
-        EnterText(_caseName, caseName);
-        EnterText(_caseNumber, caseNumber);
-        WaitForDropdownListToPopulate(_caseType);
-        SelectDropDownByText(_caseType, caseType);
-        
-    }
-
-    /// <summary>
-    /// Go to the next page or the booking journey, the hearing schedule page
-    /// </summary>
-    /// <returns></returns>
-    public HearingSchedulePage GoToNextPage()
-    {
-        ClickElement(_nextButton);
-        return new HearingSchedulePage(Driver, DefaultWaitTime);
-    }
-
     /// <summary>
     /// Enter the details for a hearing and go to the summary page
     /// </summary>
@@ -94,4 +83,15 @@ public class HearingDetailsPage : VhAdminWebPage
 
         return otherInformationPage.GoToSummaryPage();
     }
+    
+    /// <summary>
+    /// Go to the next page or the booking journey, the hearing schedule page
+    /// </summary>
+    /// <returns></returns>
+    public HearingSchedulePage GoToNextPage()
+    {
+        ClickElement(_nextButton);
+        return new HearingSchedulePage(Driver, DefaultWaitTime);
+    }
+
 }

@@ -117,9 +117,16 @@ public abstract class VhPage
 
     protected void WaitForApiSpinnerToDisappear(int timeout = 30)
     {
-        WaitForElementToBeInvisible(Spinner, timeout);
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
-            .Until(ExpectedConditions.InvisibilityOfElementLocated(Spinner));
+        try
+        {
+            WaitForElementToBeInvisible(Spinner, timeout);
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
+                .Until(ExpectedConditions.InvisibilityOfElementLocated(Spinner));
+        }
+        catch (NoSuchElementException)
+        {
+            Console.WriteLine("Couldn't find spinner");
+        }
     }
 
     protected void WaitForDropdownListToPopulate(By locator)

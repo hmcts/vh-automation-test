@@ -5,7 +5,7 @@ namespace UI.NUnitVersion;
 
 public abstract class CommonUiTest
 {
-    
+    protected List<string> TestHearingIds = new();
     protected BookingsApiClient BookingsApiClient;
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
@@ -52,5 +52,18 @@ public abstract class CommonUiTest
         TestContext.WriteLine($"Using justice user for test {justiceUser.ContactEmail}");
 
         return justiceUser;
+    }
+    
+    [OneTimeTearDown]
+    protected async Task OneTimeTearDown()
+    {
+        foreach (var hearingId in TestHearingIds)
+        {
+            if (Guid.TryParse(hearingId, out var guid))
+            {
+                TestContext.WriteLine($"Removing Hearing {guid}");
+                await BookingsApiClient.RemoveHearingAsync(guid);
+            }
+        }
     }
 }

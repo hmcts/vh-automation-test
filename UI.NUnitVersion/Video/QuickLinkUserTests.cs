@@ -111,20 +111,10 @@ public class QuickLinkUserTests : VideoWebUiTest
         var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(_hearingIdString);
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
         _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
         TestContext.WriteLine(_quickLinkJoinUrl);
-    }
-    
-    protected override async Task CleanUp()
-    {
-        if(_hearingIdString != null)
-        {
-            var hearingId = Guid.Parse(_hearingIdString);
-            await BookingsApiClient.RemoveHearingAsync(hearingId);
-            TestContext.WriteLine($"Removed Hearing {hearingId}");
-            _hearingIdString = null;
-        }
     }
 }

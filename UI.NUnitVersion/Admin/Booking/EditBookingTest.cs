@@ -37,21 +37,10 @@ public class EditBookingTest : AdminWebUiTest
         var createHearingPage = dashboardPage.GoToBookANewHearing();
         var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
-        _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(confirmationPage.GetNewHearingId());
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
         return bookingDetailsPage;
-    }
-    
-    protected override async Task CleanUp()
-    {
-        if(_hearingIdString != null)
-        {
-            var hearingId = Guid.Parse(_hearingIdString);
-            TestContext.WriteLine($"Removing Hearing {hearingId}");
-            await BookingsApiClient.RemoveHearingAsync(hearingId);
-            _hearingIdString = null;
-        }
     }
     
 }

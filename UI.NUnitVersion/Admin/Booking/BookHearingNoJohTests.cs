@@ -6,7 +6,6 @@ namespace UI.NUnitVersion.Admin.Booking;
 public class BookHearingNoJohTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
-    private string _hearingIdString;
 
     [Category("Daily")]
     [Test]
@@ -85,8 +84,9 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var saveNewJoh = new SummaryPage(driver, 20);
         saveNewJoh.ClickBookButton();
         
-        _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(confirmationPage.GetNewHearingId());
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
+        
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
         dashboardPage = confirmationPage.GoToDashboardPage();
         
@@ -104,17 +104,5 @@ public class BookHearingNoJohTests : AdminWebUiTest
         dashboardPage.SignOut();
 
         Assert.Pass();
-    }
-    
-
-    protected override async Task CleanUp()
-    {
-        if(_hearingIdString != null)
-        {
-            var hearingId = Guid.Parse(_hearingIdString);
-            TestContext.WriteLine($"Removing Hearing {hearingId}");
-            await BookingsApiClient.RemoveHearingAsync(hearingId);
-            _hearingIdString = null;
-        }
     }
 }

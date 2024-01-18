@@ -67,8 +67,9 @@ public class BookHearingTests : AdminWebUiTest
         summaryPage.ValidateSummaryPage(_bookingDto);
         
         var confirmationPage = summaryPage.ClickBookButton();
-        _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(confirmationPage.GetNewHearingId());
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
+        
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
         dashboardPage = confirmationPage.GoToDashboardPage();
         
@@ -86,17 +87,5 @@ public class BookHearingTests : AdminWebUiTest
         dashboardPage.SignOut();
 
         Assert.Pass();
-    }
-    
-
-    protected override async Task CleanUp()
-    {
-        if(_hearingIdString != null)
-        {
-            var hearingId = Guid.Parse(_hearingIdString);
-            TestContext.WriteLine($"Removing Hearing {hearingId}");
-            await BookingsApiClient.RemoveHearingAsync(hearingId);
-            _hearingIdString = null;
-        }
     }
 }

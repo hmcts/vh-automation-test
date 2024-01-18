@@ -10,10 +10,13 @@ public class EndToEndTest : VideoWebUiTest
     private ConferenceDetailsResponse _conference;
     private JusticeUserResponse _justiceUser;
 
+    [Test]
     [Category("Daily")]
     [Category("a11y")]
-    [Test]
-    [Description("Book a hearing. Allocate to a CSO. Log in as a judge, edit their display name, and log in as 4 participants. Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
+    [Category("Smoke Test")]
+    [Description("Book a hearing. " +
+                 "Allocate to a CSO. Log in as a judge, edit their display name, and log in as 4 participants. " +
+                 "Log in as a VHO and monitor the changes. IM between VHO and Judge.")]
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
@@ -122,6 +125,7 @@ public class EndToEndTest : VideoWebUiTest
         var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(_hearingIdString);
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
         bookingDetailsPage.GoToDashboardPage();
         
@@ -136,16 +140,5 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: _conference.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
-    }
-    
-    protected override async Task CleanUp()
-    {
-        if(_hearingIdString != null)
-        {
-            var hearingId = Guid.Parse(_hearingIdString);
-            await BookingsApiClient.RemoveHearingAsync(hearingId);
-            TestContext.WriteLine($"Removed Hearing {hearingId}");
-            _hearingIdString = null;
-        }
     }
 }

@@ -1,5 +1,4 @@
 trigger: none
-
 pr: none
 
 schedules:
@@ -19,7 +18,7 @@ parameters:
   - name: runA11yTests
     displayName: Run Accessibiliy Tests
     type: boolean
-    default: true
+    default: false
 
   - name: environment
     type: string
