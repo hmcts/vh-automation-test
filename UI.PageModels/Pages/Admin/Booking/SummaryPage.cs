@@ -132,15 +132,7 @@ public class SummaryPage : VhAdminWebPage
     public BookingConfirmationPage ClickBookButton()
     {
         ClickElement(_bookButton);
-        try
-        {
-            WaitForApiSpinnerToDisappear(90); // booking process can take a while. lower when process has been optimised
-        }
-        catch (NoSuchElementException)
-        {
-            Console.WriteLine("Couldn't find spinner");
-        }
-    
+        WaitForApiSpinnerToDisappear(90); // booking process can take a while. lower when process has been optimised
         WaitForElementToBeVisible(By.TagName("app-booking-confirmation"));
         return new BookingConfirmationPage(Driver, DefaultWaitTime);
     }
