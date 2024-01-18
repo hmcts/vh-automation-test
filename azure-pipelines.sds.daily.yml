@@ -1,9 +1,8 @@
 trigger: none
-
 pr: none
 
 schedules:
-  - cron: "15 9 * * 1,2,3,4,5"
+  - cron: "10 9 * * 1,2,3,4,5"
     displayName: Daily build
     always: true
     branches:
@@ -19,7 +18,7 @@ parameters:
   - name: runA11yTests
     displayName: Run Accessibiliy Tests
     type: boolean
-    default: true
+    default: false
 
   - name: environment
     type: string
