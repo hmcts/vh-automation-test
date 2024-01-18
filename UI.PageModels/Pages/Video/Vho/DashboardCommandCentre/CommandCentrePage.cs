@@ -31,7 +31,12 @@ public class CommandCentrePage : VhVideoWebPage
         ClickElement(element);
     }
 
-    public ReadOnlyCollection<IWebElement> GetAllConferencesStartTimes() => Driver.FindElements(By.XPath("//app-vho-hearing-list//div[contains(@id, '-time')]"));
+    public ReadOnlyCollection<IWebElement> GetAllConferencesStartTimes()
+    {
+        var conferences = By.XPath("//app-vho-hearing-list//div[contains(@id, '-time')]");
+        WaitForElementToBeVisible(conferences);
+        return Driver.FindElements(conferences);
+    } 
     
     public void SelectHearingByCaseNumber(string caseNumber)
     {

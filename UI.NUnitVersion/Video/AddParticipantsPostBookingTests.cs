@@ -76,6 +76,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(_hearingIdString);
         TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
         return confirmationPage.ClickViewBookingLink();
     }

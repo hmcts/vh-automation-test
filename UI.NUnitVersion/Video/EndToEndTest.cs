@@ -125,6 +125,7 @@ public class EndToEndTest : VideoWebUiTest
         var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
+        TestHearingIds.Add(_hearingIdString);
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
         bookingDetailsPage.GoToDashboardPage();
         
@@ -139,16 +140,5 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: _conference.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
-    }
-    
-    protected override async Task CleanUp()
-    {
-        if(_hearingIdString != null)
-        {
-            var hearingId = Guid.Parse(_hearingIdString);
-            await BookingsApiClient.RemoveHearingAsync(hearingId);
-            TestContext.WriteLine($"Removed Hearing {hearingId}");
-            _hearingIdString = null;
-        }
     }
 }
