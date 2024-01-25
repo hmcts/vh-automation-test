@@ -12,6 +12,9 @@ public class BookHearingNoJohTests : AdminWebUiTest
     public void BookAHearingNoJoh()
     {
         var v2Flag = FeatureToggles.UseV2Api();
+        if(!FeatureToggles.EJudEnabled())
+            Assert.Pass("Ejud is not enabled, will not be able to book without a judge. Skipping Test");
+        
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(
             judgeUsername: HearingTestData.Judge, 
@@ -47,9 +50,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
 
         if (v2Flag)
-        {
             assignJudgePage.ClickContinueWithoutJudiciary();
-        }
         else
             assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
             
