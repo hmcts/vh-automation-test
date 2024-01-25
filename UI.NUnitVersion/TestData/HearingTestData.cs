@@ -1,3 +1,5 @@
+using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
+
 namespace UI.NUnitVersion.TestData;
 
 public static class HearingTestData
@@ -98,6 +100,13 @@ public static class HearingTestData
             new("Claimant VAP", "Auto 2"),
             new("Defendant VAP", "Auto 4")
         };
+        return bookingDto;
+    }
+
+    public static BookingDto CreateMultiDayDTO(int NumberOfDays, DateTime scheduledDateTime  )
+    {
+        var bookingDto = CreateHearingDto(Judge, false, scheduledDateTime );
+        bookingDto.EndDateTime = scheduledDateTime.AddDays(NumberOfDays);
         return bookingDto;
     }
 
