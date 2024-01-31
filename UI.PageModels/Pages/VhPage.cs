@@ -60,7 +60,8 @@ public abstract class VhPage
     
     protected virtual void ConfirmPageHasLoaded()
     {
-        // actions needed to wait for page to load
+        // Actions needed to wait for page to load
+        // Implemented by child classes
     }
     
     /// <summary>

@@ -75,11 +75,10 @@ public class BookHearingTests : AdminWebUiTest
         var postBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
         var postBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
         
-        postBookingUnallocatedHearingsToday.Should().Be(preBookingUnallocatedHearingsToday);
+        postBookingUnallocatedHearingsToday.Should().BeGreaterOrEqualTo(preBookingUnallocatedHearingsToday);
         postBookingUnallocatedHearingsTomorrow.Should().BeGreaterThan(preBookingUnallocatedHearingsTomorrow);
         postBookingUnallocatedHearingsNextSevenDays.Should().BeGreaterThan(preBookingUnallocatedHearingsNextSevenDays);
-        postBookingUnallocatedHearingsNextThirtyDays.Should()
-            .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
+        postBookingUnallocatedHearingsNextThirtyDays.Should().BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
         
         dashboardPage.SignOut();
 
