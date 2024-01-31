@@ -60,7 +60,8 @@ public abstract class VhPage
     
     protected virtual void ConfirmPageHasLoaded()
     {
-        // actions needed to wait for page to load
+        // Actions needed to wait for page to load
+        // Implemented by child classes
     }
     
     /// <summary>
@@ -129,9 +130,9 @@ public abstract class VhPage
         }
     }
 
-    protected void WaitForDropdownListToPopulate(By locator)
+    protected void WaitForDropdownListToPopulate(By locator, int waitTime = 2000)
     {
-        Thread.Sleep(2000);
+        Thread.Sleep(waitTime);
         new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
             .Until<SelectElement?>(drv =>
                 {
