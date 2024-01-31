@@ -46,7 +46,7 @@ public class HearingDetailsPage : VhAdminWebPage
     /// </summary>
     /// <param name="bookingDto">A DTO representing a booking</param>
     /// <returns>the summary page</returns>
-    public SummaryPage EnterHearingDetails(BookingDto bookingDto, bool isV2)
+    public SummaryPage BookAHearingJourney(BookingDto bookingDto, bool isV2)
     {
         if(isV2)
             EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
@@ -63,17 +63,14 @@ public class HearingDetailsPage : VhAdminWebPage
         if (isV2)
         {
             assignJudgePage.AssignPresidingJudiciaryDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName);
-            assignJudgePage.ClickSaveEJudgeButton();
+            assignJudgePage.ClickSaveJudgeButton();
         }
         else
             assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
 
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage(isV2);
+        var addParticipantPage = assignJudgePage.GotToNextPage(isV2);
         
-        if(isV2)
-            addParticipantPage.AddExistingParticipantsV2(bookingDto.Participants);
-        else
-            addParticipantPage.AddExistingParticipants(bookingDto.Participants);
+        addParticipantPage.AddParticipants(bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);

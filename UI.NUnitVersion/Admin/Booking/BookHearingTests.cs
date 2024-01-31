@@ -45,17 +45,14 @@ public class BookHearingTests : AdminWebUiTest
         if (v2Flag)
         {
             assignJudgePage.AssignPresidingJudiciaryDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName);
-            assignJudgePage.ClickSaveEJudgeButton();
+            assignJudgePage.ClickSaveJudgeButton();
         }
         else
             assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
             
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage(v2Flag);
+        var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
         
-        if(v2Flag)
-            addParticipantPage.AddExistingParticipantsV2(_bookingDto.Participants);
-        else
-            addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
+        addParticipantPage.AddParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);

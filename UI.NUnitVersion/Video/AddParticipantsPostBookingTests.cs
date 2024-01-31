@@ -73,7 +73,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.EnterHearingDetails(bookingDto, FeatureToggles.UseV2Api());
+        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggles.UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);
