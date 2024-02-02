@@ -8,35 +8,21 @@ namespace UI.PageModels.Pages.Admin.Booking;
 public class ParticipantsPage : VhAdminWebPage
 {
     private readonly By _addParticipantLink = By.Id("addParticipantBtn");
-    private readonly By _cancelButton = By.Id("cancelBtn");
-    private readonly By _clearDetailsLink = By.PartialLinkText("Clear details");
     private readonly By _displayNameTextfield = By.Id("displayName");
     private readonly By _emailList = By.XPath("//ul[@id='search-results-list']//li");
-    private readonly By _existingEmailLinks = By.XPath("//li[@class='vk-showlist-m30']/a");
-    private readonly By _firstNameTextfield = By.Id("firstName");
-    private readonly By _individualOrganisationTextfield = By.Id("companyNameIndividual");
-    private readonly By _interpreteeDropdown = By.Id("interpreterFor");
-    private readonly By _interpreterFor = By.Id("interpreterFor");
-    private readonly By _lastNameTextfield = By.Id("lastName");
-
-    private readonly By _newUserWarning =
-        By.XPath("//*[@id='search-email-component']/app-search-email/div/div[2]/strong");
 
     private readonly By _nextButton = By.Id("nextButton");
     private readonly By _participantEmailTextfield = By.Id("participantEmail");
-    private readonly By _participantsList = By.XPath("//*[contains(@class, 'vhtable-header')]");
     private readonly By _partyDropdown = By.Id("party");
-    private readonly By _phoneTextfield = By.Id("phone");
-    private readonly By _repOrganisationTextfield = By.Id("companyName");
     private readonly string _repOrganisationTextfieldId = "companyName";
     private readonly By _representingTextfield = By.Id("representing");
     private readonly By _roleDropdown = By.Id("role");
-    private readonly By _titleDropdown = By.Id("title");
-    private readonly By _updateParticipantLink = By.Id("updateParticipantBtn");
+    private readonly bool _useParty;
 
-    
+
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
     {
+        _useParty = useParty;
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeClickable(_nextButton);
         if (useParty)
@@ -47,116 +33,20 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-
-    public void AddNewIndividualParticipant(string party, string role, string contactEmail, string displayName,
-        BookingNewParticipantDto bookingNewParticipantDto)
+    public void AddParticipants(BookingExistingParticipantDto participants)
     {
-        if (!string.IsNullOrEmpty(party))
-        {
-            SelectDropDownByText(_partyDropdown, party);
-        }
-       
-        SelectDropDownByText(_roleDropdown, role);
-        EnterText(_participantEmailTextfield, contactEmail);
-        WaitForElementToBeVisible(_newUserWarning);
-
-        SelectDropDownByText(_titleDropdown, bookingNewParticipantDto.Title);
-        EnterText(_firstNameTextfield, bookingNewParticipantDto.FirstName);
-        EnterText(_lastNameTextfield, bookingNewParticipantDto.LastName);
-        EnterText(_individualOrganisationTextfield, bookingNewParticipantDto.Organisation);
-        EnterText(_phoneTextfield, bookingNewParticipantDto.Telephone);
-        EnterText(_displayNameTextfield, displayName);
+        AddParticipants(new List<BookingExistingParticipantDto> {participants});
     }
 
-    public void AddNewRepresentative(string party, string role, string contactEmail, string displayName,
-        string representing, BookingNewParticipantDto bookingNewParticipantDto)
-    { 
-        if (!string.IsNullOrEmpty(party))
-        {
-            SelectDropDownByText(_partyDropdown, party);
-        }
-        SelectDropDownByText(_roleDropdown, role);
-        EnterText(_participantEmailTextfield, contactEmail);
-        WaitForElementToBeVisible(_newUserWarning);
-
-        SelectDropDownByText(_titleDropdown, bookingNewParticipantDto.Title);
-        EnterText(_firstNameTextfield, bookingNewParticipantDto.FirstName);
-        EnterText(_lastNameTextfield, bookingNewParticipantDto.LastName);
-        EnterText(_individualOrganisationTextfield, bookingNewParticipantDto.Organisation);
-        EnterText(_phoneTextfield, bookingNewParticipantDto.Telephone);
-        EnterText(_displayNameTextfield, displayName);
-    }
-
-    private void AddNewParticipant(string party, string role, string contactEmail, string displayName,
-        BookingNewParticipantDto bookingNewParticipantDto, string? representing = null)
-    {
-        if (!string.IsNullOrEmpty(party))
-        {
-            SelectDropDownByText(_partyDropdown, party);
-        }
-        
-        SelectDropDownByText(_roleDropdown, role);
-        EnterText(_participantEmailTextfield, contactEmail);
-        WaitForElementToBeVisible(_newUserWarning);
-
-        SelectDropDownByText(_titleDropdown, bookingNewParticipantDto.Title);
-        EnterText(_firstNameTextfield, bookingNewParticipantDto.FirstName);
-        EnterText(_lastNameTextfield, bookingNewParticipantDto.LastName);
-        EnterText(_individualOrganisationTextfield, bookingNewParticipantDto.Organisation);
-        EnterText(_phoneTextfield, bookingNewParticipantDto.Telephone);
-        EnterText(_displayNameTextfield, displayName);
-
-        if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
-
-        if (HasFormValidationError())
-        {
-            throw new InvalidOperationException("Form validation error");
-        }
-
-        ClickAddParticipantAndWait();
-    }
-
-    public void AddExistingParticipants(List<BookingExistingParticipantDto> participants)
+    public void AddParticipants(List<BookingExistingParticipantDto> participants)
     {
         foreach (var participant in participants)
-            switch (participant.Role)
-            {
-                case GenericTestRole.Representative:
-                    AddExistingRepresentative(participant.Party.GetDescription(), participant.Role.GetDescription(),
-                        participant.ContactEmail,
-                        participant.DisplayName, participant.Representing);
-                    break;
-                case GenericTestRole.Interpreter:
-                    throw new NotImplementedException("Adding interpreter is not implemented");
-                default:
-                    AddExistingIndividualParticipant(participant.Party.GetDescription(),
-                        participant.Role.GetDescription(), participant.ContactEmail,
-                        participant.DisplayName);
-                    break;
-            }
-    }
-    
-    public void AddExistingParticipantsV2(List<BookingExistingParticipantDto> bookingDtoParticipants)
-    {
-        Thread.Sleep(3000); 
-        foreach (var participantDto in bookingDtoParticipants)
         {
-            AddExistingParticipantV2(
-                participantDto.Role.ToString(), participantDto.ContactEmail, 
-                participantDto.DisplayName, participantDto.Representing);      
+            if(_useParty)
+                AddExistingParticipant(participant.Party.GetDescription(), participant.Role.GetDescription(), participant.ContactEmail, participant.DisplayName, participant.Representing);
+            else
+                AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
         }
-    }
-    
-    public void AddExistingIndividualParticipant(string party, string role, string contactEmail, string displayName)
-    {
-        AddExistingParticipant(party, role, contactEmail, displayName);
-    }
-
-    public void AddExistingRepresentative(string? party = null, string? role = null, 
-        string? contactEmail = null, string? displayName = null,
-        string? representing = null)
-    {
-        AddExistingParticipant(party, role, contactEmail, displayName, representing);
     }
 
     private void AddExistingParticipant(string party, string role, string contactEmail, string displayName, string? representing = null)
@@ -181,6 +71,7 @@ public class ParticipantsPage : VhAdminWebPage
     
     private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null)
     {
+        WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
 

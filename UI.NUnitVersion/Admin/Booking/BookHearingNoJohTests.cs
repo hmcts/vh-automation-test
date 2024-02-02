@@ -12,8 +12,11 @@ public class BookHearingNoJohTests : AdminWebUiTest
     public void BookAHearingNoJoh()
     {
         var v2Flag = FeatureToggles.UseV2Api();
+        if(!FeatureToggles.EJudEnabled())
+            Assert.Pass("Ejud is not enabled, will not be able to book without a judge. Skipping Test");
+        
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(
+        _bookingDto = HearingTestData.CreateHearingDto(
             judgeUsername: HearingTestData.Judge, 
             scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
@@ -45,23 +48,12 @@ public class BookHearingNoJohTests : AdminWebUiTest
             _bookingDto.RoomName);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-
-        if (v2Flag)
-        {
-            assignJudgePage.ClickContinueWithoutJudiciary();
-        }
-        else
-            assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
-            
-        var addParticipantPage = assignJudgePage.GoToParticipantsPage(v2Flag);
         
-        if(v2Flag)
-            addParticipantPage.AddExistingParticipantsV2(_bookingDto.Participants);
-        else
-            addParticipantPage.AddExistingParticipants(_bookingDto.Participants);
+        //skipping assignment of judge
+        var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
+        addParticipantPage.AddParticipants(_bookingDto.Participants.First());
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
@@ -71,18 +63,20 @@ public class BookHearingNoJohTests : AdminWebUiTest
         
         var confirmationPage = summaryPage.ClickBookButton();
         
-        //CLick View this Booking
+        confirmationPage.ClickViewBookingLink();
+        confirmationPage.EditHearing();
+        confirmationPage.GotoJudgeAssignmentPage(v2Flag);
+
+        if (v2Flag)
+        {
+            assignJudgePage.AssignPresidingJudiciaryDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName);
+            assignJudgePage.ClickSaveJudgeButton();
+        }
+        else
+            assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
         
-        var viewThisBooking = new BookingConfirmationPage(driver, 20);
-        viewThisBooking.ClickViewBookingLink();
-        viewThisBooking.editHearing();
-        viewThisBooking.AddNewNoJoh();
-        
-        assignJudgePage.AssignPresidingJudiciaryDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName);
-        assignJudgePage.ClickSaveEJudgeButton();
-        viewThisBooking.NextParticipantPage();
-        var saveNewJoh = new SummaryPage(driver, 20);
-        saveNewJoh.ClickBookButton();
+        summaryPage = assignJudgePage.GotToNextPageOnEdit();
+        summaryPage.ClickBookButton();
         
         TestHearingIds.Add(confirmationPage.GetNewHearingId());
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
