@@ -32,26 +32,17 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        
-        if(v2Flag)
-            createHearingPage.EnterHearingDetailsV2(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType);
-        else
-            createHearingPage.EnterHearingDetails(_bookingDto.CaseNumber, _bookingDto.CaseName, _bookingDto.CaseType, _bookingDto.HearingType);
+        createHearingPage.EnterHearingDetails(_bookingDto, v2Flag);
         
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
-        hearingSchedulePage.EnterSingleDayHearingSchedule(
-            _bookingDto.ScheduledDateTime, 
-            _bookingDto.DurationHour,
-            _bookingDto.DurationMinute, 
-            _bookingDto.VenueName, 
-            _bookingDto.RoomName);
+        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         
         //skipping assignment of judge
         var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
-        addParticipantPage.AddParticipants(_bookingDto.Participants.First());
+        addParticipantPage.AddParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
@@ -67,13 +58,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         confirmationPage.EditHearing();
         confirmationPage.GotoJudgeAssignmentPage(v2Flag);
 
-        if (v2Flag)
-        {
-            assignJudgePage.AssignPresidingJudiciaryDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName);
-            assignJudgePage.ClickSaveJudgeButton();
-        }
-        else
-            assignJudgePage.EnterJudgeDetails(_bookingDto.Judge.Username, _bookingDto.Judge.DisplayName, _bookingDto.Judge.Phone);
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, v2Flag);
         
         summaryPage = assignJudgePage.GotToNextPageOnEdit();
         summaryPage.ClickBookButton();

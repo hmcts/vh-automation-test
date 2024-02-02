@@ -15,7 +15,15 @@ public class HearingDetailsPage : VhAdminWebPage
                 "This is not the HearingDetails page, the current url is: " + Driver.Url);
     }
     
-    public void EnterHearingDetailsV2(string caseNumber, string caseName, string caseType)
+    public void EnterHearingDetails(BookingDto bookingDto, bool isV2)
+    {
+        if(isV2)
+            EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
+        else
+            EnterHearingDetails(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType, bookingDto.HearingType);
+    }
+    
+    private void EnterHearingDetailsV2(string caseNumber, string caseName, string caseType)
     {
         WaitForApiSpinnerToDisappear();
         EnterText(_caseNumber, caseNumber);
@@ -31,7 +39,7 @@ public class HearingDetailsPage : VhAdminWebPage
     /// <param name="caseName">the case name</param>
     /// <param name="caseType">The name of the case type</param>
     /// <param name="hearingType">the name of the hearing type</param>
-    public void EnterHearingDetails(string caseNumber, string caseName, string caseType, string hearingType)
+    private void EnterHearingDetails(string caseNumber, string caseName, string caseType, string hearingType)
     {
         WaitForApiSpinnerToDisappear();
         EnterText(_caseNumber, caseNumber);
@@ -55,18 +63,10 @@ public class HearingDetailsPage : VhAdminWebPage
         
         var hearingSchedulePage = GoToNextPage();
 
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto.ScheduledDateTime, bookingDto.DurationHour,
-            bookingDto.DurationMinute, bookingDto.VenueName, bookingDto.RoomName);
+        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto);
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-
-        if (isV2)
-        {
-            assignJudgePage.AssignPresidingJudiciaryDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName);
-            assignJudgePage.ClickSaveJudgeButton();
-        }
-        else
-            assignJudgePage.EnterJudgeDetails(bookingDto.Judge.Username, bookingDto.Judge.DisplayName, bookingDto.Judge.Phone);
+        assignJudgePage.EnterJudgeDetails(bookingDto.Judge, isV2);
 
         var addParticipantPage = assignJudgePage.GotToNextPage(isV2);
         
