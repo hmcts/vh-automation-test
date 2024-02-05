@@ -30,6 +30,7 @@ public abstract class VhAdminWebPage : VhPage
 
     public void SignOut()
     {
-        ClickElement(_signOutMenuItemButton);
+        WaitForElementVisible(Driver, _signOutMenuItemButton);
+        Driver.FindElement(_signOutMenuItemButton).Click();
     }
 }
