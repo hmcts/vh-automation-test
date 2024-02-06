@@ -2,7 +2,7 @@ variables:
   - name: env
     value: "test"
   - name: adminWebUrl
-    value: "https://vh-admin-web.test.platform.hmcts.net/reform-login"
+    value: "https://vh-admin-web.test.platform.hmcts.net"
   - name: videoWebUrl
     value: "https://vh-video-web.test.platform.hmcts.net"
   - name: bookingsApiUrl
