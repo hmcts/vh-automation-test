@@ -1,20 +1,17 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
+namespace UI.NUnitVersion.Admin.Booking;
 
-namespace UI.AutomationTests.Admin.Booking;
-
-public class BookHearingTests : AdminWebUiTest
+public class CreatingMultiDayHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
-    private string _hearingIdString;
+    private string _groupId;
 
     [Category("Daily")]
     [Test]
-    public void BookAHearing()
+    public void CreatingMultiDayHearing()
     {
         var v2Flag = FeatureToggles.UseV2Api();
-        var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername: HearingTestData.Judge, scheduledDateTime: date);
+        var numberOfDays = 7;
+        _bookingDto = HearingTestData.CreateMultiDayDto(numberOfDays, DateTime.Today.AddDays(1).AddHours(9).AddMinutes(00));
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
         var driver = VhDriver.GetDriver();
@@ -28,30 +25,33 @@ public class BookHearingTests : AdminWebUiTest
         var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        createHearingPage.EnterHearingDetails(_bookingDto, v2Flag);
         
+        createHearingPage.EnterHearingDetails(_bookingDto, v2Flag);
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
-        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto);
+        //Create Multi-day schedule
+        hearingSchedulePage.EnterMultiDayHearingSchedule(_bookingDto);
         
+        //Add Judge
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, v2Flag);
-            
-        var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
         
+        //Add Participants
+        var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
         addParticipantPage.AddParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
+        
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
         
         var summaryPage = otherInformationPage.GoToSummaryPage();
-        summaryPage.ValidateSummaryPage(_bookingDto);
+        summaryPage.ValidateSummaryPage(_bookingDto, true);
         
         var confirmationPage = summaryPage.ClickBookButton();
-        TestHearingIds.Add(confirmationPage.GetNewHearingId());
+        _groupId = confirmationPage.GetNewHearingId();
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
@@ -70,5 +70,21 @@ public class BookHearingTests : AdminWebUiTest
         dashboardPage.SignOut();
 
         Assert.Pass();
+    }
+
+    [TearDown]
+    public async Task CleanUpMultiDayHearings()
+    {
+        if(string.IsNullOrEmpty(_groupId))return;
+        var hearings = await BookingsApiClient.GetHearingsByGroupIdAsync(Guid.Parse(_groupId));
+        foreach (var hearingId in hearings.Select(h => h.Id))
+            try
+            {
+                await BookingsApiClient.RemoveHearingAsync(hearingId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to remove hearing {hearingId} with exception {e.Message}");
+            }
     }
 }

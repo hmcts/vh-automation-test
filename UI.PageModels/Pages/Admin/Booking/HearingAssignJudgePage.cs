@@ -10,15 +10,24 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _nextButton = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
-    private readonly By _contWithoutJOH = By.XPath("//button[@id='nextButtonToParticipants']");
-    
 
     public HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
     }
 
-    public void EnterJudgeDetails(string judgeEmail, string judgeDisplayName, string judgePhone)
+    public void EnterJudgeDetails(BookingJudgeDto judge, bool isV2)
+    {
+        if (isV2)
+        {
+            AssignPresidingJudiciaryDetails(judge.Username, judge.DisplayName);
+            ClickSaveJudgeButton();
+        }
+        else
+            EnterJudgeDetails(judge.Username, judge.DisplayName, judge.Phone);
+    }
+    
+    private void EnterJudgeDetails(string judgeEmail, string judgeDisplayName, string judgePhone)
     {
         EnterText(_judgeEmail, judgeEmail);
         WaitForElementToBeVisible(Spinner); // wait 2 seconds before search starts
@@ -32,7 +41,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
             EnterText(_judgePhoneFld, judgePhone);
     }
     
-    public void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName)
+    private void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName)
     {
         EnterText(_eJudgeEmail, judgeEmail);
         WaitForApiSpinnerToDisappear();
@@ -43,7 +52,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
     }
     
     
-    public void ClickSaveJudgeButton()
+    private void ClickSaveJudgeButton()
     {
         WaitForElementToBeVisible(_saveEJudge);
         ClickElement(_saveEJudge);

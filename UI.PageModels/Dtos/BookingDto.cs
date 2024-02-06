@@ -15,6 +15,8 @@ public class BookingDto
     public string CaseType { get; set; }
     public string HearingType { get; set; }
     public DateTime ScheduledDateTime { get; set; }
+    
+    public DateTime EndDateTime { get; set; }
     public int DurationHour { get; set; }
     public int DurationMinute { get; set; }
     public string VenueName { get; set; }
