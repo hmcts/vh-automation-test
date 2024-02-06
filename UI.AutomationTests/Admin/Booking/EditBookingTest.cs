@@ -1,5 +1,3 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
 using UI.PageModels.Pages.Admin.Booking;
 
 namespace UI.AutomationTests.Admin.Booking;

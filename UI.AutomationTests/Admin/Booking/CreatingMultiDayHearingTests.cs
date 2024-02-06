@@ -1,4 +1,4 @@
-namespace UI.NUnitVersion.Admin.Booking;
+namespace UI.AutomationTests.Admin.Booking;
 
 public class CreatingMultiDayHearingTests : AdminWebUiTest
 {

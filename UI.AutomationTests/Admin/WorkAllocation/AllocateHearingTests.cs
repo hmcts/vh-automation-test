@@ -1,5 +1,3 @@
-using UI.AutomationTests.TestData;
-
 namespace UI.AutomationTests.Admin.WorkAllocation;
 
 [Category("Daily")]
