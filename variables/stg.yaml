@@ -2,7 +2,7 @@ variables:
   - name: env
     value: stg
   - name: adminWebUrl
-    value: "https://admin.staging.hearings.reform.hmcts.net"
+    value: "https://admin.staging.hearings.reform.hmcts.net/reform-login"
   - name: videoWebUrl
     value: "https://video.staging.hearings.reform.hmcts.net"
   - name: bookingsApiUrl

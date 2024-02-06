@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using UI.NUnitVersion.Configuration;
+using UI.AutomationTests.Configuration;
 
 namespace UI.Common.Configuration;
 
