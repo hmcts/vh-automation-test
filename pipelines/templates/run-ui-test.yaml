@@ -11,7 +11,7 @@ parameters:
   - name: projectPath
     displayName: Project Path
     type: string
-    default: "UI.NUnitVersion"
+    default: "UI.AutomationTests"
   - name: testCategory
     displayName: Test Category
     type: string

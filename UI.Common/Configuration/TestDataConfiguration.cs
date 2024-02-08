@@ -1,4 +1,4 @@
-namespace UI.NUnitVersion.Configuration;
+namespace UI.AutomationTests.Configuration;
 
 public class TestDataConfiguration
 {

@@ -5,7 +5,7 @@ parameters:
 
 variables:
   - name: projectPath
-    value: "UI.NUnitVersion"
+    value: "UI.AutomationTests"
   - name: env
     value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
   - name: subscriptionName
