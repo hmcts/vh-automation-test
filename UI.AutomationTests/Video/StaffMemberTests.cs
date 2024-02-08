@@ -12,7 +12,7 @@ public class StaffMemberTests : VideoWebUiTest
     {
         var hearing = await CreateTestHearing();
         TestHearingIds.Add(hearing.Id.ToString());
-        var conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(hearing.Id, false);
+        var conference = await GetConference(hearing.Id);
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
 

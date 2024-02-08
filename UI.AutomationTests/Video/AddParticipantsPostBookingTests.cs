@@ -20,7 +20,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
-        var conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false);
+        var conference = await GetConference(new Guid(_hearingIdString));
 
         // log in as judge, go to waiting room and wait for alerts
         var judgeUsername = hearingDto.Judge.Username;

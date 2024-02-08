@@ -18,8 +18,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         TestContext.WriteLine(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         BookHearing(hearingDto);
-        var conference = VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false).Result;
-
+        var conference = await GetConference(new Guid(_hearingIdString));
         // log in as judge and start the hearing
         var judgeUsername = hearingDto.Judge.Username;
         var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);

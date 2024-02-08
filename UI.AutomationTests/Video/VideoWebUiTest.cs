@@ -5,6 +5,7 @@ using UI.PageModels.Pages.Video.Participant;
 using UI.PageModels.Pages.Video.QuickLink;
 using UI.PageModels.Pages.Video.Vho;
 using VideoApi.Client;
+using VideoApi.Contract.Responses;
 
 namespace UI.AutomationTests.Video;
 
@@ -57,6 +58,76 @@ public abstract class VideoWebUiTest : CommonUiTest
             x.Driver.Terminate();
         });
         ParticipantDrivers.Clear();
+    }
+    
+    protected virtual async Task<ConferenceDetailsResponse> GetConference(Guid hearingId)
+    {
+        var pollCount = 0;
+        ConferenceDetailsResponse conferenceResponse;
+        do {
+            conferenceResponse = await PollForConferenceDetails(); 
+            pollCount++;
+        } while (conferenceResponse == null);
+
+        return conferenceResponse;
+        
+        async Task<ConferenceDetailsResponse> PollForConferenceDetails()
+        {
+            try
+            {
+                return await VideoApiClient.GetConferenceByHearingRefIdAsync(hearingId, true);
+            }
+            catch (VideoApiException e)
+            {
+                if(pollCount >= 3) 
+                    throw new NotFoundException($"Conference not found for hearing {hearingId} after 3 attempts");
+                
+                if (e.StatusCode == (int) HttpStatusCode.NotFound)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    return null;
+                }
+                throw;
+            }
+        }
+using UI.AutomationTests.Drivers;
+using UI.AutomationTests.Models;
+using System.Net;
+using UI.NUnitVersion.Models;
+using VideoApi.Contract.Responses;
+namespace UI.AutomationTests.Video;
+    }
+    
+    protected virtual async Task<ConferenceDetailsResponse> GetConference(Guid hearingId)
+    {
+        var pollCount = 0;
+        ConferenceDetailsResponse conferenceResponse;
+        do {
+            conferenceResponse = await PollForConferenceDetails(); 
+            pollCount++;
+        } while (conferenceResponse == null);
+
+        return conferenceResponse;
+        
+        async Task<ConferenceDetailsResponse> PollForConferenceDetails()
+        {
+            try
+            {
+                return await VideoApiClient.GetConferenceByHearingRefIdAsync(hearingId, true);
+            }
+            catch (VideoApiException e)
+            {
+                if(pollCount >= 3) 
+                    throw new NotFoundException($"Conference not found for hearing {hearingId} after 3 attempts");
+                
+                if (e.StatusCode == (int) HttpStatusCode.NotFound)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    return null;
+                }
+                throw;
+            }
+        }
     }
     
     protected virtual Task CleanUp()
