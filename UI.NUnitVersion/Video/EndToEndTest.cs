@@ -132,7 +132,7 @@ public class EndToEndTest : VideoWebUiTest
         var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
         
         _justiceUser = await CreateVhTeamLeaderJusticeUserIfNotExist(teamMemberUsername);
-        _conference = await VideoApiClient.GetConferenceByHearingRefIdAsync(new Guid(_hearingIdString) , false);
+        _conference = await GetConference(new Guid(_hearingIdString));
         
         var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
         
