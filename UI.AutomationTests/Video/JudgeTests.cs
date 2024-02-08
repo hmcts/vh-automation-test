@@ -1,5 +1,3 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
 
 namespace UI.AutomationTests.Video
 {
