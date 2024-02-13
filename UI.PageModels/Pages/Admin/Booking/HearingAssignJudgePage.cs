@@ -7,20 +7,27 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _judgeEmail = By.Id("judge-email");
     private readonly By _eJudgeEmail = By.Id("judiciaryEmailInput");
     private readonly By _judgePhoneFld = By.Id("judgePhoneFld");
-    private readonly By _nextButton = By.Id("nextButton");
-    private readonly By _nextButtonEJudge = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
+    private readonly By _nextButton = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
-    private readonly By _contWithoutJOH = By.XPath("//button[@id='nextButtonToParticipants']");
-    //By.XPath("//*[@id='nextButtonToParticipants']
-    
 
     public HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
     }
 
-    public void EnterJudgeDetails(string judgeEmail, string judgeDisplayName, string judgePhone)
+    public void EnterJudgeDetails(BookingJudgeDto judge, bool isV2)
+    {
+        if (isV2)
+        {
+            AssignPresidingJudiciaryDetails(judge.Username, judge.DisplayName);
+            ClickSaveJudgeButton();
+        }
+        else
+            EnterJudgeDetails(judge.Username, judge.DisplayName, judge.Phone);
+    }
+    
+    private void EnterJudgeDetails(string judgeEmail, string judgeDisplayName, string judgePhone)
     {
         EnterText(_judgeEmail, judgeEmail);
         WaitForElementToBeVisible(Spinner); // wait 2 seconds before search starts
@@ -34,35 +41,40 @@ public class HearingAssignJudgePage : VhAdminWebPage
             EnterText(_judgePhoneFld, judgePhone);
     }
     
-    public void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName)
+    private void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName)
     {
         EnterText(_eJudgeEmail, judgeEmail);
-        //WaitForElementToBeVisible(Spinner); // wait 2 seconds before search starts
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
         if (!string.IsNullOrWhiteSpace(judgeDisplayName)) 
             EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
     }
-
-    public ParticipantsPage GoToParticipantsPage(bool isV2)
-    {
-        var useParty = !isV2;
-        WaitForElementVisible(Driver, _nextButtonEJudge);
-        ClickElement(_nextButtonEJudge);
-        return new ParticipantsPage(Driver, DefaultWaitTime, useParty);
-    }
     
-
-    public void ClickSaveEJudgeButton()
+    
+    private void ClickSaveJudgeButton()
     {
         WaitForElementToBeVisible(_saveEJudge);
         ClickElement(_saveEJudge);
     }
 
-    public void ClickContinueWithoutJudiciary()
+    public ParticipantsPage GotToNextPage(bool isV2)
     {
-        WaitForElementToBeVisible(_contWithoutJOH);
-        ClickElement(_contWithoutJOH);
+        var useParty = !isV2;
+        ClickNextButton();
+        return new ParticipantsPage(Driver, DefaultWaitTime, useParty);
+    }
+
+
+    public SummaryPage GotToNextPageOnEdit()
+    {
+        ClickNextButton();
+        return new SummaryPage(Driver, DefaultWaitTime);
+    }
+    
+    private void ClickNextButton()
+    {
+        WaitForElementToBeVisible(_nextButton);
+        ClickElement(_nextButton);
     }
 }

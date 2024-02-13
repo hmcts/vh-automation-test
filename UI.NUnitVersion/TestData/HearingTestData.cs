@@ -103,10 +103,10 @@ public static class HearingTestData
         return bookingDto;
     }
 
-    public static BookingDto CreateMultiDayDTO(int NumberOfDays, DateTime scheduledDateTime  )
+    public static BookingDto CreateMultiDayDto(int numberOfDays, DateTime scheduledDateTime  )
     {
         var bookingDto = CreateHearingDto(Judge, false, scheduledDateTime );
-        bookingDto.EndDateTime = scheduledDateTime.AddDays(NumberOfDays);
+        bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
         return bookingDto;
     }
 

@@ -4,18 +4,7 @@ namespace UI.PageModels.Pages.Admin.Booking;
 
 public class SummaryPage : VhAdminWebPage
 {
-    public static By ViewThisBooking = By.LinkText("View this booking");
     private readonly By _bookButton = By.Id("bookButton");
-    private readonly By _dotLoader = By.Id("dot-loader");
-
-    //private readonly By SuccessTitle = By.ClassName("govuk-panel__title");
-    private readonly By _successTitle = By.XPath("//h1[text()[contains(.,'Your hearing booking was successful')]]");
-
-    private readonly By _tryAgainButton = By.Id("btnTryAgain");
-
-    //addAJudgeWarning 
-        
-    private readonly By _addAjudgeWarning = By.ClassName("div[role='region']");
     private readonly By _addANoJudgeWarning = By.CssSelector("h2[id = govuk-notification-banner-title]");
    
 
@@ -28,28 +17,20 @@ public class SummaryPage : VhAdminWebPage
     }
     
 
-    public void ValidateSummaryPage(BookingDto bookingDto)
+    public void ValidateSummaryPage(BookingDto bookingDto, bool isMultiDay = false)
     {
-        CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
-        CompareText(By.Id("caseName"), bookingDto.CaseName);
-        CompareText(By.Id("caseType"), bookingDto.CaseType);
-        
-        
+        ValidateHearingDetails(bookingDto);
+        ValidateVenueDetails(bookingDto);
+        if (isMultiDay)
+            ValidateDateMultiDay(bookingDto);
+        else
+            ValidateDateAndDuration(bookingDto);
+        ValidateEndpointsAndOtherInformation(bookingDto);
+        ValidateParticipantDetails(bookingDto);
+    }
 
-        var courtAddress = string.IsNullOrWhiteSpace(bookingDto.RoomName)
-            ? bookingDto.VenueName
-            : $"{bookingDto.VenueName}, {bookingDto.RoomName}";
-        CompareText(By.Id("courtAddress"), courtAddress);
-
-        var hearingDate = $"{bookingDto.ScheduledDateTime:dddd dd MMMM yyyy, HH:mmtt}";
-        CompareText(By.Id("hearingDate"), hearingDate);
-        var duration =
-            $"listed for {Pluralise(bookingDto.DurationHour, "hour")} {Pluralise(bookingDto.DurationMinute, "minute")}"
-                .Trim();
-        CompareText(By.Id("hearingDuration"), duration);
-        
-        CompareText(By.Id("audioRecording"), bookingDto.AudioRecording ? "Yes" : "No");
-
+    private void ValidateEndpointsAndOtherInformation(BookingDto bookingDto)
+    {
         for (var i = 0; i < bookingDto.VideoAccessPoints.Count-1; i++)
         {
             var endpoint = bookingDto.VideoAccessPoints[i];
@@ -60,10 +41,12 @@ public class SummaryPage : VhAdminWebPage
         {
             CompareText(By.Id("otherInformation"), bookingDto.OtherInformation);
         }
-        
-        //assert judge details
+    }
+
+    private void ValidateParticipantDetails(BookingDto bookingDto)
+    {
         CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
-        
+
         for (var i = 0; i < bookingDto.Participants.Count-1; i++)
         {
             var participant = bookingDto.Participants[i];
@@ -71,9 +54,43 @@ public class SummaryPage : VhAdminWebPage
            
             CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
         }
-        
+    }
+
+    private void ValidateDateAndDuration(BookingDto bookingDto)
+    {
+        var hearingDate = $"{bookingDto.ScheduledDateTime:dddd dd MMMM yyyy, HH:mmtt}";
+        CompareText(By.Id("hearingDate"), hearingDate);
+        var duration =
+            $"listed for {Pluralise(bookingDto.DurationHour, "hour")} {Pluralise(bookingDto.DurationMinute, "minute")}"
+                .Trim();
+        CompareText(By.Id("hearingDuration"), duration);
     }
     
+    private void ValidateDateMultiDay(BookingDto bookingDto)
+    {
+        var startDate = $"{bookingDto.ScheduledDateTime:dddd dd MMMM yyyy} -";
+        var endDate = $"{bookingDto.EndDateTime:dddd dd MMMM yyyy, H:mmtt}";
+        
+        CompareText(By.Id("hearingStartDate"), startDate);
+        CompareText(By.Id("hearingEndDateTime"), endDate);
+    }
+    
+    private void ValidateVenueDetails(BookingDto bookingDto)
+    {
+        var courtAddress = string.IsNullOrWhiteSpace(bookingDto.RoomName)
+            ? bookingDto.VenueName
+            : $"{bookingDto.VenueName}, {bookingDto.RoomName}";
+        CompareText(By.Id("courtAddress"), courtAddress);
+    }
+
+    private void ValidateHearingDetails(BookingDto bookingDto)
+    {
+        CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
+        CompareText(By.Id("caseName"), bookingDto.CaseName);
+        CompareText(By.Id("caseType"), bookingDto.CaseType);
+        CompareText(By.Id("audioRecording"), bookingDto.AudioRecording ? "Yes" : "No");
+    }
+
     public void ValidateSummaryNoJudgePage(BookingDto bookingDto)
     {
         CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
@@ -108,8 +125,6 @@ public class SummaryPage : VhAdminWebPage
         Assert.AreEqual("Important", Driver.FindElement(_addANoJudgeWarning).Text);
     }
     
-    
-    
     private string Pluralise(int number, string text)
     {
         if (number == 0)
@@ -122,8 +137,8 @@ public class SummaryPage : VhAdminWebPage
 
     private void CompareText(By element, string expectedText)
     {
-        var text = GetText(element);
-        if (!text.Equals(expectedText, StringComparison.InvariantCultureIgnoreCase))
+        var text = GetText(element).Trim();
+        if (!text.Equals(expectedText.Trim(), StringComparison.InvariantCultureIgnoreCase))
         {
             throw new InvalidOperationException($"Expected text: {expectedText} but was {text}");
         }

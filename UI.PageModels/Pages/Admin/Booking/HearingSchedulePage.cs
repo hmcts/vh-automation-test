@@ -13,7 +13,6 @@ public class HearingSchedulePage : VhAdminWebPage
     private readonly By _hearingDurationMinute = By.Id("hearingDurationMinute");
     private readonly By _hearingStartTimeHour = By.Id("hearingStartTimeHour");
     private readonly By _hearingStartTimeMinute = By.Id("hearingStartTimeMinute");
-    private readonly By _multiDaysHearing = By.Id("multiDaysHearing");
     private readonly By _multiDaysHearingCheckbox = By.XPath("//input[@id='multiDaysHearing' and @type='checkbox']");
     private readonly By _nextButton = By.Id("nextButton");
     
@@ -26,18 +25,17 @@ public class HearingSchedulePage : VhAdminWebPage
         WaitForDropdownListToPopulate(_courtVenue);
     }
 
-    public void EnterSingleDayHearingSchedule(DateTime date, int durationHour, int durationMinute, string venueName,
-        string roomName)
+    public void EnterSingleDayHearingSchedule(BookingDto bookingDto)
     {
-        EnterHearingDateAndDuration(date, durationHour, durationMinute);
-        EnterHearingVenueAndRoom(venueName, roomName);
-    }
-    //Multidays
-    public void EnterMultiDayHearingSchedule(DateTime date, DateTime endDateTime, int durationHour, int durationMinute, string venueName,
-        string roomName)
+        EnterHearingDateAndDuration(bookingDto.ScheduledDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
+        EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
+    }   
+    
+    public void EnterMultiDayHearingSchedule(BookingDto bookingDto)
     {
-        EnterHearingDateAndRange(date, endDateTime, durationHour, durationMinute);
-        EnterHearingVenueAndRoom(venueName, roomName);
+        ClickMultiDaysHearingCheckbox();
+        EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
+        EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }
     
     public void EnterHearingDateAndRange(DateTime date, DateTime endDateTime, int durationHour, int durationMinute)
@@ -81,9 +79,10 @@ public class HearingSchedulePage : VhAdminWebPage
     }
     
 
-    public void ClickMultiDaysHearingCheckbox()
+    private void ClickMultiDaysHearingCheckbox()
     {
-        ClickElement(_multiDaysHearingCheckbox);
+        WaitForElementVisible(Driver, _multiDaysHearingCheckbox);
+        Driver.FindElement(_multiDaysHearingCheckbox).Click();
     }
     
 }
