@@ -5,19 +5,22 @@ namespace UI.PageModels.Dtos;
 /// </summary>
 public class BookingNewParticipantDto
 {
-    public BookingNewParticipantDto(string title, string firstName, string lastName, string organisation,
-        string telephone)
+    public BookingNewParticipantDto(BookingExistingParticipantDto existing)
     {
-        Title = title;
-        FirstName = firstName;
-        LastName = lastName;
-        Organisation = organisation;
-        Telephone = telephone;
+        Title = existing.Title;
+        FirstName = existing.FirstName;
+        LastName = existing.LastName;
+        ContactEmail = existing.ContactEmail;
+        Role = existing.Role;
     }
 
+    public GenericTestRole Role { get; set; }
+
+    public string ContactEmail { get; set; }
     public string Title { get; }
     public string FirstName { get; }
     public string LastName { get; }
-    public string Organisation { get; }
-    public string Telephone { get; }
+    public string Organisation { get; set; }
+    public string Telephone { get; set; }
+    public string DisplayName { get; set; }
 }
