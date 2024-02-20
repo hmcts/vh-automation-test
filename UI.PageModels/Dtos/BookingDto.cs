@@ -9,6 +9,7 @@ public class BookingDto
     {
         Participants = new List<BookingExistingParticipantDto>();
         VideoAccessPoints = new List<VideoAccessPointsDto>();
+        //Participants = new List<BookingNewParticipantDto>();
     }
     public string CaseName { get; set; }
     public string CaseNumber { get; set; }

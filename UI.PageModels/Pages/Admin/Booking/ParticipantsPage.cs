@@ -33,11 +33,6 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void AddParticipants(BookingExistingParticipantDto participants)
-    {
-        AddParticipants(new List<BookingExistingParticipantDto> {participants});
-    }
-
     public void AddParticipants(List<BookingExistingParticipantDto> participants)
     {
         foreach (var participant in participants)
@@ -48,7 +43,30 @@ public class ParticipantsPage : VhAdminWebPage
                 AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
         }
     }
+    
+    
 
+    public void AddNewParticipantsWithGeneratedData(List<BookingNewParticipantDto> hearingData)
+    { 
+        EnterText(_participantEmailTextfield, hearingData.);
+
+        ClickElement(_emailList);
+        EnterText(_displayNameTextfield, displayName);
+
+        if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
+
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+       
+       
+   
+    }
+    
     private void AddExistingParticipant(string party, string role, string contactEmail, string displayName, string? representing = null)
     {
         SelectDropDownByText(_partyDropdown, party);
@@ -73,6 +91,24 @@ public class ParticipantsPage : VhAdminWebPage
     {
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, role);
+        EnterText(_participantEmailTextfield, contactEmail);
+
+        ClickElement(_emailList);
+        EnterText(_displayNameTextfield, displayName);
+
+        if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
+
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    private void AddNewParticipantV2(string role, string contactEmail, string displayName, string? representing = null)
+    {
+        WaitForDropdownListToPopulate(_roleDropdown, 0);
         EnterText(_participantEmailTextfield, contactEmail);
 
         ClickElement(_emailList);

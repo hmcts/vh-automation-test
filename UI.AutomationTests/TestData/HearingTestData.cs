@@ -1,3 +1,5 @@
+using LaunchDarkly.Sdk;
+
 namespace UI.AutomationTests.TestData;
 
 public static class HearingTestData
@@ -100,6 +102,45 @@ public static class HearingTestData
         };
         return bookingDto;
     }
+    public static BookingDto CreateHearingDtoWithNewUsers(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null)
+    {
+        //var random = AddRandomDigit();
+        var randomWithDate = AddRandomDigitByDate();
+        var bookingDto = CreateHearingDto(judgeUsername: judgeUsername, remote, scheduledDateTime);
+        bookingDto.Participants.Add(BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
+            $"auto_vw.individual_60{randomWithDate}@hmcts.net", $"auto_vw.individual_60{randomWithDate}@hearings.reform.hmcts.net", "Auto 1",
+            "Mr", $"Automation_Arnold{randomWithDate}", $"Automation_Koelpin{randomWithDate}"));
+        bookingDto.Participants.Add(BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Witness,
+            $"auto_vw.representative_139{randomWithDate}@hmcts.net", $"auto_vw.representative_139{randomWithDate}@hearings.reform.hmcts.net", "Auto 1",
+            "Mr", $"Automation_Arnold{randomWithDate}", $"Automation_Koelpin{randomWithDate}", "Auto 1"));
+        bookingDto.Participants.Add(BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
+            $"auto_vw.individual_60{randomWithDate}@hmcts.net", $"auto_vw.individual_60{randomWithDate}@hearings.reform.hmcts.net", "Auto 1",
+            "Mr", $"Automation_Arnold{randomWithDate}", $"Automation_Koelpin{randomWithDate}"));
+        bookingDto.Participants.Add(BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Witness,
+            $"auto_vw.representative_157{randomWithDate}@hmcts.net", $"auto_vw.individual_60{randomWithDate}@hearings.reform.hmcts.net", "Auto 1",
+            "Mr", $"Automation_Arnold{randomWithDate}", $"Automation_Koelpin{randomWithDate}", "Auto 3"));
+        
+        return bookingDto;
+    }
+
+    public static int AddRandomDigit() => new Random().Next(1, 999);
+    public static string AddRandomDigit(this string user) => string.Concat(user, new Random().Next(1, 999));
+    public static string AddRandomDigitByDate() => DateTime.Now.ToString("yyyyMMddHHmmssfff");
+    public static string AddRandomDigitByDate(this string user) => string.Concat(user, DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+
+    
+    public static List<BookingDto> GenerateHearingDataWithNewUsers(int numberOfHearings, string judgeUsername)
+    {
+        var hearingData = new List<BookingDto>();
+        for (int i = 0; i < numberOfHearings; i++)
+        {
+            var newHearingDto = CreateHearingDtoWithNewUsers(judgeUsername, remote: true);
+            hearingData.Add(newHearingDto);
+        }
+        return hearingData;
+    }
+    
+    
 
     public static BookingDto CreateMultiDayDto(int numberOfDays, DateTime scheduledDateTime  )
     {
@@ -107,6 +148,8 @@ public static class HearingTestData
         bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
         return bookingDto;
     }
+    
+    
 
     public static BookNewHearingRequest CreateNewRequestDtoWithOnlyAJudge(bool remote = false,
         DateTime? scheduledDateTime = null)
