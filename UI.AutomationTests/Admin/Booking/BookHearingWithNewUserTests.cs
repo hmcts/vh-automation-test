@@ -48,6 +48,7 @@ public class BookHearingWithNewUserTests : AdminWebUiTest
         
         var summaryPage = otherInformationPage.GoToSummaryPage();
         summaryPage.ValidateSummaryPage(_bookingDto);
+        //summaryPage.ValidateSummaryPageWithNewUsers(newUser);
         
         var confirmationPage = summaryPage.ClickBookButton();
         TestHearingIds.Add(confirmationPage.GetNewHearingId());

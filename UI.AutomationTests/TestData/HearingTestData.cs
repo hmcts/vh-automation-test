@@ -107,9 +107,9 @@ public static class HearingTestData
     {
         var randomWithDate = AddRandomDigitByDate();
         var existing = BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
-            $"auto_vw.individual_60{randomWithDate}@hmcts.net",
-            $"auto_vw.individual_60{randomWithDate}@hearings.reform.hmcts.net", "Auto 1",
-            "Mr", $"Automation_Arnold{randomWithDate}", $"Automation_Koelpin{randomWithDate}");
+            $"New_User{randomWithDate}@hmcts.net",
+            $"New.User{randomWithDate}@hearings.reform.hmcts.net", "Auto 1",
+            "Mr", $"New", $"User{randomWithDate}");
         var newUser = new BookingNewParticipantDto(existing)
         {
             DisplayName = "NewCreatedUser",

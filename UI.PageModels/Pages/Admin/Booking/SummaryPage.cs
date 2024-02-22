@@ -90,6 +90,38 @@ public class SummaryPage : VhAdminWebPage
         CompareText(By.Id("caseType"), bookingDto.CaseType);
         CompareText(By.Id("audioRecording"), bookingDto.AudioRecording ? "Yes" : "No");
     }
+    
+    // public void ValidateSummaryPageWithNewUsers(BookingNewParticipantDto newUser)
+    // {
+    //     CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
+    //     
+    // }
+
+    private void ValidateParticipantDetailsWithNewUsers(BookingDto bookingDto)
+    {
+        CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
+
+        // Validate existing participants
+        for (var i = 0; i < bookingDto.Participants.Count - 1; i++)
+        {
+            var participant = bookingDto.Participants[i];
+            var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
+
+            CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
+        }
+
+        // Validate new participants
+        for (var i = 0; i < bookingDto.Participants.Count - 1; i++)
+        {
+            var participant = bookingDto.Participants[i];
+            var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
+
+            // Assuming the new participants start with a specific index in the UI
+            var newIndex = bookingDto.Participants.Count + i; // Assuming the index starts from the end of existing participants
+            CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
+        }
+    }
+
 
     public void ValidateSummaryNoJudgePage(BookingDto bookingDto)
     {

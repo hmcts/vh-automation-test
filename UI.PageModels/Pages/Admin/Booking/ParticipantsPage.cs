@@ -18,6 +18,10 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _representingTextfield = By.Id("representing");
     private readonly By _roleDropdown = By.Id("role");
     private readonly bool _useParty;
+    private readonly By _firstName = By.XPath("//input[@id='firstName']");
+    private readonly By _lastName = By.XPath("//input[@id='lastName']");
+    private readonly By _telePhone = By.XPath("//input[@id='phone']");
+    private readonly By _displayName = By.XPath("//input[@id='displayName']");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -50,6 +54,10 @@ public class ParticipantsPage : VhAdminWebPage
         SelectDropDownByText(_roleDropdown, newUser.Role.ToString());
         EnterText(_participantEmailTextfield, newUser.ContactEmail);
         EnterText(_displayNameTextfield, newUser.DisplayName);
+        EnterText(_firstName, newUser.FirstName);
+        EnterText(_lastName, newUser.LastName);
+        EnterText(_telePhone, newUser.Telephone);
+        //EnterText(_displayName, newUser.Organisation);
 
         /// FirstName 
         /// LASTName

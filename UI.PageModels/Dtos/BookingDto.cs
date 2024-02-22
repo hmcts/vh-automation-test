@@ -9,7 +9,7 @@ public class BookingDto
     {
         Participants = new List<BookingExistingParticipantDto>();
         VideoAccessPoints = new List<VideoAccessPointsDto>();
-        //Participants = new List<BookingNewParticipantDto>();
+      
     }
     public string CaseName { get; set; }
     public string CaseNumber { get; set; }
@@ -32,4 +32,5 @@ public class BookingDto
     
     
     public List<BookingJudgeDto> AdditionalJudges { get; set; }
+    public string NewParticipants { get; set; }
 }
