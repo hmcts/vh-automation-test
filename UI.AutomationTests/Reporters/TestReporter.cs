@@ -68,7 +68,7 @@ public class TestReporter
         Directory.CreateDirectory(Path.Join(TestContext.CurrentContext.TestDirectory, "images", testName));
         var screenshotFilePath =
             Path.Combine(Path.Join(TestContext.CurrentContext.TestDirectory, "images", testName, imageFileName));
-        driver.TakeScreenshot().SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
+        driver.TakeScreenshot().SaveAsFile(screenshotFilePath);
         if (string.IsNullOrWhiteSpace(nodeName))
             _test.AddScreenCaptureFromPath(screenshotFilePath);
         else

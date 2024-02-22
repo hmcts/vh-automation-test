@@ -22,6 +22,7 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _lastName = By.XPath("//input[@id='lastName']");
     private readonly By _telePhone = By.XPath("//input[@id='phone']");
     private readonly By _displayName = By.XPath("//input[@id='displayName']");
+    private readonly By _titleDropdown = By.Id("title");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -37,7 +38,20 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void AddParticipants(List<BookingExistingParticipantDto> participants)
+    public void AddNewParticipants(List<BookingParticipantDto> newParticipants)
+    {
+        foreach (var participant in newParticipants)
+            //todo: Need V1 implementation as well
+            AddNewParticipantsV2(participant);
+    }
+    
+    public void AddParticipants(BookingDto bookingDto)
+    {
+        AddParticipants(bookingDto.Participants);
+        AddNewParticipants(bookingDto.NewParticipants);
+    }
+    
+    public void AddParticipants(List<BookingParticipantDto> participants)
     {
         foreach (var participant in participants)
         {
@@ -48,21 +62,17 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void AddNewParticipantsWithGeneratedData(BookingNewParticipantDto newUser)
+    private void AddNewParticipantsV2(BookingParticipantDto newUser)
     { 
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, newUser.Role.ToString());
         EnterText(_participantEmailTextfield, newUser.ContactEmail);
-        EnterText(_displayNameTextfield, newUser.DisplayName);
+        WaitForDropdownListToPopulate(_titleDropdown, 0);
+        SelectDropDownByText(_titleDropdown, newUser.Title);
         EnterText(_firstName, newUser.FirstName);
         EnterText(_lastName, newUser.LastName);
-        EnterText(_telePhone, newUser.Telephone);
-        //EnterText(_displayName, newUser.Organisation);
-
-        /// FirstName 
-        /// LASTName
-        /// Telephone
-        /// Organisation
+        EnterText(_telePhone, newUser.Phone);
+        EnterText(_displayNameTextfield, newUser.DisplayName);
         
         if (HasFormValidationError())
         {
