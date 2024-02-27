@@ -50,8 +50,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
             
             judgeWaitingRoomPage.WaitForParticipantToBeConnected(participant.FullName);
-            
-            judgeWaitingRoomPage.ClearParticipantAddedNotification(participant.FullName);
+            judgeWaitingRoomPage.ClearParticipantAddedNotification();
         }
 
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
