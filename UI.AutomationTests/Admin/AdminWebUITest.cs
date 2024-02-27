@@ -1,5 +1,4 @@
 using UI.AutomationTests.Configuration;
-using UI.AutomationTests.Drivers;
 
 namespace UI.AutomationTests.Admin;
 
@@ -16,6 +15,7 @@ public abstract class AdminWebUiTest : CommonUiTest
         EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
         TestDataConfig = ConfigRootBuilder.TestDataConfigurationInstance();
+        UserApiClient = await VhApiClientFactory.CreateUserApiClient();
     }
 
     [SetUp]

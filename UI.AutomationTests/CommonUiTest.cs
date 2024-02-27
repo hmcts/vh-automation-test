@@ -65,20 +65,16 @@ public abstract class CommonUiTest
     private async Task DeleteUsers()
     {
         foreach (var userPrincipleName in CreatedUsers)
-        {
             try
             {
-                await BookingsApiClient.DeleteTestPersonByUsernameAsync(userPrincipleName);
-                //TODO: Need to add configuration for user-api
                 await UserApiClient.DeleteUserAsync(userPrincipleName);
             }
-            catch (BookingsApiException e)
+            catch(UserApiException e)
             {
                 TestContext.WriteLine(e.StatusCode == (int)HttpStatusCode.NotFound
                     ? $"User {userPrincipleName} not found"
                     : $"Failed to remove user {userPrincipleName} - {e.Message}");
             }
-        }
     }
 
     private async Task DeleteHearings()

@@ -38,17 +38,19 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void AddNewParticipants(List<BookingParticipantDto> newParticipants)
-    {
-        foreach (var participant in newParticipants)
-            //todo: Need V1 implementation as well
-            AddNewParticipantsV2(participant);
-    }
-    
-    public void AddParticipants(BookingDto bookingDto)
+    public void AddAllParticipantsFromDto(BookingDto bookingDto)
     {
         AddParticipants(bookingDto.Participants);
-        AddNewParticipants(bookingDto.NewParticipants);
+        AddNewUserParticipants(bookingDto.NewParticipants);
+    }
+    
+    public void AddNewUserParticipants(List<BookingParticipantDto> newParticipants)
+    {
+        foreach (var participant in newParticipants)
+            if(_useParty)
+                AddNewParticipant(participant);
+            else
+                AddNewParticipantV2(participant);
     }
     
     public void AddParticipants(List<BookingParticipantDto> participants)
@@ -61,11 +63,36 @@ public class ParticipantsPage : VhAdminWebPage
                 AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
         }
     }
-
-    private void AddNewParticipantsV2(BookingParticipantDto newUser)
-    { 
+    
+    private void AddNewParticipant(BookingParticipantDto newUser)
+    {
+        WaitForDropdownListToPopulate(_partyDropdown, 0);
+        SelectDropDownByText(_partyDropdown, newUser.Party.GetDescription());
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, newUser.Role.ToString());
+        EnterText(_participantEmailTextfield, newUser.ContactEmail);
+        WaitForDropdownListToPopulate(_titleDropdown, 0);
+        SelectDropDownByText(_titleDropdown, newUser.Title);
+        EnterText(_firstName, newUser.FirstName);
+        EnterText(_lastName, newUser.LastName);
+        EnterText(_telePhone, newUser.Phone);
+        EnterText(_displayNameTextfield, newUser.DisplayName);
+        
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    
+    private void AddNewParticipantV2(BookingParticipantDto newUser)
+    { 
+        WaitForDropdownListToPopulate(_partyDropdown, 0);
+        SelectDropDownByText(_partyDropdown, newUser.Party.GetDescription());
+        WaitForDropdownListToPopulate(_roleDropdown, 0);
+        SelectDropDownByText(_roleDropdown, newUser.Role.GetDescription());
         EnterText(_participantEmailTextfield, newUser.ContactEmail);
         WaitForDropdownListToPopulate(_titleDropdown, 0);
         SelectDropDownByText(_titleDropdown, newUser.Title);

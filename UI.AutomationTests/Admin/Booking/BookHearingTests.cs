@@ -1,12 +1,8 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
-
 namespace UI.AutomationTests.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
-    private string _hearingIdString;
 
     [Category("Daily")]
     [Test]
@@ -16,6 +12,9 @@ public class BookHearingTests : AdminWebUiTest
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername: HearingTestData.Judge, scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
+        var newUser = HearingTestData.CreateNewParticipantDto();
+        CreatedUsers.Add(newUser.Username);
+        _bookingDto.NewParticipants.Add(newUser);
         
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -39,7 +38,7 @@ public class BookHearingTests : AdminWebUiTest
             
         var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
         
-        addParticipantPage.AddParticipants(_bookingDto.Participants);
+        addParticipantPage.AddAllParticipantsFromDto(_bookingDto);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
