@@ -89,8 +89,6 @@ public class ParticipantsPage : VhAdminWebPage
     
     private void AddNewParticipantV2(BookingParticipantDto newUser)
     { 
-        WaitForDropdownListToPopulate(_partyDropdown, 0);
-        SelectDropDownByText(_partyDropdown, newUser.Party.GetDescription());
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, newUser.Role.GetDescription());
         EnterText(_participantEmailTextfield, newUser.ContactEmail);
