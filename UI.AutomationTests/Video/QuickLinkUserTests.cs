@@ -29,10 +29,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         var quickLinkName2 = $"QL Auto Join 2 {Guid.NewGuid():N}";
         
         var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, conference.Id.ToString());
-        judgeWaitingRoomPage.ClearParticipantAddedNotification(quickLinkName1);
-        
         var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, conference.Id.ToString());
-        judgeWaitingRoomPage.ClearParticipantAddedNotification(quickLinkName2);
 
         var particiantsFromConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
         var quicklink1 = particiantsFromConference.First(x => x.DisplayName == quickLinkName1);
@@ -40,6 +37,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink1.DisplayName);
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink2.DisplayName);
+        judgeWaitingRoomPage.ClearParticipantAddedNotification();
         
         var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation(new List<string>() {quicklink2.DisplayName});
         var ql2ConsultationPage = qlWaitingRoomPage2.AcceptPrivateConsultation();

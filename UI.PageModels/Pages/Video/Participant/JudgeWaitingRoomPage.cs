@@ -51,7 +51,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     
     public void WaitForParticipantToBeConnected(string fullName)
     {
-        var path = $"//dt[normalize-space()='{fullName}']/following-sibling::dd//label[normalize-space()='Connected']";
+        var path = $"//span[contains(@class, 'toast-content') and text() = '{fullName}']";
         WaitForElementToBeVisible(By.XPath(path));
     }
 
@@ -66,7 +66,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
         return connectedLabel.Count;
     }
 
-    public void ClearParticipantAddedNotification(string displayName)
+    public void ClearParticipantAddedNotification()
     {
         ClickElement(By.Id("notification-toastr-participant-added-dismiss"));
     }

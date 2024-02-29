@@ -18,6 +18,11 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _representingTextfield = By.Id("representing");
     private readonly By _roleDropdown = By.Id("role");
     private readonly bool _useParty;
+    private readonly By _firstName = By.XPath("//input[@id='firstName']");
+    private readonly By _lastName = By.XPath("//input[@id='lastName']");
+    private readonly By _telePhone = By.XPath("//input[@id='phone']");
+    private readonly By _displayName = By.XPath("//input[@id='displayName']");
+    private readonly By _titleDropdown = By.Id("title");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -33,12 +38,22 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void AddParticipants(BookingExistingParticipantDto participants)
+    public void AddAllParticipantsFromDto(BookingDto bookingDto)
     {
-        AddParticipants(new List<BookingExistingParticipantDto> {participants});
+        AddParticipants(bookingDto.Participants);
+        AddNewUserParticipants(bookingDto.NewParticipants);
     }
-
-    public void AddParticipants(List<BookingExistingParticipantDto> participants)
+    
+    public void AddNewUserParticipants(List<BookingParticipantDto> newParticipants)
+    {
+        foreach (var participant in newParticipants)
+            if(_useParty)
+                AddNewParticipant(participant);
+            else
+                AddNewParticipantV2(participant);
+    }
+    
+    public void AddParticipants(List<BookingParticipantDto> participants)
     {
         foreach (var participant in participants)
         {
@@ -48,7 +63,51 @@ public class ParticipantsPage : VhAdminWebPage
                 AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
         }
     }
-
+    
+    private void AddNewParticipant(BookingParticipantDto newUser)
+    {
+        WaitForDropdownListToPopulate(_partyDropdown, 0);
+        SelectDropDownByText(_partyDropdown, newUser.Party.GetDescription());
+        WaitForDropdownListToPopulate(_roleDropdown, 0);
+        SelectDropDownByText(_roleDropdown, newUser.Role.ToString());
+        EnterText(_participantEmailTextfield, newUser.ContactEmail);
+        WaitForDropdownListToPopulate(_titleDropdown, 0);
+        SelectDropDownByText(_titleDropdown, newUser.Title);
+        EnterText(_firstName, newUser.FirstName);
+        EnterText(_lastName, newUser.LastName);
+        EnterText(_telePhone, newUser.Phone);
+        EnterText(_displayNameTextfield, newUser.DisplayName);
+        
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    
+    private void AddNewParticipantV2(BookingParticipantDto newUser)
+    { 
+        WaitForDropdownListToPopulate(_roleDropdown, 0);
+        SelectDropDownByText(_roleDropdown, newUser.Role.GetDescription());
+        EnterText(_participantEmailTextfield, newUser.ContactEmail);
+        WaitForDropdownListToPopulate(_titleDropdown, 0);
+        SelectDropDownByText(_titleDropdown, newUser.Title);
+        EnterText(_firstName, newUser.FirstName);
+        EnterText(_lastName, newUser.LastName);
+        EnterText(_telePhone, newUser.Phone);
+        EnterText(_displayNameTextfield, newUser.DisplayName);
+        
+        if (HasFormValidationError())
+        {
+            var message = GetValidationErrors();
+            throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
+        }
+        
+        ClickAddParticipantAndWait();
+    }
+    
     private void AddExistingParticipant(string party, string role, string contactEmail, string displayName, string? representing = null)
     {
         SelectDropDownByText(_partyDropdown, party);

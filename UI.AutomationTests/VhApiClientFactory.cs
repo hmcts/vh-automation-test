@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using BookingsApi.Client;
 using UI.Common.Security;
+using UserApi.Client;
 using VideoApi.Client;
 
 namespace UI.AutomationTests;
@@ -27,6 +28,17 @@ public static class VhApiClientFactory
         httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("bearer", apiToken);
         return BookingsApiClient.GetClient(apiClientConfiguration.BookingsApiUrl, httpClient);
+    }    
+    
+    public static async Task<UserApiClient> CreateUserApiClient()
+    {
+        var apiClientConfiguration = ConfigRootBuilder.ApiClientConfigurationInstance();
+        
+        var apiToken = await GenerateUserApiToken(apiClientConfiguration);
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("bearer", apiToken);
+        return UserApiClient.GetClient(apiClientConfiguration.UserApiUrl, httpClient);
     }
     
     private static async Task<string> GenerateBookingsApiToken(ApiClientConfiguration apiClientConfiguration)
@@ -45,5 +57,14 @@ public static class VhApiClientFactory
                 apiClientConfiguration.ClientId,
                 apiClientConfiguration.ClientSecret, 
                 apiClientConfiguration.VideoApiResourceId);
+    }
+            
+    private static async Task<string> GenerateUserApiToken(ApiClientConfiguration apiClientConfiguration)
+    {
+        return await new TokenProvider(apiClientConfiguration)
+            .GetClientAccessToken(
+                apiClientConfiguration.ClientId,
+                apiClientConfiguration.ClientSecret, 
+                apiClientConfiguration.UserApiResourceId);
     }
 }

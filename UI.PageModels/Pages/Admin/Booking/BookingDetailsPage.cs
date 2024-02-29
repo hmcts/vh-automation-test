@@ -12,7 +12,7 @@ public class BookingDetailsPage : VhAdminWebPage
     private readonly By _participantDetails = By.ClassName("participant-details");
     private readonly By _courtRoomAddress = By.Id("court-room-address");
     private readonly By _hearingStart = By.Id("hearing-start");
-
+    private readonly By _userNames = By.XPath("//div[contains(@id,'username')]");
     public BookingDetailsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
@@ -85,7 +85,7 @@ public class BookingDetailsPage : VhAdminWebPage
     /// </summary>
     /// <param name="participantsToAdd"></param>
     /// <returns></returns>
-    public BookingConfirmationPage AddParticipantsToBooking(List<BookingExistingParticipantDto> participantsToAdd, bool useParty)
+    public BookingConfirmationPage AddParticipantsToBooking(List<BookingParticipantDto> participantsToAdd, bool useParty)
     {
         SwitchToEditMode();
         var participantsBreadcrumbLocator = By.XPath("//app-breadcrumb//div//ol//li//a[text()='Participants']");
@@ -136,8 +136,17 @@ public class BookingDetailsPage : VhAdminWebPage
                 }
             }
         }
+        ValidateParticipants(bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList());
     }
-    
+
+    private void ValidateParticipants(List<BookingParticipantDto> participants)
+    {
+        var userNames = ExtractUserNames().ToArray();
+        foreach (var participant in participants)
+            if(!userNames.Contains(participant.Username, StringComparer.InvariantCultureIgnoreCase))
+                throw new InvalidOperationException($"Expected participant username: {participant.Username} but was not found on the page.");
+    }
+
     private void CompareText(By element, string expectedText)
     {
         var text = GetText(element);
@@ -151,5 +160,12 @@ public class BookingDetailsPage : VhAdminWebPage
     {
         ClickElement(_editBookingButton);
         WaitForElementToBeVisible(By.XPath("//main[@id='main-content']//app-summary//app-breadcrumb"));
+    }    
+    
+    private IEnumerable<string> ExtractUserNames()
+    {
+        var userNamesWebElements = Driver.FindElements(_userNames);
+        foreach (var webElement in userNamesWebElements)
+            yield return webElement.Text;
     }
 }

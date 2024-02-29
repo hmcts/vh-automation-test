@@ -1,3 +1,5 @@
+using LaunchDarkly.Sdk;
+
 namespace UI.AutomationTests.TestData;
 
 public static class HearingTestData
@@ -67,20 +69,20 @@ public static class HearingTestData
     /// 2 claimants (LIP and REP) and 2 defendants (LIP and REP)
     /// </summary>
     /// <returns></returns>
-    public static List<BookingExistingParticipantDto> KnownParticipantsForTesting()
+    public static List<BookingParticipantDto> KnownParticipantsForTesting()
     {
-        return new List<BookingExistingParticipantDto>
+        return new List<BookingParticipantDto>
         {
-            BookingExistingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
+            BookingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
                 "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
                 "Mr", "Automation_Arnold", "Automation_Koelpin"),
-            BookingExistingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
+            BookingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
                 "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
                 "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1"),
-            BookingExistingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.Witness,
+            BookingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.Witness,
                 "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
                 "Mr", "Auto_VW", "Individual_137"),
-            BookingExistingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
+            BookingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
                 "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
                 "Auto 4", "Mr", "Automation_Torrance", "Automation_Moen", "Auto 3")
         };
@@ -100,6 +102,20 @@ public static class HearingTestData
         };
         return bookingDto;
     }
+    
+    public static BookingParticipantDto CreateNewParticipantDto()
+    {
+        var timeStamp = AddTimeStamp();
+        var user = BookingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
+            $"New_User{timeStamp}@hmcts.net",
+            $"New.User{timeStamp}@hearings.reform.hmcts.net", "NewCreatedUser",
+            "Mr", $"New", $"User{timeStamp}");
+        user.Organisation = "HMCTS";
+        user.Phone = "0123456789";
+        return user;
+    }
+    
+    public static string AddTimeStamp() => DateTime.Now.ToString("yyyyMMddHHmmssfff");
 
     public static BookingDto CreateMultiDayDto(int numberOfDays, DateTime scheduledDateTime  )
     {
@@ -107,6 +123,8 @@ public static class HearingTestData
         bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
         return bookingDto;
     }
+    
+    
 
     public static BookNewHearingRequest CreateNewRequestDtoWithOnlyAJudge(bool remote = false,
         DateTime? scheduledDateTime = null)

@@ -15,8 +15,8 @@ parameters:
     type: boolean
     default: true
 
-  - name: runA11yTests
-    displayName: Run Accessibiliy Tests
+  - name: runSmokeTest
+    displayName: Run End2End Smoke Test
     type: boolean
     default: false
 
@@ -55,6 +55,8 @@ stages:
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl
                 value: ${{ variables.videoApiUrl }}
+              - name: ApiClientConfiguration.UserApiUrl
+                value: ${{ variables.userApiUrl }}
               - name: TestDataConfiguration.AudioLinkCaseNumber
                 value: ${{ variables.audioLinkCaseNumber }}
               - group: slack
@@ -90,9 +92,9 @@ stages:
                     type: UI Tests
 
 
-      - ${{ if eq(parameters.runA11yTests, true) }}:
-          - job: A11Y_Tests
-            displayName: A11Y Tests ${{ parameters.environment }}
+      - ${{ if eq(parameters.runSmokeTest, true) }}:
+          - job: SmokeTest
+            displayName: End to End smoke test ${{ parameters.environment }}
             variables:
               - template: variables/${{ lower(parameters.environment) }}.yaml
               - template: variables/shared.yaml
@@ -114,6 +116,8 @@ stages:
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl
                 value: ${{ variables.videoApiUrl }}
+              - name: ApiClientConfiguration.UserApiUrl
+                value: ${{ variables.userApiUrl }}
               - group: slack
 
             steps:
@@ -121,22 +125,22 @@ stages:
                 parameters:
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
-                  testCategory: a11y
+                  testCategory: EndToEnd
                   testRunTitle: "UI Tests ${{ parameters.environment }}"
                   subscriptionName: ${{ variables.subscriptionName }}
 
               - task: PublishBuildArtifacts@1
-                displayName: Publish A11Y Output
+                displayName: Publish SmokeTest Output
                 condition: succeededOrFailed()
                 inputs:
                   pathToPublish: "$(Agent.TempDirectory)/"
-                  artifactName: A11Y_Report
+                  artifactName: EndToEnd_Report
 
               - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
 
                 - template: pipelines/templates/get-results-from-trx.yaml
                   parameters:
-                      name: A11y
+                      name: EndToEnd
                   
                 - template: pipelines/templates/send-results-to-slack.yaml
                   parameters:
@@ -144,4 +148,4 @@ stages:
                     results: $(testOutcome)
                     details: $(testSummary)
                     triggerID: $(triggerID)
-                    type: A11y Tests
+                    type: Smoke Test

@@ -7,8 +7,9 @@ public class BookingDto
 {
     public BookingDto()
     {
-        Participants = new List<BookingExistingParticipantDto>();
+        Participants = new List<BookingParticipantDto>();
         VideoAccessPoints = new List<VideoAccessPointsDto>();
+      
     }
     public string CaseName { get; set; }
     public string CaseNumber { get; set; }
@@ -23,9 +24,8 @@ public class BookingDto
     public string RoomName { get; set; }
     public bool AudioRecording { get; set; } = true;
     public string OtherInformation { get; set; }
-    
-    public BookingDto AddAJudgeWarning { get; set; }
-    public List<BookingExistingParticipantDto> Participants { get; set; }
+    public List<BookingParticipantDto> Participants { get; set; }
+    public List<BookingParticipantDto> NewParticipants { get; set; } = new ();
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public BookingJudgeDto Judge { get; set; }
     

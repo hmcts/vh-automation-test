@@ -1,12 +1,16 @@
+using System.Net;
 using BookingsApi.Client;
 using BookingsApi.Contract.V1.Requests.Enums;
+using UserApi.Client;
 
 namespace UI.AutomationTests;
 
 public abstract class CommonUiTest
 {
     protected List<string> TestHearingIds = new();
+    protected List<string> CreatedUsers = new();
     protected BookingsApiClient BookingsApiClient;
+    protected UserApiClient UserApiClient;
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
         var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);
@@ -54,12 +58,42 @@ public abstract class CommonUiTest
     [OneTimeTearDown]
     protected async Task OneTimeTearDown()
     {
+        await DeleteHearings();
+        await DeleteUsers();
+    }
+
+    private async Task DeleteUsers()
+    {
+        foreach (var userPrincipleName in CreatedUsers)
+            try
+            {
+                await UserApiClient.DeleteUserAsync(userPrincipleName);
+            }
+            catch(UserApiException e)
+            {
+                TestContext.WriteLine(e.StatusCode == (int)HttpStatusCode.NotFound
+                    ? $"User {userPrincipleName} not found"
+                    : $"Failed to remove user {userPrincipleName} - {e.Message}");
+            }
+    }
+
+    private async Task DeleteHearings()
+    {
         foreach (var hearingId in TestHearingIds)
         {
             if (Guid.TryParse(hearingId, out var guid))
             {
-                TestContext.WriteLine($"Removing Hearing {guid}");
-                await BookingsApiClient.RemoveHearingAsync(guid);
+                try
+                {
+                    TestContext.WriteLine($"Removing Hearing {guid}");
+                    await BookingsApiClient.RemoveHearingAsync(guid);
+                }
+                catch (BookingsApiException e)
+                {
+                    TestContext.WriteLine(e.StatusCode == (int)HttpStatusCode.NotFound
+                        ? $"Hearing {guid} not found"
+                        : $"Failed to remove hearing {guid} - {e.Message}");
+                }
             }
         }
     }

@@ -37,6 +37,8 @@ stages:
             value: ${{ variables.bookingsApiUrl }}
           - name: ApiClientConfiguration.VideoApiUrl
             value: ${{ variables.videoApiUrl }}
+          - name: ApiClientConfiguration.UserApiUrl
+            value: ${{ variables.userApiUrl }}
           - name: TestDataConfiguration.AudioLinkCaseNumber
             value: ${{ variables.audioLinkCaseNumber }}
 

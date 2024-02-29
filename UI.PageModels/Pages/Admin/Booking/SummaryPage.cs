@@ -47,9 +47,10 @@ public class SummaryPage : VhAdminWebPage
     {
         CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
 
-        for (var i = 0; i < bookingDto.Participants.Count-1; i++)
+        var allParticipants = bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList();
+        for (var i = 0; i < allParticipants.Count-1; i++)
         {
-            var participant = bookingDto.Participants[i];
+            var participant = allParticipants[i];
             var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
            
             CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
@@ -90,7 +91,7 @@ public class SummaryPage : VhAdminWebPage
         CompareText(By.Id("caseType"), bookingDto.CaseType);
         CompareText(By.Id("audioRecording"), bookingDto.AudioRecording ? "Yes" : "No");
     }
-
+    
     public void ValidateSummaryNoJudgePage(BookingDto bookingDto)
     {
         CompareText(By.Id("caseNumber"), bookingDto.CaseNumber);
@@ -104,9 +105,7 @@ public class SummaryPage : VhAdminWebPage
 
         var hearingDate = $"{bookingDto.ScheduledDateTime:dddd dd MMMM yyyy, HH:mmtt}";
         CompareText(By.Id("hearingDate"), hearingDate);
-        var duration =
-            $"listed for {Pluralise(bookingDto.DurationHour, "hour")} {Pluralise(bookingDto.DurationMinute, "minute")}"
-                .Trim();
+        var duration = $"listed for {Pluralise(bookingDto.DurationHour, "hour")} {Pluralise(bookingDto.DurationMinute, "minute")}".Trim();
         CompareText(By.Id("hearingDuration"), duration);
         
         CompareText(By.Id("audioRecording"), bookingDto.AudioRecording ? "Yes" : "No");
