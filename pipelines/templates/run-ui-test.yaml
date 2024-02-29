@@ -48,30 +48,6 @@ steps:
       echo "##vso[task.setvariable variable=ApiClientConfiguration.LaunchDarklyKey;issecret=false]$(launchdarkly--sdkkey)"
     displayName: Change Bookings API client secrets to variables
 
-  - task: AzureKeyVault@1
-    displayName: "Azure Key Vault: vh-video-api-${{ lower(parameters.environment) }}"
-    inputs:
-      azureSubscription: "${{ parameters.subscriptionName }}"
-      KeyVaultName: "vh-video-api-${{ lower(parameters.environment) }}"
-      SecretsFilter: "azuread--identifieruri"
-
-  - bash: |
-      echo "##vso[task.setvariable variable=ApiClientConfiguration.VideoApiResourceId;issecret=false]$(azuread--identifieruri)"
-      echo "$(ApiClientConfiguration.VideoApi.ResourceId)"
-    displayName: Change Video API client secrets to variables
-
-  - task: AzureKeyVault@1
-    displayName: "Azure Key Vault: vh-user-api-${{ lower(parameters.environment) }}"
-    inputs:
-      azureSubscription: "${{ parameters.subscriptionName }}"
-      KeyVaultName: "vh-user-api-${{ lower(parameters.environment) }}"
-      SecretsFilter: "azuread--identifieruri"
-
-  - bash: |
-      echo "##vso[task.setvariable variable=ApiClientConfiguration.UserApiResourceId;issecret=false]$(azuread--identifieruri)"
-      echo "$(ApiClientConfiguration.UserApi.ResourceId)"
-    displayName: Change User API client secrets to variables
-
   # inserts variables to help create unique test names
   - task: gitversion/setup@0
     displayName: Install GitVersion
