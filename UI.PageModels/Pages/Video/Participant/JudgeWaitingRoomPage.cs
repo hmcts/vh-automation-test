@@ -68,7 +68,9 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public void ClearParticipantAddedNotification()
     {
-        ClickElement(By.Id("notification-toastr-participant-added-dismiss"));
+        var elements = Driver.FindElements(By.Id("//div[contains(@id,'notification-toastr-participant-added')]"));
+        foreach (var element in elements)
+            element.Click();
     }
 
     public void EditStaffMemberDisplayName(string newName = "Edited Staff Member Name")
