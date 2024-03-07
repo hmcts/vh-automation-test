@@ -102,7 +102,7 @@ public class BookingDetailsPage : VhAdminWebPage
     /// <param name="durationHour"></param>
     /// <param name="durationMinute"></param>
     /// <returns></returns>
-    public BookingConfirmationPage UpdateSchedule(DateTime newDate, int durationHour, int durationMinute)
+    public SummaryPage UpdateSchedule(DateTime newDate, int durationHour, int durationMinute)
     {
         SwitchToEditMode();
         ClickElement(By.Id("edit-linkhearing-schedule-id"));
@@ -110,7 +110,7 @@ public class BookingDetailsPage : VhAdminWebPage
         hearingSchedulePage.EnterHearingDateAndDuration(newDate, durationHour, durationMinute);
         // in edit mode, next directs the user back to the summary page
         hearingSchedulePage.GoToNextPage();
-        return new SummaryPage(Driver, DefaultWaitTime).ClickBookButton();
+        return new SummaryPage(Driver, DefaultWaitTime);
     }
 
     /// <summary>
