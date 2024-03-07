@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 
 namespace UI.PageModels.Pages.Video.Participant;
@@ -26,15 +25,18 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     
     public void AdmitParticipant(string displayName, string participantId)
     {
-        OpenContextMenu(displayName);
-        ClickElement(ParticipantAdmitButton(participantId));
+        var admitButton = ParticipantAdmitButton(participantId);
+        WaitForElementToBeVisible(admitButton);
+        ClickElement(admitButton);
         WaitForElementToBeVisible(ParticipantRemoteMuteButton(displayName), 60);
     }
     
     public void DismissParticipant(string participantDisplayName)
     {
         OpenContextMenu(participantDisplayName);
-        ClickElement(ParticipantDismissButton(participantDisplayName));
+        var dismissButton = ParticipantDismissButton(participantDisplayName);
+        WaitForElementToBeVisible(dismissButton);
+        ClickElement(dismissButton);
         WaitForElementToBeVisible(ParticipantAdmitIconButton(participantDisplayName));
     }
 
@@ -76,9 +78,14 @@ public class JudgeHearingRoomPage : VhVideoWebPage
             $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//img[@alt='Context menu icon']");
     }
     
-    private By ParticipantAdmitButton(string participantId)
+    private By ParticipantAdmitFromContextButton(string participantId)
     {
         return By.XPath($"//a[contains(@id, 'judge-context-menu-participant-{participantId}')]");
+    }
+    
+    private By ParticipantAdmitButton(string participantId)
+    {
+        return By.Id($"participants-panel-{participantId}-admit-participant-icon");
     }
     
     private By ParticipantDismissButton(string participantDisplayName)

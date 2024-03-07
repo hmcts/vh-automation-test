@@ -68,7 +68,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public void ClearParticipantAddedNotification()
     {
-        var elements = Driver.FindElements(By.Id("//div[contains(@id,'notification-toastr-participant-added')]"));
+        var elements = Driver.FindElements(By.XPath("//button[contains(@id,'notification-toastr-participant-added-dismiss')]"));
         foreach (var element in elements)
             element.Click();
     }

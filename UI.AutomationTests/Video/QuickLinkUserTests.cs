@@ -37,7 +37,6 @@ public class QuickLinkUserTests : VideoWebUiTest
         
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink1.DisplayName);
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink2.DisplayName);
-        judgeWaitingRoomPage.ClearParticipantAddedNotification();
         
         var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation(new List<string>() {quicklink2.DisplayName});
         var ql2ConsultationPage = qlWaitingRoomPage2.AcceptPrivateConsultation();
@@ -51,6 +50,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         // need to set the original waiting room object to the current page else the driver will not be able to navigate sign out
         qlWaitingRoomPage1 = ql1ConsultationPage.LeaveConsultationRoom();
         qlWaitingRoomPage2 = ql2ConsultationPage.LeaveConsultationRoom();
+        
+        judgeWaitingRoomPage.ClearParticipantAddedNotification();
         
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
 
