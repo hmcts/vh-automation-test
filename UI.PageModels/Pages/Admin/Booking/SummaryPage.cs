@@ -16,7 +16,6 @@ public class SummaryPage : VhAdminWebPage
                 "This is not the summary page, the current url is: " + Driver.Url);
     }
     
-
     public void ValidateSummaryPage(BookingDto bookingDto, bool isMultiDay = false)
     {
         ValidateHearingDetails(bookingDto);
@@ -29,6 +28,19 @@ public class SummaryPage : VhAdminWebPage
         ValidateParticipantDetails(bookingDto);
     }
 
+    public HearingAssignJudgePage ChangeJudgeV1()
+    {
+        ClickElement(By.XPath("//a[contains(@href, '/assign-judge')]"));
+        return new HearingAssignJudgePage(Driver, DefaultWaitTime);
+    }
+
+    public HearingAssignJudgePage ChangeJudgeV2()
+    {
+        ClickElement(By.XPath("//a[contains(@href, '/add-judicial-office-holders')]"));
+        return new HearingAssignJudgePage(Driver, DefaultWaitTime);
+        
+    } 
+    
     private void ValidateEndpointsAndOtherInformation(BookingDto bookingDto)
     {
         for (var i = 0; i < bookingDto.VideoAccessPoints.Count-1; i++)
