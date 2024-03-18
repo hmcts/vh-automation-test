@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace UI.PageModels.Pages.Video.Vho;
+namespace UI.PageModels.Pages.Video.Vho.DashboardCommandCentre;
 
 public class CommandCentreInstantMessaging : CommandCentrePage
 {    

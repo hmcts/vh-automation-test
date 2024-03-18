@@ -12,7 +12,7 @@ public class EndToEndTest : VideoWebUiTest
 
     [Test]
     [Category("Daily")]
-    [Category("SmokeTest")]
+    [Category("a11y")]
     [Description("Book a hearing." +
                  " Allocate to a CSO." +
                  " Log in as a judge, edit their display name, and log in as 4 participants." +

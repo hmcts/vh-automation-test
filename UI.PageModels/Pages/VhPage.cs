@@ -1,10 +1,10 @@
 using System.Diagnostics;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using Selenium.Axe;
 using SeleniumExtras.WaitHelpers;
 using UI.Common.Configuration;
+using UI.Common.CustomExceptions;
 
 namespace UI.PageModels.Pages;
 
@@ -53,9 +53,10 @@ public abstract class VhPage
         }
         Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations);
         if (Array.Exists(axeResult.Violations, x => x.Impact != "minor"))
-        {
-            throw new InvalidOperationException("Accessibility check failed. Please check the report for more details.");
-        }
+            throw new AccessibilityException(GetType().Name, axeResult.Violations
+                    .Where(x => x.Impact != "minor")
+                    .Select(x => new AccessibilityException(x.Description)));
+        
     }
     
     protected virtual void ConfirmPageHasLoaded()
