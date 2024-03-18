@@ -14,10 +14,10 @@ public class EndToEndTest : VideoWebUiTest
     [Category("Daily")]
     [Category("a11y")]
     [Description("Book a hearing." +
-                 " Allocate to a CSO." +
-                 " Log in as a judge, edit their display name, and log in as 4 participants." +
-                 " Log in as a VHO and monitor the changes. IM between VHO and Judge." +
-                 " Start and stop hearing. Log out with all users. ")]
+                 "Allocate to a CSO." +
+                 "Log in as a judge, edit their display name, and log in as 4 participants." +
+                 "Log in as a VHO and monitor the changes. IM between VHO and Judge." +
+                 "Start and stop hearing. Log out with all users. ")]
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
@@ -108,7 +108,6 @@ public class EndToEndTest : VideoWebUiTest
         judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
 
         // sign out of each hearing
-
         SignOutAllUsers();
         Assert.Pass();
     }
