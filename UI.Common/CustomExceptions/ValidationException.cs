@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace UI.PageModels.CustomExceptions;
+namespace UI.Common.CustomExceptions;
 
 [Serializable]
 public class ValidationException : Exception

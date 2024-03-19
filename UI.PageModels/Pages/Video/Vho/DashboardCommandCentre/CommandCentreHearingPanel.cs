@@ -1,6 +1,6 @@
-using UI.PageModels.CustomExceptions;
+using UI.Common.CustomExceptions;
 
-namespace UI.PageModels.Pages.Video.Vho;
+namespace UI.PageModels.Pages.Video.Vho.DashboardCommandCentre;
 
 public class CommandCentreHearing: CommandCentrePage
 {

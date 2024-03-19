@@ -2,12 +2,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace UI.PageModels.Pages.Video.Vho;
+namespace UI.PageModels.Pages.Video.Vho.DashboardCommandCentre;
 
 public class CommandCentrePage : VhVideoWebPage
 {
     private readonly By _changeSelectionBtn = By.Id("change-venue-allocation-btn");
-    private int _defaultWaitTime;
+    private readonly int _defaultWaitTime;
 
     public CommandCentrePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
