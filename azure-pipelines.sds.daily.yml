@@ -140,14 +140,14 @@ stages:
 
               - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
 
-                  - template: pipelines/templates/get-results-from-trx.yaml
-                    parameters:
-                      name: A11y
+                - template: pipelines/templates/get-results-from-trx.yaml
+                  parameters:
+                    name: A11y
 
-                  - template: pipelines/templates/send-results-to-slack.yaml
-                    parameters:
-                      env: ${{ parameters.environment }}
-                      results: $(testOutcome)
-                      details: $(testSummary)
-                      triggerID: $(triggerID)
-                      type: A11y Tests
+                - template: pipelines/templates/send-results-to-slack.yaml
+                  parameters:
+                    env: ${{ parameters.environment }}
+                    results: $(testOutcome)
+                    details: $(testSummary)
+                    triggerID: $(triggerID)
+                    type: A11y Tests
