@@ -23,6 +23,11 @@ public class OtherInfoPage : VhAdminWebPage
         Driver.FindElement(_recordAudioNo).Click();
     }
 
+    public void TurnOnAudioRecording()
+    {
+        Driver.FindElement(_recordAudioYes).Click();
+    }
+
     public void EnterOtherInformation(string otherInformation)
     {
         EnterText(_otherInfo, otherInformation);

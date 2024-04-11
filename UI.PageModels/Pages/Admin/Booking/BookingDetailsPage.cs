@@ -2,17 +2,11 @@
 
 public class BookingDetailsPage : VhAdminWebPage
 {
-    private readonly By _closeBookingFailureWindowButton = By.Id("btnTryAgain");
-    private readonly By _bookingConfirmedStatus = By.XPath("//div[@class='vh-created-booking'][text()='Confirmed']");
-    private readonly By _cancelBookingButton = By.Id("cancel-button");
     private readonly By _editBookingButton = By.Id("edit-button");
-    private readonly By _saveChangesButton = By.Id("bookButton");
-    private readonly By _confirmCancelButton = By.Id("btnCancelBooking");
-    private readonly By _cancelReason = By.Id("cancel-reason");
-    private readonly By _participantDetails = By.ClassName("participant-details");
-    private readonly By _courtRoomAddress = By.Id("court-room-address");
-    private readonly By _hearingStart = By.Id("hearing-start");
     private readonly By _userNames = By.XPath("//div[contains(@id,'username')]");
+    private readonly By _audioRecording = By.Id("audioRecorded");
+    private readonly By _otherInformation = By.Id("otherInformation");
+    
     public BookingDetailsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
@@ -21,12 +15,6 @@ public class BookingDetailsPage : VhAdminWebPage
             throw new InvalidOperationException(
                 "This is not the booking-details page, the current url is: " + Driver.Url);
     }
-
-    private By SpecificBookingConfirmedStatus(string caseNumber) => By.XPath(
-        $"//div[@class='govuk-grid-column-full' and contains(.,'{caseNumber}') and contains(.,'Confirmed')]");
-
-    private By SpecificBookingCancelledStatus(string caseNumber) => By.XPath(
-        $"//div[@class='govuk-grid-column-full' and contains(.,'{caseNumber}') and contains(.,'Cancelled')]");
 
     /// <summary>
     /// Get the quick link join url from the booking details page. This is the url that can be used to join the hearing directly.
@@ -137,6 +125,7 @@ public class BookingDetailsPage : VhAdminWebPage
             }
         }
         ValidateParticipants(bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList());
+        ValidateDetails(bookingDto);
     }
 
     private void ValidateParticipants(List<BookingParticipantDto> participants)
@@ -145,6 +134,12 @@ public class BookingDetailsPage : VhAdminWebPage
         foreach (var participant in participants)
             if(!userNames.Contains(participant.Username, StringComparer.InvariantCultureIgnoreCase))
                 throw new InvalidOperationException($"Expected participant username: {participant.Username} but was not found on the page.");
+    }
+
+    private void ValidateDetails(BookingDto bookingDto)
+    {
+        CompareText(_audioRecording, BoolToString(bookingDto.AudioRecording));
+        CompareText(_otherInformation, bookingDto.OtherInformation);
     }
 
     private void CompareText(By element, string expectedText)
@@ -168,4 +163,6 @@ public class BookingDetailsPage : VhAdminWebPage
         foreach (var webElement in userNamesWebElements)
             yield return webElement.Text;
     }
+
+    private static string BoolToString(bool boolean) => boolean ? "Yes" : "No";
 }

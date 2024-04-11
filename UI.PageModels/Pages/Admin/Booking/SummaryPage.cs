@@ -39,7 +39,13 @@ public class SummaryPage : VhAdminWebPage
         ClickElement(By.XPath("//a[contains(@href, '/add-judicial-office-holders')]"));
         return new HearingAssignJudgePage(Driver, DefaultWaitTime);
         
-    } 
+    }
+
+    public OtherInfoPage ChangeOtherInformation()
+    {
+        ClickElement(By.Id("edit-linkother-information-id"));
+        return new OtherInfoPage(Driver, DefaultWaitTime);
+    }
     
     private void ValidateEndpointsAndOtherInformation(BookingDto bookingDto)
     {

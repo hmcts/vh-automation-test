@@ -48,13 +48,15 @@ public class HearingDetailsPage : VhAdminWebPage
         SelectDropDownByText(_caseType, caseType);
         SelectDropDownByText(_hearingType, hearingType);
     }
-    
+
     /// <summary>
     /// Enter the details for a hearing and go to the summary page
     /// </summary>
     /// <param name="bookingDto">A DTO representing a booking</param>
+    /// <param name="isV2">Is this a V2 booking</param>
+    /// <param name="isMultiDay">Is this a multi-day booking</param>
     /// <returns>the summary page</returns>
-    public SummaryPage BookAHearingJourney(BookingDto bookingDto, bool isV2)
+    public SummaryPage BookAHearingJourney(BookingDto bookingDto, bool isV2, bool isMultiDay = false)
     {
         if(isV2)
             EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
@@ -63,7 +65,14 @@ public class HearingDetailsPage : VhAdminWebPage
         
         var hearingSchedulePage = GoToNextPage();
 
-        hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto);
+        if (isMultiDay)
+        {
+            hearingSchedulePage.EnterMultiDayHearingSchedule(bookingDto);
+        }
+        else
+        {
+            hearingSchedulePage.EnterSingleDayHearingSchedule(bookingDto);
+        }
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         assignJudgePage.EnterJudgeDetails(bookingDto.Judge, isV2);
@@ -80,7 +89,7 @@ public class HearingDetailsPage : VhAdminWebPage
 
         return otherInformationPage.GoToSummaryPage();
     }
-    
+
     /// <summary>
     /// Go to the next page or the booking journey, the hearing schedule page
     /// </summary>
