@@ -21,8 +21,9 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _firstName = By.XPath("//input[@id='firstName']");
     private readonly By _lastName = By.XPath("//input[@id='lastName']");
     private readonly By _telePhone = By.XPath("//input[@id='phone']");
-    private readonly By _displayName = By.XPath("//input[@id='displayName']");
     private readonly By _titleDropdown = By.Id("title");
+    private readonly By _confirmRemoveParticipantButton = By.Id("btn-remove");
+    private readonly By _updateParticipantButton = By.Id("updateParticipantBtn");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -62,6 +63,28 @@ public class ParticipantsPage : VhAdminWebPage
             else
                 AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
         }
+    }
+
+    public void UpdateParticipant(int index, string newDisplayName)
+    {
+        var editLink = By.XPath($"(//a[@class='vhlink'][normalize-space()='Edit'])[{index}]");
+        ClickElement(editLink);
+        if (_useParty)
+        {
+            WaitForDropdownListToPopulate(_partyDropdown);
+        }
+        WaitForDropdownListToPopulate(_roleDropdown);
+        EnterText(_displayNameTextfield, newDisplayName);
+        
+        ClickUpdateParticipantAndWait();
+    }
+    
+    public void RemoveParticipant(int index)
+    {
+        var removeLink = By.XPath($"(//a[@class='vhlink'][normalize-space()='Remove'])[{index}]");
+        ClickElement(removeLink);
+        
+        ClickConfirmRemoveParticipantAndWait();
     }
     
     private void AddNewParticipant(BookingParticipantDto newUser)
@@ -154,6 +177,26 @@ public class ParticipantsPage : VhAdminWebPage
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
         ClickElement(_addParticipantLink);
         WaitForElementToBeInvisible(_addParticipantLink, 5);
+        Thread.Sleep(
+            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
+    }
+
+    private void ClickUpdateParticipantAndWait()
+    {
+        Thread.Sleep(
+            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
+        ClickElement(_updateParticipantButton);
+        WaitForElementToBeInvisible(_updateParticipantButton, 5);
+        Thread.Sleep(
+            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
+    }
+    
+    private void ClickConfirmRemoveParticipantAndWait()
+    {
+        Thread.Sleep(
+            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
+        ClickElement(_confirmRemoveParticipantButton);
+        WaitForElementToBeInvisible(_confirmRemoveParticipantButton, 5);
         Thread.Sleep(
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
     }

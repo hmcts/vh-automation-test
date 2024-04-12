@@ -103,6 +103,15 @@ public static class HearingTestData
         };
         return bookingDto;
     }
+
+    public static VideoAccessPointsDto CreateNewEndpointDto()
+    {
+        var timestamp = AddTimeStamp();
+        var displayName = $"VAP {timestamp}";
+        const string defenceAdvocateDisplayName = "";
+
+        return new VideoAccessPointsDto(displayName, defenceAdvocateDisplayName);
+    }
     
     public static BookingParticipantDto CreateNewParticipantDto()
     {
@@ -124,8 +133,13 @@ public static class HearingTestData
         bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
         return bookingDto;
     }
-    
-    
+
+    public static BookingDto CreateMultiDayDtoWithEndpoints(int numberOfDays, DateTime scheduledDateTime)
+    {
+        var bookingDto = CreateHearingDtoWithEndpoints(Judge, false, scheduledDateTime );
+        bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
+        return bookingDto;
+    }
 
     public static BookNewHearingRequest CreateNewRequestDtoWithOnlyAJudge(bool remote = false,
         DateTime? scheduledDateTime = null)
