@@ -65,9 +65,9 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void UpdateParticipant(int index, string newDisplayName)
+    public void UpdateParticipant(string fullName, string newDisplayName)
     {
-        var editLink = By.XPath($"(//a[@class='vhlink'][normalize-space()='Edit'])[{index}]");
+        var editLink = GetEditLink(fullName);
         ClickElement(editLink);
         if (_useParty)
         {
@@ -78,15 +78,21 @@ public class ParticipantsPage : VhAdminWebPage
         
         ClickUpdateParticipantAndWait();
     }
-    
-    public void RemoveParticipant(int index)
+
+    public void RemoveParticipant(string fullName)
     {
-        var removeLink = By.XPath($"(//a[@class='vhlink'][normalize-space()='Remove'])[{index}]");
+        var removeLink = GetRemoveLink(fullName);
         ClickElement(removeLink);
         
         ClickConfirmRemoveParticipantAndWait();
     }
     
+    private static By GetEditLink(string participantFullName) =>
+        By.XPath($"//div[normalize-space()='{participantFullName}']/../..//a[@class='vhlink'][normalize-space()='Edit']");
+    
+    private static By GetRemoveLink(string participantFullName) =>
+        By.XPath($"//div[normalize-space()='{participantFullName}']/../..//a[@class='vhlink'][normalize-space()='Remove']");
+
     private void AddNewParticipant(BookingParticipantDto newUser)
     {
         WaitForDropdownListToPopulate(_partyDropdown, 0);
