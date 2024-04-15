@@ -63,9 +63,18 @@ namespace UI.AutomationTests.Admin.Booking
             var confirmationPage = summaryPage.ClickBookButton();
             
             confirmationPage.IsBookingSuccessful().Should().BeTrue();
-            await Task.Delay(5000); // Allow time for new users to be created
+            await Task.Delay(10000); // Allow time for new users to be created
             var bookingDetailPage = confirmationPage.ClickViewBookingLink();
             bookingDetailPage.ValidateDetailsPage(hearingDto);
+            
+            // Return to the booking list and validate the details page for each of the subsequent days in the multi-day hearing
+            var driver = VhDriver.GetDriver();
+            for (var i = 2; i <= numberOfDays + 1; i++)
+            {
+                hearingDto.ScheduledDateTime = hearingDto.ScheduledDateTime.AddDays(1);
+                SearchAndValidateHearing(driver, hearingDto);
+            }
+            
             Assert.Pass();
         }
 
@@ -149,10 +158,27 @@ namespace UI.AutomationTests.Admin.Booking
             var confirmationPage = summaryPage.ClickBookButton();
             
             TestHearingIds.Add(confirmationPage.GetNewHearingId());
-            
-            
+
             var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
             return bookingDetailsPage;
+        }
+
+        private void SearchAndValidateHearing(IWebDriver driver, BookingDto hearingDto)
+        {
+            // Search for the hearing on the booking list page
+            driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+            var dashboardPage = new DashboardPage(driver, EnvConfigSettings.DefaultElementWait);
+            var bookingListPage = dashboardPage.GoToBookingList();
+            var queryDto = new BookingListQueryDto
+            {
+                CaseNumber = hearingDto.CaseNumber,
+                StartDate = hearingDto.ScheduledDateTime
+            };
+            bookingListPage.SearchForBooking(queryDto);
+            
+            // Validate the details
+            var bookingDetailPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
+            bookingDetailPage.ValidateDetailsPage(hearingDto);
         }
 
         /// <summary>
