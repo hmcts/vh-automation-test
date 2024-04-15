@@ -3,6 +3,7 @@
 public class BookingDetailsPage : VhAdminWebPage
 {
     private readonly By _editBookingButton = By.Id("edit-button");
+    private readonly By _editThisAndUpcomingDaysButton = By.Id("edit-multiple-hearings-button");
     private readonly By _userNames = By.XPath("//div[contains(@id,'username')]");
     private readonly By _audioRecording = By.Id("audioRecorded");
     private readonly By _otherInformation = By.Id("otherInformation");
@@ -101,6 +102,16 @@ public class BookingDetailsPage : VhAdminWebPage
         return new SummaryPage(Driver, DefaultWaitTime);
     }
 
+    public SummaryPage UpdateScheduleForMultipleHearings(List<DateTime> newDates, int startTimeHour, int endTimeHour, int durationHour, int durationMinute)
+    {
+        EditThisAndUpcomingDays();
+        ClickElement(By.Id("edit-linkhearing-schedule-id"));
+        var hearingSchedulePage = new HearingSchedulePage(Driver, DefaultWaitTime);
+        hearingSchedulePage.EnterNewDatesAndDuration(newDates, startTimeHour, endTimeHour, durationHour, durationMinute);
+        hearingSchedulePage.GoToNextPage();
+        return new SummaryPage(Driver, DefaultWaitTime);
+    }
+
     /// <summary>
     /// Validate the confirmation page matches the details provided by the booking dto
     /// </summary>
@@ -155,7 +166,13 @@ public class BookingDetailsPage : VhAdminWebPage
     {
         ClickElement(_editBookingButton);
         WaitForElementToBeVisible(By.XPath("//main[@id='main-content']//app-summary//app-breadcrumb"));
-    }    
+    }
+
+    private void EditThisAndUpcomingDays()
+    {
+        ClickElement(_editThisAndUpcomingDaysButton);
+        WaitForElementToBeVisible(By.XPath("//main[@id='main-content']//app-summary//app-breadcrumb"));
+    }
     
     private IEnumerable<string> ExtractUserNames()
     {

@@ -8,20 +8,69 @@ namespace UI.AutomationTests.Admin.Booking
         [Test]
         public void EditSingleDayOfMultiDayHearing()
         {
-            const int numberOfDays = 3;
             var isV2 = FeatureToggles.UseV2Api();
+            const int numberOfDays = 3;
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, DateTime.Today.AddDays(1).AddHours(10).AddMinutes(00));
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
-            TestContext.WriteLine(
-                $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
-
-            hearingDto.CaseName += $" Day 1 of {numberOfDays + 1}";
+            UpdateCaseName(hearingDto, numberOfDays);
             
             // Change the scheduled datetime
             var newTime = hearingDto.ScheduledDateTime.AddMinutes(30);
             var summaryPage = bookingDetailsPage.UpdateSchedule(newTime, hearingDto.DurationHour, hearingDto.DurationMinute);
             hearingDto.ScheduledDateTime = newTime;
             
+            // Change everything else
+            summaryPage = EditMultiDayHearing(isV2, hearingDto, summaryPage);
+            
+            summaryPage.ValidateSummaryPage(hearingDto);
+            var confirmationPage = summaryPage.ClickBookButton();
+            
+            confirmationPage.IsBookingSuccessful().Should().BeTrue();
+            var bookingDetailPage = confirmationPage.ClickViewBookingLink();
+            bookingDetailPage.ValidateDetailsPage(hearingDto);
+            Assert.Pass();
+        }
+
+        [Category("Daily")]
+        [Test]
+        public async Task EditThisAndUpcomingDaysOfMultiDayHearing()
+        {
+            var isV2 = FeatureToggles.UseV2Api();
+            var multiDayBookingEnhancementsEnabled = FeatureToggles.MultiDayBookingEnhancementsEnabled();
+            if (!isV2 || !multiDayBookingEnhancementsEnabled)
+                Assert.Pass("V2 and multi day booking enhancements are not both enabled, cannot edit this and upcoming hearings. Skipping Test");
+            
+            const int numberOfDays = 3;
+            var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, DateTime.Today.AddDays(1).AddHours(10).AddMinutes(00));
+            var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
+            UpdateCaseName(hearingDto, numberOfDays);
+            
+            // Change the scheduled datetimes
+            var newDates = new List<DateTime>();
+            for (var i = 1; i <= numberOfDays + 1; i++)
+            {
+                newDates.Add(hearingDto.ScheduledDateTime.AddDays(i));
+            }
+            var newStartTime = hearingDto.ScheduledDateTime.TimeOfDay.Add(TimeSpan.FromHours(1));
+            var summaryPage = bookingDetailsPage.UpdateScheduleForMultipleHearings(newDates, newStartTime.Hours, newStartTime.Minutes, hearingDto.DurationHour, hearingDto.DurationMinute);
+            hearingDto.ScheduledDateTime = newDates[0].Date.Add(newStartTime);
+            hearingDto.EndDateTime = newDates[^1].Date.Add(newStartTime);
+
+            // Change everything else
+            summaryPage = EditMultiDayHearing(isV2: true, hearingDto, summaryPage);
+
+            summaryPage.ValidateSummaryPage(hearingDto, isMultiDay: true);
+            var confirmationPage = summaryPage.ClickBookButton();
+            
+            confirmationPage.IsBookingSuccessful().Should().BeTrue();
+            await Task.Delay(5000); // Allow time for new users to be created
+            var bookingDetailPage = confirmationPage.ClickViewBookingLink();
+            bookingDetailPage.ValidateDetailsPage(hearingDto);
+            Assert.Pass();
+        }
+
+        private SummaryPage EditMultiDayHearing(bool isV2, BookingDto hearingDto, SummaryPage summaryPage)
+        {
             // Assign a new Judge 
             var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudge, "Auto Judge 2", "");
             var assignJudgePage = isV2
@@ -81,18 +130,15 @@ namespace UI.AutomationTests.Admin.Booking
             hearingDto.AudioRecording = newAudioRecordingSetting;
             hearingDto.OtherInformation = newOtherInformation;
             summaryPage = otherInformationPage.GoToSummaryPage();
-            
-            summaryPage.ValidateSummaryPage(hearingDto);
-            var confirmationPage = summaryPage.ClickBookButton();
-            
-            confirmationPage.IsBookingSuccessful().Should().BeTrue();
-            var bookingDetailPage = confirmationPage.ClickViewBookingLink();
-            bookingDetailPage.ValidateDetailsPage(hearingDto);
-            Assert.Pass();
+
+            return summaryPage;
         }
 
         private BookingDetailsPage BookMultiDayHearingAndGoToDetailsPage(BookingDto bookingDto)
         {
+            TestContext.WriteLine(
+                $"Attempting to book a hearing with the case name: {bookingDto.CaseName} and case number: {bookingDto.CaseNumber}");
+            
             var driver = VhDriver.GetDriver();
             driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
             var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
@@ -101,9 +147,22 @@ namespace UI.AutomationTests.Admin.Booking
             var createHearingPage = dashboardPage.GoToBookANewHearing();
             var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggles.UseV2Api(), isMultiDay: true);
             var confirmationPage = summaryPage.ClickBookButton();
+            
             TestHearingIds.Add(confirmationPage.GetNewHearingId());
+            
+            
             var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
             return bookingDetailsPage;
+        }
+
+        /// <summary>
+        /// Multi day hearings include the day number in their case name
+        /// </summary>
+        /// <param name="bookingDto"></param>
+        /// <param name="numberOfDays"></param>
+        private static void UpdateCaseName(BookingDto bookingDto, int numberOfDays)
+        {
+            bookingDto.CaseName += $" Day 1 of {numberOfDays + 1}";
         }
     }
 }
