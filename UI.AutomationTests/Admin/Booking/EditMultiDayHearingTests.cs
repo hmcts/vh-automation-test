@@ -10,7 +10,8 @@ namespace UI.AutomationTests.Admin.Booking
         {
             var isV2 = FeatureToggles.UseV2Api();
             const int numberOfDays = 3;
-            var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, DateTime.Today.AddDays(1).AddHours(10).AddMinutes(00));
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateTime.UtcNow).Date.AddHours(10).AddMinutes(0);
+            var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
             
@@ -41,7 +42,8 @@ namespace UI.AutomationTests.Admin.Booking
                 Assert.Pass("V2 and multi day booking enhancements are not both enabled, cannot edit this and upcoming hearings. Skipping Test");
             
             const int numberOfDays = 3;
-            var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, DateTime.Today.AddDays(1).AddHours(10).AddMinutes(00));
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateTime.UtcNow).Date.AddHours(10).AddMinutes(0);
+            var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
             
@@ -49,7 +51,8 @@ namespace UI.AutomationTests.Admin.Booking
             var newDates = new List<DateTime>();
             for (var i = 1; i <= numberOfDays + 1; i++)
             {
-                newDates.Add(hearingDto.ScheduledDateTime.AddDays(i));
+                // Move to the following week
+                newDates.Add(hearingDto.ScheduledDateTime.AddDays(i + 6));
             }
             var newStartTime = hearingDto.ScheduledDateTime.TimeOfDay.Add(TimeSpan.FromHours(1));
             var summaryPage = bookingDetailsPage.UpdateScheduleForMultipleHearings(newDates, newStartTime.Hours, newStartTime.Minutes, hearingDto.DurationHour, hearingDto.DurationMinute);
@@ -69,9 +72,9 @@ namespace UI.AutomationTests.Admin.Booking
             
             // Return to the booking list and validate the details page for each of the subsequent days in the multi-day hearing
             var driver = VhDriver.GetDriver();
-            for (var i = 2; i <= numberOfDays + 1; i++)
+            foreach (var newDate in newDates)
             {
-                hearingDto.ScheduledDateTime = hearingDto.ScheduledDateTime.AddDays(1);
+                hearingDto.ScheduledDateTime = newDate;
                 SearchAndValidateHearing(driver, hearingDto);
             }
             
@@ -189,6 +192,17 @@ namespace UI.AutomationTests.Admin.Booking
         private static void UpdateCaseName(BookingDto bookingDto, int numberOfDays)
         {
             bookingDto.CaseName += $" Day 1 of {numberOfDays + 1}";
+        }
+        
+        private static DateTime GetFirstDayOfNextWeek(DateTime currentDate)
+        {
+            // Calculate the number of days until the next Monday
+            var daysUntilNextMonday = ((int)DayOfWeek.Monday - (int)currentDate.DayOfWeek + 7) % 7;
+        
+            // Add the days until the next Monday to the current date to get the first day of next week
+            var firstDayOfNextWeek = currentDate.AddDays(daysUntilNextMonday);
+        
+            return firstDayOfNextWeek;
         }
     }
 }
