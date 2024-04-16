@@ -39,7 +39,7 @@ namespace UI.AutomationTests.Admin.Booking
             var isV2 = FeatureToggles.UseV2Api();
             var multiDayBookingEnhancementsEnabled = FeatureToggles.MultiDayBookingEnhancementsEnabled();
             if (!isV2 || !multiDayBookingEnhancementsEnabled)
-                Assert.Pass("V2 and multi day booking enhancements are not both enabled, cannot edit this and upcoming hearings. Skipping Test");
+                Assert.Ignore("V2 and multi day booking enhancements are not both enabled, cannot edit this and upcoming hearings. Skipping Test");
             
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateTime.UtcNow).Date.AddHours(10).AddMinutes(0);

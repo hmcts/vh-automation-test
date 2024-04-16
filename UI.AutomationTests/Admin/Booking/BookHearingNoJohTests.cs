@@ -1,8 +1,3 @@
-
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
-using UI.PageModels.Pages.Admin.Booking;
-
 namespace UI.AutomationTests.Admin.Booking;
 
 public class BookHearingNoJohTests : AdminWebUiTest
@@ -15,7 +10,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
     {
         var v2Flag = FeatureToggles.UseV2Api();
         if(!FeatureToggles.EJudEnabled())
-            Assert.Pass("Ejud is not enabled, will not be able to book without a judge. Skipping Test");
+            Assert.Ignore("Ejud is not enabled, will not be able to book without a judge. Skipping Test");
         
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDto(
