@@ -72,6 +72,28 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterText(_hearingDurationMinute, durationMinute.ToString());
     }
 
+    public void EnterNewDatesAndDuration(List<DateTime> newDates, int startTimeHour, int endTimeHour, int durationHour, int durationMinute)
+    {
+        var newDateIndex = 1;
+        
+        foreach (var newDate in newDates)
+        {
+            var dateString = GetLocaleDate(newDate);
+            var newDateInput = GetNewDateInput(newDateIndex);
+            EnterText(newDateInput, dateString);
+
+            newDateIndex++;
+        }
+        
+        EnterText(_hearingStartTimeHour, startTimeHour.ToString("00"));
+        EnterText(_hearingStartTimeMinute, endTimeHour.ToString("00"));
+        EnterText(_hearingDurationHour, durationHour.ToString());
+        EnterText(_hearingDurationMinute, durationMinute.ToString());
+    }
+    
+    private static By GetNewDateInput(int index) => 
+        By.XPath($"(//input[@type='date'])[{index}]");
+
     private void EnterHearingVenueAndRoom(string venueName, string roomName)
     {
         SelectDropDownByText(_courtVenue, venueName);

@@ -6,7 +6,7 @@ public class SummaryPage : VhAdminWebPage
 {
     private readonly By _bookButton = By.Id("bookButton");
     private readonly By _addANoJudgeWarning = By.CssSelector("h2[id = govuk-notification-banner-title]");
-   
+    private readonly By _participantsBreadcrumbLink = By.LinkText("Participants");
 
     public SummaryPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -39,7 +39,19 @@ public class SummaryPage : VhAdminWebPage
         ClickElement(By.XPath("//a[contains(@href, '/add-judicial-office-holders')]"));
         return new HearingAssignJudgePage(Driver, DefaultWaitTime);
         
-    } 
+    }
+
+    public OtherInfoPage ChangeOtherInformation()
+    {
+        ClickElement(By.Id("edit-linkother-information-id"));
+        return new OtherInfoPage(Driver, DefaultWaitTime);
+    }
+
+    public ParticipantsPage ChangeParticipants(bool isV2)
+    {
+        ClickElement(_participantsBreadcrumbLink);
+        return new ParticipantsPage(Driver, DefaultWaitTime, useParty: !isV2);
+    }
     
     private void ValidateEndpointsAndOtherInformation(BookingDto bookingDto)
     {

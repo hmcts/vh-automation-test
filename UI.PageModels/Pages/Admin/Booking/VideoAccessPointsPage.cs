@@ -52,6 +52,29 @@ public class VideoAccessPointsPage : VhAdminWebPage
             SelectDropDownByText(defenceAdvocateSelector, defenceAdvocateDisplayName);
         }
     }
+
+    /// <summary>
+    /// Adds a new video access point to an existing hearing (mimics clicking the "Add another") button
+    /// </summary>
+    /// <param name="videoAccessPoint">Video access point to add</param>
+    /// <param name="currentCount">The current number of endpoints already added to a hearing, excluding the one being added now</param>
+    public void AddAnotherVideoAccessPoint(VideoAccessPointsDto videoAccessPoint, int currentCount)
+    {
+        ClickElement(_addAnotherBtn);
+        AddVideoEndpoint(videoAccessPoint.DisplayName, videoAccessPoint.DefenceAdvocateDisplayName, currentCount);
+    }
+
+    public void RemoveVideoAccessPoint(int index)
+    {
+        var removeButton = By.Id($"removeDisplayName{index}");
+        ClickElement(removeButton);
+    }
+
+    public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName)
+    {
+        var defenceAdvocateSelector = By.Id($"defenceAdvocate{index}");
+        SelectDropDownByText(defenceAdvocateSelector, defenceAdvocateDisplayName);
+    }
     
     /// <summary>
     /// Click next and go to the other information page (only when in create mode)

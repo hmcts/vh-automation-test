@@ -18,6 +18,7 @@ public static class FeatureToggles
     private const string EJudFeatureToggleKey = "ejud-feature";
     private const string HrsFeatureToggleKey = "hrs-integration";
     private const string AudioSearchToggleKey = "hide-audio-search-tile";
+    private const string MultiDayBookingEnhancementsToggleKey = "multi-day-booking-enhancements";
     
     static FeatureToggles()
     {
@@ -62,6 +63,11 @@ public static class FeatureToggles
     public static bool UseV2Api()
     {
         return GetBoolValueWithKey(UseV2ApiToggleKey);
+    }
+
+    public static bool MultiDayBookingEnhancementsEnabled()
+    {
+        return GetBoolValueWithKey(MultiDayBookingEnhancementsToggleKey);
     }
     
     private static bool GetBoolValueWithKey(string key)

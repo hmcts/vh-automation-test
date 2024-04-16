@@ -46,15 +46,16 @@ public abstract class VideoWebUiTest : CommonUiTest
     public void TearDown()
     {
         CleanUp();
-        var testResult = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
+        var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
+                     TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
    
-        AdminWebDriver.PublishTestResult(testResult);
+        AdminWebDriver.PublishTestResult(passed);
         AdminWebDriver.Terminate();
         AdminWebDriver = null;
         
         ParticipantDrivers.Values.ToList().ForEach(x =>
         {
-            x.Driver.PublishTestResult(testResult);
+            x.Driver.PublishTestResult(passed);
             x.Driver.Terminate();
         });
         ParticipantDrivers.Clear();

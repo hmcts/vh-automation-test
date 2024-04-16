@@ -1,5 +1,3 @@
-using UI.AutomationTests.Utilities;
-
 namespace UI.AutomationTests.Admin.GetAudioLink;
 
 public class GetVideoHearingAudioLinkTests : AdminWebUiTest
@@ -9,7 +7,7 @@ public class GetVideoHearingAudioLinkTests : AdminWebUiTest
     public void GetAnAudioLinkForAVideoHearing()
     {
         if(!FeatureToggles.AudioSearchEnabled())
-            Assert.Pass("Dashboard tile isn't enabled, skipping test");
+            Assert.Ignore("Dashboard tile isn't enabled, skipping test");
         
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);

@@ -21,8 +21,9 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _firstName = By.XPath("//input[@id='firstName']");
     private readonly By _lastName = By.XPath("//input[@id='lastName']");
     private readonly By _telePhone = By.XPath("//input[@id='phone']");
-    private readonly By _displayName = By.XPath("//input[@id='displayName']");
     private readonly By _titleDropdown = By.Id("title");
+    private readonly By _confirmRemoveParticipantButton = By.Id("btn-remove");
+    private readonly By _updateParticipantButton = By.Id("updateParticipantBtn");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -63,7 +64,35 @@ public class ParticipantsPage : VhAdminWebPage
                 AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
         }
     }
+
+    public void UpdateParticipant(string fullName, string newDisplayName)
+    {
+        var editLink = GetEditLink(fullName);
+        ClickElement(editLink);
+        if (_useParty)
+        {
+            WaitForDropdownListToPopulate(_partyDropdown);
+        }
+        WaitForDropdownListToPopulate(_roleDropdown);
+        EnterText(_displayNameTextfield, newDisplayName);
+        
+        ClickElementAndWaitToDisappear(_updateParticipantButton);
+    }
+
+    public void RemoveParticipant(string fullName)
+    {
+        var removeLink = GetRemoveLink(fullName);
+        ClickElement(removeLink);
+        
+        ClickElementAndWaitToDisappear(_confirmRemoveParticipantButton);
+    }
     
+    private static By GetEditLink(string participantFullName) =>
+        By.XPath($"//div[normalize-space()='{participantFullName}']/../..//a[@class='vhlink'][normalize-space()='Edit']");
+    
+    private static By GetRemoveLink(string participantFullName) =>
+        By.XPath($"//div[normalize-space()='{participantFullName}']/../..//a[@class='vhlink'][normalize-space()='Remove']");
+
     private void AddNewParticipant(BookingParticipantDto newUser)
     {
         WaitForDropdownListToPopulate(_partyDropdown, 0);
@@ -150,10 +179,15 @@ public class ParticipantsPage : VhAdminWebPage
     
     private void ClickAddParticipantAndWait()
     {
+        ClickElementAndWaitToDisappear(_addParticipantLink);
+    }
+
+    private void ClickElementAndWaitToDisappear(By element)
+    {
         Thread.Sleep(
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
-        ClickElement(_addParticipantLink);
-        WaitForElementToBeInvisible(_addParticipantLink, 5);
+        ClickElement(element);
+        WaitForElementToBeInvisible(element, 5);
         Thread.Sleep(
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
     }
