@@ -76,7 +76,7 @@ public class ParticipantsPage : VhAdminWebPage
         WaitForDropdownListToPopulate(_roleDropdown);
         EnterText(_displayNameTextfield, newDisplayName);
         
-        ClickUpdateParticipantAndWait();
+        ClickElementAndWaitToDisappear(_updateParticipantButton);
     }
 
     public void RemoveParticipant(string fullName)
@@ -84,7 +84,7 @@ public class ParticipantsPage : VhAdminWebPage
         var removeLink = GetRemoveLink(fullName);
         ClickElement(removeLink);
         
-        ClickConfirmRemoveParticipantAndWait();
+        ClickElementAndWaitToDisappear(_confirmRemoveParticipantButton);
     }
     
     private static By GetEditLink(string participantFullName) =>
@@ -179,30 +179,15 @@ public class ParticipantsPage : VhAdminWebPage
     
     private void ClickAddParticipantAndWait()
     {
-        Thread.Sleep(
-            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
-        ClickElement(_addParticipantLink);
-        WaitForElementToBeInvisible(_addParticipantLink, 5);
-        Thread.Sleep(
-            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
+        ClickElementAndWaitToDisappear(_addParticipantLink);
     }
 
-    private void ClickUpdateParticipantAndWait()
+    private void ClickElementAndWaitToDisappear(By element)
     {
         Thread.Sleep(
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
-        ClickElement(_updateParticipantButton);
-        WaitForElementToBeInvisible(_updateParticipantButton, 5);
-        Thread.Sleep(
-            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
-    }
-    
-    private void ClickConfirmRemoveParticipantAndWait()
-    {
-        Thread.Sleep(
-            500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
-        ClickElement(_confirmRemoveParticipantButton);
-        WaitForElementToBeInvisible(_confirmRemoveParticipantButton, 5);
+        ClickElement(element);
+        WaitForElementToBeInvisible(element, 5);
         Thread.Sleep(
             500); // THIS IS ABSOLUTELY REQUIRED - the component takes 500ms to respond to change based on a setTimeout
     }
