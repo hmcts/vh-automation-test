@@ -145,23 +145,5 @@ namespace UI.AutomationTests.Admin.Booking
 
             return summaryPage;
         }
-
-        private void SearchAndValidateHearing(IWebDriver driver, BookingDto hearingDto)
-        {
-            // Search for the hearing on the booking list page
-            driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
-            var dashboardPage = new DashboardPage(driver, EnvConfigSettings.DefaultElementWait);
-            var bookingListPage = dashboardPage.GoToBookingList();
-            var queryDto = new BookingListQueryDto
-            {
-                CaseNumber = hearingDto.CaseNumber,
-                StartDate = hearingDto.ScheduledDateTime
-            };
-            bookingListPage.SearchForBooking(queryDto);
-            
-            // Validate the details
-            var bookingDetailPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
-            bookingDetailPage.ValidateDetailsPage(hearingDto);
-        }
     }
 }

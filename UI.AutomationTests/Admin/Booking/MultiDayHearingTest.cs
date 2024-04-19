@@ -44,5 +44,37 @@ namespace UI.AutomationTests.Admin.Booking
         
             return firstDayOfNextWeek;
         }
+        
+        protected static IEnumerable<DateTime> ExtractDatesForMultiDayHearing(BookingDto hearingDto)
+        {
+            var dates = new List<DateTime>();
+            var startDate = hearingDto.ScheduledDateTime;
+            var endDate = hearingDto.EndDateTime;
+            
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                dates.Add(date);
+            }
+
+            return dates;
+        }
+        
+        protected void SearchAndValidateHearing(IWebDriver driver, BookingDto hearingDto)
+        {
+            // Search for the hearing on the booking list page
+            driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+            var dashboardPage = new DashboardPage(driver, EnvConfigSettings.DefaultElementWait);
+            var bookingListPage = dashboardPage.GoToBookingList();
+            var queryDto = new BookingListQueryDto
+            {
+                CaseNumber = hearingDto.CaseNumber,
+                StartDate = hearingDto.ScheduledDateTime
+            };
+            bookingListPage.SearchForBooking(queryDto);
+            
+            // Validate the details
+            var bookingDetailPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
+            bookingDetailPage.ValidateBookingIsCancelled();
+        }
     }
 }
