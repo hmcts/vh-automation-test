@@ -7,11 +7,18 @@ public class BookingDetailsPage : VhAdminWebPage
     private readonly By _userNames = By.XPath("//div[contains(@id,'username')]");
     private readonly By _audioRecording = By.Id("audioRecorded");
     private readonly By _otherInformation = By.Id("otherInformation");
-    
+    private readonly By _cancelBookingButton = By.Id("cancel-button");
+    private readonly By _cancelReasonDropdown = By.Id("cancel-reason");
+    private readonly By _cancelThisAndUpcomingDaysButton = By.Id("btnCancelMultiDayBooking");
+    private readonly By _cancelledStatus = By.XPath("(//div[@class='vh-status vh-cancelled-booking'])[1]");
+
     public BookingDetailsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
-        WaitForElementToBeClickable(_editBookingButton);
+        if (IsBookingEditable())
+        {
+            WaitForElementToBeClickable(_editBookingButton);
+        }
         if (!Driver.Url.EndsWith("booking-details"))
             throw new InvalidOperationException(
                 "This is not the booking-details page, the current url is: " + Driver.Url);
@@ -139,6 +146,32 @@ public class BookingDetailsPage : VhAdminWebPage
         ValidateDetails(bookingDto);
     }
 
+    public void ValidateBookingIsCancelled()
+    {
+        if (!IsElementVisible(_cancelledStatus))
+        {
+            throw new InvalidOperationException("Cancelled status is not visible");
+        }
+    }
+
+    public void ClickCancelBooking()
+    {
+        ClickElement(_cancelBookingButton);
+    }
+
+    public void CancelThisAndUpcomingDays(string cancellationReason)
+    {
+        SetCancellationReason(cancellationReason);
+        ClickElement(_cancelThisAndUpcomingDaysButton);
+        WaitForApiSpinnerToDisappear(90);
+    }
+    
+    private void SetCancellationReason(string cancellationReason)
+    {
+        WaitForDropdownListToPopulate(_cancelReasonDropdown);
+        SelectDropDownByText(_cancelReasonDropdown, cancellationReason);
+    }
+
     private void ValidateParticipants(List<BookingParticipantDto> participants)
     {
         var userNames = ExtractUserNames().ToArray();
@@ -182,4 +215,9 @@ public class BookingDetailsPage : VhAdminWebPage
     }
 
     private static string BoolToString(bool boolean) => boolean ? "Yes" : "No";
+
+    private bool IsBookingEditable()
+    {
+        return !IsElementVisible(_cancelledStatus);
+    }
 }
