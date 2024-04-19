@@ -58,8 +58,8 @@ namespace UI.AutomationTests.Admin.Booking
 
             return dates;
         }
-        
-        protected void SearchAndValidateHearing(IWebDriver driver, BookingDto hearingDto)
+
+        protected BookingDetailsPage SearchAndViewHearing(IWebDriver driver, BookingDto hearingDto)
         {
             // Search for the hearing on the booking list page
             driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -72,9 +72,9 @@ namespace UI.AutomationTests.Admin.Booking
             };
             bookingListPage.SearchForBooking(queryDto);
             
-            // Validate the details
+            // View the details page
             var bookingDetailPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
-            bookingDetailPage.ValidateBookingIsCancelled();
+            return bookingDetailPage;
         }
     }
 }

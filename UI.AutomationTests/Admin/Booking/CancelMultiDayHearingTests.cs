@@ -47,7 +47,8 @@ namespace UI.AutomationTests.Admin.Booking
             foreach (var date in hearingDates)
             {
                 hearingDto.ScheduledDateTime = date;
-                SearchAndValidateHearing(driver, hearingDto);
+                bookingDetailsPage = SearchAndViewHearing(driver, hearingDto);
+                bookingDetailsPage.ValidateBookingIsCancelled();
             }
             Assert.Pass();
         }

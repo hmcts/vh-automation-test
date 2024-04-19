@@ -75,7 +75,8 @@ namespace UI.AutomationTests.Admin.Booking
             foreach (var newDate in newDates)
             {
                 hearingDto.ScheduledDateTime = newDate;
-                SearchAndValidateHearing(driver, hearingDto);
+                bookingDetailsPage = SearchAndViewHearing(driver, hearingDto);
+                bookingDetailsPage.ValidateDetailsPage(hearingDto);
             }
             
             Assert.Pass();
