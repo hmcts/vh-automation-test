@@ -2,7 +2,7 @@ using UI.PageModels.Pages.Admin.Booking;
 
 namespace UI.AutomationTests.Admin.Booking
 {
-    public class MultiDayHearingTest : AdminWebUiTest
+    public abstract class MultiDayHearingTest : AdminWebUiTest
     {
         protected BookingDetailsPage BookMultiDayHearingAndGoToDetailsPage(BookingDto bookingDto)
         {
