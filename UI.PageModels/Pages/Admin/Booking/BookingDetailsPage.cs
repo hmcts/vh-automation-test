@@ -9,6 +9,7 @@ public class BookingDetailsPage : VhAdminWebPage
     private readonly By _otherInformation = By.Id("otherInformation");
     private readonly By _cancelBookingButton = By.Id("cancel-button");
     private readonly By _cancelReasonDropdown = By.Id("cancel-reason");
+    private readonly By _cancelSingleDayButton = By.Id("cancelSingleDayBooking");
     private readonly By _cancelThisAndUpcomingDaysButton = By.Id("btnCancelMultiDayBooking");
     private readonly By _cancelledStatus = By.XPath("(//div[@class='vh-status vh-cancelled-booking'])[1]");
 
@@ -159,11 +160,18 @@ public class BookingDetailsPage : VhAdminWebPage
         ClickElement(_cancelBookingButton);
     }
 
+    public void CancelSingleHearing(string cancellationReason)
+    {
+        SetCancellationReason(cancellationReason);
+        ClickElement(_cancelSingleDayButton);
+        WaitForApiSpinnerToDisappear();
+    }
+
     public void CancelThisAndUpcomingDays(string cancellationReason)
     {
         SetCancellationReason(cancellationReason);
         ClickElement(_cancelThisAndUpcomingDaysButton);
-        WaitForApiSpinnerToDisappear(90);
+        WaitForApiSpinnerToDisappear();
     }
     
     private void SetCancellationReason(string cancellationReason)

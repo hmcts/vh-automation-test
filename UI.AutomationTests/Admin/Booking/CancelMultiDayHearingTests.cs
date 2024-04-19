@@ -6,6 +6,23 @@ namespace UI.AutomationTests.Admin.Booking
     {
         [Category("Daily")]
         [Test]
+        public void CancelSingleDayOfMultiDayHearing()
+        {
+            const int numberOfDays = 3;
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateTime.UtcNow).Date.AddHours(10).AddMinutes(0);
+            var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
+            var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
+            UpdateCaseName(hearingDto, numberOfDays);
+            
+            bookingDetailsPage.ClickCancelBooking();
+            bookingDetailsPage.CancelSingleHearing(CancellationReasons.EquipmentIncompatible);
+  
+            bookingDetailsPage.ValidateBookingIsCancelled();
+            Assert.Pass();
+        }
+        
+        [Category("Daily")]
+        [Test]
         public void CancelThisAndUpcomingDaysOfMultiDayHearing()
         {
             var multiDayBookingEnhancementsEnabled = FeatureToggles.MultiDayBookingEnhancementsEnabled();
@@ -34,7 +51,7 @@ namespace UI.AutomationTests.Admin.Booking
             }
             Assert.Pass();
         }
-        
+
         private void SearchAndValidateHearing(IWebDriver driver, BookingDto hearingDto)
         {
             // Search for the hearing on the booking list page
