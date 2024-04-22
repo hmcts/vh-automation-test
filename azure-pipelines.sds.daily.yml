@@ -2,7 +2,7 @@ trigger: none
 pr: none
 
 schedules:
-  - cron: "0 11 * * 1,2,3,4,5"
+  - cron: '0 11 * * 1,2,3,4,5'
     displayName: Daily build
     always: true
     branches:
@@ -31,7 +31,7 @@ parameters:
 name: ${{ parameters.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
-  name: "VH Self Hosted"
+  name: 'VH Self Hosted'
 
 stages:
   ####################################################
@@ -69,30 +69,28 @@ stages:
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
                   testCategory: Daily
-                  testRunTitle: "UI Tests ${{ parameters.environment }}"
+                  testRunTitle: 'UI Tests ${{ parameters.environment }}'
                   subscriptionName: ${{ variables.subscriptionName }}
-              
+
               - task: PublishBuildArtifacts@1
                 displayName: Publish UI Test Output
                 condition: succeededOrFailed()
                 inputs:
-                  pathToPublish: "$(Agent.TempDirectory)/"
+                  pathToPublish: '$(Agent.TempDirectory)/'
                   artifactName: UI_Report
-              
+
               - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
-                
-                - template: pipelines/templates/get-results-from-trx.yaml
-                  parameters:
+                  - template: pipelines/templates/get-results-from-trx.yaml
+                    parameters:
                       name: UI
 
-                - template: pipelines/templates/send-results-to-slack.yaml
-                  parameters:
-                    env: ${{ parameters.environment }}
-                    results: $(testOutcome)
-                    details: $(testSummary)
-                    triggerID: $(triggerID)
-                    type: UI Tests
-
+                  - template: pipelines/templates/send-results-to-slack.yaml
+                    parameters:
+                      env: ${{ parameters.environment }}
+                      results: $(testOutcome)
+                      details: $(testSummary)
+                      triggerID: $(triggerID)
+                      type: UI Tests
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
@@ -128,33 +126,32 @@ stages:
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
                   testCategory: a11y
-                  testRunTitle: "UI Tests ${{ parameters.environment }}"
+                  testRunTitle: 'UI Tests ${{ parameters.environment }}'
                   subscriptionName: ${{ variables.subscriptionName }}
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish A11Y Output
                 condition: succeededOrFailed()
                 inputs:
-                  pathToPublish: "$(Agent.TempDirectory)/"
+                  pathToPublish: '$(Build.ArtifactStagingDirectory)/'
                   artifactName: A11Y_Report
-              
+
               - task: PublishBuildArtifacts@1
                 displayName: Publish A11Y Output
                 condition: succeededOrFailed()
                 inputs:
-                  pathToPublish: "$(Agent.TempDirectory)/"
+                  pathToPublish: '$(Agent.TempDirectory)/'
                   artifactName: A11Y_Report_Temp
 
               - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
+                  - template: pipelines/templates/get-results-from-trx.yaml
+                    parameters:
+                      name: A11y
 
-                - template: pipelines/templates/get-results-from-trx.yaml
-                  parameters:
-                    name: A11y
-
-                - template: pipelines/templates/send-results-to-slack.yaml
-                  parameters:
-                    env: ${{ parameters.environment }}
-                    results: $(testOutcome)
-                    details: $(testSummary)
-                    triggerID: $(triggerID)
-                    type: A11y Tests
+                  - template: pipelines/templates/send-results-to-slack.yaml
+                    parameters:
+                      env: ${{ parameters.environment }}
+                      results: $(testOutcome)
+                      details: $(testSummary)
+                      triggerID: $(triggerID)
+                      type: A11y Tests
