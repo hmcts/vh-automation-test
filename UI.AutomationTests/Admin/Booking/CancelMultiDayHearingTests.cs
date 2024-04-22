@@ -10,7 +10,7 @@ namespace UI.AutomationTests.Admin.Booking
         {
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
-                .AddDays(1).AddHours(10).AddMinutes(0);
+                .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
@@ -32,7 +32,7 @@ namespace UI.AutomationTests.Admin.Booking
             
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
-                .AddDays(1).AddHours(10).AddMinutes(0);
+                .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
