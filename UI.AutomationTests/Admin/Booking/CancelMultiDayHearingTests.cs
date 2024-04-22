@@ -42,7 +42,6 @@ namespace UI.AutomationTests.Admin.Booking
   
             bookingDetailsPage.ValidateBookingIsCancelled();
             // Return to the booking list and validate the details page for each of the subsequent days in the multi-day hearing
-            bookingDetailsPage.GoToBookingList();
             var hearingDates = ExtractDatesForMultiDayHearing(hearingDto)
                 .Where(d => d > hearingDto.ScheduledDateTime)
                 .ToList();
