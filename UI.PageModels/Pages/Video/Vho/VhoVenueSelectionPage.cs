@@ -9,7 +9,12 @@ public class VhoVenueSelectionPage : VhVideoWebPage
     public VhoVenueSelectionPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
     }
-    
+
+    protected override void ConfirmPageHasLoaded()
+    {
+        WaitForElementToBeVisible(By.XPath("//h1[normalize-space()='Select your hearing lists']"));
+    }
+
     public CommandCentrePage SelectHearingsByVenues(params string[] venues)
     {
         var input = By.XPath("//ng-select[@id='venue-allocation-list']//input[@type='text']");

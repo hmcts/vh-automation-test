@@ -44,13 +44,13 @@ namespace UI.AutomationTests.Admin.Booking
         
             return firstDayOfNextWeek;
         }
-        
+
         protected static IEnumerable<DateTime> ExtractDatesForMultiDayHearing(BookingDto hearingDto)
         {
             var dates = new List<DateTime>();
             var startDate = hearingDto.ScheduledDateTime;
             var endDate = hearingDto.EndDateTime;
-            
+
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
                 dates.Add(date);
@@ -59,12 +59,16 @@ namespace UI.AutomationTests.Admin.Booking
             return dates;
         }
 
-        protected BookingDetailsPage SearchAndViewHearing(IWebDriver driver, BookingDto hearingDto)
+        /// <summary>
+        /// Search for the hearing on the booking list page and view the details page.
+        /// </summary>
+        /// <param name="vhAdminWebPage">A VH Admin Page (used to go to the Booking List)</param>
+        /// <param name="hearingDto"></param>
+        /// <returns></returns>
+        protected BookingDetailsPage SearchAndViewHearing(VhAdminWebPage vhAdminWebPage, BookingDto hearingDto)
         {
             // Search for the hearing on the booking list page
-            driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
-            var dashboardPage = new DashboardPage(driver, EnvConfigSettings.DefaultElementWait);
-            var bookingListPage = dashboardPage.GoToBookingList();
+            var bookingListPage = vhAdminWebPage.GoToBookingList();
             var queryDto = new BookingListQueryDto
             {
                 CaseNumber = hearingDto.CaseNumber,

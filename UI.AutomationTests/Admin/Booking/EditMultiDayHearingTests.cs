@@ -10,7 +10,7 @@ namespace UI.AutomationTests.Admin.Booking
         {
             var isV2 = FeatureToggles.UseV2Api();
             const int numberOfDays = 3;
-            var scheduledDateTime = GetFirstDayOfNextWeek(DateTime.UtcNow).Date.AddHours(10).AddMinutes(0);
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date.AddDays(1).AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
@@ -42,7 +42,7 @@ namespace UI.AutomationTests.Admin.Booking
                 Assert.Ignore("V2 and multi day booking enhancements are not both enabled, cannot edit this and upcoming hearings. Skipping Test");
             
             const int numberOfDays = 3;
-            var scheduledDateTime = GetFirstDayOfNextWeek(DateTime.UtcNow).Date.AddHours(10).AddMinutes(0);
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date.AddDays(1).AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
@@ -71,11 +71,10 @@ namespace UI.AutomationTests.Admin.Booking
             bookingDetailPage.ValidateDetailsPage(hearingDto);
             
             // Return to the booking list and validate the details page for each of the subsequent days in the multi-day hearing
-            var driver = VhDriver.GetDriver();
             foreach (var newDate in newDates)
             {
                 hearingDto.ScheduledDateTime = newDate;
-                bookingDetailsPage = SearchAndViewHearing(driver, hearingDto);
+                bookingDetailsPage = SearchAndViewHearing(bookingDetailPage, hearingDto);
                 bookingDetailsPage.ValidateDetailsPage(hearingDto);
             }
             

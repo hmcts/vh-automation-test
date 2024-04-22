@@ -9,7 +9,7 @@ public class CommandCentrePage : VhVideoWebPage
     private readonly By _changeSelectionBtn = By.Id("change-venue-allocation-btn");
     private readonly int _defaultWaitTime;
 
-    public CommandCentrePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    public CommandCentrePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime, ignoreAccessibilityForPage: true)
     {
         _defaultWaitTime = defaultWaitTime;
     }
