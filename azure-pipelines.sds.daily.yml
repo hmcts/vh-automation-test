@@ -137,6 +137,13 @@ stages:
                 inputs:
                   pathToPublish: "$(Agent.TempDirectory)/"
                   artifactName: A11Y_Report
+              
+              - task: PublishBuildArtifacts@1
+                displayName: Publish A11Y Output
+                condition: succeededOrFailed()
+                inputs:
+                  pathToPublish: "$(Agent.TempDirectory)/"
+                  artifactName: A11Y_Report_Temp
 
               - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
 

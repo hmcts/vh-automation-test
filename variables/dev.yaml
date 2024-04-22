@@ -4,7 +4,7 @@ variables:
   - name: adminWebUrl
     value: "https://vh-admin-web.dev.platform.hmcts.net"
   - name: videoWebUrl
-    value: "https://vh-video-web.dev.platform.hmcts.net"
+    value: "https://vh-video-web-pr-2132.dev.platform.hmcts.net"
   - name: bookingsApiUrl
     value: "https://vh-bookings-api.dev.platform.hmcts.net/"
   - name: videoApiUrl

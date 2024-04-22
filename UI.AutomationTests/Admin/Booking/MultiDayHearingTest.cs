@@ -38,6 +38,8 @@ namespace UI.AutomationTests.Admin.Booking
         {
             // Calculate the number of days until the next Monday
             var daysUntilNextMonday = ((int)DayOfWeek.Monday - (int)currentDate.DayOfWeek + 7) % 7;
+            if (currentDate.DayOfWeek == DayOfWeek.Monday)
+                daysUntilNextMonday = 7;
         
             // Add the days until the next Monday to the current date to get the first day of next week
             var firstDayOfNextWeek = currentDate.AddDays(daysUntilNextMonday);
