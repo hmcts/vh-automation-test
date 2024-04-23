@@ -50,36 +50,15 @@ public class RemoteChromeVhDriver : IVhDriver
             { "username", sauceLabsConfiguration.SauceUsername },
             { "accessKey", sauceLabsConfiguration.SauceAccessKey }
         };
-
         chromeOptions.AddAdditionalOption("sauce:options", sauceOptions);
-
         var remoteUrl = new Uri(sauceLabsConfiguration.SecureSauceUrl);
         var commandTimeout = TimeSpan.FromSeconds(sauceLabsConfiguration.CommandTimeoutInSeconds);
-
         // annoyingly hacky retry due to TaskCanceledException being thrown by the RemoteWebDriver constructor
         // can remove this when the issue is fixed in a future WebDriver release
-        var retryCount = 0;
-        while (true) // Retry up to 3 times
-        {
-            try
-            {
-                var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions.ToCapabilities(), commandTimeout);
-                remoteDriver.Manage().Timeouts().PageLoad.Add(TimeSpan.FromSeconds(30));
-
-                remoteDriver.FileDetector = new LocalFileDetector();
-                _driver = remoteDriver;
-                break; // If the operation is successful, break the loop
-            }
-            catch (Exception)
-            {
-                TestContext.WriteLine($"Failed to create RemoteWebDriver on attempt {retryCount + 1}, retrying...");
-                retryCount++;
-                if (retryCount >= 3)
-                {
-                    throw; // If the operation has failed 3 times, rethrow the exception
-                }
-            }
-        }
+        var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions.ToCapabilities(), commandTimeout);
+        remoteDriver.Manage().Timeouts().PageLoad.Add(TimeSpan.FromSeconds(30));
+        remoteDriver.FileDetector = new LocalFileDetector();
+        _driver = remoteDriver;
     }
 
     private string GetEnvName()
