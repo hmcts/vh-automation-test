@@ -29,9 +29,9 @@ public abstract class AdminWebUiTest : CommonUiTest
     protected virtual void TearDown()
     {
         CleanUp();
+        if(VhDriver == null) throw new InvalidOperationException("Driver is null, cannot publish test result");
         var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
                       TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
-        if(VhDriver == null) throw new InvalidOperationException("Driver is null, cannot publish test result");
         VhDriver.PublishTestResult(passed);
         VhDriver.Terminate();
     }

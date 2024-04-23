@@ -79,6 +79,7 @@ public abstract class CommonUiTest
 
     private async Task DeleteHearings()
     {
+        List<string> removedHearings = new();
         foreach (var hearingId in TestHearingIds)
         {
             if (Guid.TryParse(hearingId, out var guid))
@@ -87,6 +88,7 @@ public abstract class CommonUiTest
                 {
                     TestContext.WriteLine($"Removing Hearing {guid}");
                     await BookingsApiClient.RemoveHearingAsync(guid);
+                    removedHearings.Add(hearingId);
                 }
                 catch (BookingsApiException e)
                 {
@@ -100,5 +102,7 @@ public abstract class CommonUiTest
                 }
             }
         }
+        // remove the hearing from the list so that it is not attempted to be removed again
+        TestHearingIds.RemoveAll(id => removedHearings.Contains(id));
     }
 }

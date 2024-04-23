@@ -54,7 +54,11 @@ public class RemoteChromeVhDriver : IVhDriver
         var remoteUrl =
             new Uri(
                 $"https://{sauceLabsConfiguration.SauceUsername}:{sauceLabsConfiguration.SauceAccessKey}@{sauceLabsConfiguration.SecureSauceUrl}");
-        var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions);
+        // var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions);
+        var commandTimeout = TimeSpan.FromSeconds(sauceLabsConfiguration.CommandTimeoutInSeconds);
+        var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions.ToCapabilities(), commandTimeout);
+        remoteDriver.Manage().Timeouts().PageLoad.Add(TimeSpan.FromSeconds(30));
+        
         remoteDriver.FileDetector = new LocalFileDetector();
         _driver = remoteDriver;
     }
