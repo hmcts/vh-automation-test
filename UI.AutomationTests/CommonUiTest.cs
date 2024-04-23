@@ -94,6 +94,10 @@ public abstract class CommonUiTest
                         ? $"Hearing {guid} not found"
                         : $"Failed to remove hearing {guid} - {e.Message}");
                 }
+                catch (Exception e)
+                {
+                    TestContext.WriteLine($"Failed to remove hearing {guid} - {e.Message}");
+                }
             }
         }
     }

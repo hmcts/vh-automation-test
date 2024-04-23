@@ -1,5 +1,4 @@
 using OpenQA.Selenium.Remote;
-using UI.AutomationTests.Utilities;
 
 namespace UI.AutomationTests.Drivers;
 

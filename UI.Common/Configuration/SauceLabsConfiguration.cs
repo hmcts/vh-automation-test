@@ -18,5 +18,5 @@ public class SauceLabsConfiguration
     // SauceLabOptions
     public int MaxDurationInSeconds => 60 * 10;
     public int IdleTimeoutInSeconds => 60 * 7;
-    public int CommandTimeoutInSeconds => 60 * 3;
+    public int CommandTimeoutInSeconds => 60;
 }
