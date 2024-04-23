@@ -4,11 +4,9 @@ public class GetVideoHearingAudioLinkTests : AdminWebUiTest
 {
     [Category("Daily")]
     [Test]
+    [FeatureToggleSetting(FeatureToggle.AudioSearchToggleKey, true)]
     public void GetAnAudioLinkForAVideoHearing()
     {
-        if(!FeatureToggles.AudioSearchEnabled())
-            Assert.Ignore("Dashboard tile isn't enabled, skipping test");
-        
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);

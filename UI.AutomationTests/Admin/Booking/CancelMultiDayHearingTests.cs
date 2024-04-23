@@ -24,12 +24,9 @@ namespace UI.AutomationTests.Admin.Booking
         
         [Category("Daily")]
         [Test]
+        [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
         public void CancelThisAndUpcomingDaysOfMultiDayHearing()
         {
-            var multiDayBookingEnhancementsEnabled = FeatureToggles.MultiDayBookingEnhancementsEnabled();
-            if (!multiDayBookingEnhancementsEnabled)
-                Assert.Ignore("Multi day booking enhancements are not both enabled, cannot cancel this and upcoming hearings. Skipping Test");
-            
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
                 .AddHours(10).AddMinutes(0);

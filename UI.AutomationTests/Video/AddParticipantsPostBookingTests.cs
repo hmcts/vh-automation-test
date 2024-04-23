@@ -13,7 +13,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Test]
     public async Task should_add_new_participant_after_booking()
     {
-        var isV2 = FeatureToggles.UseV2Api();
+        var isV2 = FeatureToggle.Instance().UseV2Api();
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
         TestContext.WriteLine(
@@ -74,7 +74,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggles.UseV2Api());
+        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);

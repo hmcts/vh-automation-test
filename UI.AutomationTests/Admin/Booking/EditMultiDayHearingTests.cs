@@ -8,7 +8,7 @@ namespace UI.AutomationTests.Admin.Booking
         [Test]
         public void EditSingleDayOfMultiDayHearing()
         {
-            var isV2 = FeatureToggles.UseV2Api();
+            var isV2 = FeatureToggle.Instance().UseV2Api();
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
                 .AddHours(10).AddMinutes(0);
@@ -35,13 +35,10 @@ namespace UI.AutomationTests.Admin.Booking
 
         [Category("Daily")]
         [Test]
+        [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
+        [FeatureToggleSetting(FeatureToggle.UseV2ApiToggleKey, true)]
         public async Task EditThisAndUpcomingDaysOfMultiDayHearing()
         {
-            var isV2 = FeatureToggles.UseV2Api();
-            var multiDayBookingEnhancementsEnabled = FeatureToggles.MultiDayBookingEnhancementsEnabled();
-            if (!isV2 || !multiDayBookingEnhancementsEnabled)
-                Assert.Ignore("V2 and multi day booking enhancements are not both enabled, cannot edit this and upcoming hearings. Skipping Test");
-            
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
                 .AddHours(10).AddMinutes(0);
@@ -90,7 +87,7 @@ namespace UI.AutomationTests.Admin.Booking
             var assignJudgePage = isV2
                 ? summaryPage.ChangeJudgeV2() 
                 : summaryPage.ChangeJudgeV1();
-            assignJudgePage.EnterJudgeDetails(alternativeJudge, FeatureToggles.UseV2Api());
+            assignJudgePage.EnterJudgeDetails(alternativeJudge, FeatureToggle.Instance().UseV2Api());
             hearingDto.Judge = alternativeJudge;
             summaryPage = assignJudgePage.GotToNextPageOnEdit();
 

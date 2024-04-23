@@ -8,7 +8,7 @@ public class BookHearingTests : AdminWebUiTest
     [Test]
     public void BookAHearing()
     {
-        var v2Flag = FeatureToggles.UseV2Api();
+        var v2Flag = FeatureToggle.Instance().UseV2Api();
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername: HearingTestData.Judge, scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";

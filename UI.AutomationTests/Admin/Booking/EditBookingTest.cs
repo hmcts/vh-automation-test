@@ -15,10 +15,11 @@ public class EditBookingTest : HearingTest
         
         //Assign a new Judge 
         var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudge, "Auto Judge 2", "");
-        var assignJudgePage = FeatureToggles.UseV2Api() 
+        var useV2Api = FeatureToggle.Instance().UseV2Api();
+        var assignJudgePage = useV2Api 
             ? summaryPage.ChangeJudgeV2() 
             : summaryPage.ChangeJudgeV1();
-        assignJudgePage.EnterJudgeDetails(alternativeJudge, FeatureToggles.UseV2Api());
+        assignJudgePage.EnterJudgeDetails(alternativeJudge, useV2Api);
         summaryPage = assignJudgePage.GotToNextPageOnEdit();
         var confirmationPage = summaryPage.ClickBookButton();
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
