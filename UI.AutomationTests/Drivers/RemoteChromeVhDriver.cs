@@ -68,10 +68,9 @@ public class RemoteChromeVhDriver : IVhDriver
 
                 remoteDriver.FileDetector = new LocalFileDetector();
                 _driver = remoteDriver;
-                remoteDriver.Manage().Timeouts().PageLoad.Add(TimeSpan.FromSeconds(30));
                 break; // If the operation is successful, break the loop
             }
-            catch (TaskCanceledException)
+            catch (Exception)
             {
                 TestContext.WriteLine($"Failed to create RemoteWebDriver on attempt {retryCount + 1}, retrying...");
                 retryCount++;
