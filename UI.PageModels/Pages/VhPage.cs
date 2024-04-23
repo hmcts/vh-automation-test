@@ -231,29 +231,8 @@ public abstract class VhPage
 
     protected void WaitForElementToBeInvisible(By locator, int timeOut)
     {
-        var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-        {
-            PollingInterval = TimeSpan.FromMilliseconds(500), // Check every half second
-        };
-
-        wait.IgnoreExceptionTypes(typeof(ElementNotVisibleException));
-
-        wait.Until(driver =>
-        {
-            try
-            {
-                var element = driver.FindElement(locator);
-                return !element.Displayed; // Return true (stop waiting) when the element is not displayed
-            }
-            catch (NoSuchElementException)
-            {
-                return true; // Element is not found, so it's "invisible"
-            }
-            catch (StaleElementReferenceException)
-            {
-                return false; // Element is stale, continue waiting
-            }
-        });
+        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
+            .Until(ExpectedConditions.InvisibilityOfElementLocated(locator));
     }
 
     protected string GetLocaleDate(DateTime date)
