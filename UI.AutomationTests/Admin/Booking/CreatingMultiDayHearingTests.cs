@@ -9,7 +9,7 @@ public class CreatingMultiDayHearingTests : AdminWebUiTest
     [Test]
     public void CreatingMultiDayHearing()
     {
-        var v2Flag = FeatureToggles.UseV2Api();
+        var v2Flag = FeatureToggle.Instance().UseV2Api();
         var numberOfDays = 7;
         _bookingDto = HearingTestData.CreateMultiDayDto(numberOfDays, DateTime.Today.AddDays(1).AddHours(9).AddMinutes(00));
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";

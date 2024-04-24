@@ -15,7 +15,7 @@ namespace UI.AutomationTests.Admin.Booking
             var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
             var createHearingPage = dashboardPage.GoToBookANewHearing();
-            var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggles.UseV2Api());
+            var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api());
             var confirmationPage = summaryPage.ClickBookButton();
             TestHearingIds.Add(confirmationPage.GetNewHearingId());
             var bookingDetailsPage = confirmationPage.ClickViewBookingLink();

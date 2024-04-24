@@ -10,6 +10,7 @@ public class TestingEquipmentPage : VhVideoWebPage
     
     protected override void ConfirmPageHasLoaded()
     {
+        WaitForElementToBeInvisible(By.XPath("//p[normalize-space()='Please wait to be connected...']"), DefaultWaitTime);
         WaitForElementToBeClickable(_continueBtn);
     }
 

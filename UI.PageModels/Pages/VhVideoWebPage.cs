@@ -6,7 +6,9 @@ public abstract class VhVideoWebPage : VhPage
 {
     private readonly By _signOutMenuItemButton = By.Id("logout-link");
 
-    protected VhVideoWebPage(IWebDriver driver, int defaultWaitTime, bool useAltLocator = false) : base(driver, defaultWaitTime, useAltLocator)
+    protected VhVideoWebPage(IWebDriver driver, int defaultWaitTime, bool useAltLocator = false,
+        bool ignoreAccessibilityForPage = false) : base(driver, defaultWaitTime, useAltLocator,
+        ignoreAccessibilityForPage)
     {
     }
 

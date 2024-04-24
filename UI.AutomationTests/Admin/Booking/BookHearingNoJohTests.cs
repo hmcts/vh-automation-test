@@ -6,11 +6,10 @@ public class BookHearingNoJohTests : AdminWebUiTest
 
     [Category("Daily")]
     [Test]
+    [FeatureToggleSetting(FeatureToggle.EJudFeatureToggleKey, true)]
     public void BookAHearingNoJoh()
     {
-        var v2Flag = FeatureToggles.UseV2Api();
-        if(!FeatureToggles.EJudEnabled())
-            Assert.Ignore("Ejud is not enabled, will not be able to book without a judge. Skipping Test");
+        var v2Flag = FeatureToggle.Instance().UseV2Api();
         
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDto(

@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace UI.PageModels.Pages.Admin.Booking;
+﻿namespace UI.PageModels.Pages.Admin.Booking;
 
 public class SummaryPage : VhAdminWebPage
 {
@@ -145,7 +143,7 @@ public class SummaryPage : VhAdminWebPage
             CompareText(By.Id("otherInformation"), bookingDto.OtherInformation);
         }
         
-        Assert.AreEqual("Important", Driver.FindElement(_addANoJudgeWarning).Text);
+        CompareText(_addANoJudgeWarning, "Important");
     }
     
     private string Pluralise(int number, string text)

@@ -227,7 +227,7 @@ public abstract class VhPage
         var selectElement = new SelectElement(Driver.FindElement(locator));
         selectElement.SelectByIndex(index);
     }
-    
+
 
     protected void WaitForElementToBeInvisible(By locator, int timeOut)
     {
