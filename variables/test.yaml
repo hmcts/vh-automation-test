@@ -9,3 +9,5 @@ variables:
     value: "https://vh-bookings-api.test.platform.hmcts.net/"
   - name: videoApiUrl
     value: "https://vh-video-api.test.platform.hmcts.net/"
+  - name: userApiUrl
+    value: "https://vh-user-api.test.platform.hmcts.net/"
