@@ -22,6 +22,8 @@ variables:
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
     value: ${{ variables.videoWebUrl }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.Environment
+    value: ${{ variables.env }}
 
   - name: SystemConfiguration.LogLocation
     value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
