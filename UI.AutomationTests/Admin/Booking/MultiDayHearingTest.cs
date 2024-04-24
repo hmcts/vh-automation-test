@@ -15,7 +15,8 @@ namespace UI.AutomationTests.Admin.Booking
             var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
             
             var createHearingPage = dashboardPage.GoToBookANewHearing();
-            var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api(), isMultiDay: true);
+            var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api(),
+                FeatureToggle.Instance().MultiDayEnhancementsEnabled(), isMultiDay: true);
             var confirmationPage = summaryPage.ClickBookButton();
             
             TestHearingIds.Add(confirmationPage.GetNewHearingId());

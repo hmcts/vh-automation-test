@@ -10,6 +10,7 @@ public class CreatingMultiDayHearingTests : AdminWebUiTest
     public void CreatingMultiDayHearing()
     {
         var v2Flag = FeatureToggle.Instance().UseV2Api();
+        var multiDayEnhancementsFlag = FeatureToggle.Instance().MultiDayEnhancementsEnabled();
         var numberOfDays = 7;
         _bookingDto = HearingTestData.CreateMultiDayDto(numberOfDays, DateTime.Today.AddDays(1).AddHours(9).AddMinutes(00));
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
@@ -30,7 +31,7 @@ public class CreatingMultiDayHearingTests : AdminWebUiTest
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
         //Create Multi-day schedule
-        hearingSchedulePage.EnterMultiDayHearingSchedule(_bookingDto);
+        hearingSchedulePage.EnterMultiDayHearingSchedule(_bookingDto, multiDayEnhancementsFlag);
         
         //Add Judge
         var assignJudgePage = hearingSchedulePage.GoToNextPage();

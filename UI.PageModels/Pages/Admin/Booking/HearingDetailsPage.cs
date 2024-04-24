@@ -54,9 +54,10 @@ public class HearingDetailsPage : VhAdminWebPage
     /// </summary>
     /// <param name="bookingDto">A DTO representing a booking</param>
     /// <param name="isV2">Is this a V2 booking</param>
-    /// <param name="isMultiDay">Is this a multi-day booking</param>
+    /// <param name="multiDayEnhancementEnabled">Is the multiday enhancement feature toggle enabled</param>
+    /// <param name="isMultiDay">Is this a multi-day booking. Default to false</param>
     /// <returns>the summary page</returns>
-    public SummaryPage BookAHearingJourney(BookingDto bookingDto, bool isV2, bool isMultiDay = false)
+    public SummaryPage BookAHearingJourney(BookingDto bookingDto, bool isV2, bool multiDayEnhancementEnabled, bool isMultiDay = false)
     {
         if(isV2)
             EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
@@ -67,7 +68,7 @@ public class HearingDetailsPage : VhAdminWebPage
 
         if (isMultiDay)
         {
-            hearingSchedulePage.EnterMultiDayHearingSchedule(bookingDto);
+            hearingSchedulePage.EnterMultiDayHearingSchedule(bookingDto, multiDayEnhancementEnabled);
         }
         else
         {

@@ -13,6 +13,13 @@ namespace UI.AutomationTests.Admin.Booking
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
                 .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
+            if (!FeatureToggle.Instance().MultiDayEnhancementsEnabled())
+            {
+                // default to 8 hours if the feature toggle is off due to validation on page
+                hearingDto.DurationHour = 8;
+                hearingDto.DurationMinute = 0;
+            }
+
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
             UpdateCaseName(hearingDto, numberOfDays);
             

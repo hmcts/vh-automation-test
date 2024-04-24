@@ -15,9 +15,6 @@ public class HearingSchedulePage : VhAdminWebPage
     private readonly By _hearingStartTimeMinute = By.Id("hearingStartTimeMinute");
     private readonly By _multiDaysHearingCheckbox = By.XPath("//input[@id='multiDaysHearing' and @type='checkbox']");
     private readonly By _nextButton = By.Id("nextButton");
-    
-    private readonly IWebDriver driver;
-    private readonly int defaultWaitTime;
 
     public HearingSchedulePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -31,14 +28,22 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }   
     
-    public void EnterMultiDayHearingSchedule(BookingDto bookingDto)
+    public void EnterMultiDayHearingSchedule(BookingDto bookingDto, bool multiDayEnhancementToggleEnabled)
     {
         ClickMultiDaysHearingCheckbox();
-        EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
+        if (multiDayEnhancementToggleEnabled)
+        {
+            EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);    
+        }
+        else
+        {
+            EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime);
+        }
+        
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }
     
-    public void EnterHearingDateAndRange(DateTime date, DateTime endDateTime, int durationHour, int durationMinute)
+    private void EnterHearingDateAndRange(DateTime date, DateTime endDateTime)
     {
         var dateString = GetLocaleDate(date);
         var endDateString = GetLocaleDate(endDateTime);
@@ -46,6 +51,11 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterText(_endOfHearingDate,endDateString);
         EnterText(_hearingStartTimeHour, date.ToString("HH"));
         EnterText(_hearingStartTimeMinute, date.ToString("mm"));
+    }
+    
+    private void EnterHearingDateAndRange(DateTime date, DateTime endDateTime, int durationHour, int durationMinute)
+    {
+        EnterHearingDateAndRange(date, endDateTime);
         EnterText(_hearingDurationHour, durationHour.ToString());
         EnterText(_hearingDurationMinute, durationMinute.ToString());
     }

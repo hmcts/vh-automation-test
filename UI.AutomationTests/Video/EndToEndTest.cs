@@ -122,7 +122,8 @@ public class EndToEndTest : VideoWebUiTest
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api());
+        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api(),
+            FeatureToggle.Instance().MultiDayEnhancementsEnabled());
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);

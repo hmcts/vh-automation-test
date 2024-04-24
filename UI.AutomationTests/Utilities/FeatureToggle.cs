@@ -52,6 +52,11 @@ public sealed class FeatureToggle
     {
         return GetBoolValueWithKey(UseV2ApiToggleKey);
     }
+    
+    public bool MultiDayEnhancementsEnabled()
+    {
+        return GetBoolValueWithKey(MultiDayBookingEnhancementsToggleKey);
+    }
 
     public bool AudioSearchEnabled()
     {
