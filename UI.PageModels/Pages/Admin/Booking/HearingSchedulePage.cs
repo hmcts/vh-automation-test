@@ -15,6 +15,8 @@ public class HearingSchedulePage : VhAdminWebPage
     private readonly By _hearingStartTimeMinute = By.Id("hearingStartTimeMinute");
     private readonly By _multiDaysHearingCheckbox = By.XPath("//input[@id='multiDaysHearing' and @type='checkbox']");
     private readonly By _nextButton = By.Id("nextButton");
+    private readonly By _selectIndividualDates = By.Id("multiDaysRange-choice-yes-label");
+    private readonly By _addHearingDateButton = By.XPath("//button[text()='Add hearing date']");
     
     private readonly IWebDriver driver;
     private readonly int defaultWaitTime;
@@ -36,6 +38,33 @@ public class HearingSchedulePage : VhAdminWebPage
         ClickMultiDaysHearingCheckbox();
         EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
+    }
+    
+    public void EnterMultiDayHearingScheduleWithIndividualDates(BookingDto bookingDto)
+    {
+        ClickMultiDaysHearingCheckbox();
+        ClickElement(_selectIndividualDates);
+        var i = 0;
+        DateTime bookingDate;
+        do
+        {
+            bookingDate = new DateTime(bookingDto.ScheduledDateTime.Ticks, DateTimeKind.Utc).AddDays(i++);
+            EnterHearingDateIndividualDates(bookingDate);
+        } while (bookingDate < bookingDto.EndDateTime);
+        
+        EnterText(_hearingStartTimeHour, bookingDate.ToString("HH"));
+        EnterText(_hearingStartTimeMinute, bookingDate.ToString("mm"));
+        EnterText(_hearingDurationHour, bookingDto.DurationHour.ToString());
+        EnterText(_hearingDurationMinute, bookingDto.DurationMinute.ToString());
+        
+        EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
+    }
+
+    public void EnterHearingDateIndividualDates(DateTime bookingDate)
+    {
+        var dateString = GetLocaleDate(bookingDate);
+        ClickElement(_addHearingDateButton);
+        EnterText(_hearingDate, dateString);
     }
     
     public void EnterHearingDateAndRange(DateTime date, DateTime endDateTime, int durationHour, int durationMinute)
