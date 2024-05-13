@@ -8,6 +8,8 @@ public class HearingSchedulePage : VhAdminWebPage
     private readonly By _courtRoom = By.Id("court-room");
     private readonly By _courtVenue = By.Id("courtAddress");
     private readonly By _hearingDate = By.Id("hearingDate");
+    private readonly By _multiIndividualHearingDate = By.Id("multiHearingDateIndividual");
+    private readonly By _startOfHearingDate = By.Id("startHearingDate");
     private readonly By _endOfHearingDate = By.Id("endHearingDate");
     private readonly By _hearingDurationHour = By.Id("hearingDurationHour");
     private readonly By _hearingDurationMinute = By.Id("hearingDurationMinute");
@@ -40,15 +42,17 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }
     
-    public void EnterMultiDayHearingScheduleWithIndividualDates(BookingDto bookingDto)
+    public void EnterMultiDayHearingScheduleWithIndividualDates(BookingDto bookingDto, out List<DateTime>? individualDatesForValidation)
     {
         ClickMultiDaysHearingCheckbox();
         ClickElement(_selectIndividualDates);
         var i = 0;
         DateTime bookingDate;
+        individualDatesForValidation = new List<DateTime>();
         do
         {
             bookingDate = new DateTime(bookingDto.ScheduledDateTime.Ticks, DateTimeKind.Utc).AddDays(i++);
+            individualDatesForValidation.Add(bookingDate);
             EnterHearingDateIndividualDates(bookingDate);
         } while (bookingDate < bookingDto.EndDateTime);
         
@@ -64,14 +68,14 @@ public class HearingSchedulePage : VhAdminWebPage
     {
         var dateString = GetLocaleDate(bookingDate);
         ClickElement(_addHearingDateButton);
-        EnterText(_hearingDate, dateString);
+        EnterText(_multiIndividualHearingDate, dateString);
     }
     
     public void EnterHearingDateAndRange(DateTime date, DateTime endDateTime, int durationHour, int durationMinute)
     {
         var dateString = GetLocaleDate(date);
         var endDateString = GetLocaleDate(endDateTime);
-        EnterText(_hearingDate, dateString);
+        EnterText(_startOfHearingDate, dateString);
         EnterText(_endOfHearingDate,endDateString);
         EnterText(_hearingStartTimeHour, date.ToString("HH"));
         EnterText(_hearingStartTimeMinute, date.ToString("mm"));

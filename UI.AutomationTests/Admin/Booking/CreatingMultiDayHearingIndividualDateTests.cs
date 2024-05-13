@@ -30,7 +30,7 @@ public class CreatingMultiDayHearingIndividualDateTests : AdminWebUiTest
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
         //Create Multi-day schedule
-        hearingSchedulePage.EnterMultiDayHearingScheduleWithIndividualDates(_bookingDto);
+        hearingSchedulePage.EnterMultiDayHearingScheduleWithIndividualDates(_bookingDto, out var individualDatesForValidation);
         
         //Add Judge
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
@@ -48,7 +48,7 @@ public class CreatingMultiDayHearingIndividualDateTests : AdminWebUiTest
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
         
         var summaryPage = otherInformationPage.GoToSummaryPage();
-        summaryPage.ValidateSummaryPage(_bookingDto, true);
+        summaryPage.ValidateSummaryPage(_bookingDto, true, individualDatesForValidation);
         
         var confirmationPage = summaryPage.ClickBookButton();
         _groupId = confirmationPage.GetNewHearingId();
