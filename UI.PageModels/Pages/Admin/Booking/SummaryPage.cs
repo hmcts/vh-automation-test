@@ -14,16 +14,38 @@ public class SummaryPage : VhAdminWebPage
                 "This is not the summary page, the current url is: " + Driver.Url);
     }
     
-    public void ValidateSummaryPage(BookingDto bookingDto, bool isMultiDay = false)
+    public void ValidateSummaryPage(BookingDto bookingDto, bool isMultiDay = false, List<DateTime>? individualDatesForValidation = null)
     {
         ValidateHearingDetails(bookingDto);
         ValidateVenueDetails(bookingDto);
         if (isMultiDay)
-            ValidateDateMultiDay(bookingDto);
+        {
+            if (individualDatesForValidation == null)
+                ValidateDateMultiDay(bookingDto);
+            else
+                ValidateDateMultiDayIndividualDates(individualDatesForValidation);
+        }
         else
             ValidateDateAndDuration(bookingDto);
         ValidateEndpointsAndOtherInformation(bookingDto);
         ValidateParticipantDetails(bookingDto);
+    }
+
+    private void ValidateDateMultiDayIndividualDates(List<DateTime>? individualDatesForValidation)
+    {
+        foreach (var bookingDate in individualDatesForValidation)
+        {
+            var day = bookingDate.ToString("dd");
+            var month = bookingDate.ToString("MMMM");
+            var year = bookingDate.ToString("yyyy");
+            var datesXpath = By.XPath($"//span[text()='{month} {year}']/following-sibling::*[@class='dates']/div[@class='date']");
+            var dates = Driver.FindElements(datesXpath);
+            if(dates.Count == 0)
+                throw new InvalidOperationException("No dates found for the given month and year");
+            // check if the date is present in the list of dates throw error if not
+            if (dates.All(x => x.Text != day))
+                throw new InvalidOperationException("Date not found in the list of dates");
+        }
     }
 
     public HearingAssignJudgePage ChangeJudgeV1()
