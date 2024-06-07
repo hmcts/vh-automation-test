@@ -46,7 +46,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public string GetParticipantStatus(string fullName)
     {
-        return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//label"));
+        return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//span"));
     }
     
     public void WaitForParticipantToBeConnected(string fullName)
@@ -57,12 +57,12 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public string GetVideoAccessPointStatus(string accessPointName)
     {
-        return GetText(By.XPath($"//dt[normalize-space()='{accessPointName}']/following-sibling::dd//label"));
+        return GetText(By.XPath($"//dt[normalize-space()='{accessPointName}']/following-sibling::dd//span"));
     }
 
     public int GetParticipantConnectedCount()
     {
-        var connectedLabel = Driver.FindElements(By.XPath("//label[normalize-space()='Connected']"));
+        var connectedLabel = Driver.FindElements(By.XPath("//span[normalize-space()='Connected']"));
         return connectedLabel.Count;
     }
 
