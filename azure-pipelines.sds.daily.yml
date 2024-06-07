@@ -128,6 +128,7 @@ stages:
                   testCategory: a11y
                   testRunTitle: 'UI Tests ${{ parameters.environment }}'
                   subscriptionName: ${{ variables.subscriptionName }}
+                  netVersion: 8.x
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish A11Y Output

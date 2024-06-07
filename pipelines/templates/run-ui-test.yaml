@@ -24,6 +24,9 @@ parameters:
     displayName: Key Vault Subscription Name
     type: string
     default: "**/TestResults/*.trx"
+  - name: netVersion
+    type: string
+    default: '8.x'
 
 steps:
   - task: AzureKeyVault@1
@@ -59,6 +62,20 @@ steps:
     inputs:
       useConfigFile: true
       configFilePath: "GitVersion.yml"
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      packageType: sdk
+      version: ${{ parameters.netVersion }}
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - task: DotNetCoreCLI@2
+    displayName: Verify .NET Version
+    inputs:
+      testRunTitle: Acceptance Tests
+      command: custom
+      custom: --version
 
   - task: FileTransform@1
     displayName: Transform App Settings
