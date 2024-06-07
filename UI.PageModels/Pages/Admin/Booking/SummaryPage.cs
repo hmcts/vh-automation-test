@@ -35,7 +35,7 @@ public class SummaryPage : VhAdminWebPage
     {
         foreach (var bookingDate in individualDatesForValidation)
         {
-            var day = bookingDate.ToString("dd");
+            var day = bookingDate.ToString("%d");
             var month = bookingDate.ToString("MMMM");
             var year = bookingDate.ToString("yyyy");
             var datesXpath = By.XPath($"//span[text()='{month} {year}']/following-sibling::*[@class='dates']/div[@class='date']");
