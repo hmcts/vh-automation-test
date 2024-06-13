@@ -5,15 +5,15 @@ namespace UI.PageModels.Pages.Admin.Booking;
 
 public class VideoAccessPointsPage : VhAdminWebPage
 {
-    private readonly By _addAnotherBtn = By.Id("addEndpoint");
+    private readonly By _displayNameTextField = By.Id("displayName");
+    private readonly By _defenceAdvocateSelector = By.Id("representative");
+    private readonly By _saveOrUpdateButton = By.Id("confirmEndpointBtn");
     private readonly By _nextButton = By.Id("nextButton");
 
     public VideoAccessPointsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
-        WaitForElementToBeVisible(_addAnotherBtn);
+        WaitForElementToBeVisible(_displayNameTextField);
     }
-    
-    private static By RemoveDisplayName(int number) => By.Id($"removeDisplayName{number}");
 
     /// <summary>
     /// Add a list of video access points to a hearing
@@ -21,15 +21,9 @@ public class VideoAccessPointsPage : VhAdminWebPage
     /// <param name="videoAccessPoints"></param>
     public void AddVideoAccessPoints(List<VideoAccessPointsDto> videoAccessPoints)
     {
-        for (var i = 0; i < videoAccessPoints.Count; i++)
+        foreach (var vap in videoAccessPoints)
         {
-            var vap = videoAccessPoints[i];
-            
-            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName,i);
-            if (i < videoAccessPoints.Count - 1)
-            {
-                ClickElement(_addAnotherBtn);
-            }
+            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName);
         }
     }
     
@@ -38,42 +32,32 @@ public class VideoAccessPointsPage : VhAdminWebPage
     /// </summary>
     /// <param name="displayName">The display name for the access point</param>
     /// <param name="defenceAdvocateDisplayName">The defence advocate to link to, if provided</param>
-    /// <param name="currentCount">The current number of endpoints already added to a hearing, excluding the one being added now</param>
-    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName, int currentCount = 0)
+    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName)
     {
-        // enter the video endpoints display name, which is index based
-        var displayNameTextField = By.Id($"displayName{currentCount}");
-        EnterText(displayNameTextField, displayName);
+        EnterText(_displayNameTextField, displayName);
 
         if (!string.IsNullOrWhiteSpace(defenceAdvocateDisplayName))
         {
-            // defence advocate selector
-            var defenceAdvocateSelector = By.Id($"defenceAdvocate{currentCount}");
-            SelectDropDownByText(defenceAdvocateSelector, defenceAdvocateDisplayName);
+            SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
         }
-    }
-
-    /// <summary>
-    /// Adds a new video access point to an existing hearing (mimics clicking the "Add another") button
-    /// </summary>
-    /// <param name="videoAccessPoint">Video access point to add</param>
-    /// <param name="currentCount">The current number of endpoints already added to a hearing, excluding the one being added now</param>
-    public void AddAnotherVideoAccessPoint(VideoAccessPointsDto videoAccessPoint, int currentCount)
-    {
-        ClickElement(_addAnotherBtn);
-        AddVideoEndpoint(videoAccessPoint.DisplayName, videoAccessPoint.DefenceAdvocateDisplayName, currentCount);
+        
+        ClickElement(_saveOrUpdateButton);
     }
 
     public void RemoveVideoAccessPoint(int index)
     {
-        var removeButton = By.Id($"removeDisplayName{index}");
-        ClickElement(removeButton);
+        var removeEndpointXPath = $"(//a[@class='vhlink'][normalize-space()='Remove'])[{index + 1}]";
+        ClickElement(By.XPath(removeEndpointXPath));
     }
 
     public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName)
     {
-        var defenceAdvocateSelector = By.Id($"defenceAdvocate{index}");
-        SelectDropDownByText(defenceAdvocateSelector, defenceAdvocateDisplayName);
+        var editEndpointXPath = $"(//a[@class='vhlink'][normalize-space()='Edit'])[{index + 1}]";
+        ClickElement(By.XPath(editEndpointXPath));
+        
+        SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
+        
+        ClickElement(_saveOrUpdateButton);
     }
     
     /// <summary>
