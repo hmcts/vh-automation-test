@@ -112,8 +112,7 @@ namespace UI.AutomationTests.Admin.Booking
 
             // Add an endpoint
             var newEndpoint = HearingTestData.CreateNewEndpointDto();
-            var countOfEndpointsCurrentlyOnHearing = hearingDto.VideoAccessPoints.Count;
-            videoAccessPointsPage.AddAnotherVideoAccessPoint(newEndpoint, countOfEndpointsCurrentlyOnHearing);
+            videoAccessPointsPage.AddVideoEndpoint(newEndpoint.DisplayName, newEndpoint.DefenceAdvocateDisplayName);
             hearingDto.VideoAccessPoints.Add(newEndpoint);
             
             // Remove an endpoint
