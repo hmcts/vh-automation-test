@@ -7,6 +7,7 @@ public class VideoAccessPointsPage : VhAdminWebPage
 {
     private readonly By _displayNameTextField = By.Id("displayName");
     private readonly By _defenceAdvocateSelector = By.Id("representative");
+    private readonly By _saveOrUpdateButton = By.Id("confirmEndpointBtn");
     private readonly By _nextButton = By.Id("nextButton");
 
     public VideoAccessPointsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
@@ -40,19 +41,23 @@ public class VideoAccessPointsPage : VhAdminWebPage
             SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
         }
         
-        ClickElement(By.Id("confirmEndpointBtn"));
+        ClickElement(_saveOrUpdateButton);
     }
 
     public void RemoveVideoAccessPoint(int index)
     {
-        var removeButton = By.Id($"removeDisplayName{index}");
-        ClickElement(removeButton);
+        var removeEndpointXPath = $"(//a[@class='vhlink'][normalize-space()='Remove'])[{index + 1}]";
+        ClickElement(By.XPath(removeEndpointXPath));
     }
 
     public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName)
     {
-        var defenceAdvocateSelector = By.Id($"defenceAdvocate{index}");
-        SelectDropDownByText(defenceAdvocateSelector, defenceAdvocateDisplayName);
+        var editEndpointXPath = $"(//a[@class='vhlink'][normalize-space()='Edit'])[{index + 1}]";
+        ClickElement(By.XPath(editEndpointXPath));
+        
+        SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
+        
+        ClickElement(_saveOrUpdateButton);
     }
     
     /// <summary>
