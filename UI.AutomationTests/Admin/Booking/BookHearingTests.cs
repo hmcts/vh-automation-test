@@ -70,4 +70,50 @@ public class BookHearingTests : AdminWebUiTest
 
         Assert.Pass();
     }
+
+    [Category("Daily")]
+    [Test]
+    [FeatureToggleSetting(FeatureToggle.InterpreterEnhancementsToggleKey, true)]
+    public void BookAHearingWithInterpreterLanguages()
+    {
+        var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
+        _bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(judgeUsername: HearingTestData.Judge, scheduledDateTime: date);
+        _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
+        
+        var driver = VhDriver.GetDriver();
+        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+        
+        var createHearingPage = dashboardPage.GoToBookANewHearing();
+        createHearingPage.EnterHearingDetails(_bookingDto, true);
+        
+        var hearingSchedulePage = createHearingPage.GoToNextPage();
+        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto);
+        
+        var assignJudgePage = hearingSchedulePage.GoToNextPage();
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, true);
+        
+        // TODO johs
+        
+        var addParticipantPage = assignJudgePage.GotToNextPage(true);
+        addParticipantPage.AddAllParticipantsFromDto(_bookingDto);
+        
+        var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
+        videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
+        
+        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
+        
+        var summaryPage = otherInformationPage.GoToSummaryPage();
+        summaryPage.ValidateSummaryPage(_bookingDto);
+        
+        var confirmationPage = summaryPage.ClickBookButton();
+        TestHearingIds.Add(confirmationPage.GetNewHearingId());
+        confirmationPage.IsBookingSuccessful().Should().BeTrue();
+        
+        confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
+
+        Assert.Pass();
+    }
 }

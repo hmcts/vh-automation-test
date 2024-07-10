@@ -167,9 +167,12 @@ public abstract class VhPage
             .Until(ExpectedConditions.ElementToBeClickable(locator));
     }
     
-    protected void ClickElement(By locator)
+    protected void ClickElement(By locator, bool waitToBeClickable = true)
     {
-        WaitForElementToBeClickable(locator);
+        if (waitToBeClickable)
+        {
+            WaitForElementToBeClickable(locator);
+        }
         try
         {
             Driver.FindElement(locator).Click();

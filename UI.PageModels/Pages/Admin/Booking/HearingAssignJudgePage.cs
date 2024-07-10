@@ -7,6 +7,8 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _judgeEmail = By.Id("judge-email");
     private readonly By _eJudgeEmail = By.Id("judiciaryEmailInput");
     private readonly By _judgePhoneFld = By.Id("judgePhoneFld");
+    private readonly By _judgeInterpreterRequired = By.Name("interpreter-required");
+    private readonly By _judgeSpokenLanguageDropdown = By.Id("verbal-language");
     private readonly By _nextButton = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
@@ -20,7 +22,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
     {
         if (isV2)
         {
-            AssignPresidingJudiciaryDetails(judge.Username, judge.DisplayName);
+            AssignPresidingJudiciaryDetails(judge.Username, judge.DisplayName, judge.InterpreterLanguageDescription);
             ClickSaveJudgeButton();
         }
         else
@@ -41,7 +43,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
             EnterText(_judgePhoneFld, judgePhone);
     }
     
-    private void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName)
+    private void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName, string interpreterLanguageDescription = "")
     {
         EnterText(_eJudgeEmail, judgeEmail);
         WaitForApiSpinnerToDisappear();
@@ -49,6 +51,12 @@ public class HearingAssignJudgePage : VhAdminWebPage
         ClickElement(_searchResults);
         if (!string.IsNullOrWhiteSpace(judgeDisplayName)) 
             EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
+        if (!string.IsNullOrEmpty(interpreterLanguageDescription))
+        {
+            ClickElement(_judgeInterpreterRequired, waitToBeClickable: false);
+            WaitForDropdownListToPopulate(_judgeSpokenLanguageDropdown, 0);
+            SelectDropDownByText(_judgeSpokenLanguageDropdown, interpreterLanguageDescription);
+        }
     }
     
     

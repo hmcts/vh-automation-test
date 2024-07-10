@@ -9,6 +9,8 @@ public class VideoAccessPointsPage : VhAdminWebPage
     private readonly By _defenceAdvocateSelector = By.Id("representative");
     private readonly By _saveOrUpdateButton = By.Id("confirmEndpointBtn");
     private readonly By _nextButton = By.Id("nextButton");
+    private readonly By _interpreterRequired = By.Name("interpreter-required");
+    private readonly By _spokenLanguageDropdown = By.Id("verbal-language");
 
     public VideoAccessPointsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -23,22 +25,30 @@ public class VideoAccessPointsPage : VhAdminWebPage
     {
         foreach (var vap in videoAccessPoints)
         {
-            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName);
+            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName, vap.InterpreterLanguageDescription);
         }
     }
-    
+
     /// <summary>
     /// Add a video access point to a hearing
     /// </summary>
     /// <param name="displayName">The display name for the access point</param>
     /// <param name="defenceAdvocateDisplayName">The defence advocate to link to, if provided</param>
-    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName)
+    /// <param name="interpreterLanguageDescription">The interpreter language required, if provided</param>
+    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName, string interpreterLanguageDescription = "")
     {
         EnterText(_displayNameTextField, displayName);
 
         if (!string.IsNullOrWhiteSpace(defenceAdvocateDisplayName))
         {
             SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
+        }
+        
+        if (!string.IsNullOrEmpty(interpreterLanguageDescription))
+        {
+            ClickElement(_interpreterRequired, waitToBeClickable: false);
+            WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
+            SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguageDescription);
         }
         
         ClickElement(_saveOrUpdateButton);

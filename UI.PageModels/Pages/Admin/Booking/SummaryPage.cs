@@ -90,6 +90,10 @@ public class SummaryPage : VhAdminWebPage
     private void ValidateParticipantDetails(BookingDto bookingDto)
     {
         CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
+        if (!string.IsNullOrEmpty(bookingDto.Judge.InterpreterLanguageDescription))
+        {
+            CompareText(By.XPath($"//div[normalize-space()='{bookingDto.Judge.InterpreterLanguageDescription}']"), bookingDto.Judge.InterpreterLanguageDescription);   
+        }
 
         var allParticipants = bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList();
         for (var i = 0; i < allParticipants.Count-1; i++)
@@ -98,6 +102,10 @@ public class SummaryPage : VhAdminWebPage
             var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
            
             CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
+            if (!string.IsNullOrEmpty(participant.InterpreterLanguageDescription))
+            {
+                CompareText(By.XPath($"//div[normalize-space()='{participant.InterpreterLanguageDescription}']"), participant.InterpreterLanguageDescription);
+            }
         }
     }
 

@@ -24,6 +24,8 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _titleDropdown = By.Id("title");
     private readonly By _confirmRemoveParticipantButton = By.Id("btn-remove");
     private readonly By _updateParticipantButton = By.Id("updateParticipantBtn");
+    private readonly By _interpreterRequired = By.Name("interpreter-required");
+    private readonly By _spokenLanguageDropdown = By.Id("verbal-language");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -61,7 +63,7 @@ public class ParticipantsPage : VhAdminWebPage
             if(_useParty)
                 AddExistingParticipant(participant.Party.GetDescription(), participant.Role.GetDescription(), participant.ContactEmail, participant.DisplayName, participant.Representing);
             else
-                AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing);
+                AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing, participant.InterpreterLanguageDescription);
         }
     }
 
@@ -157,13 +159,22 @@ public class ParticipantsPage : VhAdminWebPage
         ClickAddParticipantAndWait();
     }
     
-    private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null)
+    private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null, string interpreterLanguageDescription = "")
     {
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
 
         ClickElement(_emailList);
+        if (!string.IsNullOrEmpty(interpreterLanguageDescription))
+        {
+            if (role != GenericTestRole.Interpreter.ToString())
+            {
+                ClickElement(_interpreterRequired, waitToBeClickable: false);
+            }
+            WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
+            SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguageDescription);
+        }
         EnterText(_displayNameTextfield, displayName);
 
         if (!string.IsNullOrWhiteSpace(representing)) EnterText(_representingTextfield, representing);
