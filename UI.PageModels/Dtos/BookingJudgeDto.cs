@@ -16,7 +16,7 @@ public class BookingJudgeDto
     public string Username { get; set; }
     public string DisplayName { get; set; }
     public string Phone { get; set; }
-    public string InterpreterLanguageDescription { get; set; }
+    public InterpreterLanguageDto? InterpreterLanguage { get; set; }
 
 
 }

@@ -11,6 +11,7 @@ public class VideoAccessPointsPage : VhAdminWebPage
     private readonly By _nextButton = By.Id("nextButton");
     private readonly By _interpreterRequired = By.Name("interpreter-required");
     private readonly By _spokenLanguageDropdown = By.Id("verbal-language");
+    private readonly By _signLanguageDropdown = By.Id("sign-language");
 
     public VideoAccessPointsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -25,7 +26,7 @@ public class VideoAccessPointsPage : VhAdminWebPage
     {
         foreach (var vap in videoAccessPoints)
         {
-            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName, vap.InterpreterLanguageDescription);
+            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName, vap.InterpreterLanguage);
         }
     }
 
@@ -34,8 +35,8 @@ public class VideoAccessPointsPage : VhAdminWebPage
     /// </summary>
     /// <param name="displayName">The display name for the access point</param>
     /// <param name="defenceAdvocateDisplayName">The defence advocate to link to, if provided</param>
-    /// <param name="interpreterLanguageDescription">The interpreter language required, if provided</param>
-    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName, string interpreterLanguageDescription = "")
+    /// <param name="interpreterLanguage">The interpreter language required, if provided</param>
+    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName, InterpreterLanguageDto? interpreterLanguage = null)
     {
         EnterText(_displayNameTextField, displayName);
 
@@ -44,14 +45,30 @@ public class VideoAccessPointsPage : VhAdminWebPage
             SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
         }
         
-        if (!string.IsNullOrEmpty(interpreterLanguageDescription))
+        if (interpreterLanguage != null)
         {
             ClickElement(_interpreterRequired, waitToBeClickable: false);
-            WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
-            SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguageDescription);
+            SelectInterpreterLanguage(interpreterLanguage);
         }
         
         ClickElement(_saveOrUpdateButton);
+    }
+    
+    private void SelectInterpreterLanguage(InterpreterLanguageDto interpreterLanguage)
+    {
+        switch (interpreterLanguage.Type)
+        {
+            case InterpreterType.Sign:
+                WaitForDropdownListToPopulate(_signLanguageDropdown, 0);
+                SelectDropDownByText(_signLanguageDropdown, interpreterLanguage.Description);
+                break;
+            case InterpreterType.Verbal:
+                WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
+                SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguage.Description);
+                break;
+            default:
+                throw new InvalidOperationException("Unknown interpreter language type: " + interpreterLanguage.Type);
+        }
     }
 
     public void RemoveVideoAccessPoint(int index)

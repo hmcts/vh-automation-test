@@ -1,4 +1,5 @@
 using LaunchDarkly.Sdk;
+using UI.AutomationTests.Models;
 
 namespace UI.AutomationTests.TestData;
 
@@ -66,18 +67,17 @@ public static class HearingTestData
         return bookingDto;
     }
 
-    public static BookingDto CreateHearingDtoWithInterpreterLanguages(string judgeUsername, DateTime scheduledDateTime)
+    public static BookingDto CreateHearingDtoWithInterpreterLanguages(string judgeUsername, DateTime scheduledDateTime, InterpreterLanguageDto interpreterLanguage)
     {
-        const string interpreterLanguageDescription = "Spanish";
         var bookingDto = CreateHearingDtoWithEndpoints(judgeUsername, scheduledDateTime: scheduledDateTime, includeInterpreter: true);
-        bookingDto.Judge.InterpreterLanguageDescription = interpreterLanguageDescription;
+        bookingDto.Judge.InterpreterLanguage = interpreterLanguage;
         foreach (var participant in bookingDto.Participants)
         {
-            participant.InterpreterLanguageDescription = interpreterLanguageDescription;
+            participant.InterpreterLanguage = interpreterLanguage;
         }
         foreach (var endpoint in bookingDto.VideoAccessPoints)
         {
-            endpoint.InterpreterLanguageDescription = interpreterLanguageDescription;
+            endpoint.InterpreterLanguage = interpreterLanguage;
         }
         return bookingDto;
     }

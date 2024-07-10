@@ -90,9 +90,9 @@ public class SummaryPage : VhAdminWebPage
     private void ValidateParticipantDetails(BookingDto bookingDto)
     {
         CompareText(By.Id("judge-user"), bookingDto.Judge.Username);
-        if (!string.IsNullOrEmpty(bookingDto.Judge.InterpreterLanguageDescription))
+        if (bookingDto.Judge.InterpreterLanguage != null)
         {
-            CompareText(By.XPath($"//div[normalize-space()='{bookingDto.Judge.InterpreterLanguageDescription}']"), bookingDto.Judge.InterpreterLanguageDescription);   
+            CompareText(By.XPath($"//div[normalize-space()='{bookingDto.Judge.InterpreterLanguage.Description}']"), bookingDto.Judge.InterpreterLanguage.Description);   
         }
 
         var allParticipants = bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList();
@@ -102,9 +102,9 @@ public class SummaryPage : VhAdminWebPage
             var name = $"{participant.Title} {participant.FirstName} {participant.LastName}";
            
             CompareText(By.XPath($"//div[normalize-space()='{name}']"), name);
-            if (!string.IsNullOrEmpty(participant.InterpreterLanguageDescription))
+            if (participant.InterpreterLanguage != null)
             {
-                CompareText(By.XPath($"//div[normalize-space()='{participant.InterpreterLanguageDescription}']"), participant.InterpreterLanguageDescription);
+                CompareText(By.XPath($"//div[normalize-space()='{participant.InterpreterLanguage.Description}']"), participant.InterpreterLanguage.Description);
             }
         }
     }

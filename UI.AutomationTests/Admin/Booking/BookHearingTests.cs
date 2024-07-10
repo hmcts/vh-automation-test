@@ -1,3 +1,4 @@
+using UI.AutomationTests.Models;
 namespace UI.AutomationTests.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
@@ -72,12 +73,14 @@ public class BookHearingTests : AdminWebUiTest
     }
 
     [Category("Daily")]
-    [Test]
+    [TestCase("British Sign Language (BSL)", InterpreterType.Sign)]
+    [TestCase("Spanish", InterpreterType.Verbal)]
     [FeatureToggleSetting(FeatureToggle.InterpreterEnhancementsToggleKey, true)]
-    public void BookAHearingWithInterpreterLanguages()
+    public void BookAHearingWithInterpreterLanguages(string description, InterpreterType type)
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(judgeUsername: HearingTestData.Judge, scheduledDateTime: date);
+        var interpreterLanguage = new InterpreterLanguageDto(description, type);
+        _bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(judgeUsername: HearingTestData.Judge, scheduledDateTime: date, interpreterLanguage);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
         var driver = VhDriver.GetDriver();

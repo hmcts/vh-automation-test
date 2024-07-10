@@ -26,6 +26,7 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _updateParticipantButton = By.Id("updateParticipantBtn");
     private readonly By _interpreterRequired = By.Name("interpreter-required");
     private readonly By _spokenLanguageDropdown = By.Id("verbal-language");
+    private readonly By _signLanguageDropdown = By.Id("sign-language");
 
 
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool useParty) : base(driver, defaultWaitTime)
@@ -63,7 +64,7 @@ public class ParticipantsPage : VhAdminWebPage
             if(_useParty)
                 AddExistingParticipant(participant.Party.GetDescription(), participant.Role.GetDescription(), participant.ContactEmail, participant.DisplayName, participant.Representing);
             else
-                AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing, participant.InterpreterLanguageDescription);
+                AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName, participant.Representing, participant.InterpreterLanguage);
         }
     }
 
@@ -159,21 +160,20 @@ public class ParticipantsPage : VhAdminWebPage
         ClickAddParticipantAndWait();
     }
     
-    private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null, string interpreterLanguageDescription = "")
+    private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null, InterpreterLanguageDto? interpreterLanguage = null)
     {
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
 
         ClickElement(_emailList);
-        if (!string.IsNullOrEmpty(interpreterLanguageDescription))
+        if (interpreterLanguage != null)
         {
             if (role != GenericTestRole.Interpreter.ToString())
             {
                 ClickElement(_interpreterRequired, waitToBeClickable: false);
             }
-            WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
-            SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguageDescription);
+            SelectInterpreterLanguage(interpreterLanguage);
         }
         EnterText(_displayNameTextfield, displayName);
 
@@ -186,6 +186,23 @@ public class ParticipantsPage : VhAdminWebPage
         }
         
         ClickAddParticipantAndWait();
+    }
+    
+    private void SelectInterpreterLanguage(InterpreterLanguageDto interpreterLanguage)
+    {
+        switch (interpreterLanguage.Type)
+        {
+            case InterpreterType.Sign:
+                WaitForDropdownListToPopulate(_signLanguageDropdown, 0);
+                SelectDropDownByText(_signLanguageDropdown, interpreterLanguage.Description);
+                break;
+            case InterpreterType.Verbal:
+                WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
+                SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguage.Description);
+                break;
+            default:
+                throw new InvalidOperationException("Unknown interpreter language type: " + interpreterLanguage.Type);
+        }
     }
     
     private void ClickAddParticipantAndWait()

@@ -142,9 +142,9 @@ public class BookingDetailsPage : VhAdminWebPage
                     throw new InvalidOperationException($"Link icon between VAP {endpoint.DisplayName} and {endpoint.DefenceAdvocateDisplayName} is not visible");
                 }
             }
-            if (!string.IsNullOrEmpty(endpoint.InterpreterLanguageDescription))
+            if (endpoint.InterpreterLanguage != null)
             {
-                CompareText(By.XPath($"//div[normalize-space()='{endpoint.InterpreterLanguageDescription}']"), endpoint.InterpreterLanguageDescription);
+                CompareText(By.XPath($"//div[normalize-space()='{endpoint.InterpreterLanguage.Description}']"), endpoint.InterpreterLanguage.Description);
             }
         }
         ValidateParticipants(bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList());
@@ -191,9 +191,9 @@ public class BookingDetailsPage : VhAdminWebPage
         {
             if(!userNames.Contains(participant.Username, StringComparer.InvariantCultureIgnoreCase))
                 throw new InvalidOperationException($"Expected participant username: {participant.Username} but was not found on the page.");
-            if (!string.IsNullOrEmpty(participant.InterpreterLanguageDescription))
+            if (participant.InterpreterLanguage != null)
             {
-                CompareText(By.XPath($"//div[normalize-space()='{participant.InterpreterLanguageDescription}']"), participant.InterpreterLanguageDescription);
+                CompareText(By.XPath($"//div[normalize-space()='{participant.InterpreterLanguage.Description}']"), participant.InterpreterLanguage.Description);
             }
         }
     }
