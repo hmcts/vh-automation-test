@@ -47,7 +47,11 @@ public class VideoAccessPointsPage : VhAdminWebPage
         
         if (interpreterLanguage != null)
         {
-            ClickElement(_interpreterRequired, waitToBeClickable: false);
+            var interpreterRequiredCheckbox= FindElement(_interpreterRequired);
+            if (interpreterRequiredCheckbox is { Selected: false })
+            {
+                ClickElement(_interpreterRequired, waitToBeClickable: false);
+            }
             SelectInterpreterLanguage(interpreterLanguage);
         }
         
@@ -86,7 +90,6 @@ public class VideoAccessPointsPage : VhAdminWebPage
 
         if (interpreterLanguage != null)
         {
-            ClickElement(_interpreterRequired, waitToBeClickable: false);
             SelectInterpreterLanguage(interpreterLanguage);
         }
         

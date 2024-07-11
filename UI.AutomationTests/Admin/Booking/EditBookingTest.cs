@@ -57,6 +57,7 @@ public class EditBookingTest : HearingTest
         foreach (var participant in bookingDto.Participants.Where(p => p.Role != GenericTestRole.Representative).ToList()) // There is a bug updating representatives, so skip them for now
         {
             participant.InterpreterLanguage = newInterpreterLanguage;
+            Thread.Sleep(5000); // Allow time for the edit link to be clickable
             participantsPage.UpdateParticipant(participant.FullName, participant.DisplayName, newInterpreterLanguage);
         }
         var videoAccessPointsPage = participantsPage.GoToVideoAccessPointsPage();
