@@ -80,16 +80,8 @@ public class ParticipantsPage : VhAdminWebPage
         
         if (interpreterLanguage != null)
         {
-            IWebElement? interpreterRequiredCheckboxElement = null;
-            try
-            {
-                interpreterRequiredCheckboxElement = Driver.FindElement(_interpreterRequired);
-            }
-            catch (NoSuchElementException)
-            {
-            }
-            
-            if (interpreterRequiredCheckboxElement is { Selected: false })
+            var interpreterRequiredCheckbox= FindElement(_interpreterRequired);
+            if (interpreterRequiredCheckbox is { Selected: false })
             {
                 ClickElement(_interpreterRequired, waitToBeClickable: false);
             }

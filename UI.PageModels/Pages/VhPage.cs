@@ -287,4 +287,23 @@ public abstract class VhPage
             return x.FindElement(element);
         });
     }
+
+    /// <summary>
+    /// Returns the element if it exists, otherwise returns null 
+    /// </summary>
+    /// <param name="by"></param>
+    /// <returns></returns>
+    protected IWebElement? FindElement(By by)
+    {
+        IWebElement? element = null;
+        try
+        {
+            element = Driver.FindElement(by);
+        }
+        catch (NoSuchElementException)
+        {
+        }
+
+        return element;
+    }
 }
