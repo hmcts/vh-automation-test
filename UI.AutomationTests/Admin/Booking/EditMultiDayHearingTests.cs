@@ -124,7 +124,6 @@ namespace UI.AutomationTests.Admin.Booking
             
             // Change the rep linked to an endpoint
             sortedEndpoints = hearingDto.VideoAccessPoints.OrderBy(x => x.DisplayName).ToList();
-            
             const int endpointIndexToUpdate = 0;
             var endpointToUpdate = sortedEndpoints[endpointIndexToUpdate];
             videoAccessPointsPage.UpdateVideoAccessPoint(endpointIndexToUpdate, "None");
