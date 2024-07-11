@@ -1,4 +1,3 @@
-using UI.AutomationTests.Models;
 namespace UI.AutomationTests.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
