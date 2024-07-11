@@ -77,12 +77,30 @@ public class VideoAccessPointsPage : VhAdminWebPage
         ClickElement(By.XPath(removeEndpointXPath));
     }
 
-    public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName)
+    public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName, InterpreterLanguageDto? interpreterLanguage = null)
     {
         var editEndpointXPath = $"(//a[@class='vhlink'][normalize-space()='Edit'])[{index + 1}]";
         ClickElement(By.XPath(editEndpointXPath));
         
         SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
+
+        if (interpreterLanguage != null)
+        {
+            IWebElement? interpreterRequiredCheckboxElement = null;
+            try
+            {
+                interpreterRequiredCheckboxElement = Driver.FindElement(_interpreterRequired);
+            }
+            catch (NoSuchElementException)
+            {
+            }
+            
+            if (interpreterRequiredCheckboxElement is { Selected: false })
+            {
+                ClickElement(_interpreterRequired, waitToBeClickable: false);
+            }
+            SelectInterpreterLanguage(interpreterLanguage);
+        }
         
         ClickElement(_saveOrUpdateButton);
     }

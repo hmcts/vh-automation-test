@@ -54,7 +54,11 @@ public class HearingAssignJudgePage : VhAdminWebPage
             EnterText(_ejudgeDisplayNameFld, judgeDisplayName);
         if (interpreterLanguage != null)
         {
-            ClickElement(_judgeInterpreterRequired, waitToBeClickable: false);
+            var interpreterRequiredCheckboxElement = Driver.FindElement(_judgeInterpreterRequired);
+            if (!interpreterRequiredCheckboxElement.Selected)
+            {
+                ClickElement(_judgeInterpreterRequired, waitToBeClickable: false);
+            }
             SelectInterpreterLanguage(interpreterLanguage);
         }
     }

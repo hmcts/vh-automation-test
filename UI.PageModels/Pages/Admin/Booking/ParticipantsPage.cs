@@ -68,7 +68,7 @@ public class ParticipantsPage : VhAdminWebPage
         }
     }
 
-    public void UpdateParticipant(string fullName, string newDisplayName)
+    public void UpdateParticipant(string fullName, string newDisplayName, InterpreterLanguageDto? interpreterLanguage = null)
     {
         var editLink = GetEditLink(fullName);
         ClickElement(editLink);
@@ -77,8 +77,27 @@ public class ParticipantsPage : VhAdminWebPage
             WaitForDropdownListToPopulate(_partyDropdown);
         }
         WaitForDropdownListToPopulate(_roleDropdown);
-        EnterText(_displayNameTextfield, newDisplayName);
         
+        if (interpreterLanguage != null)
+        {
+            IWebElement? interpreterRequiredCheckboxElement = null;
+            try
+            {
+                interpreterRequiredCheckboxElement = Driver.FindElement(_interpreterRequired);
+            }
+            catch (NoSuchElementException)
+            {
+            }
+            
+            if (interpreterRequiredCheckboxElement is { Selected: false })
+            {
+                ClickElement(_interpreterRequired, waitToBeClickable: false);
+            }
+            SelectInterpreterLanguage(interpreterLanguage);
+        }
+        
+        EnterText(_displayNameTextfield, newDisplayName);
+
         ClickElementAndWaitToDisappear(_updateParticipantButton);
     }
 
@@ -169,7 +188,16 @@ public class ParticipantsPage : VhAdminWebPage
         ClickElement(_emailList);
         if (interpreterLanguage != null)
         {
-            if (role != GenericTestRole.Interpreter.ToString())
+            IWebElement? interpreterRequiredCheckboxElement = null;
+            try
+            {
+                interpreterRequiredCheckboxElement = Driver.FindElement(_interpreterRequired);
+            }
+            catch (NoSuchElementException)
+            {
+            }
+            
+            if (interpreterRequiredCheckboxElement is { Selected: false })
             {
                 ClickElement(_interpreterRequired, waitToBeClickable: false);
             }

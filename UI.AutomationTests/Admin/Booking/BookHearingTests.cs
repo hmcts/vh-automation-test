@@ -96,9 +96,7 @@ public class BookHearingTests : AdminWebUiTest
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, true);
-        
-        // TODO johs
-        
+
         var addParticipantPage = assignJudgePage.GotToNextPage(true);
         addParticipantPage.AddAllParticipantsFromDto(_bookingDto);
         
