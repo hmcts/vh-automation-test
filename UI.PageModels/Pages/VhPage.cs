@@ -167,9 +167,12 @@ public abstract class VhPage
             .Until(ExpectedConditions.ElementToBeClickable(locator));
     }
     
-    protected void ClickElement(By locator)
+    protected void ClickElement(By locator, bool waitToBeClickable = true)
     {
-        WaitForElementToBeClickable(locator);
+        if (waitToBeClickable)
+        {
+            WaitForElementToBeClickable(locator);
+        }
         try
         {
             Driver.FindElement(locator).Click();
@@ -283,5 +286,24 @@ public abstract class VhPage
         {
             return x.FindElement(element);
         });
+    }
+
+    /// <summary>
+    /// Returns the element if it exists, otherwise returns null 
+    /// </summary>
+    /// <param name="by"></param>
+    /// <returns></returns>
+    protected IWebElement? FindElement(By by)
+    {
+        IWebElement? element = null;
+        try
+        {
+            element = Driver.FindElement(by);
+        }
+        catch (NoSuchElementException)
+        {
+        }
+
+        return element;
     }
 }

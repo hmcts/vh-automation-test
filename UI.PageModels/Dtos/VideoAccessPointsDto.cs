@@ -5,6 +5,7 @@ public class VideoAccessPointsDto
     
     public string DisplayName { get; set; }
     public string DefenceAdvocateDisplayName { get; set; }
+    public InterpreterLanguageDto? InterpreterLanguage { get; set; }
     
     public VideoAccessPointsDto(string displayName, string defenceAdvocateDisplayName)
     {

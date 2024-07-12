@@ -16,6 +16,7 @@ public class BookingParticipantDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Organisation { get; set; }
+    public InterpreterLanguageDto? InterpreterLanguage { get; set; }
     
     public string FullName => $"{Title} {FirstName} {LastName}";
 

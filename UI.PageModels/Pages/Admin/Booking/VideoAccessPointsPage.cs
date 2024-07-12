@@ -9,6 +9,9 @@ public class VideoAccessPointsPage : VhAdminWebPage
     private readonly By _defenceAdvocateSelector = By.Id("representative");
     private readonly By _saveOrUpdateButton = By.Id("confirmEndpointBtn");
     private readonly By _nextButton = By.Id("nextButton");
+    private readonly By _interpreterRequired = By.Name("interpreter-required");
+    private readonly By _spokenLanguageDropdown = By.Id("verbal-language");
+    private readonly By _signLanguageDropdown = By.Id("sign-language");
 
     public VideoAccessPointsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -23,16 +26,17 @@ public class VideoAccessPointsPage : VhAdminWebPage
     {
         foreach (var vap in videoAccessPoints)
         {
-            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName);
+            AddVideoEndpoint(vap.DisplayName,vap.DefenceAdvocateDisplayName, vap.InterpreterLanguage);
         }
     }
-    
+
     /// <summary>
     /// Add a video access point to a hearing
     /// </summary>
     /// <param name="displayName">The display name for the access point</param>
     /// <param name="defenceAdvocateDisplayName">The defence advocate to link to, if provided</param>
-    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName)
+    /// <param name="interpreterLanguage">The interpreter language required, if provided</param>
+    public void AddVideoEndpoint(string displayName, string defenceAdvocateDisplayName, InterpreterLanguageDto? interpreterLanguage = null)
     {
         EnterText(_displayNameTextField, displayName);
 
@@ -41,7 +45,34 @@ public class VideoAccessPointsPage : VhAdminWebPage
             SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
         }
         
+        if (interpreterLanguage != null)
+        {
+            var interpreterRequiredCheckbox= FindElement(_interpreterRequired);
+            if (interpreterRequiredCheckbox is { Selected: false })
+            {
+                ClickElement(_interpreterRequired, waitToBeClickable: false);
+            }
+            SelectInterpreterLanguage(interpreterLanguage);
+        }
+        
         ClickElement(_saveOrUpdateButton);
+    }
+    
+    private void SelectInterpreterLanguage(InterpreterLanguageDto interpreterLanguage)
+    {
+        switch (interpreterLanguage.Type)
+        {
+            case InterpreterType.Sign:
+                WaitForDropdownListToPopulate(_signLanguageDropdown, 0);
+                SelectDropDownByText(_signLanguageDropdown, interpreterLanguage.Description);
+                break;
+            case InterpreterType.Verbal:
+                WaitForDropdownListToPopulate(_spokenLanguageDropdown, 0);
+                SelectDropDownByText(_spokenLanguageDropdown, interpreterLanguage.Description);
+                break;
+            default:
+                throw new InvalidOperationException("Unknown interpreter language type: " + interpreterLanguage.Type);
+        }
     }
 
     public void RemoveVideoAccessPoint(int index)
@@ -50,12 +81,17 @@ public class VideoAccessPointsPage : VhAdminWebPage
         ClickElement(By.XPath(removeEndpointXPath));
     }
 
-    public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName)
+    public void UpdateVideoAccessPoint(int index, string defenceAdvocateDisplayName, InterpreterLanguageDto? interpreterLanguage = null)
     {
         var editEndpointXPath = $"(//a[@class='vhlink'][normalize-space()='Edit'])[{index + 1}]";
         ClickElement(By.XPath(editEndpointXPath));
         
         SelectDropDownByText(_defenceAdvocateSelector, defenceAdvocateDisplayName);
+
+        if (interpreterLanguage != null)
+        {
+            SelectInterpreterLanguage(interpreterLanguage);
+        }
         
         ClickElement(_saveOrUpdateButton);
     }

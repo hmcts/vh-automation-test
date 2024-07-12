@@ -1,4 +1,5 @@
 using LaunchDarkly.Sdk;
+using UI.AutomationTests.Models;
 
 namespace UI.AutomationTests.TestData;
 
@@ -40,7 +41,7 @@ public static class HearingTestData
     ///     Create a hearing with 4 participants, 2 claimants and 2 defendants
     /// </summary>
     /// <returns>a hearing with 4 participants, 2 claimants and 2 defendants</returns>
-    public static BookingDto CreateHearingDto(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null)
+    public static BookingDto CreateHearingDto(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null, bool includeInterpreter = false)
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
@@ -59,10 +60,25 @@ public static class HearingTestData
                 judgeUsername,
                 "Auto Judge",
                 ""),
-            Participants = KnownParticipantsForTesting(),
+            Participants = KnownParticipantsForTesting(includeInterpreter: includeInterpreter),
             AudioRecording = false,
             OtherInformation = "This is a test hearing"
         };
+        return bookingDto;
+    }
+
+    public static BookingDto CreateHearingDtoWithInterpreterLanguages(string judgeUsername, DateTime scheduledDateTime, InterpreterLanguageDto interpreterLanguage)
+    {
+        var bookingDto = CreateHearingDtoWithEndpoints(judgeUsername, scheduledDateTime: scheduledDateTime, includeInterpreter: true);
+        bookingDto.Judge.InterpreterLanguage = interpreterLanguage;
+        foreach (var participant in bookingDto.Participants)
+        {
+            participant.InterpreterLanguage = interpreterLanguage;
+        }
+        foreach (var endpoint in bookingDto.VideoAccessPoints)
+        {
+            endpoint.InterpreterLanguage = interpreterLanguage;
+        }
         return bookingDto;
     }
 
@@ -70,9 +86,9 @@ public static class HearingTestData
     /// 2 claimants (LIP and REP) and 2 defendants (LIP and REP)
     /// </summary>
     /// <returns></returns>
-    public static List<BookingParticipantDto> KnownParticipantsForTesting()
+    public static List<BookingParticipantDto> KnownParticipantsForTesting(bool includeInterpreter = false)
     {
-        return new List<BookingParticipantDto>
+        var participants = new List<BookingParticipantDto>
         {
             BookingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
                 "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
@@ -87,20 +103,33 @@ public static class HearingTestData
                 "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
                 "Auto 4", "Mr", "Automation_Torrance", "Automation_Moen", "Auto 3")
         };
+
+        if (includeInterpreter)
+        {
+            participants.Add(BookingParticipantDto.Individual(GenericTestParty.Applicant, GenericTestRole.Interpreter,
+                "Automation_Claimant_Interpreter_1@hmcts.net", "automation_claimant_interpreter_1@hearings.reform.hmcts.net", "Auto 5",
+                "Mrs", "Automation_Claimant", "Interpreter_1"));
+        }
+
+        return participants;
     }
     
     /// <summary>
     ///     Create a hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)
     /// </summary>
     /// <returns>hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)</returns>
-    public static BookingDto CreateHearingDtoWithEndpoints(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null)
+    public static BookingDto CreateHearingDtoWithEndpoints(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null, bool includeInterpreter = false)
     {
-        var bookingDto = CreateHearingDto(judgeUsername: judgeUsername, remote, scheduledDateTime);
+        var bookingDto = CreateHearingDto(judgeUsername: judgeUsername, remote, scheduledDateTime, includeInterpreter: includeInterpreter);
         bookingDto.VideoAccessPoints = new List<VideoAccessPointsDto>
         {
             new("Claimant VAP", "Auto 2"),
             new("Defendant VAP", "Auto 4")
         };
+        if (includeInterpreter)
+        {
+            bookingDto.AudioRecording = true;
+        }
         return bookingDto;
     }
 
