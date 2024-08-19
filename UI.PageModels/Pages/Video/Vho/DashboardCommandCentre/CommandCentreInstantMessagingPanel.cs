@@ -43,7 +43,7 @@ public class CommandCentreInstantMessaging : CommandCentrePage
         var messageFromTheCso = "Hello from the CSO";
         SendAMessage(messageFromTheCso);
         var messagesSent = GetMessagesSent();
-        if(!messagesSent.Last().Text.Contains(messageFromTheCso))
+        if(!messagesSent[^1].Text.Contains(messageFromTheCso))
             throw new ValidationException("The message sent by the CSO was not displayed in the IM panel");
     }    
     
@@ -51,7 +51,7 @@ public class CommandCentreInstantMessaging : CommandCentrePage
     {
         // CSO will be able to receive a reply to the IM
         var messagesReceived = GetMessagesReceived();
-        if(!messagesReceived.Last().Text.Contains(messageToCso))
+        if(!messagesReceived[^1].Text.Contains(messageToCso))
             throw new ValidationException("The message sent by the participant was not received by the CSO");
     }
 }

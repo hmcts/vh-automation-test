@@ -48,12 +48,6 @@ public class SummaryPage : VhAdminWebPage
         }
     }
 
-    public HearingAssignJudgePage ChangeJudgeV1()
-    {
-        ClickElement(By.XPath("//a[contains(@href, '/assign-judge')]"));
-        return new HearingAssignJudgePage(Driver, DefaultWaitTime);
-    }
-
     public HearingAssignJudgePage ChangeJudgeV2()
     {
         ClickElement(By.XPath("//a[contains(@href, '/add-judicial-office-holders')]"));
@@ -67,10 +61,10 @@ public class SummaryPage : VhAdminWebPage
         return new OtherInfoPage(Driver, DefaultWaitTime);
     }
 
-    public ParticipantsPage ChangeParticipants(bool isV2)
+    public ParticipantsPage ChangeParticipants()
     {
         ClickElement(_participantsBreadcrumbLink);
-        return new ParticipantsPage(Driver, DefaultWaitTime, useParty: !isV2);
+        return new ParticipantsPage(Driver, DefaultWaitTime);
     }
     
     private void ValidateEndpointsAndOtherInformation(BookingDto bookingDto)

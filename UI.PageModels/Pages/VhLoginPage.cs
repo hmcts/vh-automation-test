@@ -1,5 +1,3 @@
-using OpenQA.Selenium;
-
 namespace UI.PageModels.Pages;
 
 public abstract class VhLoginPage : VhPage

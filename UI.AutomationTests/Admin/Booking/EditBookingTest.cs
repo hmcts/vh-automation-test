@@ -7,19 +7,20 @@ public class EditBookingTest : HearingTest
     public void should_update_booking_schedule_and_change_judge()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(60);
-        var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername:"auto_aw.judge_02@hearings.reform.hmcts.net",scheduledDateTime:hearingScheduledDateAndTime);
+        var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
+            judgeUsername: "auto_aw.judge_02@hearings.reform.hmcts.net",
+            scheduledDateTime: hearingScheduledDateAndTime);
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
         
         var newTime = hearingDto.ScheduledDateTime.AddMinutes(30);
         var summaryPage = bookingDetailsPage.UpdateSchedule(newTime, hearingDto.DurationHour, hearingDto.DurationMinute);
         
         //Assign a new Judge 
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudge, "Auto Judge 2", "");
-        var useV2Api = FeatureToggle.Instance().UseV2Api();
-        var assignJudgePage = useV2Api 
-            ? summaryPage.ChangeJudgeV2() 
-            : summaryPage.ChangeJudgeV1();
-        assignJudgePage.EnterJudgeDetails(alternativeJudge, useV2Api);
+        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudgePersonalCode, HearingTestData.AltJudgeUsername,
+            "Auto Judge 2", "");
+
+        var assignJudgePage = summaryPage.ChangeJudgeV2();
+        assignJudgePage.EnterJudgeDetails(alternativeJudge);
         summaryPage = assignJudgePage.GotToNextPageOnEdit();
         var confirmationPage = summaryPage.ClickBookButton();
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
@@ -34,7 +35,8 @@ public class EditBookingTest : HearingTest
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         var interpreterLanguage = new InterpreterLanguageDto("Spanish", InterpreterType.Verbal);
-        var bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(judgeUsername: HearingTestData.Judge, scheduledDateTime: date, interpreterLanguage);
+        var bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(HearingTestData.JudgePersonalCode,
+            judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date, interpreterLanguage);
         bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(bookingDto);
         
@@ -43,17 +45,18 @@ public class EditBookingTest : HearingTest
         var newInterpreterLanguage = new InterpreterLanguageDto("British Sign Language (BSL)", InterpreterType.Sign);
         
         // Assign a new judge
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudge, "Auto Judge 2", "")
+        var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode, HearingTestData.AltJudgeUsername,
+            "Auto Judge 2", "")
         {
             InterpreterLanguage = newInterpreterLanguage
         };
         var assignJudgePage = summaryPage.ChangeJudgeV2();
-        assignJudgePage.EnterJudgeDetails(alternativeJudge, FeatureToggle.Instance().UseV2Api());
+        assignJudgePage.EnterJudgeDetails(alternativeJudge);
         bookingDto.Judge = alternativeJudge;
         summaryPage = assignJudgePage.GotToNextPageOnEdit();
 
         // Update the participants
-        var participantsPage = summaryPage.ChangeParticipants(true);
+        var participantsPage = summaryPage.ChangeParticipants();
         foreach (var participant in bookingDto.Participants.Where(p => p.Role != GenericTestRole.Representative).ToList()) // There is a bug updating representatives, so skip them for now
         {
             participant.InterpreterLanguage = newInterpreterLanguage;

@@ -24,7 +24,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     protected override void ConfirmPageHasLoaded()
     {
         // the start/resume hearing button is not available when a hearing is closed
-        WaitForElementToBeClickable(_enterConsultationRoomBtn, 60);
+        WaitForElementToBeClickable(_enterConsultationRoomBtn, DefaultWaitTime, withRefresh: true);
     }
 
     public JudgeHearingRoomPage StartOrResumeHearing()
@@ -104,6 +104,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
 
     public bool ParticipantExistsInHearingRoom(string displayName)
     {
-        return IsElementVisible(By.XPath($"//div[@class='panel-container-list participants-grid']//div[@apptooltip]//span[@class='wrap-anywhere' and text()='{displayName}']"));
+        var locator = By.XPath($"//span[@class='wrap-anywhere'][normalize-space()='{displayName}']");
+        return IsElementVisible(locator);
     }
 }

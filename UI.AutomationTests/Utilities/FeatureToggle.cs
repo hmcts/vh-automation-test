@@ -8,8 +8,6 @@ namespace UI.AutomationTests.Utilities;
 
 public sealed class FeatureToggle
 {
-    public const string UseV2ApiToggleKey = "use-bookings-api-v2";
-    public const string EJudFeatureToggleKey = "ejud-feature";
     public const string MultiDayBookingEnhancementsToggleKey = "multi-day-booking-enhancements";
     public const string InterpreterEnhancementsToggleKey = "interpreter-enhancements";
     
@@ -42,10 +40,5 @@ public sealed class FeatureToggle
         }
 
         return _ldClient.BoolVariation(key, _context);
-    }
-
-    public bool UseV2Api()
-    {
-        return GetBoolValueWithKey(UseV2ApiToggleKey);
     }
 }

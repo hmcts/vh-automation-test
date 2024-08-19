@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-
-namespace UI.PageModels.Pages.Video.Participant;
+﻿namespace UI.PageModels.Pages.Video.Participant;
 
 public class MicrophoneWorkingPage : VhPage
 {

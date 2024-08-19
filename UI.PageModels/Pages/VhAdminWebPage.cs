@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using UI.PageModels.Pages.Admin;
 
 namespace UI.PageModels.Pages;

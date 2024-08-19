@@ -6,14 +6,12 @@ public class BookHearingNoJohTests : AdminWebUiTest
 
     [Category("Daily")]
     [Test]
-    [FeatureToggleSetting(FeatureToggle.EJudFeatureToggleKey, true)]
     public void BookAHearingNoJoh()
     {
-        var v2Flag = FeatureToggle.Instance().UseV2Api();
-        
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDto(
-            judgeUsername: HearingTestData.Judge, 
+            HearingTestData.JudgePersonalCode,
+            judgeUsername: HearingTestData.JudgeUsername, 
             scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
@@ -28,7 +26,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        createHearingPage.EnterHearingDetails(_bookingDto, v2Flag);
+        createHearingPage.EnterHearingDetails(_bookingDto);
         
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
@@ -37,7 +35,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         
         //skipping assignment of judge
-        var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
+        var addParticipantPage = assignJudgePage.GotToNextPage();
         addParticipantPage.AddParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
@@ -52,9 +50,9 @@ public class BookHearingNoJohTests : AdminWebUiTest
         
         confirmationPage.ClickViewBookingLink();
         confirmationPage.EditHearing();
-        confirmationPage.GotoJudgeAssignmentPage(v2Flag);
+        confirmationPage.GotoJudgeAssignmentPage();
 
-        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, v2Flag);
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge);
         
         summaryPage = assignJudgePage.GotToNextPageOnEdit();
         summaryPage.ClickBookButton();

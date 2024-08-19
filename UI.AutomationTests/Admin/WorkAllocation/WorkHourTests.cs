@@ -84,6 +84,6 @@ public class WorkHourTests : AdminWebUiTest
         {
             await BookingsApiClient.DeleteVhoNonAvailabilityHoursAsync(username, nonAvailability.Id);
         }
-        TestContext.WriteLine($"Removed justice user {username} non availability hours");
+        await TestContext.Out.WriteLineAsync($"Removed justice user {username} non availability hours");
     }
 }

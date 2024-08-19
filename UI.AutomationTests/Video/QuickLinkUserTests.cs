@@ -15,7 +15,7 @@ public class QuickLinkUserTests : VideoWebUiTest
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
-        TestContext.WriteLine(
+        await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         BookHearing(hearingDto);
         var conference = await GetConference(new Guid(_hearingIdString));
@@ -104,13 +104,13 @@ public class QuickLinkUserTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api());
+        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto);
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);
-        TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
+        TestContext.Out.WriteLine($"Hearing  ID: {_hearingIdString}");
         var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
         _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
-        TestContext.WriteLine(_quickLinkJoinUrl);
+        TestContext.Out.WriteLine(_quickLinkJoinUrl);
     }
 }

@@ -6,7 +6,7 @@ namespace UI.AutomationTests.Admin.Booking
     {
         protected BookingDetailsPage BookMultiDayHearingAndGoToDetailsPage(BookingDto bookingDto)
         {
-            TestContext.WriteLine(
+            TestContext.Out.WriteLine(
                 $"Attempting to book a hearing with the case name: {bookingDto.CaseName} and case number: {bookingDto.CaseNumber}");
             
             var driver = VhDriver.GetDriver();
@@ -15,7 +15,7 @@ namespace UI.AutomationTests.Admin.Booking
             var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
             
             var createHearingPage = dashboardPage.GoToBookANewHearing();
-            var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api(), isMultiDay: true);
+            var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, isMultiDay: true);
             var confirmationPage = summaryPage.ClickBookButton();
             
             TestHearingIds.Add(confirmationPage.GetNewHearingId());

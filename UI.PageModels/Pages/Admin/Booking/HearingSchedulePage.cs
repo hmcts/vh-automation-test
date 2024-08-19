@@ -19,9 +19,6 @@ public class HearingSchedulePage : VhAdminWebPage
     private readonly By _nextButton = By.Id("nextButton");
     private readonly By _selectIndividualDates = By.Id("multiDaysRange-choice-yes-label");
     private readonly By _addHearingDateButton = By.XPath("//button[text()='Add hearing date']");
-    
-    private readonly IWebDriver driver;
-    private readonly int defaultWaitTime;
 
     public HearingSchedulePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {

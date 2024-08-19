@@ -1,5 +1,4 @@
-using LaunchDarkly.Sdk;
-using UI.AutomationTests.Models;
+using BookingsApi.Contract.V1.Requests.Enums;
 
 namespace UI.AutomationTests.TestData;
 
@@ -7,8 +6,18 @@ public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
-    public static string AltJudge = "auto_aw.judge_01@hearings.reform.hmcts.net";
-    public static string Judge = "auto_aw.judge_02@hearings.reform.hmcts.net";
+    public static string AltJudgeUsername = "auto_aw.judge_01@hearings.reform.hmcts.net";
+    public static string AltJudgePersonalCode = "VH-GENERIC-ACCOUNT-00";
+    public static string JudgeUsername = "auto_aw.judge_02@hearings.reform.hmcts.net";
+    public static string JudgePersonalCode = "VH-GENERIC-ACCOUNT-0";
+
+
+    private const string HearingVenueName = "Birmingham Civil and Family Justice Centre";
+    private const string HearingVenueCode = "231596";
+
+    private const string CaseType = "Civil";
+    private const string ServiceId = "ZZY14";
+
     /// <summary>
     /// Create a hearing with only a judge
     /// </summary>
@@ -23,25 +32,27 @@ public static class HearingTestData
         {
             CaseName = $"BookAHearing Automation Test {date:M-d-yy-H-mm-ss} {Guid.NewGuid():N}",
             CaseNumber = $"Automation Test Hearing {Guid.NewGuid():N}",
-            CaseType = "Civil",
-            HearingType = "Enforcement Hearing",
+            CaseType = CaseType,
+            ServiceId = ServiceId,
             ScheduledDateTime = hearingDateTime,
             DurationHour = 1,
             DurationMinute = 30,
-            VenueName = "Birmingham Civil and Family Justice Centre",
+            VenueName = HearingVenueName,
+            VenueCode = HearingVenueCode,
             RoomName = "Room 1",
-            Judge = new BookingJudgeDto(Judge, "Auto Judge", ""),
+            Judge = new BookingJudgeDto(JudgePersonalCode, JudgeUsername, "Auto Judge", ""),
             AudioRecording = false,
             OtherInformation = "This is a test hearing"
         };
         return bookingDto;
     }
-    
+
     /// <summary>
     ///     Create a hearing with 4 participants, 2 claimants and 2 defendants
     /// </summary>
     /// <returns>a hearing with 4 participants, 2 claimants and 2 defendants</returns>
-    public static BookingDto CreateHearingDto(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null, bool includeInterpreter = false)
+    public static BookingDto CreateHearingDto(string judgePersonalCode, string judgeUsername, bool remote = false,
+        DateTime? scheduledDateTime = null, bool includeInterpreter = false)
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
@@ -49,14 +60,16 @@ public static class HearingTestData
         {
             CaseName = $"BookAHearing Automation Test {date:M-d-yy-H-mm-ss} {Guid.NewGuid():N}",
             CaseNumber = $"Automation Test Hearing {Guid.NewGuid():N}",
-            CaseType = "Civil",
-            HearingType = "Enforcement Hearing",
+            CaseType = CaseType,
+            ServiceId = ServiceId,
             ScheduledDateTime = hearingDateTime,
             DurationHour = 1,
             DurationMinute = 30,
             VenueName = "Birmingham Civil and Family Justice Centre",
+            VenueCode = HearingVenueCode,
             RoomName = "Room 1",
             Judge = new BookingJudgeDto(
+                judgePersonalCode,
                 judgeUsername,
                 "Auto Judge",
                 ""),
@@ -67,18 +80,22 @@ public static class HearingTestData
         return bookingDto;
     }
 
-    public static BookingDto CreateHearingDtoWithInterpreterLanguages(string judgeUsername, DateTime scheduledDateTime, InterpreterLanguageDto interpreterLanguage)
+    public static BookingDto CreateHearingDtoWithInterpreterLanguages(string judgePersonalCode, string judgeUsername,
+        DateTime scheduledDateTime, InterpreterLanguageDto interpreterLanguage)
     {
-        var bookingDto = CreateHearingDtoWithEndpoints(judgeUsername, scheduledDateTime: scheduledDateTime, includeInterpreter: true);
+        var bookingDto = CreateHearingDtoWithEndpoints(judgePersonalCode, judgeUsername,
+            scheduledDateTime: scheduledDateTime, includeInterpreter: true);
         bookingDto.Judge.InterpreterLanguage = interpreterLanguage;
         foreach (var participant in bookingDto.Participants)
         {
             participant.InterpreterLanguage = interpreterLanguage;
         }
+
         foreach (var endpoint in bookingDto.VideoAccessPoints)
         {
             endpoint.InterpreterLanguage = interpreterLanguage;
         }
+
         return bookingDto;
     }
 
@@ -107,20 +124,23 @@ public static class HearingTestData
         if (includeInterpreter)
         {
             participants.Add(BookingParticipantDto.Individual(GenericTestParty.Applicant, GenericTestRole.Interpreter,
-                "Automation_Claimant_Interpreter_1@hmcts.net", "automation_claimant_interpreter_1@hearings.reform.hmcts.net", "Auto 5",
+                "Automation_Claimant_Interpreter_1@hmcts.net",
+                "automation_claimant_interpreter_1@hearings.reform.hmcts.net", "Auto 5",
                 "Mrs", "Automation_Claimant", "Interpreter_1"));
         }
 
         return participants;
     }
-    
+
     /// <summary>
     ///     Create a hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)
     /// </summary>
     /// <returns>hearing with 4 participants, 2 claimants, 2 defendants and 2 Video Access Points (one for each party)</returns>
-    public static BookingDto CreateHearingDtoWithEndpoints(string judgeUsername, bool remote = false, DateTime? scheduledDateTime = null, bool includeInterpreter = false)
+    public static BookingDto CreateHearingDtoWithEndpoints(string judgePersonalCode, string judgeUsername,
+        bool remote = false, DateTime? scheduledDateTime = null, bool includeInterpreter = false)
     {
-        var bookingDto = CreateHearingDto(judgeUsername: judgeUsername, remote, scheduledDateTime, includeInterpreter: includeInterpreter);
+        var bookingDto = CreateHearingDto(judgePersonalCode, judgeUsername, remote, scheduledDateTime,
+            includeInterpreter: includeInterpreter);
         bookingDto.VideoAccessPoints = new List<VideoAccessPointsDto>
         {
             new("Claimant VAP", "Auto 2"),
@@ -130,6 +150,7 @@ public static class HearingTestData
         {
             bookingDto.AudioRecording = true;
         }
+
         return bookingDto;
     }
 
@@ -141,7 +162,7 @@ public static class HearingTestData
 
         return new VideoAccessPointsDto(displayName, defenceAdvocateDisplayName);
     }
-    
+
     public static BookingParticipantDto CreateNewParticipantDto()
     {
         var timeStamp = AddTimeStamp();
@@ -153,33 +174,33 @@ public static class HearingTestData
         user.Phone = "0123456789";
         return user;
     }
-    
+
     public static string AddTimeStamp() => DateTime.Now.ToString("yyyyMMddHHmmssfff");
 
-    public static BookingDto CreateMultiDayDto(int numberOfDays, DateTime scheduledDateTime  )
+    public static BookingDto CreateMultiDayDto(int numberOfDays, DateTime scheduledDateTime)
     {
-        var bookingDto = CreateHearingDto(Judge, false, scheduledDateTime );
+        var bookingDto = CreateHearingDto(JudgePersonalCode, JudgeUsername, false, scheduledDateTime);
         bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
         return bookingDto;
     }
 
     public static BookingDto CreateMultiDayDtoWithEndpoints(int numberOfDays, DateTime scheduledDateTime)
     {
-        var bookingDto = CreateHearingDtoWithEndpoints(Judge, false, scheduledDateTime );
+        var bookingDto = CreateHearingDtoWithEndpoints(JudgePersonalCode, JudgeUsername, false, scheduledDateTime);
         bookingDto.EndDateTime = scheduledDateTime.AddDays(numberOfDays);
         return bookingDto;
     }
 
-    public static BookNewHearingRequest CreateNewRequestDtoWithOnlyAJudge(bool remote = false,
+    public static BookNewHearingRequestV2 CreateNewRequestDtoWithOnlyAJudge(bool remote = false,
         DateTime? scheduledDateTime = null)
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
 
         var bookingDto = CreateHearingDtoWithOnlyAJudge(scheduledDateTime: hearingDateTime);
-        var request = new BookNewHearingRequest()
+        var request = new BookNewHearingRequestV2()
         {
-            Cases = new List<CaseRequest>()
+            Cases = new List<CaseRequestV2>()
             {
                 {
                     new()
@@ -194,25 +215,21 @@ public static class HearingTestData
             ScheduledDuration = bookingDto.DurationHour = 90,
             HearingRoomName = bookingDto.RoomName,
             CreatedBy = "automated test framework",
-            HearingTypeName = bookingDto.HearingType,
-            CaseTypeName = bookingDto.CaseType,
+            ServiceId = bookingDto.ServiceId,
             OtherInformation = bookingDto.OtherInformation,
             AudioRecordingRequired = bookingDto.AudioRecording,
-            HearingVenueName = bookingDto.VenueName,
-            Participants = new List<ParticipantRequest>()
-            {
+            HearingVenueCode = bookingDto.VenueCode,
+            JudiciaryParticipants =
+            [
                 new()
                 {
-                    FirstName = "Auto_AW",
-                    LastName = "Judge_02",
+                    HearingRoleCode = JudiciaryParticipantHearingRoleCode.Judge,
                     DisplayName = bookingDto.Judge.DisplayName,
-                    Username = bookingDto.Judge.Username,
-                    CaseRoleName = "Judge",
-                    HearingRoleName = "Judge",
-                    TelephoneNumber = null,
-                    ContactEmail = bookingDto.Judge.Username
+                    ContactEmail = bookingDto.Judge.Username,
+                    PersonalCode = bookingDto.Judge.PersonalCode,
+                    ContactTelephone = bookingDto.Judge.Phone
                 }
-            }
+            ]
         };
         return request;
     }

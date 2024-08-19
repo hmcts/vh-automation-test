@@ -13,7 +13,7 @@ public class StaffMemberTests : VideoWebUiTest
         var hearing = await CreateTestHearing();
         TestHearingIds.Add(hearing.Id.ToString());
         var conference = await GetConference(hearing.Id);
-        TestContext.WriteLine(
+        await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
 
         // log in as staff-member, go to waiting room and start hearing
@@ -34,10 +34,10 @@ public class StaffMemberTests : VideoWebUiTest
         Assert.Pass();
     }
 
-    private async Task<HearingDetailsResponse> CreateTestHearing()
+    private async Task<HearingDetailsResponseV2> CreateTestHearing()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: hearingScheduledDateAndTime);
-        return await BookingsApiClient.BookNewHearingAsync(hearingDto);
+        return await BookingsApiClient.BookNewHearingWithCodeAsync(hearingDto);
     }
 }

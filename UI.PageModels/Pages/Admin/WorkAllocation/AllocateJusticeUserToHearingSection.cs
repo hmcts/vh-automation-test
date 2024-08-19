@@ -76,13 +76,6 @@ public class AllocateJusticeUserToHearingSection : VhAdminWebPage
             throw new InvalidOperationException("Hearings have not been updated");
         }
     }
-    
-    private IWebElement GetHearingCheckboxNotAllocatedToUser(string justiceUserUsername)
-    {
-        var row = Driver.FindElement(
-            By.XPath($"//tr[.//td[7][normalize-space()!='{justiceUserUsername}']]"));
-        return row.FindElement(By.XPath("//tbody/tr[2]/td[1]/input[1]"));;
-    }
 
     private void CheckSectionIsOpen()
     {

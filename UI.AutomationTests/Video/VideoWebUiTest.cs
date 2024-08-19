@@ -189,7 +189,7 @@ public abstract class VideoWebUiTest : CommonUiTest
     {
         foreach (var videoWebParticipant in ParticipantDrivers.Values)
         {
-            TestContext.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
+            TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
             videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);
         }
     }
