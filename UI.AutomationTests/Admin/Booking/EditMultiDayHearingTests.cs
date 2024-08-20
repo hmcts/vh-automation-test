@@ -8,7 +8,6 @@ namespace UI.AutomationTests.Admin.Booking
         [Test]
         public void EditSingleDayOfMultiDayHearing()
         {
-            var isV2 = FeatureToggle.Instance().UseV2Api();
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
                 .AddHours(10).AddMinutes(0);
@@ -22,7 +21,7 @@ namespace UI.AutomationTests.Admin.Booking
             hearingDto.ScheduledDateTime = newTime;
             
             // Change everything else
-            summaryPage = EditMultiDayHearing(isV2, hearingDto, summaryPage);
+            summaryPage = EditMultiDayHearing(hearingDto, summaryPage);
             
             summaryPage.ValidateSummaryPage(hearingDto);
             var confirmationPage = summaryPage.ClickBookButton();
@@ -36,7 +35,6 @@ namespace UI.AutomationTests.Admin.Booking
         [Category("Daily")]
         [Test]
         [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
-        [FeatureToggleSetting(FeatureToggle.UseV2ApiToggleKey, true)]
         public async Task EditThisAndUpcomingDaysOfMultiDayHearing()
         {
             const int numberOfDays = 3;
@@ -59,7 +57,7 @@ namespace UI.AutomationTests.Admin.Booking
             hearingDto.EndDateTime = newDates[^1].Date.Add(newStartTime);
 
             // Change everything else
-            summaryPage = EditMultiDayHearing(isV2: true, hearingDto, summaryPage);
+            summaryPage = EditMultiDayHearing(hearingDto, summaryPage);
 
             summaryPage.ValidateSummaryPage(hearingDto, isMultiDay: true);
             var confirmationPage = summaryPage.ClickBookButton();
@@ -80,22 +78,21 @@ namespace UI.AutomationTests.Admin.Booking
             Assert.Pass();
         }
 
-        private SummaryPage EditMultiDayHearing(bool isV2, BookingDto hearingDto, SummaryPage summaryPage)
+        private SummaryPage EditMultiDayHearing(BookingDto hearingDto, SummaryPage summaryPage)
         {
             // Assign a new Judge 
-            var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudge, "Auto Judge 2", "");
-            var assignJudgePage = isV2
-                ? summaryPage.ChangeJudgeV2() 
-                : summaryPage.ChangeJudgeV1();
-            assignJudgePage.EnterJudgeDetails(alternativeJudge, FeatureToggle.Instance().UseV2Api());
+            var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode,
+                HearingTestData.AltJudgeUsername, "Auto Judge 2", "");
+            var assignJudgePage = summaryPage.ChangeJudgeV2();
+            assignJudgePage.EnterJudgeDetails(alternativeJudge);
             hearingDto.Judge = alternativeJudge;
             summaryPage = assignJudgePage.GotToNextPageOnEdit();
 
             // Add a new participant
             var newParticipant = HearingTestData.CreateNewParticipantDto();
             CreatedUsers.Add(newParticipant.Username);
-            var participantsPage = summaryPage.ChangeParticipants(isV2);
-            participantsPage.AddNewUserParticipants(new List<BookingParticipantDto>{ newParticipant });
+            var participantsPage = summaryPage.ChangeParticipants();
+            participantsPage.AddNewUserParticipants([newParticipant]);
             hearingDto.Participants.Add(newParticipant);
             
             // Update a participant

@@ -4,12 +4,12 @@ namespace UI.PageModels.Dtos;
 
 public class BookingJudgeDto
 {
-    public BookingJudgeDto(string username, string displayName, string phone)
+    public BookingJudgeDto(string personalCode, string username, string displayName, string phone)
     {
+        PersonalCode = personalCode;
         Username = username;
         DisplayName = displayName;
         Phone = phone;
-        
     }
     
 
@@ -17,6 +17,5 @@ public class BookingJudgeDto
     public string DisplayName { get; set; }
     public string Phone { get; set; }
     public InterpreterLanguageDto? InterpreterLanguage { get; set; }
-
-
+    public string PersonalCode { get; set; }
 }

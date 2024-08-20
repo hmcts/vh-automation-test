@@ -8,9 +8,9 @@ public class BookHearingTests : AdminWebUiTest
     [Test]
     public void BookAHearing()
     {
-        var v2Flag = FeatureToggle.Instance().UseV2Api();
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
-        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(judgeUsername: HearingTestData.Judge, scheduledDateTime: date);
+        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
+            judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         var newUser = HearingTestData.CreateNewParticipantDto();
         CreatedUsers.Add(newUser.Username);
@@ -27,16 +27,16 @@ public class BookHearingTests : AdminWebUiTest
         var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        createHearingPage.EnterHearingDetails(_bookingDto, v2Flag);
+        createHearingPage.EnterHearingDetails(_bookingDto);
         
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         
         hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, v2Flag);
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge);
             
-        var addParticipantPage = assignJudgePage.GotToNextPage(v2Flag);
+        var addParticipantPage = assignJudgePage.GotToNextPage();
         
         addParticipantPage.AddAllParticipantsFromDto(_bookingDto);
         
@@ -79,7 +79,8 @@ public class BookHearingTests : AdminWebUiTest
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         var interpreterLanguage = new InterpreterLanguageDto(description, type);
-        _bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(judgeUsername: HearingTestData.Judge, scheduledDateTime: date, interpreterLanguage);
+        _bookingDto = HearingTestData.CreateHearingDtoWithInterpreterLanguages(HearingTestData.JudgePersonalCode,
+            judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date, interpreterLanguage);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         
         var driver = VhDriver.GetDriver();
@@ -88,15 +89,15 @@ public class BookHearingTests : AdminWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
         
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        createHearingPage.EnterHearingDetails(_bookingDto, true);
+        createHearingPage.EnterHearingDetails(_bookingDto);
         
         var hearingSchedulePage = createHearingPage.GoToNextPage();
         hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto);
         
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
-        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge, true);
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge);
 
-        var addParticipantPage = assignJudgePage.GotToNextPage(true);
+        var addParticipantPage = assignJudgePage.GotToNextPage();
         addParticipantPage.AddAllParticipantsFromDto(_bookingDto);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();

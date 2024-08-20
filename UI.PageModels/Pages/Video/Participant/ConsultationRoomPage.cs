@@ -4,8 +4,6 @@ namespace UI.PageModels.Pages.Video.Participant;
 
 public class ConsultationRoomPage : VhVideoWebPage
 {
-    public static By HearingListConsultationRooms = By.Id("ConsultationRooms");
-
     public ConsultationRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
     }

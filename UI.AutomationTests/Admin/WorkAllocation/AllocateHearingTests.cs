@@ -3,7 +3,7 @@ namespace UI.AutomationTests.Admin.WorkAllocation;
 [Category("Daily")]
 public class AllocateHearingTests : AdminWebUiTest
 {
-    private HearingDetailsResponse _hearing;
+    private HearingDetailsResponseV2 _hearing;
     
     [Test]
     public async Task AllocateAJusticeUserToAHearing()
@@ -13,7 +13,7 @@ public class AllocateHearingTests : AdminWebUiTest
         
         await BookBasicHearing();
         var driver = VhDriver.GetDriver();
-        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        await driver.Navigate().GoToUrlAsync(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
@@ -30,7 +30,7 @@ public class AllocateHearingTests : AdminWebUiTest
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         var request = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: date);
-        _hearing = await BookingsApiClient.BookNewHearingAsync(request);
+        _hearing = await BookingsApiClient.BookNewHearingWithCodeAsync(request);
         TestHearingIds.Add(_hearing.Id.ToString());
     }
 }

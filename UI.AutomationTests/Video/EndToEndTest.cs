@@ -1,3 +1,4 @@
+using BookingsApi.Contract.V1.Responses;
 using UI.PageModels.Pages.Video.Participant;
 using VideoApi.Contract.Enums;
 using VideoApi.Contract.Responses;
@@ -21,8 +22,9 @@ public class EndToEndTest : VideoWebUiTest
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.Judge, scheduledDateTime:hearingScheduledDateAndTime);
-        TestContext.WriteLine(
+        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode,
+            HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
+        await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         await BookHearing(hearingDto);
@@ -116,13 +118,13 @@ public class EndToEndTest : VideoWebUiTest
     {
         var driver = AdminWebDriver.GetDriver();
             
-        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        await driver.Navigate().GoToUrlAsync(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
 
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api());
+        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto);
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);

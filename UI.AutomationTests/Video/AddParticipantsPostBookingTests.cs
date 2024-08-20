@@ -1,5 +1,3 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
 using UI.PageModels.Pages.Admin.Booking;
 
 namespace UI.AutomationTests.Video;
@@ -13,10 +11,9 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Test]
     public async Task should_add_new_participant_after_booking()
     {
-        var isV2 = FeatureToggle.Instance().UseV2Api();
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
-        TestContext.WriteLine(
+        await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         var bookingDetailsPage = BookHearingAndGoToDetailsPage(hearingDto);
@@ -29,7 +26,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
         
         var participantsToAdd = new List<BookingParticipantDto>(){HearingTestData.KnownParticipantsForTesting()[0]};
-        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd, !isV2);
+        var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd);
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         
@@ -74,11 +71,11 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
         var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto, FeatureToggle.Instance().UseV2Api());
+        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto);
         var confirmationPage = summaryPage.ClickBookButton();
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);
-        TestContext.WriteLine($"Hearing  ID: {_hearingIdString}");
+        TestContext.Out.WriteLine($"Hearing  ID: {_hearingIdString}");
         return confirmationPage.ClickViewBookingLink();
     }
 }

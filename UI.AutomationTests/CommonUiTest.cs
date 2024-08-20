@@ -1,6 +1,8 @@
 using System.Net;
 using BookingsApi.Client;
+using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
+using BookingsApi.Contract.V1.Responses;
 using UserApi.Client;
 
 namespace UI.AutomationTests;
@@ -28,12 +30,12 @@ public abstract class CommonUiTest
                 Roles = new List<JusticeUserRole> { JusticeUserRole.VhTeamLead },
                 CreatedBy = "automation test framework"
             });
-            TestContext.WriteLine($"Created user {justiceUser.ContactEmail}");
+            await TestContext.Out.WriteLineAsync($"Created user {justiceUser.ContactEmail}");
         }
 
         if (justiceUser.Deleted)
         {
-            TestContext.WriteLine("Restoring deleted user {justiceUser.ContactEmail}");
+            await TestContext.Out.WriteLineAsync("Restoring deleted user {justiceUser.ContactEmail}");
             await BookingsApiClient.RestoreJusticeUserAsync(new RestoreJusticeUserRequest()
             {
                 Id = justiceUser.Id, Username = justiceUser.Username
@@ -42,7 +44,7 @@ public abstract class CommonUiTest
 
         if (!justiceUser.IsVhTeamLeader)
         {
-            TestContext.WriteLine("Updated justice user to be a Team Leader");
+            await TestContext.Out.WriteLineAsync("Updated justice user to be a Team Leader");
             await BookingsApiClient.EditJusticeUserAsync(new EditJusticeUserRequest()
             {
                 Id = justiceUser.Id, Username = justiceUser.Username,
@@ -50,7 +52,7 @@ public abstract class CommonUiTest
             });
         }
 
-        TestContext.WriteLine($"Using justice user for test {justiceUser.ContactEmail}");
+        await TestContext.Out.WriteLineAsync($"Using justice user for test {justiceUser.ContactEmail}");
 
         return justiceUser;
     }
@@ -71,7 +73,7 @@ public abstract class CommonUiTest
             }
             catch(UserApiException e)
             {
-                TestContext.WriteLine(e.StatusCode == (int)HttpStatusCode.NotFound
+                await TestContext.Out.WriteLineAsync(e.StatusCode == (int)HttpStatusCode.NotFound
                     ? $"User {userPrincipleName} not found"
                     : $"Failed to remove user {userPrincipleName} - {e.Message}");
             }
@@ -86,19 +88,19 @@ public abstract class CommonUiTest
             {
                 try
                 {
-                    TestContext.WriteLine($"Removing Hearing {guid}");
+                    await TestContext.Out.WriteLineAsync($"Removing Hearing {guid}");
                     await BookingsApiClient.RemoveHearingAsync(guid);
                     removedHearings.Add(hearingId);
                 }
                 catch (BookingsApiException e)
                 {
-                    TestContext.WriteLine(e.StatusCode == (int)HttpStatusCode.NotFound
+                    await TestContext.Out.WriteLineAsync(e.StatusCode == (int)HttpStatusCode.NotFound
                         ? $"Hearing {guid} not found"
                         : $"Failed to remove hearing {guid} - {e.Message}");
                 }
                 catch (Exception e)
                 {
-                    TestContext.WriteLine($"Failed to remove hearing {guid} - {e.Message}");
+                    await TestContext.Out.WriteLineAsync($"Failed to remove hearing {guid} - {e.Message}");
                 }
             }
         }

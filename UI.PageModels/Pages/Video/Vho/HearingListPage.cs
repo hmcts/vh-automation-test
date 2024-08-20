@@ -9,7 +9,6 @@ namespace UI.PageModels.Pages.Video.Vho;
 /// </summary>
 public class HearingListPage
 {
-    public static By ConferenceList = By.ClassName("conference-list");
     public static By Quicklinks => By.CssSelector("fa-icon");
     public static By CloseButton => By.Id("closeButton");
     public static By MessagesTabButton => By.Id("messagesTabButton");

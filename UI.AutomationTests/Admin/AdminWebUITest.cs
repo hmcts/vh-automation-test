@@ -1,12 +1,9 @@
-using UI.AutomationTests.Configuration;
-
 namespace UI.AutomationTests.Admin;
 
 public abstract class AdminWebUiTest : CommonUiTest
 {
     protected readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
     protected EnvironmentConfigSettings EnvConfigSettings;
-    protected TestDataConfiguration TestDataConfig;
     protected IVhDriver VhDriver;
 
     [OneTimeSetUp]
@@ -14,7 +11,6 @@ public abstract class AdminWebUiTest : CommonUiTest
     {
         EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
-        TestDataConfig = ConfigRootBuilder.TestDataConfigurationInstance();
         UserApiClient = await VhApiClientFactory.CreateUserApiClient();
     }
 

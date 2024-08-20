@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace UI.Common.CustomExceptions;
 
 [Serializable]
@@ -16,11 +14,6 @@ public class ValidationException : Exception
 
     public ValidationException(string message, Exception innerException) 
         : base(message, innerException)
-    {
-    }
-
-    protected ValidationException(SerializationInfo info, StreamingContext context) 
-        : base(info, context)
     {
     }
 }

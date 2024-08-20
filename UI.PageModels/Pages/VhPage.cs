@@ -161,10 +161,19 @@ public abstract class VhPage
             .Until(ExpectedConditions.ElementToBeClickable(locator));
     }
 
-    protected void WaitForElementToBeClickable(By locator, int timeOut)     
+    protected void WaitForElementToBeClickable(By locator, int timeOut, bool withRefresh = false)     
     {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-            .Until(ExpectedConditions.ElementToBeClickable(locator));
+        try
+        {
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
+                .Until(ExpectedConditions.ElementToBeClickable(locator));
+        }
+        catch (WebDriverTimeoutException)
+        {
+            if (!withRefresh) throw;
+            Driver.Navigate().Refresh();
+            WaitForElementToBeClickable(locator, timeOut, withRefresh: false);
+        }
     }
     
     protected void ClickElement(By locator, bool waitToBeClickable = true)

@@ -2,7 +2,7 @@ namespace UI.AutomationTests.Admin.BookingList;
 
 public class SearchForHearingTests : AdminWebUiTest
 {
-    private HearingDetailsResponse _hearing;
+    private HearingDetailsResponseV2 _hearing;
 
     [Category("Daily")]
     [Test]
@@ -28,7 +28,7 @@ public class SearchForHearingTests : AdminWebUiTest
         var bookingDetailsPage = bookingListPage.ViewBookingDetails(queryDto.CaseNumber);
         bookingDetailsPage.GetAllocatedTo().Should().Be("Not Allocated");
         bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl).Should().NotBeNullOrWhiteSpace();
-        TestContext.WriteLine(bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl));
+        await TestContext.Out.WriteLineAsync(bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl));
         dashboardPage.SignOut();
         Assert.Pass();
     }
@@ -37,7 +37,7 @@ public class SearchForHearingTests : AdminWebUiTest
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         var request = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: date);
-        _hearing = await BookingsApiClient.BookNewHearingAsync(request);
+        _hearing = await BookingsApiClient.BookNewHearingWithCodeAsync(request);
         TestHearingIds.Add(_hearing.Id.ToString());
     }
 }

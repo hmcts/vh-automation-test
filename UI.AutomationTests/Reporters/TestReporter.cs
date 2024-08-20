@@ -16,7 +16,7 @@ public class TestReporter
         var dir = TestContext.CurrentContext.TestDirectory;
         var fileName = "UI_Test_Demo" + ".html";
         var htmlReporter = new ExtentHtmlReporter(Path.Join(dir, fileName));
-        TestContext.WriteLine(Path.Join(dir, fileName));
+        TestContext.Out.WriteLine(Path.Join(dir, fileName));
         _extent = new ExtentReports();
         _extent.AttachReporter(htmlReporter);
     }

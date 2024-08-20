@@ -5,7 +5,6 @@ namespace UI.PageModels.Pages.Admin.WorkAllocation;
 public class EditHoursSection : VhAdminWebPage
 {
     private readonly By _addNewNonAvailabilityBtn = By.Id("non-available-table-add-new-btn");
-    private readonly By _cancelWorkHoursBtn = By.Id("save-individual-work-hours-button");
     private readonly By _editHoursSectionBtn = By.Id("edit-availability");
 
     private readonly By _editNonAvailabilityHoursRadioButton =

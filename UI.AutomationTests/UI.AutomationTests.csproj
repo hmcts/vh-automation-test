@@ -8,20 +8,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BookingsApi.Client" Version="2.0.14" />
+        <PackageReference Include="BookingsApi.Client" Version="2.2.9" />
         <PackageReference Include="ExtentReports" Version="4.1.0" />
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="LaunchDarkly.ServerSdk" Version="8.5.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
         <PackageReference Include="NUnit" Version="4.1.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-        <PackageReference Include="NUnit.Analyzers" Version="4.2.0">
+        <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.3.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="UserApi.Client" Version="1.49.6" />
-        <PackageReference Include="VideoApi.Client" Version="1.51.10" />
-        <PackageReference Include="WebDriverManager" Version="2.17.2" />
+        <PackageReference Include="VideoApi.Client" Version="2.2.5" />
+        <PackageReference Include="WebDriverManager" Version="2.17.4" />
     </ItemGroup>
 
     <ItemGroup>

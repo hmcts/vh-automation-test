@@ -1,5 +1,3 @@
-using OpenQA.Selenium;
-
 namespace UI.PageModels.Pages.Video;
 
 public class VideoWebLogoutPage : VhPage

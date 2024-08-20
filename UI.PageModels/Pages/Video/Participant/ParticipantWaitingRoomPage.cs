@@ -17,10 +17,10 @@ public class ParticipantWaitingRoomPage : VhVideoWebPage
 
     protected override void ConfirmPageHasLoaded()
     {
-        if(UseAltLocator)
+        if (UseAltLocator)
             WaitForElementToBeVisible(_chooseCameraAndMicButton, 10);
         else
-            WaitForElementToBeClickable(_startPrivateConsultationBtn, 60);
+            WaitForElementToBeClickable(_startPrivateConsultationBtn, 60, withRefresh: true);
     }
 
     private readonly By StartVideoHearingButton = By.XPath("//button[contains(text(),'Start video hearing')]");

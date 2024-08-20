@@ -6,14 +6,8 @@ public class BookingConfirmationPage : VhAdminWebPage
 {
     private readonly By _bookAnotherHearingBtn = By.Id("btnBookAnotherHearing");
     private readonly By _viewBookingLink = By.XPath("//a[text()='View this booking']");
-
-    private readonly By _viewThisBooking =
-        By.XPath("//*[@id='main-content']/app-booking-confirmation/div/div/div[1]/a");
-
     private readonly By _editHearing = By.XPath("//button[@id='edit-button']");
     private readonly By _johBreadcrumbLink = By.LinkText("Judicial Office Holder(s)");
-    private readonly By _judgeBreadcrumbLink = By.LinkText("Judge");
-    private readonly By _nextParticipantPage = By.XPath("//*[@id='nextButtonToParticipants']");
 
     public BookingConfirmationPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -40,11 +34,6 @@ public class BookingConfirmationPage : VhAdminWebPage
         return new BookingDetailsPage(Driver, DefaultWaitTime);
     }
 
-    public void viewThisBooking()
-    {
-        ClickElement(_viewThisBooking);
-    }
-
     public void EditHearing()
     {
         IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
@@ -53,8 +42,8 @@ public class BookingConfirmationPage : VhAdminWebPage
         ClickElement(_editHearing);
     }
 
-    public void GotoJudgeAssignmentPage(bool isV2)
+    public void GotoJudgeAssignmentPage()
     {
-        ClickElement(isV2 ? _johBreadcrumbLink : _judgeBreadcrumbLink);
+        ClickElement(_johBreadcrumbLink);
     }
 }

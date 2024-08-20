@@ -103,7 +103,7 @@ public class RemoteChromeVhDriver : IVhDriver
         }
         catch (Exception e)
         {
-            TestContext.WriteLine($"<{e.GetType().Name}> Failed to report test status to SauceLabs: {e.Message}");
+            TestContext.Out.WriteLine($"<{e.GetType().Name}> Failed to report test status to SauceLabs: {e.Message}");
         }
     }
 

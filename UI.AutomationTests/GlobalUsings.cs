@@ -19,5 +19,5 @@ global using System.Globalization;
 global using UI.AutomationTests.Utilities;
 global using UI.PageModels.Dtos;
 
-global using BookingsApi.Contract.V1.Requests;
-global using BookingsApi.Contract.V1.Responses;
+global using BookingsApi.Contract.V2.Requests;
+global using BookingsApi.Contract.V2.Responses;
