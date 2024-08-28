@@ -24,7 +24,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     protected override void ConfirmPageHasLoaded()
     {
         // the start/resume hearing button is not available when a hearing is closed
-        WaitForElementToBeClickable(_enterConsultationRoomBtn, DefaultWaitTime, withRefresh: true);
+        WaitForElementToBeClickable(_enterConsultationRoomBtn, DefaultWaitTime);
     }
 
     public JudgeHearingRoomPage StartOrResumeHearing()
