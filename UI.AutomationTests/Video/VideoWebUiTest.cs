@@ -5,6 +5,8 @@ using UI.PageModels.Pages.Video.Participant;
 using UI.PageModels.Pages.Video.QuickLink;
 using UI.PageModels.Pages.Video.Vho;
 using VideoApi.Client;
+using VideoApi.Contract.Enums;
+using VideoApi.Contract.Requests;
 using VideoApi.Contract.Responses;
 
 namespace UI.AutomationTests.Video;
@@ -76,18 +78,26 @@ public abstract class VideoWebUiTest : CommonUiTest
         {
             try
             {
-                return await VideoApiClient.GetConferenceByHearingRefIdAsync(hearingId, true);
+                var result = await VideoApiClient.GetConferenceDetailsByHearingRefIdsAsync(
+                    new GetConferencesByHearingIdsRequest()
+                    {
+                        IncludeClosed = true,
+                        HearingRefIds = [hearingId]
+                    });
+                result.Should().NotBeNullOrEmpty();
+                return result.FirstOrDefault(x => x.CurrentStatus != ConferenceState.Closed) ?? result.First();
             }
             catch (VideoApiException e)
             {
-                if(pollCount >= 3) 
+                if (pollCount >= 3)
                     throw new NotFoundException($"Conference not found for hearing {hearingId} after 3 attempts");
-                
-                if (e.StatusCode == (int) HttpStatusCode.NotFound)
+
+                if (e.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5));
                     return null;
                 }
+
                 throw;
             }
         }

@@ -31,7 +31,7 @@ public class FeatureToggleSettingAttribute : TestActionAttribute
 
         if (actualValue != _expected)
         {
-            Assert.Ignore($"Test ignored because feature toggle {_key} does not match the expected value {_expected}");
+            Assert.Ignore($"Test ignored because feature toggle {_key} does not match the requirement toggle value {_expected}");
         }
     }
 }

@@ -133,8 +133,8 @@ public class HearingSchedulePage : VhAdminWebPage
 
     private void ClickMultiDaysHearingCheckbox()
     {
-        WaitForElementVisible(Driver, _multiDaysHearingCheckbox);
-        Driver.FindElement(_multiDaysHearingCheckbox).Click();
+        WaitForElementToBeVisible(_multiDaysHearingCheckbox);
+        ClickElement(_multiDaysHearingCheckbox);
     }
     
 }

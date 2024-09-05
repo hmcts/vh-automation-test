@@ -15,8 +15,8 @@ public static class HearingTestData
     private const string HearingVenueName = "Birmingham Civil and Family Justice Centre";
     private const string HearingVenueCode = "231596";
 
-    private const string CaseType = "Civil";
-    private const string ServiceId = "ZZY14";
+    private const string CaseType = "Adoption";
+    private const string ServiceId = "ABA4";
 
     /// <summary>
     /// Create a hearing with only a judge

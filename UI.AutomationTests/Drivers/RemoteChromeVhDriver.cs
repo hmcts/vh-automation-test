@@ -48,7 +48,8 @@ public class RemoteChromeVhDriver : IVhDriver
             { "idleTimeout", sauceLabsConfiguration.IdleTimeoutInSeconds },
             { "screenResolution", sauceLabsConfiguration.WindowsScreenResolution },
             { "username", sauceLabsConfiguration.SauceUsername },
-            { "accessKey", sauceLabsConfiguration.SauceAccessKey }
+            { "accessKey", sauceLabsConfiguration.SauceAccessKey },
+            { "extendedDebugging", true }
         };
         chromeOptions.AddAdditionalOption("sauce:options", sauceOptions);
         var remoteUrl = new Uri(sauceLabsConfiguration.SecureSauceUrl);

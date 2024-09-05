@@ -14,7 +14,7 @@ parameters:
 name: ${{ parameters.environment }}_UI_Regression_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
-  name: "VH Self Hosted"
+  name: 'VH Self Hosted'
 
 stages:
   ####################################################
@@ -39,13 +39,11 @@ stages:
             value: ${{ variables.videoApiUrl }}
           - name: ApiClientConfiguration.UserApiUrl
             value: ${{ variables.userApiUrl }}
-          - name: TestDataConfiguration.AudioLinkCaseNumber
-            value: ${{ variables.audioLinkCaseNumber }}
 
         steps:
           - template: pipelines/templates/run-ui-test.yaml
             parameters:
               environment: ${{ parameters.environment }}
               projectPath: ${{ variables.projectPath }}
-              testRunTitle: "UI Tests ${{ parameters.environment }}"
+              testRunTitle: 'UI Tests ${{ parameters.environment }}'
               subscriptionName: ${{ variables.subscriptionName }}

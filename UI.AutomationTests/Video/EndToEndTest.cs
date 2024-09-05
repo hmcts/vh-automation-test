@@ -139,7 +139,7 @@ public class EndToEndTest : VideoWebUiTest
         var manageWorkAllocationPage = dashboardPage.GoToManageWorkAllocation();
         
         manageWorkAllocationPage.AllocateJusticeUserToHearing(
-            caseNumber: _conference.CaseNumber,
+            caseNumber: bookingDto.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
     }

@@ -1,0 +1,13 @@
+variables:
+  - name: env
+    value: 'demo'
+  - name: adminWebUrl
+    value: 'https://vh-admin-web.demo.platform.hmcts.net'
+  - name: videoWebUrl
+    value: 'https://vh-video-web.demo.platform.hmcts.net'
+  - name: bookingsApiUrl
+    value: 'https://vh-bookings-api.demo.platform.hmcts.net/'
+  - name: videoApiUrl
+    value: 'https://vh-video-api.demo.platform.hmcts.net/'
+  - name: userApiUrl
+    value: 'https://vh-user-api.demo.platform.hmcts.net/'

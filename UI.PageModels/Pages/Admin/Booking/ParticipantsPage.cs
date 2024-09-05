@@ -29,6 +29,7 @@ public class ParticipantsPage : VhAdminWebPage
     public ParticipantsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
+        WaitForElementToBeVisible(_nextButton);
         WaitForElementToBeClickable(_nextButton);
     }
 

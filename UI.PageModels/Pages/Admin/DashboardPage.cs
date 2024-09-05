@@ -14,7 +14,7 @@ public class DashboardPage : VhAdminWebPage
     private readonly By _unallocatedHearingsToday = By.Id("unallocated-hearings-today");
     private readonly By _unallocatedHearingsTomorrow = By.Id("unallocated-hearings-tomorrow");
     private readonly By _workAllocationButton = By.Id("manageWorkAllocationBtn");
-    private readonly By _getAudioFileLinkButton = By.Id("getAudioLinkBtn");
+    private readonly By _manageTeamButton = By.Id("manageTeamBtn");
 
     public DashboardPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
@@ -64,14 +64,14 @@ public class DashboardPage : VhAdminWebPage
         ClickElement(_workAllocationButton);
         return new ManageWorkAllocationPage(Driver, DefaultWaitTime);
     }
-
-    public GetAudioFilePage GoToGetAudioFileLink()
+    
+    public ManageTeamPage GoToManageTeam()
     {
         WaitForApiSpinnerToDisappear();
-        ClickElement(_getAudioFileLinkButton);
-        return new GetAudioFilePage(Driver, DefaultWaitTime);
+        ClickElement(_manageTeamButton);
+        return new ManageTeamPage(Driver, DefaultWaitTime);
     }
-
+    
     private int GetNumberOfUnallocatedHearings(By locator)
     {
         var text = GetText(locator);

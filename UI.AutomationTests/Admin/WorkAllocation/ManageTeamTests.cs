@@ -11,7 +11,10 @@ public class ManageTeamTests : AdminWebUiTest
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
 
-        var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
+        var manageTeamTile = FeatureToggle.Instance().Dom1Enabled();
+        JusticeUserManagementPage manageTeamPage =
+            manageTeamTile ? dashboardPage.GoToManageTeam() : dashboardPage.GoToManageWorkAllocation();
+        // var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
 
         var newUsername = $"new.user{Guid.NewGuid():N}@automation.com";
         TestContext.Out.WriteLine("Attempting to add a new user with username: " + newUsername);
@@ -20,18 +23,18 @@ public class ManageTeamTests : AdminWebUiTest
         var contactTelephone = "0131 496 0881"; // generated from https://neilzone.co.uk/number/
         var roles = new List<JusticeUserRoles> {JusticeUserRoles.Vho};
 
-        workAllocationPage.AddTeamMember(newUsername, firstName, lastName, contactTelephone, roles);
+        manageTeamPage.AddTeamMember(newUsername, firstName, lastName, contactTelephone, roles);
         TestContext.Out.WriteLine("Successfully added a new user with username: " + newUsername);
         var updatedRoles = new List<JusticeUserRoles> {JusticeUserRoles.VhTeamLead};
-        workAllocationPage.EditTeamMember(newUsername, updatedRoles);
+        manageTeamPage.EditTeamMember(newUsername, updatedRoles);
         TestContext.Out.WriteLine("Successfully edited a user with username: " + newUsername);
-        workAllocationPage.DeleteTeamMember(newUsername);
+        manageTeamPage.DeleteTeamMember(newUsername);
         TestContext.Out.WriteLine("Successfully deleted a user with username: " + newUsername);
-        workAllocationPage.RestoreTeamMember(newUsername);
+        manageTeamPage.RestoreTeamMember(newUsername);
         TestContext.Out.WriteLine("Successfully restored a user with username: " + newUsername);
 
         // Delete the user again
-        workAllocationPage.DeleteTeamMember(newUsername);
+        manageTeamPage.DeleteTeamMember(newUsername);
         Assert.Pass();
     }
 }
