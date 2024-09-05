@@ -31,6 +31,5 @@ public abstract class VhAdminWebPage : VhPage
     {
         WaitForElementToBeVisible(_signOutMenuItemButton);
         ClickElement(_signOutMenuItemButton);
-        Driver.FindElement(_signOutMenuItemButton).Click();
     }
 }
