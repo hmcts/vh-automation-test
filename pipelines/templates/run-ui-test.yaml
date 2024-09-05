@@ -100,11 +100,12 @@ steps:
       command: custom
       custom: --version
 
-  - task: FileTransform@2
+  - task: FileTransform@1
     displayName: Transform App Settings
     inputs:
-      folderPath: ${{ parameters.projectpath }}/**/appsettings.json
-      jsonTargetFiles: '**/appsettings.json'
+      folderPath: ${{ parameters.projectpath }}
+      fileType: json
+      targetFiles: '**/appsettings.json'
 
   - pwsh: |
       Get-Content "${{ parameters.projectpath }}/appsettings.json"
