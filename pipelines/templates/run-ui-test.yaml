@@ -103,7 +103,7 @@ steps:
   - task: FileTransform@2
     displayName: Transform App Settings
     inputs:
-      folderPath: ${{ parameters.projectpath }}
+      folderPath: ${{ parameters.projectpath }}/**/appsettings.json
       jsonTargetFiles: '**/appsettings.json'
 
   - pwsh: |
