@@ -31,6 +31,7 @@ public class EditBookingTest : HearingTest
     }
 
     [Test]
+    [FeatureToggleSetting(FeatureToggle.InterpreterEnhancementsToggleKey, true)]
     public void should_update_booking_with_interpreter_languages()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);

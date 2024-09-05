@@ -10,6 +10,7 @@ public sealed class FeatureToggle
 {
     public const string MultiDayBookingEnhancementsToggleKey = "multi-day-booking-enhancements";
     public const string InterpreterEnhancementsToggleKey = "interpreter-enhancements";
+    public const string Dom1Key = "dom1";
     
     private static FeatureToggle _instance;
     private static ILdClient _ldClient;
@@ -40,5 +41,10 @@ public sealed class FeatureToggle
         }
 
         return _ldClient.BoolVariation(key, _context);
+    }
+    
+    public bool Dom1Enabled()
+    {
+        return GetBoolValueWithKey(Dom1Key);
     }
 }

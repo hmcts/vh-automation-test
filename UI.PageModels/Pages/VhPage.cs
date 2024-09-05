@@ -257,46 +257,6 @@ public abstract class VhPage
         return time.ToString(Locale == GbLocale ? "HHmm" : "hhmmtt");
     }
 
-    public static void MilliTimeOut(double timeOut)
-    {
-        Thread.Sleep(TimeSpan.FromMilliseconds(timeOut));
-    }
-    
-    public bool WaitForElementVisible(IWebDriver driver, By by)
-    {
-        var timerCheck = TimeSpan.FromSeconds(2);
-        var stopWatch = Stopwatch.StartNew();
-        do
-        {
-            if (driver.FindElement(by).Displayed)
-            {
-                WaitForElementToBeClickable(by);
-            }
-            MilliTimeOut(200);
-        } while (stopWatch.Elapsed < timerCheck);
-        return driver.FindElement(by).Displayed;
-    }
-    
-    public IWebElement WaitForSingleCondition(IWebDriver driver, By by)
-    {
-        driver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(DefaultWaitTime);
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(DefaultWaitTime))
-        {
-            PollingInterval = TimeSpan.FromMilliseconds(500),
-            Message = $"Element {by} not found"
-        };
-        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
-        return wait.Until(ElementDisplayed(by));
-    }
-
-    private static Func<IWebDriver, IWebElement> ElementDisplayed(By element)
-    {
-        return ((x)=>
-        {
-            return x.FindElement(element);
-        });
-    }
-
     /// <summary>
     /// Returns the element if it exists, otherwise returns null 
     /// </summary>
