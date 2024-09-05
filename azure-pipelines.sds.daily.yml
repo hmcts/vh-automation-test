@@ -25,6 +25,7 @@ parameters:
     default: Dev
     values:
       - Dev
+      - Demo
       - Test
       - Stg
 
@@ -59,8 +60,6 @@ stages:
                 value: ${{ variables.videoApiUrl }}
               - name: ApiClientConfiguration.UserApiUrl
                 value: ${{ variables.userApiUrl }}
-              - name: TestDataConfiguration.AudioLinkCaseNumber
-                value: ${{ variables.audioLinkCaseNumber }}
               - group: slack
 
             steps:

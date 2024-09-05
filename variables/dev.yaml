@@ -11,5 +11,3 @@ variables:
     value: "https://vh-video-api.dev.platform.hmcts.net/"
   - name: userApiUrl
     value: "https://vh-user-api.dev.platform.hmcts.net/"
-  - name: audioLinkCaseNumber
-    value: "VIH 9831"

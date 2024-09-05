@@ -11,5 +11,3 @@ variables:
     value: "https://vh-video-api.staging.platform.hmcts.net/"
   - name: userApiUrl
     value: "https://vh-user-api.staging.platform.hmcts.net/"
-  - name: audioLinkCaseNumber
-    value: "Test Test Tuesday"

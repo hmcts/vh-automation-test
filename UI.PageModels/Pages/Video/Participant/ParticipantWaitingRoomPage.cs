@@ -20,7 +20,7 @@ public class ParticipantWaitingRoomPage : VhVideoWebPage
         if (UseAltLocator)
             WaitForElementToBeVisible(_chooseCameraAndMicButton, 10);
         else
-            WaitForElementToBeClickable(_startPrivateConsultationBtn, 60, withRefresh: true);
+            WaitForElementToBeClickable(_startPrivateConsultationBtn, DefaultWaitTime);
     }
 
     private readonly By StartVideoHearingButton = By.XPath("//button[contains(text(),'Start video hearing')]");
