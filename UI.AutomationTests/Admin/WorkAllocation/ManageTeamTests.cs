@@ -1,6 +1,6 @@
 namespace UI.AutomationTests.Admin.WorkAllocation;
 
-[Category("Daily")]
+
 public class ManageTeamTests : AdminWebUiTest
 {
     [Test]
@@ -14,7 +14,6 @@ public class ManageTeamTests : AdminWebUiTest
         var manageTeamTile = FeatureToggle.Instance().Dom1Enabled();
         JusticeUserManagementPage manageTeamPage =
             manageTeamTile ? dashboardPage.GoToManageTeam() : dashboardPage.GoToManageWorkAllocation();
-        // var workAllocationPage = dashboardPage.GoToManageWorkAllocation();
 
         var newUsername = $"new.user{Guid.NewGuid():N}@automation.com";
         TestContext.Out.WriteLine("Attempting to add a new user with username: " + newUsername);

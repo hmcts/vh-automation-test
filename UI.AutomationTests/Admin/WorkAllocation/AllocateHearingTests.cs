@@ -1,6 +1,6 @@
 namespace UI.AutomationTests.Admin.WorkAllocation;
 
-[Category("Daily")]
+
 public class AllocateHearingTests : AdminWebUiTest
 {
     private HearingDetailsResponseV2 _hearing;

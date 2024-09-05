@@ -4,7 +4,7 @@ namespace UI.AutomationTests.Admin.Booking
 {
     public class EditMultiDayHearingTests : MultiDayHearingTest
     {
-        [Category("Daily")]
+        
         [Test]
         public void EditSingleDayOfMultiDayHearing()
         {
@@ -32,7 +32,7 @@ namespace UI.AutomationTests.Admin.Booking
             Assert.Pass();
         }
 
-        [Category("Daily")]
+        
         [Test]
         [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
         public async Task EditThisAndUpcomingDaysOfMultiDayHearing()

@@ -5,7 +5,7 @@ public class CreatingMultiDayHearingTests : AdminWebUiTest
     private BookingDto _bookingDto;
     private string _groupId;
 
-    [Category("Daily")]
+    
     [Test]
     public void CreatingMultiDayHearing()
     {

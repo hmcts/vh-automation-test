@@ -2,7 +2,7 @@ using UI.AutomationTests.TestData;
 
 namespace UI.AutomationTests.Admin.WorkAllocation;
 
-[Category("Daily")]
+
 public class WorkHourTests : AdminWebUiTest
 {
     [Test]

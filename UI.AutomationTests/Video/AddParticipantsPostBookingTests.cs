@@ -6,7 +6,6 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
 {
     private string _hearingIdString;
     
-    [Category("Daily")]
     [Description("Book a hearing with a judge and add a participant after booking. Check if the notification appears and if the user joins the judge in the hearing when a hearing is started.")]
     [Test]
     public async Task should_add_new_participant_after_booking()

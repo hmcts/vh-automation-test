@@ -12,7 +12,6 @@ public class EndToEndTest : VideoWebUiTest
     private JusticeUserResponse _justiceUser;
 
     [Test]
-    [Category("Daily")]
     [Category("a11y")]
     [Description("Book a hearing." +
                  "Allocate to a CSO." +

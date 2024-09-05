@@ -4,7 +4,7 @@ namespace UI.AutomationTests.Admin.Booking
 {
     public class CancelMultiDayHearingTests : MultiDayHearingTest
     {
-        [Category("Daily")]
+        
         [Test]
         public void CancelSingleDayOfMultiDayHearing()
         {
@@ -22,7 +22,7 @@ namespace UI.AutomationTests.Admin.Booking
             Assert.Pass();
         }
         
-        [Category("Daily")]
+        
         [Test]
         [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
         public void CancelThisAndUpcomingDaysOfMultiDayHearing()

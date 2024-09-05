@@ -4,7 +4,7 @@ using UI.PageModels.Pages.Video.Participant;
 
 namespace UI.AutomationTests.Video;
 
-[Category("Daily")]
+
 public class QuickLinkUserTests : VideoWebUiTest
 {
     private string _quickLinkJoinUrl;
