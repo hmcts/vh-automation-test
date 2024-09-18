@@ -5,43 +5,44 @@ parameters:
     default: Dev
     values:
       - Dev
+      - Demo
       - Test
       - Stg
       - Prod
   - name: projectPath
     displayName: Project Path
     type: string
-    default: "UI.AutomationTests"
+    default: 'UI.AutomationTests'
   - name: testCategory
     displayName: Test Category
     type: string
-    default: ""
+    default: ''
   - name: testRunTitle
     displayName: Test Run Title
     type: string
-    default: "Test Results"
+    default: 'Test Results'
   - name: subscriptionName
     displayName: Key Vault Subscription Name
     type: string
-    default: "**/TestResults/*.trx"
+    default: '**/TestResults/*.trx'
   - name: netVersion
     type: string
     default: '8.x'
 
 steps:
-  - task: AzureKeyVault@1
-    displayName: "Azure Key Vault: vh-infra-core-${{ lower(parameters.environment) }}"
+  - task: AzureKeyVault@2
+    displayName: 'Azure Key Vault: vh-infra-core-${{ lower(parameters.environment) }}'
     inputs:
-      azureSubscription: "${{ parameters.subscriptionName }}"
-      KeyVaultName: "vh-infra-core-${{ lower(parameters.environment) }}"
-      SecretsFilter: "azuread--tenantid"
+      azureSubscription: '${{ parameters.subscriptionName }}'
+      KeyVaultName: 'vh-infra-core-${{ lower(parameters.environment) }}'
+      SecretsFilter: 'azuread--tenantid'
 
-  - task: AzureKeyVault@1
-    displayName: "Azure Key Vault: vh-bookings-api-${{ lower(parameters.environment) }}"
+  - task: AzureKeyVault@2
+    displayName: 'Azure Key Vault: vh-bookings-api-${{ lower(parameters.environment) }}'
     inputs:
-      azureSubscription: "${{ parameters.subscriptionName }}"
-      KeyVaultName: "vh-bookings-api-${{ lower(parameters.environment) }}"
-      SecretsFilter: "azuread--clientid, azuread--clientsecret, azuread--identifieruri, launchdarkly--sdkkey"
+      azureSubscription: '${{ parameters.subscriptionName }}'
+      KeyVaultName: 'vh-bookings-api-${{ lower(parameters.environment) }}'
+      SecretsFilter: 'azuread--clientid, azuread--clientsecret, azuread--identifieruri, launchdarkly--sdkkey'
 
   - bash: |
       echo "##vso[task.setvariable variable=ApiClientConfiguration.TenantId;issecret=false]$(azuread--tenantid)"
@@ -51,17 +52,39 @@ steps:
       echo "##vso[task.setvariable variable=ApiClientConfiguration.LaunchDarklyKey;issecret=false]$(launchdarkly--sdkkey)"
     displayName: Change Bookings API client secrets to variables
 
+  - task: AzureKeyVault@2
+    displayName: 'Azure Key Vault: vh-video-api-${{ lower(parameters.environment) }}'
+    inputs:
+      azureSubscription: '${{ parameters.subscriptionName }}'
+      KeyVaultName: 'vh-video-api-${{ lower(parameters.environment) }}'
+      SecretsFilter: 'azuread--identifieruri'
+
+  - bash: |
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.VideoApiResourceId;issecret=false]$(azuread--identifieruri)"
+    displayName: Change Video API client secrets to variables
+
+  - task: AzureKeyVault@2
+    displayName: 'Azure Key Vault: vh-user-api-${{ lower(parameters.environment) }}'
+    inputs:
+      azureSubscription: '${{ parameters.subscriptionName }}'
+      KeyVaultName: 'vh-user-api-${{ lower(parameters.environment) }}'
+      SecretsFilter: 'azuread--identifieruri'
+
+  - bash: |
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.UserApiResourceId;issecret=false]$(azuread--identifieruri)"
+    displayName: Change User API client secrets to variables
+
   # inserts variables to help create unique test names
   - task: gitversion/setup@0
     displayName: Install GitVersion
     inputs:
-      versionSpec: "6.x"
+      versionSpec: '6.x'
 
   - task: gitversion/execute@0
     displayName: Determine Version
     inputs:
       useConfigFile: true
-      configFilePath: "GitVersion.yml"
+      configFilePath: 'GitVersion.yml'
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
@@ -82,7 +105,7 @@ steps:
     inputs:
       folderPath: ${{ parameters.projectpath }}
       fileType: json
-      targetFiles: "**/appsettings.json"
+      targetFiles: '**/appsettings.json'
 
   - pwsh: |
       Get-Content "${{ parameters.projectpath }}/appsettings.json"
@@ -97,10 +120,10 @@ steps:
     displayName: Run UI Tests
     inputs:
       command: test
-      projects: "${{ parameters.projectpath }}/*.csproj"
+      projects: '${{ parameters.projectpath }}/*.csproj'
       publishTestResults: true
-      testRunTitle: "${{ parameters.testRunTitle }}"
+      testRunTitle: '${{ parameters.testRunTitle }}'
       ${{ if eq(parameters.testCategory, '') }}:
-        arguments: "--configuration Release"
+        arguments: '--configuration Release'
       ${{ else }}:
-        arguments: "--configuration Release --filter TestCategory=${{ parameters.testCategory }}"
+        arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'

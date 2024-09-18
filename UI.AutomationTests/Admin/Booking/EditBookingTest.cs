@@ -1,6 +1,6 @@
 namespace UI.AutomationTests.Admin.Booking;
 
-[Category("Daily")]
+
 public class EditBookingTest : HearingTest
 {
     [Test]

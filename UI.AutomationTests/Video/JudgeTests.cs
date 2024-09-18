@@ -5,7 +5,7 @@ namespace UI.AutomationTests.Video
 {
     public class JudgeTests : VideoWebUiTest
     {
-        [Category("Daily")]
+        
         [Description("Book a hearing. Log into hearing with a judge account. Edit their display name. Start and stop the hearing.")]
         [Test]
         public async Task LogIntoHearingWithJudgeAndEditDisplayName()

@@ -4,7 +4,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
 
-    [Category("Daily")]
+    
     [Test]
     public void BookAHearingNoJoh()
     {
