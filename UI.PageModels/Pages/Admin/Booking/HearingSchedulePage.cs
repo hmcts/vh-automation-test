@@ -133,8 +133,7 @@ public class HearingSchedulePage : VhAdminWebPage
 
     private void ClickMultiDaysHearingCheckbox()
     {
-        WaitForElementToBeVisible(_multiDaysHearingCheckbox);
-        ClickElement(_multiDaysHearingCheckbox);
+        ClickElement(_multiDaysHearingCheckbox, waitToBeClickable: false);
     }
     
 }
