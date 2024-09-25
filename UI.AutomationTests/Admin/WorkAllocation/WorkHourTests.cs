@@ -75,6 +75,12 @@ public class WorkHourTests : AdminWebUiTest
         
         Assert.Pass();
     }
+    
+    
+    protected override async Task InitTest()
+    {
+        await CreateVhTeamLeaderJusticeUserIfNotExist(AdminLoginUsername);
+    }
 
     protected override async Task CleanUp()
     {

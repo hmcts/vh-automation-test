@@ -10,15 +10,13 @@ public class CommandCentreHearing: CommandCentrePage
     public string ParticipantStatus(Guid participantId)
     {
         var element = By.XPath($"//p[@id='participant-status-{participantId}']");
-        WaitForElementToBeVisible(element);
-        return Driver.FindElement(element).Text;
+        return GetText(element);
     } 
 
     public string HearingStatus()
     {
         var element = By.XPath("//div[@class='selected-menu-content']//div[contains(@class, 'status status-button')]");
-        WaitForElementToBeVisible(element);
-        return Driver.FindElement(element).Text;
+        return GetText(element);
     } 
         
     public void ValidateParticipantStatusBeforeLogin(Guid testParticipantId)
