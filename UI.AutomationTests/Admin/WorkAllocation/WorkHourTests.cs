@@ -1,5 +1,3 @@
-using UI.AutomationTests.TestData;
-
 namespace UI.AutomationTests.Admin.WorkAllocation;
 
 
@@ -74,12 +72,6 @@ public class WorkHourTests : AdminWebUiTest
         workAllocationPage.AddNonAvailableDayForUser(teamMemberUsername, startDateTime, endDateTime);
         
         Assert.Pass();
-    }
-    
-    
-    protected override async Task InitTest()
-    {
-        await CreateVhTeamLeaderJusticeUserIfNotExist(AdminLoginUsername);
     }
 
     protected override async Task CleanUp()

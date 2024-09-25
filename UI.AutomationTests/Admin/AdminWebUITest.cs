@@ -26,9 +26,9 @@ public abstract class AdminWebUiTest : CommonUiTest
     /// Run ad-hoc clean up tasks for a test
     /// </summary>
     /// <returns></returns>
-    protected virtual Task InitTest()
+    private async Task InitTest()
     {
-        return Task.CompletedTask;
+        await CreateVhTeamLeaderJusticeUserIfNotExist(AdminLoginUsername);
     }
 
     [TearDown]
