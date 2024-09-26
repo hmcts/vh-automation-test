@@ -39,8 +39,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
         addParticipantPage.AddParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
-        var otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
+        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
         

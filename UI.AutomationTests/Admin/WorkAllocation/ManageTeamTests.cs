@@ -1,3 +1,5 @@
+using UI.Common.Utilities;
+
 namespace UI.AutomationTests.Admin.WorkAllocation;
 
 

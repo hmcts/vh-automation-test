@@ -1,3 +1,5 @@
+using UI.Common.Utilities;
+
 namespace UI.AutomationTests.Admin.Booking;
 
 
@@ -76,8 +78,7 @@ public class EditBookingTest : HearingTest
         var endpointToUpdate = sortedEndpoints[endpointIndexToUpdate];
         videoAccessPointsPage.UpdateVideoAccessPoint(endpointIndexToUpdate, "None", newInterpreterLanguage);
         endpointToUpdate.DefenceAdvocateDisplayName = "";
-        var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
-        var otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
+        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage(); 
         
         summaryPage = otherInformationPage.GoToSummaryPage();
         

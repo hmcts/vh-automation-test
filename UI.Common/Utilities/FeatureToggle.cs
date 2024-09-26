@@ -1,16 +1,18 @@
 using LaunchDarkly.Sdk;
 using LaunchDarkly.Sdk.Server;
 using LaunchDarkly.Sdk.Server.Interfaces;
+using UI.Common.Configuration;
 using LogLevel = LaunchDarkly.Logging.LogLevel;
 using Logs = LaunchDarkly.Logging.Logs;
 
-namespace UI.AutomationTests.Utilities;
+namespace UI.Common.Utilities;
 
 public sealed class FeatureToggle
 {
     public const string MultiDayBookingEnhancementsToggleKey = "multi-day-booking-enhancements";
     public const string InterpreterEnhancementsToggleKey = "interpreter-enhancements";
     public const string Dom1Key = "dom1";
+    public const string SpecialMeasuresKey = "special-measures";
     
     private static FeatureToggle _instance;
     private static ILdClient _ldClient;
@@ -46,5 +48,10 @@ public sealed class FeatureToggle
     public bool Dom1Enabled()
     {
         return GetBoolValueWithKey(Dom1Key);
+    }
+
+    public bool SpecialMeasuresEnabled()
+    {
+        return GetBoolValueWithKey(SpecialMeasuresKey);
     }
 }
