@@ -42,7 +42,7 @@ public class CreatingMultiDayHearingTests : AdminWebUiTest
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
         
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage(); 
+        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
         
