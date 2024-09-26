@@ -105,7 +105,12 @@ public class VideoAccessPointsPage : VhAdminWebPage
         ClickElement(_nextButton);
         return new OtherInfoPage(Driver, DefaultWaitTime);
     }
-    
+
+    public SpecialMeasuresPage GoToSpecialMeasuresPage()
+    {
+        ClickElement(_nextButton);
+        return new SpecialMeasuresPage(Driver, DefaultWaitTime);
+    }
     
     /// <summary>
     /// When in edit mode, the next button directs a user to the summary page
