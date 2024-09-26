@@ -89,7 +89,10 @@ public class BookingDetailsPage : VhAdminWebPage
         ClickElement(participantsBreadcrumbLocator);
         var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime);
         participantsPage.AddParticipants(participantsToAdd);
-        return participantsPage.GoToVideoAccessPointsPage().GoToSummaryPage().ClickBookButton();
+        var videoAccessPointsPage = participantsPage.GoToVideoAccessPointsPage();
+        var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
+        var summaryPage = specialMeasuresPage.GoToSummaryPage();
+        return summaryPage.ClickBookButton();
     }
     
     /// <summary>

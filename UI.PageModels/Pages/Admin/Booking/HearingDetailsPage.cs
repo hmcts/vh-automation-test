@@ -61,7 +61,8 @@ public class HearingDetailsPage : VhAdminWebPage
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
+        var otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
 

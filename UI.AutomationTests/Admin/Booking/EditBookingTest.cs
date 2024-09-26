@@ -76,7 +76,8 @@ public class EditBookingTest : HearingTest
         var endpointToUpdate = sortedEndpoints[endpointIndexToUpdate];
         videoAccessPointsPage.UpdateVideoAccessPoint(endpointIndexToUpdate, "None", newInterpreterLanguage);
         endpointToUpdate.DefenceAdvocateDisplayName = "";
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
+        var otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
         
         summaryPage = otherInformationPage.GoToSummaryPage();
         
