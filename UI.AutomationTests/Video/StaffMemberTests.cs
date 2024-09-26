@@ -24,6 +24,7 @@ public class StaffMemberTests : VideoWebUiTest
         // edit display name
         const string newDisplayName = "Edited Staff Member Name";
         statffMemberWaitingRoom.EditStaffMemberDisplayName(newDisplayName);
+        Thread.Sleep(TimeSpan.FromSeconds(2));
         var updatedDisplayName = statffMemberWaitingRoom.GetStaffMemberDisplayNameInWaitingRoom();
         updatedDisplayName.Should().BeEquivalentTo(newDisplayName);
 

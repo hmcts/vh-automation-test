@@ -25,6 +25,7 @@ namespace UI.AutomationTests.Video
             // edit display name
             const string newDisplayName = "Edited Judge Name Automated Test";
             judgeWaitingRoomPage.EditJudgeDisplayName(newDisplayName);
+            Thread.Sleep(TimeSpan.FromSeconds(2));
             judgeWaitingRoomPage.ParticipantExistsInWaitingRoom(newDisplayName).Should().BeTrue();
 
             var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
