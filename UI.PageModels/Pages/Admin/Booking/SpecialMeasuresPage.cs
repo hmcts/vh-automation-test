@@ -9,11 +9,7 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
         ClickElement(_nextButton);
         return new OtherInfoPage(Driver, DefaultWaitTime);
     }
-    
-    /// <summary>
-    /// When in edit mode, the next button directs a user to the summary page
-    /// </summary>
-    /// <returns></returns>
+
     public SummaryPage GoToSummaryPage()
     {
         ClickElement(_nextButton);

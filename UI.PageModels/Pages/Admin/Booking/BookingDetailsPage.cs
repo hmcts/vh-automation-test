@@ -1,4 +1,6 @@
-﻿namespace UI.PageModels.Pages.Admin.Booking;
+﻿using UI.Common.Utilities;
+
+namespace UI.PageModels.Pages.Admin.Booking;
 
 public class BookingDetailsPage : VhAdminWebPage
 {
@@ -89,7 +91,11 @@ public class BookingDetailsPage : VhAdminWebPage
         ClickElement(participantsBreadcrumbLocator);
         var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime);
         participantsPage.AddParticipants(participantsToAdd);
-        return participantsPage.GoToVideoAccessPointsPage().GoToSummaryPage().ClickBookButton();
+        var videoAccessPointsPage = participantsPage.GoToVideoAccessPointsPage();
+        var specialMeasuresEnabled = FeatureToggle.Instance().SpecialMeasuresEnabled();
+        var summaryPage = specialMeasuresEnabled ? 
+            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToSummaryPage() : videoAccessPointsPage.GoToSummaryPage();
+        return summaryPage.ClickBookButton();
     }
     
     /// <summary>
