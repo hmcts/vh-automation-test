@@ -1,3 +1,5 @@
+using UI.Common.Utilities;
+
 namespace UI.AutomationTests.Admin.Booking;
 
 public class BookHearingTests : AdminWebUiTest
@@ -103,7 +105,7 @@ public class BookHearingTests : AdminWebUiTest
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
-
+        
         var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
 

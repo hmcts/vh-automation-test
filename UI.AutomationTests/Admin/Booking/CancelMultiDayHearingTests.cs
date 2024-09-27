@@ -1,3 +1,4 @@
+using UI.Common.Utilities;
 using UI.PageModels.Constants;
 
 namespace UI.AutomationTests.Admin.Booking

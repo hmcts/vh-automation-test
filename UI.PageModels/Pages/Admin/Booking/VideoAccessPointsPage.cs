@@ -1,5 +1,4 @@
-﻿using OpenQA.Selenium;
-using UI.PageModels.Dtos;
+﻿using UI.Common.Utilities;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
@@ -103,10 +102,12 @@ public class VideoAccessPointsPage : VhAdminWebPage
     public OtherInfoPage GoToOtherInformationPage()
     {
         ClickElement(_nextButton);
-        return new OtherInfoPage(Driver, DefaultWaitTime);
+        
+        var specialMeasuresEnabled = FeatureToggle.Instance().SpecialMeasuresEnabled();
+        return specialMeasuresEnabled ? 
+            new SpecialMeasuresPage(Driver, DefaultWaitTime).GoToOtherInformationPage() : new OtherInfoPage(Driver, DefaultWaitTime);
     }
-    
-    
+
     /// <summary>
     /// When in edit mode, the next button directs a user to the summary page
     /// </summary>
@@ -114,6 +115,9 @@ public class VideoAccessPointsPage : VhAdminWebPage
     public SummaryPage GoToSummaryPage()
     {
         ClickElement(_nextButton);
-        return new SummaryPage(Driver, DefaultWaitTime);
+        
+        var specialMeasuresEnabled = FeatureToggle.Instance().SpecialMeasuresEnabled();
+        return specialMeasuresEnabled ? 
+            new SpecialMeasuresPage(Driver, DefaultWaitTime).GoToSummaryPage() : new SummaryPage(Driver, DefaultWaitTime);
     }
 }
