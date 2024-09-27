@@ -115,9 +115,12 @@ public class VideoAccessPointsPage : VhAdminWebPage
     public SummaryPage GoToSummaryPage()
     {
         ClickElement(_nextButton);
-        
-        var specialMeasuresEnabled = FeatureToggle.Instance().SpecialMeasuresEnabled();
-        return specialMeasuresEnabled ? 
-            new SpecialMeasuresPage(Driver, DefaultWaitTime).GoToSummaryPage() : new SummaryPage(Driver, DefaultWaitTime);
+        return new SummaryPage(Driver, DefaultWaitTime);
+    }
+
+    public SpecialMeasuresPage GoToSpecialMeasuresPage()
+    {
+        ClickElement(_nextButton);
+        return new SpecialMeasuresPage(Driver, DefaultWaitTime);
     }
 }
