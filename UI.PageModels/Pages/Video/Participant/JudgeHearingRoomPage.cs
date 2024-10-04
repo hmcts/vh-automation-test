@@ -70,7 +70,16 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         ClickElement(_pauseHearing);
         return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
     }
-    
+
+    /// <summary>
+    /// Wait for the hearing countdown to complete
+    /// </summary>
+    /// <param name="buffer">Additional buffer, in seconds</param>
+    public void WaitForCountdownToComplete(int buffer = 5)
+    {
+        const int countdown = 30;
+        Thread.Sleep(TimeSpan.FromSeconds(countdown + buffer));
+    }
     
     private By ParticipantContextButton(string participantDisplayName)
     {
