@@ -52,7 +52,7 @@ namespace UI.AutomationTests.Video
 
             var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
             
-            Thread.Sleep(TimeSpan.FromSeconds(10)); // Allow time for the countdown to start
+            Thread.Sleep(TimeSpan.FromSeconds(20)); // Allow time for the countdown to start
             judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
             judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
             Assert.Pass();
