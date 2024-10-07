@@ -35,6 +35,29 @@ namespace UI.AutomationTests.Video
             Assert.Pass();
         }
 
+        [Test]
+        public async Task PauseHearingDuringCountdown()
+        {
+            var hearing = await CreateTestHearing();
+            TestHearingIds.Add(hearing.Id.ToString());
+            var conference = await GetConference(hearing.Id);
+            await TestContext.Out.WriteLineAsync(
+                $"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
+
+            // log in as judge, go to waiting room and start hearing
+            var judgeUsername = hearing.JudiciaryParticipants
+                .Find(x => x.HearingRoleCode == JudiciaryParticipantHearingRoleCode.Judge).Email;
+            var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
+            var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
+
+            var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
+            
+            Thread.Sleep(TimeSpan.FromSeconds(20)); // Allow time for the countdown to start
+            judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
+            judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
+            Assert.Pass();
+        }
+
         private async Task<HearingDetailsResponseV2> CreateTestHearing()
         {
             var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);

@@ -72,6 +72,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeHearingRoomPage.IsParticipantInHearing(quicklink1.DisplayName).Should().BeFalse();
         judgeHearingRoomPage.IsParticipantInHearing(quicklink2.DisplayName).Should().BeFalse();
         
+        judgeHearingRoomPage.WaitForCountdownToComplete();
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
 
