@@ -3,6 +3,7 @@ using BookingsApi.Client;
 using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V1.Responses;
+using UI.PageModels.Utilities;
 using UserApi.Client;
 
 namespace UI.AutomationTests;
@@ -55,6 +56,16 @@ public abstract class CommonUiTest
         await TestContext.Out.WriteLineAsync($"Using justice user for test {justiceUser.ContactEmail}");
 
         return justiceUser;
+    }
+
+    protected static void CheckAccessibility()
+    {
+        AccessibilityResultCollection.CreateReports();
+        
+        if (AccessibilityResultCollection.HasViolations())
+        {
+            Assert.Fail("Accessibility tests failed, please view the results in the reports");
+        }
     }
     
     [OneTimeTearDown]

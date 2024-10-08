@@ -110,6 +110,8 @@ public class EndToEndTest : VideoWebUiTest
 
         // sign out of each hearing
         SignOutAllUsers();
+
+        CheckAccessibility();
         Assert.Pass();
     }
 
