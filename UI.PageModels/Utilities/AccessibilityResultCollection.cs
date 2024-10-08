@@ -1,4 +1,5 @@
 using Selenium.Axe;
+using UI.PageModels.Pages;
 
 namespace UI.PageModels.Utilities;
 
@@ -24,10 +25,9 @@ public static class AccessibilityResultCollection
         foreach (var result in Results)
         {
             var filename = GenerateFilename();
+            CheckAndCreateDirectory(filename);
             result.Driver.CreateAxeHtmlReport(result.Result, filename, ReportTypes.Violations);
         }
-        
-        // TODO merge the json into a single report
     }
 
     public static bool HasViolations()
@@ -38,13 +38,24 @@ public static class AccessibilityResultCollection
     
     private static string GenerateFilename()
     {
-        var filename = $"{Guid.NewGuid()}_AccessibilityReport.html";
-        var stagingDir = Environment.GetEnvironmentVariable("BUILD_ARTIFACTSTAGINGDIRECTORY");
-        if (!string.IsNullOrEmpty(stagingDir))
-        {
-            filename = Path.Join(stagingDir, filename);
-        }
+        var directory = Environment.GetEnvironmentVariable("BUILD_ARTIFACTSTAGINGDIRECTORY") ?? string.Empty;
+        var testName = Environment.GetEnvironmentVariable(VhPage.VHTestNameKey);
+        directory = !string.IsNullOrEmpty(directory) ? Path.Join(directory, testName) : testName;
+
+        if (!string.IsNullOrEmpty(directory) && !directory.EndsWith('/'))
+            directory += "/";
+        
+        var filename = $"{directory}{Guid.NewGuid()}_AccessibilityReport.html";
 
         return filename;
+    }
+
+    private static void CheckAndCreateDirectory(string filename)
+    {
+        var directory = Path.GetDirectoryName(filename) ?? string.Empty;
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
     }
 }
