@@ -58,7 +58,7 @@ public abstract class CommonUiTest
         return justiceUser;
     }
 
-    protected static void CheckAccessibility()
+    protected static void ReportAccessibility()
     {
         AccessibilityResultCollection.CreateReports();
         
