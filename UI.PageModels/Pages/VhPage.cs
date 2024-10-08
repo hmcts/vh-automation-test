@@ -1,7 +1,6 @@
 
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
-using Selenium.Axe;
 using SeleniumExtras.WaitHelpers;
 using UI.Common.Configuration;
 using UI.PageModels.Utilities;
@@ -37,10 +36,7 @@ public abstract class VhPage
     {
         ConfirmPageHasLoaded();
         if(!AccessibilityCheck || IsLoginPage || IgnoreAccessibilityForPage) return;
-        var axeBuilder = new AxeBuilder(Driver);
-        var axeResult = axeBuilder.Analyze();
-        var result = new AccessibilityResult(axeResult, Driver);
-        AccessibilityResultCollection.Capture(result);
+        AccessibilityResult.Capture(Driver);
     }
     
     protected virtual void ConfirmPageHasLoaded()
