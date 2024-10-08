@@ -40,7 +40,7 @@ public abstract class VhPage
         var axeBuilder = new AxeBuilder(Driver);
         var axeResult = axeBuilder.Analyze();
         var result = new AccessibilityResult(axeResult, Driver);
-        AccessibilityResultCollection.Add(result);
+        AccessibilityResultCollection.Capture(result);
     }
     
     protected virtual void ConfirmPageHasLoaded()

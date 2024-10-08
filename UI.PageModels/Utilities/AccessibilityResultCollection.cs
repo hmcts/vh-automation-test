@@ -6,13 +6,15 @@ namespace UI.PageModels.Utilities;
 public static class AccessibilityResultCollection
 {
     private static List<AccessibilityResult> Results { get; } = [];
-    
-    public static void Add(AccessibilityResult result)
+
+    /// <summary>
+    /// If the result has not already been captured, saves the result and creates a report
+    /// </summary>
+    /// <param name="result"></param>
+    public static void Capture(AccessibilityResult result)
     {
-        var alreadyExists = Results.Find(r => r.Result.Url == result.Result.Url) != null;
-        if (alreadyExists) return;
-        
-        Results.Add(result);
+        if (!Add(result)) return;
+        CreateReport(result);
     }
 
     public static void Clear()
@@ -20,20 +22,27 @@ public static class AccessibilityResultCollection
         Results.Clear();
     }
 
-    public static void CreateReports()
+    public static void CreateReport(AccessibilityResult result)
     {
-        foreach (var result in Results)
-        {
-            var filename = GenerateFilename();
-            CheckAndCreateDirectory(filename);
-            result.Driver.CreateAxeHtmlReport(result.Result, filename, ReportTypes.Violations);
-        }
+        var filename = GenerateFilename();
+        CheckAndCreateDirectory(filename);
+        result.Driver.CreateAxeHtmlReport(result.Result, filename, ReportTypes.Violations);
     }
 
     public static bool HasViolations()
     {
         return Results.Any(r =>
             r.Result.Violations.Any(x => x.Impact != "minor"));
+    }
+    
+    private static bool Add(AccessibilityResult result)
+    {
+        var alreadyExists = Results.Find(r => r.Result.Url == result.Result.Url) != null;
+        if (alreadyExists) return false;
+        
+        Results.Add(result);
+
+        return true;
     }
     
     private static string GenerateFilename()

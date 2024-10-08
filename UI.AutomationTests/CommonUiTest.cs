@@ -60,8 +60,6 @@ public abstract class CommonUiTest
 
     protected static void ReportAccessibility()
     {
-        AccessibilityResultCollection.CreateReports();
-        
         if (AccessibilityResultCollection.HasViolations())
         {
             Assert.Fail("Accessibility tests failed, please view the results in the reports");
