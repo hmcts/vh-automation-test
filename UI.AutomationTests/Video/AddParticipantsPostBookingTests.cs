@@ -56,6 +56,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             judgeHearingRoomPage.AdmitParticipant(p.DisplayName, p.Id.ToString());
         }
         
+        judgeHearingRoomPage.WaitForCountdownToComplete();
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
 

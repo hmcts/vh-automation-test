@@ -100,6 +100,7 @@ public class EndToEndTest : VideoWebUiTest
         ccHearingPanel.ValidateLiveHearingStatusScenario(_conference.Id.ToString());
         
         // pause hearing
+        judgeHearingRoomPage.WaitForCountdownToComplete(buffer: 10);
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         ccHearingPanel.ValidatePausedHearingStatusScenario(_conference.Id.ToString());
         
