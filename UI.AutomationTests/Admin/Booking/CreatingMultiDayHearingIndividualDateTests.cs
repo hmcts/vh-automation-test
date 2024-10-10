@@ -7,6 +7,7 @@ public class CreatingMultiDayHearingIndividualDateTests : AdminWebUiTest
 
     
     [Test]
+    [Category("admin")]
     public void CreatingMultiDayHearingIndividualDate()
     {
         var numberOfDays = 7;

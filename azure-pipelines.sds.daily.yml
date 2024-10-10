@@ -29,6 +29,12 @@ parameters:
       - Test
       - Stg
 
+  - name: testCategories
+    type: object
+    default:
+      - admin
+      - video
+
 name: ${{ parameters.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
@@ -41,55 +47,57 @@ stages:
     displayName: Automation Tests ${{ parameters.environment }}
     jobs:
       - ${{ if eq(parameters.runUITests, true) }}:
-          - job: UI_Tests
-            cancelTimeoutInMinutes: 80
-            displayName: UI Tests ${{ parameters.environment }}
-            variables:
-              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
-                value: false
-              - template: variables/${{ lower(parameters.environment) }}.yaml
-              - template: variables/shared.yaml
-                parameters:
-                  environment: ${{ parameters.environment }}
-              - group: vh-automation-test-${{ parameters.environment }}
-              - group: FeatureFlags_${{ parameters.environment }}
-              - group: Saucelabs
-              - group: KinlyConfiguration_${{ parameters.environment }}
-              - name: ApiClientConfiguration.BookingsApiUrl
-                value: ${{ variables.bookingsApiUrl }}
-              - name: ApiClientConfiguration.VideoApiUrl
-                value: ${{ variables.videoApiUrl }}
-              - name: ApiClientConfiguration.UserApiUrl
-                value: ${{ variables.userApiUrl }}
-              - group: slack
-
-            steps:
-              - template: pipelines/templates/run-ui-test.yaml
-                parameters:
-                  environment: ${{ parameters.environment }}
-                  projectPath: ${{ variables.projectPath }}
-                  testRunTitle: 'UI Tests ${{ parameters.environment }}'
-                  subscriptionName: ${{ variables.subscriptionName }}
-
-              - task: PublishBuildArtifacts@1
-                displayName: Publish UI Test Output
-                condition: succeededOrFailed()
-                inputs:
-                  pathToPublish: '$(Agent.TempDirectory)/'
-                  artifactName: UI_Report
-
-              - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
-                  - template: pipelines/templates/get-results-from-trx.yaml
+          - ${{ each testCategory in parameters.testCategories }}:
+              - job: UI_Tests_${{ testCategory }}
+                cancelTimeoutInMinutes: 80
+                displayName: UI Tests ${{ parameters.environment }} - ${{ testCategory }}
+                variables:
+                  - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
+                    value: false
+                  - template: variables/${{ lower(parameters.environment) }}.yaml
+                  - template: variables/shared.yaml
                     parameters:
-                      name: UI
+                      environment: ${{ parameters.environment }}
+                  - group: vh-automation-test-${{ parameters.environment }}
+                  - group: FeatureFlags_${{ parameters.environment }}
+                  - group: Saucelabs
+                  - group: KinlyConfiguration_${{ parameters.environment }}
+                  - name: ApiClientConfiguration.BookingsApiUrl
+                    value: ${{ variables.bookingsApiUrl }}
+                  - name: ApiClientConfiguration.VideoApiUrl
+                    value: ${{ variables.videoApiUrl }}
+                  - name: ApiClientConfiguration.UserApiUrl
+                    value: ${{ variables.userApiUrl }}
+                  - group: slack
 
-                  - template: pipelines/templates/send-results-to-slack.yaml
+                steps:
+                  - template: pipelines/templates/run-ui-test.yaml
                     parameters:
-                      env: ${{ parameters.environment }}
-                      results: $(testOutcome)
-                      details: $(testSummary)
-                      triggerID: $(triggerID)
-                      type: UI Tests
+                      environment: ${{ parameters.environment }}
+                      projectPath: ${{ variables.projectPath }}
+                      testRunTitle: 'UI Tests ${{ parameters.environment }} - ${{ testCategory }}'
+                      testCategory: ${{ testCategory }}
+                      subscriptionName: ${{ variables.subscriptionName }}
+
+                  - task: PublishBuildArtifacts@1
+                    displayName: Publish UI Test Output
+                    condition: succeededOrFailed()
+                    inputs:
+                      pathToPublish: '$(Agent.TempDirectory)/'
+                      artifactName: UI_Report
+
+                  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
+                      - template: pipelines/templates/get-results-from-trx.yaml
+                        parameters:
+                          name: UI
+
+                      - template: pipelines/templates/send-results-to-slack.yaml
+                        parameters:
+                          env: ${{ parameters.environment }}
+                          results: $(testOutcome)
+                          details: $(testSummary)
+                          triggerID: $(triggerID)
+                          type: UI Tests
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
