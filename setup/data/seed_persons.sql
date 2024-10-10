@@ -137,6 +137,6 @@ SELECT *
 FROM dbo.Person
 WHERE ContactEmail in
       ('auto_vw.individual_60@hmcts.net', 'auto_vw.representative_139@hmcts.net', 'auto_vw.individual_137@hmcts.net',
-       'auto_vw.representative_157@hmcts.net')
+       'auto_vw.representative_157@hmcts.net', 'automation_claimant_interpreter_1@hmcts.net')
 COMMIT TRANSACTION;
 SET XACT_ABORT OFF
