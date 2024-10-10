@@ -1,10 +1,9 @@
-using System.Diagnostics;
+
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
-using Selenium.Axe;
 using SeleniumExtras.WaitHelpers;
 using UI.Common.Configuration;
-using UI.Common.CustomExceptions;
+using UI.PageModels.Utilities;
 
 namespace UI.PageModels.Pages;
 
@@ -15,8 +14,6 @@ public abstract class VhPage
     protected int DefaultWaitTime;
     protected IWebDriver Driver;
     protected bool AccessibilityCheck;
-    protected string AccessibilityReportFilePath;
-    protected string AccessibilityHtmlReportFilePath;
     protected static readonly string GbLocale = "en-GB";
     protected string Locale = GbLocale;
     protected bool IsLoginPage => Driver.Url.Contains("login");
@@ -30,8 +27,6 @@ public abstract class VhPage
         DefaultWaitTime = defaultWaitTime;
         IgnoreAccessibilityForPage = ignoreAccessibilityForPage;
         AccessibilityCheck = config.EnableAccessibilityCheck;
-        AccessibilityReportFilePath = config.AccessibilityReportFilePath;
-        AccessibilityHtmlReportFilePath = config.AccessibilityHtmlReportFilePath;
         UseAltLocator = useAltLocator;
         if (driver is RemoteWebDriver) Locale = "en-US";
         CheckAccessibility();
@@ -41,22 +36,7 @@ public abstract class VhPage
     {
         ConfirmPageHasLoaded();
         if(!AccessibilityCheck || IsLoginPage || IgnoreAccessibilityForPage) return;
-        var axeBuilder = new AxeBuilder(Driver);
-        axeBuilder.WithOutputFile(AccessibilityReportFilePath);
-        var axeResult = axeBuilder.Analyze();
-        var htmlFilePath = AccessibilityHtmlReportFilePath;
-        var stagingDir = Environment.GetEnvironmentVariable("BUILD_ARTIFACTSTAGINGDIRECTORY");
-        if (!string.IsNullOrEmpty(stagingDir))
-        {
-            var testName = Environment.GetEnvironmentVariable(VHTestNameKey);
-            htmlFilePath = Path.Join(stagingDir, $"{testName}_AccessibilityReport.html");
-        }
-        Driver.CreateAxeHtmlReport(axeResult, htmlFilePath, ReportTypes.Violations);
-        if (Array.Exists(axeResult.Violations, x => x.Impact != "minor"))
-            throw new AccessibilityException(GetType().Name, axeResult.Violations
-                    .Where(x => x.Impact != "minor")
-                    .Select(x => new AccessibilityException(x.Description)));
-        
+        AccessibilityResult.Capture(Driver);
     }
     
     protected virtual void ConfirmPageHasLoaded()

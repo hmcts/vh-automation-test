@@ -4,6 +4,7 @@ using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
 using UI.PageModels.Pages.Video.QuickLink;
 using UI.PageModels.Pages.Video.Vho;
+using UI.PageModels.Utilities;
 using VideoApi.Client;
 using VideoApi.Contract.Enums;
 using VideoApi.Contract.Requests;
@@ -61,6 +62,7 @@ public abstract class VideoWebUiTest : CommonUiTest
             x.Driver.Terminate();
         });
         ParticipantDrivers.Clear();
+        AccessibilityResultCollection.Clear();
     }
     
     protected virtual async Task<ConferenceDetailsResponse> GetConference(Guid hearingId)
