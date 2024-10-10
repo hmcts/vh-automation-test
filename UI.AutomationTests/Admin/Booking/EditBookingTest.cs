@@ -6,6 +6,7 @@ namespace UI.AutomationTests.Admin.Booking;
 public class EditBookingTest : HearingTest
 {
     [Test]
+    [Category("admin")]
     public void should_update_booking_schedule_and_change_judge()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(60);
@@ -33,6 +34,7 @@ public class EditBookingTest : HearingTest
     }
 
     [Test]
+    [Category("admin")]
     [FeatureToggleSetting(FeatureToggle.InterpreterEnhancementsToggleKey, true)]
     public void should_update_booking_with_interpreter_languages()
     {

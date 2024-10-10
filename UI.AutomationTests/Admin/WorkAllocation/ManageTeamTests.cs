@@ -6,6 +6,7 @@ namespace UI.AutomationTests.Admin.WorkAllocation;
 public class ManageTeamTests : AdminWebUiTest
 {
     [Test]
+    [Category("admin")]
     public void AddThenEditThenDeleteAndThenRestoreATeamMember()
     {
         var driver = VhDriver.GetDriver();

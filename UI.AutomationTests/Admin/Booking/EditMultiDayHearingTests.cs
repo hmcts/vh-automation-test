@@ -7,6 +7,7 @@ namespace UI.AutomationTests.Admin.Booking
     {
         
         [Test]
+        [Category("admin")]
         public void EditSingleDayOfMultiDayHearing()
         {
             const int numberOfDays = 3;
@@ -35,6 +36,7 @@ namespace UI.AutomationTests.Admin.Booking
 
         
         [Test]
+        [Category("admin")]
         [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
         public async Task EditThisAndUpcomingDaysOfMultiDayHearing()
         {

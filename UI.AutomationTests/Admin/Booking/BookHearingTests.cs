@@ -7,7 +7,7 @@ public class BookHearingTests : AdminWebUiTest
     private BookingDto _bookingDto;
 
     [Test]
-    [Category("Daily")]
+    [Category("admin")]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
@@ -78,6 +78,7 @@ public class BookHearingTests : AdminWebUiTest
     [TestCase("British Sign Language (BSL)", InterpreterType.Sign)]
     [TestCase("Spanish", InterpreterType.Verbal)]
     [FeatureToggleSetting(FeatureToggle.InterpreterEnhancementsToggleKey, true)]
+    [Category("admin")]
     public void BookAHearingWithInterpreterLanguages(string description, InterpreterType type)
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);

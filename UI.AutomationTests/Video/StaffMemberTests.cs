@@ -1,13 +1,10 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
-
 namespace UI.AutomationTests.Video;
 
 public class StaffMemberTests : VideoWebUiTest
 {
     [Description("Book a hearing. Log into hearing with a staff member account. Edit their display name. Start and stop the hearing.")]
     [Test]
-    [Category("Daily")]
+    [Category("video")]
     public async Task LogIntoHearingWithStaffMember()
     {
         var hearing = await CreateTestHearing();

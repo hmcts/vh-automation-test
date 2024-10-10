@@ -5,6 +5,7 @@ public class WorkHourTests : AdminWebUiTest
 {
     [Test]
     [Order(1)]
+    [Category("admin")]
     public void UploadValidWorkHours()
     {
         var driver = VhDriver.GetDriver();
@@ -19,6 +20,7 @@ public class WorkHourTests : AdminWebUiTest
 
     [Test]
     [Order(1)]
+    [Category("admin")]
     public void UploadValidNonAvailabilityHours()
     {
         var driver = VhDriver.GetDriver();
@@ -33,6 +35,7 @@ public class WorkHourTests : AdminWebUiTest
     
     [Test]
     [Order(2)]
+    [Category("admin")]
     public async Task EditWorkHoursForExistingUser()
     {
         var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;
@@ -54,6 +57,7 @@ public class WorkHourTests : AdminWebUiTest
 
     [Test]
     [Order(2)]
+    [Category("admin")]
     public async Task AddNonAvailableHoursForExistingUser()
     {
         var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;

@@ -7,6 +7,7 @@ namespace UI.AutomationTests.Admin.Booking
     {
         
         [Test]
+        [Category("admin")]
         public void CancelSingleDayOfMultiDayHearing()
         {
             const int numberOfDays = 3;
@@ -26,6 +27,7 @@ namespace UI.AutomationTests.Admin.Booking
         
         [Test]
         [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
+        [Category("admin")]
         public void CancelThisAndUpcomingDaysOfMultiDayHearing()
         {
             const int numberOfDays = 3;

@@ -8,6 +8,7 @@ namespace UI.AutomationTests.Video
         
         [Description("Book a hearing. Log into hearing with a judge account. Edit their display name. Start and stop the hearing.")]
         [Test]
+        [Category("video")]
         public async Task LogIntoHearingWithJudgeAndEditDisplayName()
         {
             var hearing = await CreateTestHearing();
@@ -36,6 +37,7 @@ namespace UI.AutomationTests.Video
         }
 
         [Test]
+        [Category("video")]
         public async Task PauseHearingDuringCountdown()
         {
             var hearing = await CreateTestHearing();

@@ -11,6 +11,7 @@ public class QuickLinkUserTests : VideoWebUiTest
     private string _hearingIdString;
 
     [Test]
+    [Category("video")]
     public async Task JoinAHearingAsAQuickLinkUser()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);

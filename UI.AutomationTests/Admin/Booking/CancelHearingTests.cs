@@ -5,6 +5,7 @@ namespace UI.AutomationTests.Admin.Booking
     public class CancelHearingTests : HearingTest
     {
         [Test]
+        [Category("admin")]
         public void CancelHearing()
         {
             var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(60);
