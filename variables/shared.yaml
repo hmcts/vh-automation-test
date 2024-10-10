@@ -1,15 +1,15 @@
 parameters:
   - name: environment
     type: string
-    default: "Dev"
+    default: 'Dev'
 
 variables:
   - name: projectPath
-    value: "UI.AutomationTests"
+    value: 'UI.AutomationTests'
   - name: env
     value: ${{ lower(replace(parameters.environment, 'stg', 'staging')) }}
   - name: subscriptionName
-    value: "DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings"
+    value: 'DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings'
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
     value: true
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
@@ -22,6 +22,8 @@ variables:
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
     value: ${{ variables.videoWebUrl }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.Environment
+    value: ${{ parameters.environment }}
 
   - name: SystemConfiguration.LogLocation
     value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
