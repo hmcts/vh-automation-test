@@ -6,6 +6,7 @@ public class AllocateHearingTests : AdminWebUiTest
     private HearingDetailsResponseV2 _hearing;
     
     [Test]
+    [Category("admin")]
     public async Task AllocateAJusticeUserToAHearing()
     {
         var teamMemberUsername = WorkAllocationTestData.JusticeUserUsername;

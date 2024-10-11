@@ -6,6 +6,7 @@ public class SearchForHearingTests : AdminWebUiTest
 
     
     [Test]
+    [Category("admin")]
     public async Task SearchForHearingViaBookingList()
     {
         await BookBasicHearing();

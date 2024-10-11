@@ -6,6 +6,7 @@ public class BookHearingNoJohTests : AdminWebUiTest
 
     
     [Test]
+    [Category("admin")]
     public void BookAHearingNoJoh()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
