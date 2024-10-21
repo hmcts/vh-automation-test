@@ -219,7 +219,7 @@ public static class HearingTestData
             OtherInformation = bookingDto.OtherInformation,
             AudioRecordingRequired = bookingDto.AudioRecording,
             HearingVenueCode = bookingDto.VenueCode,
-            JudiciaryParticipants =
+            JudicialOfficeHolders =
             [
                 new()
                 {

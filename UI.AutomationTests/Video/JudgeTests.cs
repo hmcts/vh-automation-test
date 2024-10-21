@@ -18,7 +18,7 @@ namespace UI.AutomationTests.Video
                 $"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
 
             // log in as judge, go to waiting room and start hearing
-            var judgeUsername = hearing.JudiciaryParticipants
+            var judgeUsername = hearing.JudicialOfficeHolders
                 .Find(x => x.HearingRoleCode == JudiciaryParticipantHearingRoleCode.Judge).Email;
             var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
             var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
@@ -47,7 +47,7 @@ namespace UI.AutomationTests.Video
                 $"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
 
             // log in as judge, go to waiting room and start hearing
-            var judgeUsername = hearing.JudiciaryParticipants
+            var judgeUsername = hearing.JudicialOfficeHolders
                 .Find(x => x.HearingRoleCode == JudiciaryParticipantHearingRoleCode.Judge).Email;
             var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
             var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
