@@ -147,9 +147,9 @@ public abstract class VhPage
 
     private void TryWaitForClickable(By locator, int timeOut, bool withRefresh)
     {
-        var attempts = 0;
-        const int attemptLimit = 3;
-        while (attempts < attemptLimit)
+        const int maxAttempts = 3;
+
+        for (var attempts = 0; attempts < maxAttempts; attempts++)
         {
             try
             {
@@ -159,17 +159,18 @@ public abstract class VhPage
             }
             catch (StaleElementReferenceException)
             {
-                attempts++;
+                if (attempts == maxAttempts - 1) 
+                    throw;
             }
             catch (WebDriverTimeoutException)
             {
                 if (!withRefresh) throw;
                 Driver.Navigate().Refresh();
-                TryWaitForClickable(locator, timeOut, withRefresh: false);
-                return;
+                
+                if (attempts == maxAttempts - 1) 
+                    throw;
             }
         }
-        throw new StaleElementReferenceException("Element not clickable after multiple attempts");
     }
     
     protected void ClickElement(By locator, bool waitToBeClickable = true)
