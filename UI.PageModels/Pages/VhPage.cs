@@ -137,23 +137,39 @@ public abstract class VhPage
 
     protected void WaitForElementToBeClickable(By locator)
     {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
-            .Until(ExpectedConditions.ElementToBeClickable(locator));
+        WaitForElementToBeClickable(locator, DefaultWaitTime, false);
     }
 
-    protected void WaitForElementToBeClickable(By locator, int timeOut, bool withRefresh = false)     
+    protected void WaitForElementToBeClickable(By locator, int timeOut, bool withRefresh = false)
     {
-        try
+        TryWaitForClickable(locator, timeOut, withRefresh);
+    }
+
+    private void TryWaitForClickable(By locator, int timeOut, bool withRefresh)
+    {
+        var attempts = 0;
+        const int attemptLimit = 3;
+        while (attempts < attemptLimit)
         {
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-                .Until(ExpectedConditions.ElementToBeClickable(locator));
+            try
+            {
+                new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
+                    .Until(ExpectedConditions.ElementToBeClickable(locator));
+                return;
+            }
+            catch (StaleElementReferenceException)
+            {
+                attempts++;
+            }
+            catch (WebDriverTimeoutException)
+            {
+                if (!withRefresh) throw;
+                Driver.Navigate().Refresh();
+                TryWaitForClickable(locator, timeOut, withRefresh: false);
+                return;
+            }
         }
-        catch (WebDriverTimeoutException)
-        {
-            if (!withRefresh) throw;
-            Driver.Navigate().Refresh();
-            WaitForElementToBeClickable(locator, timeOut, withRefresh: false);
-        }
+        throw new StaleElementReferenceException("Element not clickable after multiple attempts");
     }
     
     protected void ClickElement(By locator, bool waitToBeClickable = true)
