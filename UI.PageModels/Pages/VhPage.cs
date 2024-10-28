@@ -137,22 +137,39 @@ public abstract class VhPage
 
     protected void WaitForElementToBeClickable(By locator)
     {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
-            .Until(ExpectedConditions.ElementToBeClickable(locator));
+        WaitForElementToBeClickable(locator, DefaultWaitTime, false);
     }
 
-    protected void WaitForElementToBeClickable(By locator, int timeOut, bool withRefresh = false)     
+    protected void WaitForElementToBeClickable(By locator, int timeOut, bool withRefresh = false)
     {
-        try
+        TryWaitForClickable(locator, timeOut, withRefresh);
+    }
+
+    private void TryWaitForClickable(By locator, int timeOut, bool withRefresh)
+    {
+        const int maxAttempts = 3;
+
+        for (var attempts = 0; attempts < maxAttempts; attempts++)
         {
-            new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-                .Until(ExpectedConditions.ElementToBeClickable(locator));
-        }
-        catch (WebDriverTimeoutException)
-        {
-            if (!withRefresh) throw;
-            Driver.Navigate().Refresh();
-            WaitForElementToBeClickable(locator, timeOut, withRefresh: false);
+            try
+            {
+                new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
+                    .Until(ExpectedConditions.ElementToBeClickable(locator));
+                return;
+            }
+            catch (StaleElementReferenceException)
+            {
+                if (attempts == maxAttempts - 1) 
+                    throw;
+            }
+            catch (WebDriverTimeoutException)
+            {
+                if (!withRefresh) throw;
+                Driver.Navigate().Refresh();
+                
+                if (attempts == maxAttempts - 1) 
+                    throw;
+            }
         }
     }
     
