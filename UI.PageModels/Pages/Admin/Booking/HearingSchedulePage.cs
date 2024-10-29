@@ -31,6 +31,10 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }   
     
+    /// <summary>
+    /// Populates the hearing schedule form with the provided details
+    /// </summary>
+    /// <param name="bookingDto">Details to populate with</param>
     public void EnterMultiDayHearingSchedule(BookingDto bookingDto)
     {
         ClickMultiDaysHearingCheckbox();
