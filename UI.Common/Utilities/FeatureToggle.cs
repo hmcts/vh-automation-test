@@ -54,4 +54,9 @@ public sealed class FeatureToggle
     {
         return GetBoolValueWithKey(SpecialMeasuresKey);
     }
+    
+    public bool MultiDayBookingEnhancementsEnabled()
+    {
+        return GetBoolValueWithKey(MultiDayBookingEnhancementsToggleKey);
+    }
 }

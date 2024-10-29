@@ -129,7 +129,13 @@ namespace UI.AutomationTests.Admin.Booking
             videoAccessPointsPage.UpdateVideoAccessPoint(endpointIndexToUpdate, "None");
             endpointToUpdate.DefenceAdvocateDisplayName = "";
             
-            summaryPage = videoAccessPointsPage.GoToSummaryPage();
+            // Go to the summary page
+            // The journey is slightly different here when special measures is enabled
+            var specialMeasuresEnabled = FeatureToggle.Instance().SpecialMeasuresEnabled();
+            if (specialMeasuresEnabled)
+                summaryPage = videoAccessPointsPage.GoToSummaryPage();
+            else
+                summaryPage = videoAccessPointsPage.GoToOtherInformationPage().GoToSummaryPage();
             
             // Change the recording setting and other information
             const bool newAudioRecordingSetting = true;
