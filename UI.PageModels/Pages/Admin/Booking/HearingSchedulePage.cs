@@ -1,5 +1,4 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+﻿using UI.Common.Utilities;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
@@ -35,7 +34,12 @@ public class HearingSchedulePage : VhAdminWebPage
     public void EnterMultiDayHearingSchedule(BookingDto bookingDto)
     {
         ClickMultiDaysHearingCheckbox();
-        EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
+        EnterHearingDateAndRange(bookingDto.ScheduledDateTime, bookingDto.EndDateTime);
+        
+        var multiDayEnhancementsEnabled = FeatureToggle.Instance().MultiDayBookingEnhancementsEnabled();
+        if (multiDayEnhancementsEnabled)
+            EnterHearingDuration(bookingDto.DurationHour, bookingDto.DurationMinute);
+        
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }
     
@@ -55,8 +59,10 @@ public class HearingSchedulePage : VhAdminWebPage
         
         EnterText(_hearingStartTimeHour, bookingDate.ToString("HH"));
         EnterText(_hearingStartTimeMinute, bookingDate.ToString("mm"));
-        EnterText(_hearingDurationHour, bookingDto.DurationHour.ToString());
-        EnterText(_hearingDurationMinute, bookingDto.DurationMinute.ToString());
+        
+        var multiDayEnhancementsEnabled = FeatureToggle.Instance().MultiDayBookingEnhancementsEnabled();
+        if (multiDayEnhancementsEnabled)
+            EnterHearingDuration(bookingDto.DurationHour, bookingDto.DurationMinute);
         
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
     }
@@ -68,7 +74,7 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterText(_multiIndividualHearingDate, dateString);
     }
     
-    public void EnterHearingDateAndRange(DateTime date, DateTime endDateTime, int durationHour, int durationMinute)
+    private void EnterHearingDateAndRange(DateTime date, DateTime endDateTime)
     {
         var dateString = GetLocaleDate(date);
         var endDateString = GetLocaleDate(endDateTime);
@@ -76,8 +82,6 @@ public class HearingSchedulePage : VhAdminWebPage
         EnterText(_endOfHearingDate,endDateString);
         EnterText(_hearingStartTimeHour, date.ToString("HH"));
         EnterText(_hearingStartTimeMinute, date.ToString("mm"));
-        EnterText(_hearingDurationHour, durationHour.ToString());
-        EnterText(_hearingDurationMinute, durationMinute.ToString());
     }
 
     public HearingAssignJudgePage GoToNextPage()
@@ -135,5 +139,10 @@ public class HearingSchedulePage : VhAdminWebPage
     {
         ClickElement(_multiDaysHearingCheckbox, waitToBeClickable: false);
     }
-    
+
+    private void EnterHearingDuration(int durationHour, int durationMinute)
+    {
+        EnterText(_hearingDurationHour, durationHour.ToString());
+        EnterText(_hearingDurationMinute, durationMinute.ToString());
+    }
 }
