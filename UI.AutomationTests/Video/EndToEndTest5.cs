@@ -7,7 +7,7 @@ namespace UI.AutomationTests.Video;
 
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
-public class EndToEndTest : VideoWebUiTest
+public class EndToEndTest5 : VideoWebUiTest
 {
     private string _hearingIdString;
     private ConferenceDetailsResponse _conference;
