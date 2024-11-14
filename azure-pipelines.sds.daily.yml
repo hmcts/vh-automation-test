@@ -97,7 +97,7 @@ stages:
                           results: $(testOutcome)
                           details: $(testSummary)
                           triggerID: $(triggerID)
-                          type: UI Tests
+                          type: UI Tests - ${{ testCategory }}
 
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
