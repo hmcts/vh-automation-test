@@ -5,8 +5,6 @@ using VideoApi.Contract.Responses;
 
 namespace UI.AutomationTests.Video;
 
-[TestFixture]
-[Parallelizable(ParallelScope.All)]
 public class EndToEndTest : VideoWebUiTest
 {
     private string _hearingIdString;
@@ -22,8 +20,6 @@ public class EndToEndTest : VideoWebUiTest
                  "Log in as a judge, edit their display name, and log in as 4 participants." +
                  "Log in as a VHO and monitor the changes. IM between VHO and Judge." +
                  "Start and stop hearing. Log out with all users. ")]
-    [Repeat(5)]
-    [Parallelizable(ParallelScope.Self)]
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
