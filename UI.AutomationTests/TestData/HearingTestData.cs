@@ -1,4 +1,6 @@
 using BookingsApi.Contract.V1.Requests.Enums;
+using BookingsApi.Contract.V2.Enums;
+using UI.Common.Utilities;
 
 namespace UI.AutomationTests.TestData;
 
@@ -11,6 +13,7 @@ public static class HearingTestData
     public static string JudgeUsername = "auto_aw.judge_02@hearings.reform.hmcts.net";
     public static string JudgePersonalCode = "VH-GENERIC-ACCOUNT-0";
 
+    public static bool VodafoneEnabled = FeatureToggle.Instance().VodafoneSupplierEnabled();
 
     private const string HearingVenueName = "Birmingham Civil and Family Justice Centre";
     private const string HearingVenueCode = "231596";
@@ -229,7 +232,8 @@ public static class HearingTestData
                     PersonalCode = bookingDto.Judge.PersonalCode,
                     ContactTelephone = bookingDto.Judge.Phone
                 }
-            ]
+            ],
+            BookingSupplier = VodafoneEnabled ? BookingSupplier.Vodafone : BookingSupplier.Kinly,
         };
         return request;
     }

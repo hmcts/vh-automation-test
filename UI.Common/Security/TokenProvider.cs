@@ -32,7 +32,7 @@ public class TokenProvider
         {
             result = await app.AcquireTokenForClient(new[] {$"{clientResource}/.default"}).ExecuteAsync();
         }
-        catch (MsalServiceException)
+        catch (MsalServiceException e)
         {
             throw new UnauthorizedAccessException();
         }

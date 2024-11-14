@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BookingsApi.Client" Version="3.0.3" />
+        <PackageReference Include="BookingsApi.Client" Version="3.0.5" />
         <PackageReference Include="ExtentReports" Version="4.1.0" />
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
@@ -19,7 +19,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="UserApi.Client" Version="2.1.1" />
-        <PackageReference Include="VideoApi.Client" Version="3.0.1" />
+        <PackageReference Include="VideoApi.Client" Version="3.0.4" />
         <PackageReference Include="WebDriverManager" Version="2.17.4" />
     </ItemGroup>
 
