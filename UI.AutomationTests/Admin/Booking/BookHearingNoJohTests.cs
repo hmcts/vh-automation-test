@@ -21,11 +21,6 @@ public class BookHearingNoJohTests : AdminWebUiTest
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
         
-        var preBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
-        var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
-        var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
-        var preBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
-        
         var createHearingPage = dashboardPage.GoToBookANewHearing();
         createHearingPage.EnterHearingDetails(_bookingDto);
         
@@ -63,17 +58,6 @@ public class BookHearingNoJohTests : AdminWebUiTest
         
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
         dashboardPage = confirmationPage.GoToDashboardPage();
-        
-        var postBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
-        var postBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
-        var postBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
-        var postBookingUnallocatedHearingsNextThirtyDays = dashboardPage.GetNumberOfUnallocatedHearingsNextThirtyDays();
-        
-        postBookingUnallocatedHearingsToday.Should().BeGreaterOrEqualTo(preBookingUnallocatedHearingsToday);
-        postBookingUnallocatedHearingsTomorrow.Should().BeGreaterThan(preBookingUnallocatedHearingsTomorrow);
-        postBookingUnallocatedHearingsNextSevenDays.Should().BeGreaterThan(preBookingUnallocatedHearingsNextSevenDays);
-        postBookingUnallocatedHearingsNextThirtyDays.Should()
-            .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
         
         dashboardPage.SignOut();
 

@@ -51,7 +51,7 @@ public class ParticipantsPage : VhAdminWebPage
     {
         foreach (var participant in participants)
         {
-            AddExistingParticipantV2(participant.Role.ToString(), participant.ContactEmail, participant.DisplayName,
+            AddExistingParticipantV2(participant.Title, participant.Role.ToString(), participant.ContactEmail, participant.DisplayName,
                 participant.Representing, participant.InterpreterLanguage);
         }
     }
@@ -112,13 +112,17 @@ public class ParticipantsPage : VhAdminWebPage
         ClickAddParticipantAndWait();
     }
     
-    private void AddExistingParticipantV2(string role, string contactEmail, string displayName, string? representing = null, InterpreterLanguageDto? interpreterLanguage = null)
+    private void AddExistingParticipantV2(string title, string role, string contactEmail, string displayName, string? representing = null, InterpreterLanguageDto? interpreterLanguage = null)
     {
         WaitForDropdownListToPopulate(_roleDropdown, 0);
         SelectDropDownByText(_roleDropdown, role);
         EnterText(_participantEmailTextfield, contactEmail);
 
         ClickElement(_emailList);
+        
+        WaitForDropdownListToPopulate(_titleDropdown, 0);
+        SelectDropDownByText(_titleDropdown, title);
+        
         if (interpreterLanguage != null)
         {
             var interpreterRequiredCheckbox= FindElement(_interpreterRequired);
