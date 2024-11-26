@@ -7,10 +7,10 @@ parameters:
     default: true
   - name: adminWebOverrideUrl
     type: string
-    default: ''
+    default: ' '
   - name: videoWebOverrideUrl
     type: string
-    default: ''
+    default: ' '
 
 variables:
   - name: projectPath
@@ -28,9 +28,9 @@ variables:
   - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
     value: $(ConferencePhoneNumber)
   - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
-    value: ${{ if eq(parameters.adminWebOverrideUrl, '') }}${{ variables.adminWebUrl }}${{ else }}${{ parameters.adminWebOverrideUrl }}
+    value: ${{ if eq(parameters.adminWebOverrideUrl, ' ') }}${{ variables.adminWebUrl }}${{ else }}${{ parameters.adminWebOverrideUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
-    value: ${{ if eq(parameters.videoWebOverrideUrl, '') }}${{ variables.videoWebUrl }}${{ else }}${{ parameters.videoWebOverrideUrl }}
+    value: ${{ if eq(parameters.videoWebOverrideUrl, ' ') }}${{ variables.videoWebUrl }}${{ else }}${{ parameters.videoWebOverrideUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.Environment
     value: ${{ parameters.environment }}
 
