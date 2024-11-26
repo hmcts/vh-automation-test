@@ -1,3 +1,4 @@
+using ChromeForTesting;
 using WebDriverManager;
 
 namespace UI.AutomationTests.Drivers;
@@ -8,9 +9,14 @@ public class LocalChromeVhDriver : IVhDriver
 
     public LocalChromeVhDriver()
     {
+        var chromePath = ChromeForTestingInstance.ChromePath;
         new DriverManager().SetUpDriver(new ChromeConfig());
         var cService = ChromeDriverService.CreateDefaultService();
-        var chromeOptions = new ChromeOptions();
+        TestContext.Out.WriteLine($"Using chrome binary at {chromePath}");
+        var chromeOptions = new ChromeOptions()
+        {
+            BinaryLocation = chromePath
+        };
         chromeOptions.AddArguments("start-maximized");
         chromeOptions.AddArgument("no-sandbox");
         chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
