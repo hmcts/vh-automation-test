@@ -28,12 +28,12 @@ parameters:
   - name: adminWebOverrideUrl
     displayName: Admin Web URL Override
     type: string
-    default: ''
+    default: ' ' # Optional parameter with default value
 
   - name: videoWebOverrideUrl
     displayName: Video Web URL Override
     type: string
-    default: ''
+    default: ' ' # Optional parameter with default value
 
   - name: environment
     type: string
