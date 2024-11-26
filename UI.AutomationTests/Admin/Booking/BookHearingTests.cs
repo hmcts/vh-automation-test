@@ -8,6 +8,7 @@ public class BookHearingTests : AdminWebUiTest
 
     [Test]
     [Category("admin")]
+    [Category("core")]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
