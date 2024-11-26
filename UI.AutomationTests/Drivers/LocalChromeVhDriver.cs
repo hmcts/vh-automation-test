@@ -17,6 +17,7 @@ public class LocalChromeVhDriver : IVhDriver
         {
             BinaryLocation = chromePath
         };
+        chromeOptions.AddArgument("--lang=en-GB"); // Set the region to English (UK)
         chromeOptions.AddArguments("start-maximized");
         chromeOptions.AddArgument("no-sandbox");
         chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
