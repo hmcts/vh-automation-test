@@ -2,6 +2,15 @@ parameters:
   - name: environment
     type: string
     default: 'Dev'
+  - name: runOnSauceLabs
+    type: boolean
+    default: true
+  - name: adminWebOverrideUrl
+    type: string
+    default: ''
+  - name: videoWebOverrideUrl
+    type: string
+    default: ''
 
 variables:
   - name: projectPath
@@ -11,7 +20,7 @@ variables:
   - name: subscriptionName
     value: 'DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings'
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
-    value: true
+    value: ${{ parameters.runOnSauceLabs }}
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
     value: $(Saucelabs:Username)
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
@@ -19,9 +28,9 @@ variables:
   - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
     value: $(ConferencePhoneNumber)
   - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
-    value: ${{ variables.adminWebUrl }}
+    value: ${{ if eq(parameters.adminWebOverrideUrl, '') }}${{ variables.adminWebUrl }}${{ else }}${{ parameters.adminWebOverrideUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
-    value: ${{ variables.videoWebUrl }}
+    value: ${{ if eq(parameters.videoWebOverrideUrl, '') }}${{ variables.videoWebUrl }}${{ else }}${{ parameters.videoWebOverrideUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.Environment
     value: ${{ parameters.environment }}
 

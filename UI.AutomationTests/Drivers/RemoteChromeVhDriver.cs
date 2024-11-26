@@ -1,4 +1,6 @@
 using OpenQA.Selenium.Remote;
+using Polly;
+using Polly.Retry;
 
 namespace UI.AutomationTests.Drivers;
 
@@ -54,12 +56,21 @@ public class RemoteChromeVhDriver : IVhDriver
         chromeOptions.AddAdditionalOption("sauce:options", sauceOptions);
         var remoteUrl = new Uri(sauceLabsConfiguration.SecureSauceUrl);
         var commandTimeout = TimeSpan.FromSeconds(sauceLabsConfiguration.CommandTimeoutInSeconds);
-        // annoyingly hacky retry due to TaskCanceledException being thrown by the RemoteWebDriver constructor
-        // can remove this when the issue is fixed in a future WebDriver release
-        var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions.ToCapabilities(), commandTimeout);
-        remoteDriver.Manage().Timeouts().PageLoad.Add(TimeSpan.FromSeconds(30));
-        remoteDriver.FileDetector = new LocalFileDetector();
-        _driver = remoteDriver;
+        
+        // Retry policy with Polly
+        AsyncRetryPolicy retryPolicy = Policy
+            .Handle<WebDriverException>()
+            .Or<TaskCanceledException>()
+            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+        retryPolicy.ExecuteAsync(() =>
+        {
+            var remoteDriver = new RemoteWebDriver(remoteUrl, chromeOptions.ToCapabilities(), commandTimeout);
+            _ =remoteDriver.Manage().Timeouts().PageLoad.Add(TimeSpan.FromSeconds(30));
+            remoteDriver.FileDetector = new LocalFileDetector();
+            _driver = remoteDriver;
+            return Task.CompletedTask;
+        }).GetAwaiter().GetResult();
     }
 
     private string GetEnvName()
@@ -78,6 +89,11 @@ public class RemoteChromeVhDriver : IVhDriver
         if (apiClientConfiguration.BookingsApiResourceId.Contains(".staging."))
         {
             return "Staging";
+        }
+        
+        if (apiClientConfiguration.BookingsApiResourceId.Contains(".demo."))
+        {
+            return "Demo";
         }
 
         return null;
