@@ -31,7 +31,7 @@ public class LocalChromeVhDriver : IVhDriver
             chromeOptions.AddArgument("--remote-debugging-port=9222"); // Debugging port
         }
         _driver = new ChromeDriver(cService, chromeOptions);
-        var dateFormat = (string)((IJavaScriptExecutor)_driver).ExecuteScript("navigator.language || navigator.userLanguage;");
+        var dateFormat = (string)((IJavaScriptExecutor)_driver).ExecuteScript("var lang = navigator.language || navigator.userLanguage; return lang;");
         TestContext.Out.WriteLine($"Date format: {dateFormat}");
 
     }
