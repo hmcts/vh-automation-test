@@ -1,5 +1,7 @@
 
+using System.Diagnostics;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using UI.Common.Configuration;
@@ -28,8 +30,17 @@ public abstract class VhPage
         IgnoreAccessibilityForPage = ignoreAccessibilityForPage;
         AccessibilityCheck = config.EnableAccessibilityCheck;
         UseAltLocator = useAltLocator;
-        if (driver is RemoteWebDriver) Locale = "en-US";
+        // if (driver is RemoteWebDriver) Locale = "en-US";
+        CheckBrowserLocale();
         CheckAccessibility();
+        var pageName = GetType().Name;
+        Driver.TakeScreenshotAndSave(pageName, "Page Load");
+    }
+    
+    private void CheckBrowserLocale()
+    {
+        var locale = Driver.ExecuteJavaScript<string>("return navigator.language");
+        if (locale != null && locale.Contains("en-US")) Locale = "en-US";
     }
 
     private void CheckAccessibility()

@@ -18,12 +18,12 @@ public class LocalChromeVhDriver : IVhDriver
             BinaryLocation = chromePath
         };
         chromeOptions.AddArgument("--lang=en-GB"); // Set the region to English (UK)
-        chromeOptions.AddArguments("start-maximized");
-        chromeOptions.AddArgument("no-sandbox");
-        chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
-        chromeOptions.AddArguments("--use-fake-device-for-media-stream");
+        chromeOptions.AddArgument("--start-maximized");
+        chromeOptions.AddArgument("--no-sandbox");
+        chromeOptions.AddArgument("--use-fake-ui-for-media-stream");
+        chromeOptions.AddArgument("--use-fake-device-for-media-stream");
 
-        if (Environment.GetEnvironmentVariable("TF_BUILD") != null)
+        if (ConfigRootBuilder.EnvConfigInstance().RunHeadlessBrowser)
         {
             chromeOptions.AddArgument("--disable-dev-shm-usage"); // Overcome limited resource problems
             chromeOptions.AddArgument("--headless"); // Run in headless mode if needed
@@ -31,8 +31,8 @@ public class LocalChromeVhDriver : IVhDriver
             chromeOptions.AddArgument("--remote-debugging-port=9222"); // Debugging port
         }
         _driver = new ChromeDriver(cService, chromeOptions);
-        var dateFormat = (string)((IJavaScriptExecutor)_driver).ExecuteScript("var lang = navigator.language || navigator.userLanguage; return lang;");
-        TestContext.Out.WriteLine($"Date format: {dateFormat}");
+        var lang = (string)((IJavaScriptExecutor)_driver).ExecuteScript("return navigator.language || navigator.userLanguage");
+        TestContext.Out.WriteLine($"Browser language: {lang}");
 
     }
 

@@ -11,7 +11,7 @@ namespace UI.AutomationTests.Admin.Booking
         public void CancelSingleDayOfMultiDayHearing()
         {
             const int numberOfDays = 3;
-            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser)).Date
                 .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
@@ -21,7 +21,7 @@ namespace UI.AutomationTests.Admin.Booking
             bookingDetailsPage.CancelSingleHearing(CancellationReasons.EquipmentIncompatible);
   
             bookingDetailsPage.ValidateBookingIsCancelled();
-            Assert.Pass();
+            Assert.Pass("Successfully cancelled a single day of a multi-day hearing. Cancelled badge appears on the booking details page.");
         }
         
         
@@ -31,7 +31,7 @@ namespace UI.AutomationTests.Admin.Booking
         public void CancelThisAndUpcomingDaysOfMultiDayHearing()
         {
             const int numberOfDays = 3;
-            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser)).Date
                 .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
@@ -51,7 +51,7 @@ namespace UI.AutomationTests.Admin.Booking
                 bookingDetailsPage = SearchAndViewHearing(bookingDetailsPage, hearingDto);
                 bookingDetailsPage.ValidateBookingIsCancelled();
             }
-            Assert.Pass();
+            Assert.Pass("");
         }
     }
 }

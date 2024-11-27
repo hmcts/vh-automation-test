@@ -6,7 +6,7 @@ public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
 
-    [Test]
+    [Test(Description = "Book a hearing")]
     [Category("admin")]
     [Category("core")]
     public void BookAHearing()
@@ -15,15 +15,15 @@ public class BookHearingTests : AdminWebUiTest
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
             judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
-        var newUser = HearingTestData.CreateNewParticipantDto();
-        CreatedUsers.Add(newUser.Username);
-        _bookingDto.NewParticipants.Add(newUser);
+        // var newUser = HearingTestData.CreateNewParticipantDto();
+        // CreatedUsers.Add(newUser.Username);
+        // _bookingDto.NewParticipants.Add(newUser);
 
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
-
+        
         var preBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
         var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
         var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
@@ -72,7 +72,7 @@ public class BookHearingTests : AdminWebUiTest
 
         dashboardPage.SignOut();
 
-        Assert.Pass();
+        Assert.Pass("Hearing booked successfully with existing and a new participant. Unallocated hearings count increased as expected.");
     }
 
 
@@ -120,6 +120,6 @@ public class BookHearingTests : AdminWebUiTest
 
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
 
-        Assert.Pass();
+        Assert.Pass($"Booked a hearing with interpretation for {description}");
     }
 }

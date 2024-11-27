@@ -1,5 +1,4 @@
-
-using BookingsApi.Contract.V1.Requests.Enums;
+using BookingsApi.Contract.V2.Enums;
 
 namespace UI.AutomationTests.Video
 {
@@ -62,7 +61,7 @@ namespace UI.AutomationTests.Video
 
         private async Task<HearingDetailsResponseV2> CreateTestHearing()
         {
-            var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
+            var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
             var hearingDto = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: hearingScheduledDateAndTime);
             return await BookingsApiClient.BookNewHearingWithCodeAsync(hearingDto);
         }

@@ -29,6 +29,7 @@ public class HearingSchedulePage : VhAdminWebPage
     {
         EnterHearingDateAndDuration(bookingDto.ScheduledDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Entered Single Day Hearing Schedule");
     }   
     
     /// <summary>

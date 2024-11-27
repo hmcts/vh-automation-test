@@ -26,7 +26,7 @@ public class EndToEndTest : VideoWebUiTest
                  "Start and stop hearing. Log out with all users. ")]
     public async Task EndToEnd()
     {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode, 
             HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
         await TestContext.Out.WriteLineAsync(

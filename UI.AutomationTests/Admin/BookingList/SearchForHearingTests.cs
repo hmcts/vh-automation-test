@@ -12,7 +12,7 @@ public class SearchForHearingTests : AdminWebUiTest
         await BookBasicHearing();
         
         var driver = VhDriver.GetDriver();
-        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        await driver.Navigate().GoToUrlAsync(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
         
@@ -39,6 +39,7 @@ public class SearchForHearingTests : AdminWebUiTest
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         var request = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: date);
         _hearing = await BookingsApiClient.BookNewHearingWithCodeAsync(request);
+        await TestContext.Out.WriteLineAsync($"Hearing created with id: {_hearing.Id}");
         TestHearingIds.Add(_hearing.Id.ToString());
     }
 }

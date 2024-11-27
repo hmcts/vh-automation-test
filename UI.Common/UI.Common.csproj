@@ -15,4 +15,8 @@
         <PackageReference Include="Microsoft.Identity.Client" Version="4.63.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+    </ItemGroup>
+
 </Project>

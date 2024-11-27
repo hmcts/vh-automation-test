@@ -1,3 +1,5 @@
+using UI.AutomationTests.Reporters;
+
 namespace UI.AutomationTests.Admin;
 
 public abstract class AdminWebUiTest : CommonUiTest
@@ -19,7 +21,15 @@ public abstract class AdminWebUiTest : CommonUiTest
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         VhDriver = EnvConfigSettings.RunOnSaucelabs ? new RemoteChromeVhDriver() : new LocalChromeVhDriver();
+        
         await InitTest();
+        
+        UiTestReport = TestReporterInstance.Instance();
+        var nunitTest = TestContext.CurrentContext.Test;
+        var testName = nunitTest.Name;
+        var description = nunitTest.Properties.Get("Description")?.ToString() ?? string.Empty;
+        var categories = nunitTest.Properties["Category"].ToList().Select(x => x.ToString()).ToArray();
+        UiTestReport.SetupTest(testName, description, categories);
     }
     
     /// <summary>
@@ -38,6 +48,11 @@ public abstract class AdminWebUiTest : CommonUiTest
         if(VhDriver == null) throw new InvalidOperationException("Driver is null, cannot publish test result");
         var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
                       TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
+        
+        UiTestReport?.AddScreenshotsToReport(VhDriver.GetDriver());
+        UiTestReport?.ProcessTest(VhDriver.GetDriver());
+        UiTestReport?.Flush();
+        
         VhDriver.PublishTestResult(passed);
         VhDriver.Terminate();
     }

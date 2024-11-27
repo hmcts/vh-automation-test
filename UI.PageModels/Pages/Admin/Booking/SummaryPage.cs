@@ -1,19 +1,19 @@
 ﻿namespace UI.PageModels.Pages.Admin.Booking;
 
-public class SummaryPage : VhAdminWebPage
+public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _bookButton = By.Id("bookButton");
     private readonly By _addANoJudgeWarning = By.CssSelector("h2[id = govuk-notification-banner-title]");
     private readonly By _participantsBreadcrumbLink = By.LinkText("Participants");
 
-    public SummaryPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForElementToBeClickable(_bookButton);
         if (!Driver.Url.EndsWith("summary"))
             throw new InvalidOperationException(
                 "This is not the summary page, the current url is: " + Driver.Url);
     }
-    
+
     public void ValidateSummaryPage(BookingDto bookingDto, bool isMultiDay = false, List<DateTime>? individualDatesForValidation = null)
     {
         ValidateHearingDetails(bookingDto);

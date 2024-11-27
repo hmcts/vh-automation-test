@@ -6,6 +6,7 @@ public class SystemConfigSettings
     public string ReportLocation { get; set; }
     public string ImageLocation { get; set; }
     public bool RunOnSaucelabs { get; set; }
+    public bool RunHeadlessBrowser { get; set; }
     public bool EnableAccessibilityCheck { get; set; }
     public string AccessibilityReportFilePath { get; set; }
     public string AccessibilityHtmlReportFilePath { get; set; }

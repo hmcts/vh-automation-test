@@ -3,6 +3,7 @@ using BookingsApi.Client;
 using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V1.Responses;
+using UI.AutomationTests.Reporters;
 using UI.PageModels.Utilities;
 using UserApi.Client;
 
@@ -14,6 +15,7 @@ public abstract class CommonUiTest
     protected List<string> CreatedUsers = new();
     protected BookingsApiClient BookingsApiClient;
     protected UserApiClient UserApiClient;
+    protected TestReporter UiTestReport;
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
         var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);

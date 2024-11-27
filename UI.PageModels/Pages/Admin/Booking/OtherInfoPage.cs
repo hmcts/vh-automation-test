@@ -2,14 +2,14 @@
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
-public class OtherInfoPage : VhAdminWebPage
+public class OtherInfoPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _nextButton = By.Id("nextButton");
     private readonly By _otherInfo = By.Id("details-other-information");
     private readonly By _recordAudioNo = By.Id("audio-choice-no");
     private readonly By _recordAudioYes = By.Id("audio-choice-yes");
 
-    public OtherInfoPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForElementToBeVisible(_otherInfo);
         if (!Driver.Url.EndsWith("other-information"))

@@ -9,7 +9,7 @@ public class EditBookingTest : HearingTest
     [Category("admin")]
     public void should_update_booking_schedule_and_change_judge()
     {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(60);
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(60);
         var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
             judgeUsername: "auto_aw.judge_02@hearings.reform.hmcts.net",
             scheduledDateTime: hearingScheduledDateAndTime);

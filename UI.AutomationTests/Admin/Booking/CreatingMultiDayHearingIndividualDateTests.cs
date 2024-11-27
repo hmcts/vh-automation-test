@@ -61,7 +61,7 @@ public class CreatingMultiDayHearingIndividualDateTests : AdminWebUiTest
     public async Task CleanUpMultiDayHearings()
     {
         if(string.IsNullOrEmpty(_groupId))return;
-        var hearings = await BookingsApiClient.GetHearingsByGroupIdAsync(Guid.Parse(_groupId));
+        var hearings = await BookingsApiClient.GetHearingsByGroupIdV2Async(Guid.Parse(_groupId));
         foreach (var hearingId in hearings.Select(h => h.Id))
             try
             {

@@ -61,6 +61,6 @@ public class BookHearingNoJohTests : AdminWebUiTest
         
         dashboardPage.SignOut();
 
-        Assert.Pass();
+        Assert.Pass("Hearing booked successfully without a judge.");
     }
 }

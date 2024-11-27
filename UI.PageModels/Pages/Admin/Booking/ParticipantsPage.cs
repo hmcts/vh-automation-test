@@ -1,9 +1,9 @@
-﻿using UI.PageModels.Extensions;
+﻿using AventStack.ExtentReports;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
 
-public class ParticipantsPage : VhAdminWebPage
+public class ParticipantsPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _addParticipantLink = By.Id("addParticipantBtn");
     private readonly By _displayNameTextfield = By.Id("displayName");
@@ -26,7 +26,7 @@ public class ParticipantsPage : VhAdminWebPage
     private readonly By _signLanguageDropdown = By.Id("sign-language");
 
 
-    public ParticipantsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_nextButton);
@@ -110,6 +110,7 @@ public class ParticipantsPage : VhAdminWebPage
         }
         
         ClickAddParticipantAndWait();
+        Driver.TakeScreenshotAndSave("ParticipantsPage", $"Add New Participant {newUser.ContactEmail}");
     }
     
     private void AddExistingParticipantV2(string title, string role, string contactEmail, string displayName, string? representing = null, InterpreterLanguageDto? interpreterLanguage = null)
@@ -139,10 +140,12 @@ public class ParticipantsPage : VhAdminWebPage
         if (HasFormValidationError())
         {
             var message = GetValidationErrors();
+            Driver.TakeScreenshotAndSave("ParticipantsPage", $"Add Existing Participant {contactEmail}", Status.Fail);
             throw new InvalidOperationException($"Form has validation errors.", new InvalidOperationException(message));
         }
         
         ClickAddParticipantAndWait();
+        Driver.TakeScreenshotAndSave("ParticipantsPage", $"Add Existing Participant {contactEmail}");
     }
     
     private void SelectInterpreterLanguage(InterpreterLanguageDto interpreterLanguage)
