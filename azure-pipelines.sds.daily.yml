@@ -104,6 +104,13 @@ stages:
                       pathToPublish: '$(Agent.TempDirectory)/'
                       artifactName: UI_Report
 
+                  - task: PublishBuildArtifacts@1
+                    displayName: Publish UI HTML Report
+                    condition: succeededOrFailed()
+                    inputs:
+                      pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+                      artifactName: UI_Report
+
                   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
                       - template: pipelines/templates/get-results-from-trx.yaml
                         parameters:
@@ -136,6 +143,8 @@ stages:
                 value: true
               - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                 value: true
+              - name: SystemConfiguration.EnvironmentConfigSettings.ReportLocation
+                value: $(Build.ArtifactStagingDirectory)/UITestReports/
               - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityReportFilePath
                 value: $(Build.ArtifactStagingDirectory)/axe-results.json
               - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityHtmlReportFilePath

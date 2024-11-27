@@ -20,7 +20,7 @@ public abstract class AdminWebUiTest : CommonUiTest
     protected virtual async Task Setup()
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
-        VhDriver = EnvConfigSettings.RunOnSaucelabs ? new RemoteChromeVhDriver() : new LocalChromeVhDriver();
+        VhDriver = EnvConfigSettings.RunOnSauceLabs ? new RemoteChromeVhDriver() : new LocalChromeVhDriver();
         
         await InitTest();
         

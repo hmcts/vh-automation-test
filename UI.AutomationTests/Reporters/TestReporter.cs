@@ -27,7 +27,9 @@ public class TestReporter
     
     public void SetupReport()
     {
-        var dir = $"{TestContext.CurrentContext.TestDirectory}/Reports";
+        var dir = string.IsNullOrWhiteSpace(ConfigRootBuilder.EnvConfigInstance().ReportLocation)
+            ? $"{TestContext.CurrentContext.TestDirectory}/Reports"
+            : ConfigRootBuilder.EnvConfigInstance().ReportLocation;
         var environment = ConfigRootBuilder.EnvConfigInstance().Environment;
         var category = GetTestCategory();
 

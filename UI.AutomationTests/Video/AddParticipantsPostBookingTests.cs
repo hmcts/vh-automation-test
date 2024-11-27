@@ -11,7 +11,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Category("video")]
     public async Task should_add_new_participant_after_booking()
     {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
         await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");

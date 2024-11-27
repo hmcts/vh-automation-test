@@ -49,3 +49,5 @@ variables:
     value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
   - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
     value: $(Build.ArtifactStagingDirectory)/TestResults/
+  - name: SystemConfiguration.EnvironmentConfigSettings.ReportLocation
+    value: $(Build.ArtifactStagingDirectory)/UITestReports/

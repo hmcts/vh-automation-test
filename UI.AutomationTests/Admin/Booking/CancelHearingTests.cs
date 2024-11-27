@@ -8,7 +8,7 @@ namespace UI.AutomationTests.Admin.Booking
         [Category("admin")]
         public void CancelHearing()
         {
-            var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(60);
+            var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(60);
             var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
                 judgeUsername: "auto_aw.judge_02@hearings.reform.hmcts.net",
                 scheduledDateTime: hearingScheduledDateAndTime);

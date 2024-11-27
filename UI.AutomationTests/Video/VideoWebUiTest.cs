@@ -180,7 +180,7 @@ public abstract class VideoWebUiTest : CommonUiTest
     
     private IVhDriver CreateDriver(string username = null)
     {
-        return EnvConfigSettings.RunOnSaucelabs
+        return EnvConfigSettings.RunOnSauceLabs
             ? new RemoteChromeVhDriver(username: username)
             : new LocalChromeVhDriver();
     }
