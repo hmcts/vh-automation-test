@@ -20,6 +20,7 @@ public class LocalChromeVhDriver : IVhDriver
         chromeOptions.AddArgument("--lang=en-GB"); // Set the region to English (UK)
         chromeOptions.AddArgument("--start-maximized");
         chromeOptions.AddArgument("--no-sandbox");
+        chromeOptions.AddArgument("--mute-audio");
         chromeOptions.AddArgument("--use-fake-ui-for-media-stream");
         chromeOptions.AddArgument("--use-fake-device-for-media-stream");
 

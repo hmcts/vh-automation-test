@@ -22,6 +22,7 @@ public class HearingSchedulePage : VhAdminWebPage
     public HearingSchedulePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
+        WaitForElementToBeVisible(_courtVenue);
         WaitForDropdownListToPopulate(_courtVenue);
     }
 
