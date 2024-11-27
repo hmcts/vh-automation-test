@@ -1,8 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿namespace UI.PageModels.Pages.Video.Participant;
 
-namespace UI.PageModels.Pages.Video.Participant;
-
-public class JudgeWaitingRoomPage : VhVideoWebPage
+public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVideoWebPage(driver, defaultWaitTime)
 {
     private readonly By _confirmStartHearingButton = By.Id("btnConfirmStart");
 
@@ -17,10 +15,6 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     private readonly By _editStaffMemberDisplayNameTextBox = By.Id("new-staff-member-name");
     private readonly By _editStaffMemberDisplayNameSaveButton = By.Id("editStaffmemberDisplayName");
 
-    public JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
-    {
-    }
-
     protected override void ConfirmPageHasLoaded()
     {
         // the start/resume hearing button is not available when a hearing is closed
@@ -30,6 +24,7 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     public JudgeHearingRoomPage StartOrResumeHearing()
     {
         ClickElement(_startOrResumeHearingBtn);
+        WaitForElementToBeClickable(_confirmStartHearingButton);
         ClickElement(_confirmStartHearingButton);
         return new JudgeHearingRoomPage(Driver, DefaultWaitTime);
     }
@@ -51,8 +46,9 @@ public class JudgeWaitingRoomPage : VhVideoWebPage
     
     public void WaitForParticipantToBeConnected(string fullName)
     {
-        var path = $"//span[contains(@class, 'toast-content') and text() = '{fullName}']";
+        var path = $"//dl[contains(., '{fullName}')]//span[contains(text(), 'Connected')]";
         WaitForElementToBeVisible(By.XPath(path));
+ 
     }
 
     public string GetVideoAccessPointStatus(string accessPointName)

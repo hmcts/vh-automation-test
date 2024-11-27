@@ -98,7 +98,7 @@ public class EndToEndTest : VideoWebUiTest
         ccHearingPanel.ValidateHearingStatusBeforeStartScenario();
         
         // start hearing
-        var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
+         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         ccHearingPanel.ValidateLiveHearingStatusScenario(_conference.Id.ToString());
         
         // pause hearing
