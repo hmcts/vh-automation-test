@@ -4,9 +4,9 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
 {
     protected override void ConfirmPageHasLoaded()
     {
-        if (!Driver.Url.EndsWith("other-information"))
+        if (!Driver.Url.EndsWith("screening"))
             throw new InvalidOperationException(
-                "This is not the other-information page, the current url is: " + Driver.Url);
+                "This is not the screening page, the current url is: " + Driver.Url);
     }
 
     private readonly By _nextButton = By.Id("nextButton");

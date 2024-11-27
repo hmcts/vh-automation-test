@@ -102,14 +102,14 @@ stages:
                     condition: succeededOrFailed()
                     inputs:
                       pathToPublish: '$(Agent.TempDirectory)/'
-                      artifactName: UI_Html_Report
+                      artifactName: UI_Report
 
                   - task: PublishBuildArtifacts@1
                     displayName: Publish UI HTML Report
                     condition: succeededOrFailed()
                     inputs:
                       pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
-                      artifactName: UI_Report
+                      artifactName: UI_Html_Report
 
                   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
                       - template: pipelines/templates/get-results-from-trx.yaml
