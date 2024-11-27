@@ -21,6 +21,8 @@ variables:
     value: 'DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings'
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
     value: ${{ parameters.runOnSauceLabs }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
+    value: true
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
     value: $(Saucelabs:Username)
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey

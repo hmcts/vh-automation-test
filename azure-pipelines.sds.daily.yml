@@ -102,7 +102,7 @@ stages:
                     condition: succeededOrFailed()
                     inputs:
                       pathToPublish: '$(Agent.TempDirectory)/'
-                      artifactName: UI_Report
+                      artifactName: UI_Html_Report
 
                   - task: PublishBuildArtifacts@1
                     displayName: Publish UI HTML Report
