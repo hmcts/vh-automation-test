@@ -1,27 +1,23 @@
-using UI.AutomationTests.TestData;
-using UI.AutomationTests.Utilities;
 using UI.PageModels.Pages.Video.Participant;
 
 namespace UI.AutomationTests.Video;
 
-
 public class QuickLinkUserTests : VideoWebUiTest
 {
     private string _quickLinkJoinUrl;
-    private string _hearingIdString;
 
     [Test]
     [Category("video")]
     public async Task JoinAHearingAsAQuickLinkUser()
     {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDtoWithOnlyAJudge(scheduledDateTime:hearingScheduledDateAndTime);
+        var hearing = await CreateTestHearing();
+        TestHearingIds.Add(hearing.Id.ToString());
         await TestContext.Out.WriteLineAsync(
-            $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
-        BookHearing(hearingDto);
-        var conference = await GetConference(new Guid(_hearingIdString));
+            $"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
+        await GetQuicklinkJoinUri(hearing);
+        var conference = await GetConference(hearing.Id);
         // log in as judge and start the hearing
-        var judgeUsername = hearingDto.Judge.Username;
+        var judgeUsername = hearing.JudicialOfficeHolders[0].Email;
         var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
         var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
@@ -40,7 +36,7 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink2.DisplayName);
         judgeWaitingRoomPage.ClearParticipantAddedNotification();
         
-        var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation(new List<string>() {quicklink2.DisplayName});
+        var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation([quicklink2.DisplayName]);
         var ql2ConsultationPage = qlWaitingRoomPage2.AcceptPrivateConsultation();
         
         ql1ConsultationPage.IsParticipantConnected(quicklink2.DisplayName).Should().BeTrue();
@@ -82,6 +78,28 @@ public class QuickLinkUserTests : VideoWebUiTest
         
         Assert.Pass();
     }
+    
+    private async Task<HearingDetailsResponseV2> CreateTestHearing()
+    {
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
+        var hearingDto = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: hearingScheduledDateAndTime);
+        return await BookingsApiClient.BookNewHearingWithCodeAsync(hearingDto);
+    }
+    
+    private async Task GetQuicklinkJoinUri(HearingDetailsResponseV2 hearing)
+    {
+        var driver = AdminWebDriver.GetDriver();
+        await driver.Navigate().GoToUrlAsync(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+        var bookingListPage = dashboardPage.GoToBookingList();
+        bookingListPage.SearchForBooking(new BookingListQueryDto {CaseNumber = hearing.Cases[0].Number});
+        var bookingDetailsPage = bookingListPage.ViewBookingDetails(hearing.Cases[0].Number);
+        _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
+        bookingDetailsPage.SignOut();
+        AdminWebDriver.Terminate();
+        await TestContext.Out.WriteLineAsync(_quickLinkJoinUrl);
+    }
 
     private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string conferenceId)
     {
@@ -96,23 +114,5 @@ public class QuickLinkUserTests : VideoWebUiTest
         ParticipantDrivers[qlName].VhVideoWebPage = page;
         
         return page;
-    }
-    
-    private void BookHearing(BookingDto bookingDto)
-    {
-        var driver = AdminWebDriver.GetDriver();
-        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
-        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
-        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
-
-        var createHearingPage = dashboardPage.GoToBookANewHearing();
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto);
-        var confirmationPage = summaryPage.ClickBookButton();
-        _hearingIdString = confirmationPage.GetNewHearingId();
-        TestHearingIds.Add(_hearingIdString);
-        TestContext.Out.WriteLine($"Hearing  ID: {_hearingIdString}");
-        var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
-        _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
-        TestContext.Out.WriteLine(_quickLinkJoinUrl);
     }
 }

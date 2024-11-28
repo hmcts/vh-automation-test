@@ -5,17 +5,15 @@
 ///     It is used to join a hearing as a participant or observer.
 ///     The user only needs to provide a name and select the role they wish to join as.
 /// </summary>
-public class QuickLinkJoinYourHearingPage : VhVideoWebPage
+public class QuickLinkJoinYourHearingPage(IWebDriver driver, int defaultWaitTime)
+    : VhVideoWebPage(driver, defaultWaitTime)
 {
     private readonly By _fullName = By.Id("full-name");
     private readonly By _quickLinkParticipant = By.Id("QuickLinkParticipant-item-title");
     private readonly By _quickLinkObserver = By.Id("QuickLinkObserver-item-title");
     private readonly By _continueButton = By.Id("continue-button");
-    
 
-    public QuickLinkJoinYourHearingPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
-    {
-    }
+
     public void EnterQuickLinkUserDetails(string fullname, bool isParticipant)
     {
         EnterText(_fullName, fullname);
