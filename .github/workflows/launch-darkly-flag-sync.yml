@@ -16,6 +16,6 @@ jobs:
       - name: LaunchDarkly Code References
         uses: launchdarkly/find-code-references@v2
         with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           accessToken: ${{ secrets.LD_SERVICE_TOKEN }}
           projKey: VH
-          debug: true
