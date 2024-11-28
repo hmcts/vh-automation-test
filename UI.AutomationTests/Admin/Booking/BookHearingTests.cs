@@ -15,9 +15,9 @@ public class BookHearingTests : AdminWebUiTest
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
             judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
-        // var newUser = HearingTestData.CreateNewParticipantDto();
-        // CreatedUsers.Add(newUser.Username);
-        // _bookingDto.NewParticipants.Add(newUser);
+        var newUser = HearingTestData.CreateNewParticipantDto();
+        CreatedUsers.Add(newUser.Username);
+        _bookingDto.NewParticipants.Add(newUser);
 
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);

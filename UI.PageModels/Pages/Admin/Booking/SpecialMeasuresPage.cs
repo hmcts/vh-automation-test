@@ -11,12 +11,20 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
 
     private readonly By _nextButton = By.Id("nextButton");
 
+    /// <summary>
+    /// On a new booking, clicking next will take you to the other information page
+    /// </summary>
+    /// <returns></returns>
     public OtherInfoPage GoToOtherInformationPage()
     {
         ClickElement(_nextButton);
         return new OtherInfoPage(Driver, DefaultWaitTime);
     }
 
+    /// <summary>
+    /// When in edit mode, return to the summary page after clicking next
+    /// </summary>
+    /// <returns></returns>
     public SummaryPage GoToSummaryPage()
     {
         ClickElement(_nextButton);

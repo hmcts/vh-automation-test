@@ -92,9 +92,8 @@ public class BookingDetailsPage : VhAdminWebPage
         var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime);
         participantsPage.AddParticipants(participantsToAdd);
         var videoAccessPointsPage = participantsPage.GoToVideoAccessPointsPage();
-        var specialMeasuresEnabled = FeatureToggle.Instance().SpecialMeasuresEnabled();
-        var summaryPage = specialMeasuresEnabled ? 
-            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToSummaryPage() : videoAccessPointsPage.GoToSummaryPage();
+        // use existing booking flow (i.e. next on vap goes to summary page)
+        var summaryPage = videoAccessPointsPage.GoToSummaryPage();
         return summaryPage.ClickBookButton();
     }
     
