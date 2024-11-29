@@ -31,7 +31,9 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
 
     public bool IsHearingClosed()
     {
-        return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing is closed']"));
+        var hearingClosed = By.XPath("//h1[normalize-space()='Hearing is closed']");
+        WaitForElementToBeVisible(hearingClosed);
+        return IsElementVisible(hearingClosed);
     }
     
     public bool IsHearingPaused()
