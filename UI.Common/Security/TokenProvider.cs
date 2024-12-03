@@ -18,24 +18,17 @@ public class TokenProvider
         return result.AccessToken;
     }
 
-    private async Task<AuthenticationResult> GetAuthorisationResult(string clientId, string clientSecret, string clientResource)
+    private async Task<AuthenticationResult> GetAuthorisationResult(string clientId, string clientSecret,
+        string clientResource)
     {
-        AuthenticationResult result;
         var authority = $"{_apiClientConfiguration.Authority}{_apiClientConfiguration.TenantId}";
         var app = ConfidentialClientApplicationBuilder
             .Create(clientId)
             .WithClientSecret(clientSecret)
             .WithAuthority(authority)
             .Build();
-            
-        try
-        {
-            result = await app.AcquireTokenForClient(new[] {$"{clientResource}/.default"}).ExecuteAsync();
-        }
-        catch (MsalServiceException e)
-        {
-            throw new UnauthorizedAccessException();
-        }
+
+        var result = await app.AcquireTokenForClient(new[] { $"{clientResource}/.default" }).ExecuteAsync();
 
         return result;
     }
