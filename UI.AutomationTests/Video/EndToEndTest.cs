@@ -1,7 +1,11 @@
 using BookingsApi.Contract.V1.Responses;
+using UI.Common.Utilities;
 using UI.PageModels.Pages.Video.Participant;
+using UI.PageModels.Pages.Video.Vho;
+using UI.PageModels.Pages.Video.Vho.DashboardCommandCentre;
 using VideoApi.Contract.Enums;
 using VideoApi.Contract.Responses;
+using ParticipantResponse = VideoApi.Contract.Responses.ParticipantResponse;
 
 namespace UI.AutomationTests.Video;
 
@@ -23,7 +27,7 @@ public class EndToEndTest : VideoWebUiTest
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode,
+        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode, 
             HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
         await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
@@ -34,51 +38,19 @@ public class EndToEndTest : VideoWebUiTest
         var vhoVenueSelectionPage = LoginAsVho(HearingTestData.VhOfficerUsername, EnvConfigSettings.UserPassword);
         ParticipantDrivers[HearingTestData.VhOfficerUsername].VhVideoWebPage = vhoVenueSelectionPage;
  
-        // vho will be able to see hearings at selected venue(s) OR selected vho(s)
-        // // VHO will go back to venue selection then select a hearing to monitor based on the allocated CSO
-        var commandCentrePage = vhoVenueSelectionPage.SelectHearingsByVenues(hearingDto.VenueName);
-        vhoVenueSelectionPage = commandCentrePage.ChangeVenueSelection();
-        commandCentrePage = vhoVenueSelectionPage.SelectHearingsByAllocatedCso(_justiceUser);
-        
-        // Hearings will be displayed in chronological order as per VIH-10224
-        commandCentrePage.ValidateHearingsAreInChronologicalOrder();
-        
-        // vho will be able to select a hearing to monitor
-        commandCentrePage.SelectConferenceFromList(_conference.Id.ToString());
-        
-        // vho will be able to see connectivity status of participants in that hearing
-        var ccHearingPanel = commandCentrePage.ClickHearingsButton();
-        var testParticipant = _conference.Participants.First(e => e.UserRole == UserRole.Individual);
-        ccHearingPanel.ValidateParticipantStatusBeforeLogin(testParticipant.Id);
-        
+        var commandCentrePage = CsoCommandCentreJourney(vhoVenueSelectionPage, hearingDto, out var ccHearingPanel, out var testParticipant);
+
         // loop through all participants in hearing and login as each one
         foreach (var participant in hearingDto.Participants)
         {
-            var participantUsername = participant.Username;
-            var participantPassword = EnvConfigSettings.UserPassword;
-            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
-            var participantWaitingRoom = participantHearingList
-                .SelectHearing(_conference.Id).GoToEquipmentCheck()
-                .GoToSwitchOnCameraMicrophonePage()
-                .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
-                .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
-            // store the participant driver in a dictionary so we can access it later to sign out
-            ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
+            ParticipantLoginToWaitingRoomJourney(participant);
         }
 
         var testParticipantWaitingRoom = (ParticipantWaitingRoomPage)ParticipantDrivers[testParticipant.Username].VhVideoWebPage;
         ccHearingPanel.ValidateParticipantStatusAfterLogin(testParticipant.Id, _conference.Id.ToString());
         
-        // VHO will be able to see participants moving from waiting room to consultation room and hearing room
-        var ccMessagingPanel = commandCentrePage.ClickMessagesButton();
-        ccMessagingPanel.ValidateInstantMessagingOutboundScenario(testParticipant.DisplayName);
-            
-        // VHO will be able to receive a reply to the IM
-        var messageToCso = "Hello from the participant";
-        testParticipantWaitingRoom
-            .OpenChatWithVHO()
-            .SendAMessageToVHO(messageToCso);
-        ccMessagingPanel.ValidateInstantMessagingInboundScenario(messageToCso);
+        if(FeatureToggle.Instance().IMEnabled())
+            AssertInstantMessagesFeature(commandCentrePage, testParticipant, testParticipantWaitingRoom);
 
         // log in as judge and start the hearing
         var judgeUsername = hearingDto.Judge.Username;
@@ -94,7 +66,7 @@ public class EndToEndTest : VideoWebUiTest
         judgeWaitingRoomPage.GetParticipantConnectedCount().Should().Be(hearingDto.Participants.Count);
         
         // VHO will be able to monitor HearingStatus updates
-        ccHearingPanel = ccMessagingPanel.ClickHearingsButton();
+        ccHearingPanel.ClickHearingsButton();
         ccHearingPanel.ValidateHearingStatusBeforeStartScenario();
         
         // start hearing
@@ -116,6 +88,57 @@ public class EndToEndTest : VideoWebUiTest
 
         ReportAccessibility();
         Assert.Pass();
+    }
+
+    private void ParticipantLoginToWaitingRoomJourney(BookingParticipantDto participant)
+    {
+        var participantUsername = participant.Username;
+        var participantPassword = EnvConfigSettings.UserPassword;
+        var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
+        var participantWaitingRoom = participantHearingList
+            .SelectHearing(_conference.Id).GoToEquipmentCheck()
+            .GoToSwitchOnCameraMicrophonePage()
+            .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
+            .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
+        // store the participant driver in a dictionary, so we can access it later to sign out
+        ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
+    }
+
+    private CommandCentrePage CsoCommandCentreJourney(VhoVenueSelectionPage vhoVenueSelectionPage, BookingDto hearingDto,
+        out CommandCentreHearing ccHearingPanel, out ParticipantResponse testParticipant)
+    {
+        // vho will be able to see hearings at selected venue(s) OR selected vho(s)
+        // // VHO will go back to venue selection then select a hearing to monitor based on the allocated CSO
+        var commandCentrePage = vhoVenueSelectionPage.SelectHearingsByVenues(hearingDto.VenueName);
+        vhoVenueSelectionPage = commandCentrePage.ChangeVenueSelection();
+        commandCentrePage = vhoVenueSelectionPage.SelectHearingsByAllocatedCso(_justiceUser);
+        
+        // Hearings will be displayed in chronological order as per VIH-10224
+        commandCentrePage.ValidateHearingsAreInChronologicalOrder();
+        
+        // vho will be able to select a hearing to monitor
+        commandCentrePage.SelectConferenceFromList(_conference.Id.ToString());
+        
+        // vho will be able to see connectivity status of participants in that hearing
+        ccHearingPanel = commandCentrePage.ClickHearingsButton();
+        testParticipant = _conference.Participants.First(e => e.UserRole == UserRole.Individual);
+        ccHearingPanel.ValidateParticipantStatusBeforeLogin(testParticipant.Id);
+        return commandCentrePage;
+    }
+
+    private static void AssertInstantMessagesFeature(CommandCentrePage commandCentrePage,
+        ParticipantResponse testParticipant, ParticipantWaitingRoomPage testParticipantWaitingRoom)
+    {
+        // VHO will be able to see participants moving from waiting room to consultation room and hearing room
+        var ccMessagingPanel = commandCentrePage.ClickMessagesButton();
+        ccMessagingPanel.ValidateInstantMessagingOutboundScenario(testParticipant.DisplayName);
+            
+        // VHO will be able to receive a reply to the IM
+        var messageToCso = "Hello from the participant";
+        testParticipantWaitingRoom
+            .OpenChatWithVHO()
+            .SendAMessageToVHO(messageToCso);
+        ccMessagingPanel.ValidateInstantMessagingInboundScenario(messageToCso);
     }
 
     private async Task BookHearing(BookingDto bookingDto)
