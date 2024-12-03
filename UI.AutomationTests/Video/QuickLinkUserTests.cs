@@ -81,7 +81,7 @@ public class QuickLinkUserTests : VideoWebUiTest
     
     private async Task<HearingDetailsResponseV2> CreateTestHearing()
     {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs|| EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
         var hearingDto = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: hearingScheduledDateAndTime);
         return await BookingsApiClient.BookNewHearingWithCodeAsync(hearingDto);
     }
