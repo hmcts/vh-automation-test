@@ -19,8 +19,6 @@ variables:
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
     value: ${{ parameters.runOnSauceLabs }}
   - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
-    value: ${{ parameters.runHeadlessBrowser }}
-  - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
     value: true
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
     value: $(Saucelabs:Username)
