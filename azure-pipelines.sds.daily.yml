@@ -97,6 +97,10 @@ stages:
                   - group: slack
 
                 steps:
+                  - script: |
+                      echo "adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}"
+                      echo "adminWebUrl: ${{ variables.adminWebUrl }}"
+
                   - template: pipelines/templates/run-ui-test.yaml
                     parameters:
                       environment: ${{ parameters.environment }}
@@ -137,12 +141,13 @@ stages:
             displayName: A11Y Tests ${{ parameters.environment }}
             variables:
               - template: variables/${{ lower(parameters.environment) }}.yaml
+                parameters:
+                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
               - template: variables/shared.yaml
                 parameters:
                   environment: ${{ parameters.environment }}
                   runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
-                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: FeatureFlags_${{ parameters.environment }}
