@@ -5,6 +5,9 @@ parameters:
   - name: runOnSauceLabs
     type: boolean
     default: true
+  - name: runHeadlessBrowser
+    type: boolean
+    default: false
   - name: adminWebOverrideUrl
     type: string
     default: ' '
@@ -21,6 +24,8 @@ variables:
     value: 'DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings'
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
     value: ${{ parameters.runOnSauceLabs }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
+    value: ${{ parameters.runHeadlessBrowser }}
   - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
     value: true
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername

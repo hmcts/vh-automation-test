@@ -25,6 +25,11 @@ parameters:
     type: boolean
     default: true
 
+  - name: runHeadlessBrowser
+    displayName: Run on Locally on Chrome in Headless Mode
+    type: boolean
+    default: false
+
   - name: adminWebOverrideUrl
     displayName: Admin Web URL Override
     type: string
@@ -74,6 +79,7 @@ stages:
                     parameters:
                       environment: ${{ parameters.environment }}
                       runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+                      runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
                       adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
                       videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                   - group: vh-automation-test-${{ parameters.environment }}
@@ -139,12 +145,8 @@ stages:
               - group: Saucelabs
               - group: FeatureFlags_${{ parameters.environment }}
               - group: KinlyConfiguration_${{ parameters.environment }}
-              - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
-                value: true
               - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                 value: true
-              - name: SystemConfiguration.EnvironmentConfigSettings.ReportLocation
-                value: $(Build.ArtifactStagingDirectory)/UITestReports/
               - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityReportFilePath
                 value: $(Build.ArtifactStagingDirectory)/axe-results.json
               - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityHtmlReportFilePath

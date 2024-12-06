@@ -8,6 +8,7 @@ namespace UI.AutomationTests.Video
         [Description("Book a hearing. Log into hearing with a judge account. Edit their display name. Start and stop the hearing.")]
         [Test]
         [Category("video")]
+        [Category("coreVideo")]
         public async Task LogIntoHearingWithJudgeAndEditDisplayName()
         {
             var hearing = await CreateTestHearing();

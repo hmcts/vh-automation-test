@@ -8,7 +8,7 @@ public class BookHearingTests : AdminWebUiTest
 
     [Test(Description = "Book a hearing")]
     [Category("admin")]
-    [Category("core")]
+    [Category("coreAdmin")]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
