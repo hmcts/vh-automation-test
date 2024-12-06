@@ -76,9 +76,6 @@ stages:
                   - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                     value: false
                   - template: variables/${{ lower(parameters.environment) }}.yaml
-                    parameters:
-                      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                   - template: variables/shared.yaml
                     parameters:
                       environment: ${{ parameters.environment }}
@@ -97,13 +94,10 @@ stages:
                   - group: slack
 
                 steps:
-                  - script: |
-                      echo "adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}"
-                      echo "adminWebUrl: ${{ variables.adminWebUrl }}"
-                      echo "Config: ${{ variables.SystemConfiguration.EnvironmentConfigSettings.AdminUrl }}"
-
                   - template: pipelines/templates/run-ui-test.yaml
                     parameters:
+                      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                       environment: ${{ parameters.environment }}
                       projectPath: ${{ variables.projectPath }}
                       testRunTitle: 'UI Tests ${{ parameters.environment }} - ${{ testCategory }}'
