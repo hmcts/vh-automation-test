@@ -1,6 +1,6 @@
 - name: adminWebOverrideUrl
-    type: string
-    default: ' '
+  type: string
+  default: ' '
 - name: videoWebOverrideUrl
   type: string
   default: ' '
