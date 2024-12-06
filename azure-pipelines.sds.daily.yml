@@ -31,14 +31,27 @@ parameters:
     default: false
 
   - name: adminWebOverrideUrl
-    displayName: Admin Web URL Override
+    displayName: Admin Web URL Override (leave blank for default)
     type: string
     default: ' ' # Optional parameter with default value
 
   - name: videoWebOverrideUrl
-    displayName: Video Web URL Override
+    displayName: Video Web URL Override (leave blank for default)
     type: string
     default: ' ' # Optional parameter with default value
+
+  - name: bookingsApiOverrideUrl
+    displayName: Bookings API PR Url (leave blank for default)
+    type: string
+    default: ' '
+  - name: videoApiOverrideUrl
+    displayName: Video API PR Url (leave blank for default)
+    type: string
+    default: ' '
+  - name: userApiOverrideUrl
+    displayName: User API PR Url (leave blank for default)
+    type: string
+    default: ' '
 
   - name: environment
     displayName: Environment name (used by to get the correct configuration from LaunchDarkly and KeyVault)
