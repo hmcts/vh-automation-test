@@ -1,6 +1,6 @@
 ﻿namespace UI.PageModels.Pages.Admin.Booking;
 
-public class HearingAssignJudgePage : VhAdminWebPage
+public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _ejudgeDisplayNameFld = By.Id("judiciaryDisplayNameInput");
     private readonly By _eJudgeEmail = By.Id("judiciaryEmailInput");
@@ -11,7 +11,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
     private readonly By _searchResults = By.Id("search-results-list");
     private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
 
-    public HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForApiSpinnerToDisappear();
     }
@@ -20,7 +20,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
     {
         AssignPresidingJudiciaryDetails(judge.Username, judge.DisplayName, judge.InterpreterLanguage);
         ClickSaveJudgeButton();
-
+        Driver.TakeScreenshotAndSave(GetType().Name, "Entered Judge Details");
     }
     
     private void AssignPresidingJudiciaryDetails(string judgeEmail, string judgeDisplayName, InterpreterLanguageDto? interpreterLanguage = null)
@@ -40,6 +40,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
             }
             SelectInterpreterLanguage(interpreterLanguage);
         }
+        Driver.TakeScreenshotAndSave(GetType().Name, "Entered Presiding Judiciary Details");
     }
 
     private void SelectInterpreterLanguage(InterpreterLanguageDto interpreterLanguage)
@@ -57,6 +58,7 @@ public class HearingAssignJudgePage : VhAdminWebPage
             default:
                 throw new InvalidOperationException("Unknown interpreter language type: " + interpreterLanguage.Type);
         }
+        Driver.TakeScreenshotAndSave(GetType().Name, $"Selected Interpreter Language {interpreterLanguage.Description}");
     }
     
     private void ClickSaveJudgeButton()

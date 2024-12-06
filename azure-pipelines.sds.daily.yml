@@ -20,7 +20,41 @@ parameters:
     type: boolean
     default: true
 
+  - name: runOnSaucelabs
+    displayName: Run on SauceLabs
+    type: boolean
+    default: true
+
+  - name: runHeadlessBrowser
+    displayName: Run Headless Browser (Required for PR environments)
+    type: boolean
+    default: false
+
+  - name: adminWebOverrideUrl
+    displayName: Admin Web URL Override (leave blank for default)
+    type: string
+    default: ' ' # Optional parameter with default value
+
+  - name: videoWebOverrideUrl
+    displayName: Video Web URL Override (leave blank for default)
+    type: string
+    default: ' ' # Optional parameter with default value
+
+  - name: bookingsApiOverrideUrl
+    displayName: Bookings API PR Url (leave blank for default)
+    type: string
+    default: ' '
+  - name: videoApiOverrideUrl
+    displayName: Video API PR Url (leave blank for default)
+    type: string
+    default: ' '
+  - name: userApiOverrideUrl
+    displayName: User API PR Url (leave blank for default)
+    type: string
+    default: ' '
+
   - name: environment
+    displayName: Environment name (used by to get the correct configuration from LaunchDarkly and KeyVault)
     type: string
     default: Dev
     values:
@@ -58,6 +92,8 @@ stages:
                   - template: variables/shared.yaml
                     parameters:
                       environment: ${{ parameters.environment }}
+                      runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+                      runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
                   - group: vh-automation-test-${{ parameters.environment }}
                   - group: FeatureFlags_${{ parameters.environment }}
                   - group: Saucelabs
@@ -73,6 +109,8 @@ stages:
                 steps:
                   - template: pipelines/templates/run-ui-test.yaml
                     parameters:
+                      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                       environment: ${{ parameters.environment }}
                       projectPath: ${{ variables.projectPath }}
                       testRunTitle: 'UI Tests ${{ parameters.environment }} - ${{ testCategory }}'
@@ -85,6 +123,13 @@ stages:
                     inputs:
                       pathToPublish: '$(Agent.TempDirectory)/'
                       artifactName: UI_Report
+
+                  - task: PublishBuildArtifacts@1
+                    displayName: Publish UI HTML Report
+                    condition: succeededOrFailed()
+                    inputs:
+                      pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+                      artifactName: UI_Html_Report
 
                   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
                       - template: pipelines/templates/get-results-from-trx.yaml
@@ -104,21 +149,19 @@ stages:
             displayName: A11Y Tests ${{ parameters.environment }}
             variables:
               - template: variables/${{ lower(parameters.environment) }}.yaml
+                parameters:
+                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
               - template: variables/shared.yaml
                 parameters:
                   environment: ${{ parameters.environment }}
+                  runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: FeatureFlags_${{ parameters.environment }}
               - group: KinlyConfiguration_${{ parameters.environment }}
-              - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
-                value: true
               - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                 value: true
-              - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityReportFilePath
-                value: $(Build.ArtifactStagingDirectory)/axe-results.json
-              - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityHtmlReportFilePath
-                value: $(Build.ArtifactStagingDirectory)/axe-results.html
               - name: ApiClientConfiguration.BookingsApiUrl
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl

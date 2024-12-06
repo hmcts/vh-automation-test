@@ -1,11 +1,9 @@
-﻿using OpenQA.Selenium;
-using UI.PageModels.Pages.Admin.Audio;
-using UI.PageModels.Pages.Admin.Booking;
+﻿using UI.PageModels.Pages.Admin.Booking;
 using UI.PageModels.Pages.Admin.WorkAllocation;
 
 namespace UI.PageModels.Pages.Admin;
 
-public class DashboardPage : VhAdminWebPage
+public class DashboardPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _bookHearingButton = By.Id("bookHearingBtn");
     private readonly By _unallocatedHearingsNextSevenDays = By.Id("unallocated-hearings-next-seven-days");
@@ -16,15 +14,13 @@ public class DashboardPage : VhAdminWebPage
     private readonly By _workAllocationButton = By.Id("manageWorkAllocationBtn");
     private readonly By _manageTeamButton = By.Id("manageTeamBtn");
 
-    public DashboardPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected override void ConfirmPageHasLoaded()
     {
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeClickable(_bookHearingButton);
         if (!Driver.Url.EndsWith("dashboard"))
             throw new InvalidOperationException(
                 "This is not the dashboard page, the current url is: " + Driver.Url);
-        
-        
     }
 
     public int GetNumberOfUnallocatedHearingsToday()
@@ -55,6 +51,7 @@ public class DashboardPage : VhAdminWebPage
     {
         WaitForApiSpinnerToDisappear();
         ClickElement(_bookHearingButton);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Clicked Book Hearing Button");
         return new HearingDetailsPage(Driver, DefaultWaitTime);
     }
 
@@ -62,6 +59,7 @@ public class DashboardPage : VhAdminWebPage
     {
         WaitForApiSpinnerToDisappear();
         ClickElement(_workAllocationButton);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Clicked Manage Work Allocation Button");
         return new ManageWorkAllocationPage(Driver, DefaultWaitTime);
     }
     
@@ -69,6 +67,7 @@ public class DashboardPage : VhAdminWebPage
     {
         WaitForApiSpinnerToDisappear();
         ClickElement(_manageTeamButton);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Clicked Manage Team Button");
         return new ManageTeamPage(Driver, DefaultWaitTime);
     }
     

@@ -1,13 +1,15 @@
-﻿namespace UI.PageModels.Pages.Admin.Booking;
+﻿using UI.Common.Utilities;
 
-public class HearingDetailsPage : VhAdminWebPage
+namespace UI.PageModels.Pages.Admin.Booking;
+
+public class HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _caseName = By.Id("caseName");
     private readonly By _caseNumber = By.Id("caseNumber");
     private readonly By _caseType = By.Id("caseType");
     private readonly By _nextButton = By.Id("nextButton");
 
-    public HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
+    protected override void ConfirmPageHasLoaded()
     {
         if (!Driver.Url.EndsWith("book-hearing"))
             throw new InvalidOperationException(
@@ -17,7 +19,6 @@ public class HearingDetailsPage : VhAdminWebPage
     public void EnterHearingDetails(BookingDto bookingDto)
     {
         EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
-
     }
 
     private void EnterHearingDetailsV2(string caseNumber, string caseName, string caseType)
@@ -27,7 +28,7 @@ public class HearingDetailsPage : VhAdminWebPage
         EnterText(_caseName, caseName);
         WaitForDropdownListToPopulate(_caseType);
         SelectDropDownByText(_caseType, caseType);
-        
+        Driver.TakeScreenshotAndSave(GetType().Name, "Entered Hearing Details");
     }
 
     /// <summary>
@@ -38,9 +39,8 @@ public class HearingDetailsPage : VhAdminWebPage
     /// <returns>the summary page</returns>
     public SummaryPage BookAHearingJourney(BookingDto bookingDto, bool isMultiDay = false)
     {
-            EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
-        
-        
+        EnterHearingDetailsV2(bookingDto.CaseNumber, bookingDto.CaseName, bookingDto.CaseType);
+
         var hearingSchedulePage = GoToNextPage();
 
         if (isMultiDay)
@@ -56,12 +56,14 @@ public class HearingDetailsPage : VhAdminWebPage
         assignJudgePage.EnterJudgeDetails(bookingDto.Judge);
 
         var addParticipantPage = assignJudgePage.GotToNextPage();
-        
+
         addParticipantPage.AddParticipants(bookingDto.Participants);
-        
+
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        var otherInformationPage = FeatureToggle.Instance().SpecialMeasuresEnabled() ?
+            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage() :
+            videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
 

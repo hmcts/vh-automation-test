@@ -1,9 +1,10 @@
+using UI.AutomationTests.Reporters;
+
 namespace UI.AutomationTests.Admin;
 
 public abstract class AdminWebUiTest : CommonUiTest
 {
     protected readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
-    protected EnvironmentConfigSettings EnvConfigSettings;
     protected IVhDriver VhDriver;
 
     [OneTimeSetUp]
@@ -18,10 +19,13 @@ public abstract class AdminWebUiTest : CommonUiTest
     protected virtual async Task Setup()
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
-        VhDriver = EnvConfigSettings.RunOnSaucelabs ? new RemoteChromeVhDriver() : new LocalChromeVhDriver();
+        VhDriver = CreateDriver(null);
+        
         await InitTest();
+        
+        SetupUiTestReport();
     }
-    
+
     /// <summary>
     /// Run ad-hoc clean up tasks for a test
     /// </summary>
@@ -38,10 +42,13 @@ public abstract class AdminWebUiTest : CommonUiTest
         if(VhDriver == null) throw new InvalidOperationException("Driver is null, cannot publish test result");
         var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
                       TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
+        
+        BuildUiReport(VhDriver);
+
         VhDriver.PublishTestResult(passed);
         VhDriver.Terminate();
     }
-    
+
     /// <summary>
     /// Run ad-hoc clean up tasks for a test
     /// </summary>

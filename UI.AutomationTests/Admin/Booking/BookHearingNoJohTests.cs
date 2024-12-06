@@ -1,3 +1,5 @@
+using UI.Common.Utilities;
+
 namespace UI.AutomationTests.Admin.Booking;
 
 public class BookHearingNoJohTests : AdminWebUiTest
@@ -35,7 +37,9 @@ public class BookHearingNoJohTests : AdminWebUiTest
         addParticipantPage.AddParticipants(_bookingDto.Participants);
         
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        var otherInformationPage = FeatureToggle.Instance().SpecialMeasuresEnabled()
+            ? videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage()
+            : videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
         
@@ -61,6 +65,6 @@ public class BookHearingNoJohTests : AdminWebUiTest
         
         dashboardPage.SignOut();
 
-        Assert.Pass();
+        Assert.Pass("Hearing booked successfully without a judge.");
     }
 }

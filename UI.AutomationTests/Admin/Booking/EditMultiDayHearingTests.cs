@@ -11,7 +11,7 @@ namespace UI.AutomationTests.Admin.Booking
         public void EditSingleDayOfMultiDayHearing()
         {
             const int numberOfDays = 3;
-            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser)).Date
                 .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);
@@ -41,7 +41,7 @@ namespace UI.AutomationTests.Admin.Booking
         public async Task EditThisAndUpcomingDaysOfMultiDayHearing()
         {
             const int numberOfDays = 3;
-            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs)).Date
+            var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser)).Date
                 .AddHours(10).AddMinutes(0);
             var hearingDto = HearingTestData.CreateMultiDayDtoWithEndpoints(numberOfDays, scheduledDateTime);
             var bookingDetailsPage = BookMultiDayHearingAndGoToDetailsPage(hearingDto);

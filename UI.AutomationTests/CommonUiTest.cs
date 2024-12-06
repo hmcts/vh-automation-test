@@ -3,6 +3,7 @@ using BookingsApi.Client;
 using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V1.Responses;
+using UI.AutomationTests.Reporters;
 using UI.PageModels.Utilities;
 using UserApi.Client;
 
@@ -10,10 +11,12 @@ namespace UI.AutomationTests;
 
 public abstract class CommonUiTest
 {
-    protected List<string> TestHearingIds = new();
-    protected List<string> CreatedUsers = new();
+    protected readonly List<string> TestHearingIds = new();
+    protected readonly List<string> CreatedUsers = new();
     protected BookingsApiClient BookingsApiClient;
     protected UserApiClient UserApiClient;
+    protected TestReporter UiTestReport;
+    protected EnvironmentConfigSettings EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
         var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);
@@ -73,6 +76,39 @@ public abstract class CommonUiTest
         await DeleteUsers();
     }
 
+    protected IVhDriver CreateDriver(string username)
+    {
+        var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
+        IVhDriver driver;
+        if (envConfigSettings.RunHeadlessBrowser || !envConfigSettings.RunOnSauceLabs)
+        {
+            driver = new LocalChromeVhDriver();
+        } 
+        else
+        {
+            driver = new RemoteChromeVhDriver(username: username);
+        }
+
+        return driver;
+    }
+
+    protected void SetupUiTestReport()
+    {
+        UiTestReport = TestReporterInstance.Instance();
+        var nunitTest = TestContext.CurrentContext.Test;
+        var testName = nunitTest.Name;
+        var description = nunitTest.Properties.Get("Description")?.ToString() ?? string.Empty;
+        var categories = nunitTest.Properties["Category"].ToList().Select(x => x.ToString()).ToArray();
+        UiTestReport.SetupTest(testName, description, categories);
+    }
+    
+    protected void BuildUiReport(IVhDriver vhDriver)
+    {
+        UiTestReport?.AddScreenshotsToReport(vhDriver.GetDriver());
+        UiTestReport?.ProcessTest(vhDriver.GetDriver());
+        UiTestReport?.Flush();
+    }
+    
     private async Task DeleteUsers()
     {
         foreach (var userPrincipleName in CreatedUsers)

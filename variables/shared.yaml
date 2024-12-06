@@ -2,6 +2,12 @@ parameters:
   - name: environment
     type: string
     default: 'Dev'
+  - name: runOnSauceLabs
+    type: boolean
+    default: true
+  - name: runHeadlessBrowser
+    type: boolean
+    default: false
 
 variables:
   - name: projectPath
@@ -11,6 +17,8 @@ variables:
   - name: subscriptionName
     value: 'DTS-SHAREDSERVICES-${{ upper(parameters.environment) }}-Video Hearings'
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
+    value: ${{ parameters.runOnSauceLabs }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
     value: true
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
     value: $(Saucelabs:Username)
@@ -22,6 +30,7 @@ variables:
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
     value: ${{ variables.videoWebUrl }}
+
   - name: SystemConfiguration.EnvironmentConfigSettings.Environment
     value: ${{ parameters.environment }}
 
@@ -29,3 +38,5 @@ variables:
     value: $(Build.ArtifactStagingDirectory)/TestResults/Logs
   - name: SystemConfiguration.EnvironmentConfigSettings.TestResultsDirectory
     value: $(Build.ArtifactStagingDirectory)/TestResults/
+  - name: SystemConfiguration.EnvironmentConfigSettings.ReportLocation
+    value: $(Build.ArtifactStagingDirectory)/UITestReports/

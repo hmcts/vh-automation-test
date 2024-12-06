@@ -22,6 +22,7 @@ public class HearingSchedulePage : VhAdminWebPage
     public HearingSchedulePage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
         WaitForApiSpinnerToDisappear();
+        WaitForElementToBeVisible(_courtVenue);
         WaitForDropdownListToPopulate(_courtVenue);
     }
 
@@ -29,6 +30,7 @@ public class HearingSchedulePage : VhAdminWebPage
     {
         EnterHearingDateAndDuration(bookingDto.ScheduledDateTime, bookingDto.DurationHour, bookingDto.DurationMinute);
         EnterHearingVenueAndRoom(bookingDto.VenueName, bookingDto.RoomName);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Entered Single Day Hearing Schedule");
     }   
     
     /// <summary>

@@ -6,8 +6,9 @@ public class BookHearingTests : AdminWebUiTest
 {
     private BookingDto _bookingDto;
 
-    [Test]
+    [Test(Description = "Book a hearing")]
     [Category("admin")]
+    [Category("coreAdmin")]
     public void BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
@@ -22,7 +23,7 @@ public class BookHearingTests : AdminWebUiTest
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
         var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
         var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
-
+        
         var preBookingUnallocatedHearingsToday = dashboardPage.GetNumberOfUnallocatedHearingsToday();
         var preBookingUnallocatedHearingsTomorrow = dashboardPage.GetNumberOfUnallocatedHearingsTomorrow();
         var preBookingUnallocatedHearingsNextSevenDays = dashboardPage.GetNumberOfUnallocatedHearingsNextSevenDays();
@@ -44,7 +45,10 @@ public class BookHearingTests : AdminWebUiTest
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        
+        var otherInformationPage = FeatureToggle.Instance().SpecialMeasuresEnabled() ?
+            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage() :
+            videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
 
@@ -71,7 +75,7 @@ public class BookHearingTests : AdminWebUiTest
 
         dashboardPage.SignOut();
 
-        Assert.Pass();
+        Assert.Pass("Hearing booked successfully with existing and a new participant. Unallocated hearings count increased as expected.");
     }
 
 
@@ -119,6 +123,6 @@ public class BookHearingTests : AdminWebUiTest
 
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
 
-        Assert.Pass();
+        Assert.Pass($"Booked a hearing with interpretation for {description}");
     }
 }

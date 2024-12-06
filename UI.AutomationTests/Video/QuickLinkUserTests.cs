@@ -81,7 +81,7 @@ public class QuickLinkUserTests : VideoWebUiTest
     
     private async Task<HearingDetailsResponseV2> CreateTestHearing()
     {
-        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSaucelabs).AddMinutes(5);
+        var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
         var hearingDto = HearingTestData.CreateNewRequestDtoWithOnlyAJudge(scheduledDateTime: hearingScheduledDateAndTime);
         return await BookingsApiClient.BookNewHearingWithCodeAsync(hearingDto);
     }
@@ -97,7 +97,6 @@ public class QuickLinkUserTests : VideoWebUiTest
         var bookingDetailsPage = bookingListPage.ViewBookingDetails(hearing.Cases[0].Number);
         _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
         bookingDetailsPage.SignOut();
-        AdminWebDriver.Terminate();
         await TestContext.Out.WriteLineAsync(_quickLinkJoinUrl);
     }
 
