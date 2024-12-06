@@ -1,10 +1,23 @@
+- name: adminWebOverrideUrl
+    type: string
+    default: ' '
+- name: videoWebOverrideUrl
+  type: string
+  default: ' '
+
 variables:
   - name: env
     value: "dev"
   - name: adminWebUrl
-    value: "https://vh-admin-web.dev.platform.hmcts.net"
+    ${{ if eq(parameters.adminWebOverrideUrl, ' ') }}:
+      value: "https://vh-admin-web.dev.platform.hmcts.net"
+    ${{ else }}:
+      value: adminWebOverrideUrl
   - name: videoWebUrl
-    value: "https://vh-video-web.dev.platform.hmcts.net"
+    ${{ if eq(parameters.videoWebOverrideUrl, ' ') }}:
+      value: "https://vh-video-web.dev.platform.hmcts.net"
+    ${{ else }}:
+      value: videoWebOverrideUrl
   - name: bookingsApiUrl
     value: "https://vh-bookings-api.dev.platform.hmcts.net/"
   - name: videoApiUrl

@@ -76,13 +76,14 @@ stages:
                   - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                     value: false
                   - template: variables/${{ lower(parameters.environment) }}.yaml
+                    parameters:
+                      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                   - template: variables/shared.yaml
                     parameters:
                       environment: ${{ parameters.environment }}
                       runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
                       runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
-                      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                   - group: vh-automation-test-${{ parameters.environment }}
                   - group: FeatureFlags_${{ parameters.environment }}
                   - group: Saucelabs
@@ -148,10 +149,6 @@ stages:
               - group: KinlyConfiguration_${{ parameters.environment }}
               - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                 value: true
-              - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityReportFilePath
-                value: $(Build.ArtifactStagingDirectory)/axe-results.json
-              - name: SystemConfiguration.EnvironmentConfigSettings.AccessibilityHtmlReportFilePath
-                value: $(Build.ArtifactStagingDirectory)/axe-results.html
               - name: ApiClientConfiguration.BookingsApiUrl
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl

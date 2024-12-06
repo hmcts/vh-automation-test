@@ -8,12 +8,6 @@ parameters:
   - name: runHeadlessBrowser
     type: boolean
     default: false
-  - name: adminWebOverrideUrl
-    type: string
-    default: ' '
-  - name: videoWebOverrideUrl
-    type: string
-    default: ' '
 
 variables:
   - name: projectPath
@@ -34,20 +28,10 @@ variables:
     value: $(Saucelabs:AccessKey)
   - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
     value: $(ConferencePhoneNumber)
-
-  - ${{ if eq(parameters.adminWebOverrideUrl, ' ') }}:
-      - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
-        value: ${{ variables.adminWebUrl }}
-  - ${{ else }}:
-      - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
-        value: ${{ parameters.adminWebOverrideUrl }}
-
-  - ${{ if eq(parameters.videoWebOverrideUrl, ' ') }}:
-      - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
-        value: ${{ variables.videoWebUrl }}
-  - ${{ else }}:
-      - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
-        value: ${{ parameters.videoWebOverrideUrl }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
+    value: ${{ variables.adminWebUrl }}
+  - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
+    value: ${{ variables.videoWebUrl }}
 
   - name: SystemConfiguration.EnvironmentConfigSettings.Environment
     value: ${{ parameters.environment }}
