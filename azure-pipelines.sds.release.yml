@@ -59,13 +59,16 @@ stages:
 
             steps:
               # inserts variables to help create unique test names
-              - task: gitversion/setup@0
+              - task: gitversion/setup@3.0.3
                 displayName: Install GitVersion
                 inputs:
-                  versionSpec: "5.11.1"
+                  versionSpec: "6.x"
 
-              - task: gitversion/execute@0
+              - task: gitversion/execute@3.0.3
                 displayName: Determine Version
+                inputs:
+                  useConfigFile: true
+                  configFilePath: '$(Build.SourcesDirectory)/GitVersion.yml'
 
               - task: FileTransform@1
                 displayName: Transform App Settings
