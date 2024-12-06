@@ -100,6 +100,7 @@ stages:
                   - script: |
                       echo "adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}"
                       echo "adminWebUrl: ${{ variables.adminWebUrl }}"
+                      echo "Config: ${{ variables.SystemConfiguration.EnvironmentConfigSettings.AdminUrl }}"
 
                   - template: pipelines/templates/run-ui-test.yaml
                     parameters:
