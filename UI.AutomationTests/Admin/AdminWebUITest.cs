@@ -5,7 +5,6 @@ namespace UI.AutomationTests.Admin;
 public abstract class AdminWebUiTest : CommonUiTest
 {
     protected readonly string AdminLoginUsername = "auto_aw.videohearingsofficer_02@hearings.reform.hmcts.net";
-    protected EnvironmentConfigSettings EnvConfigSettings;
     protected IVhDriver VhDriver;
 
     [OneTimeSetUp]
@@ -20,18 +19,13 @@ public abstract class AdminWebUiTest : CommonUiTest
     protected virtual async Task Setup()
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
-        VhDriver = EnvConfigSettings.RunOnSauceLabs ? new RemoteChromeVhDriver() : new LocalChromeVhDriver();
+        VhDriver = CreateDriver(null);
         
         await InitTest();
         
-        UiTestReport = TestReporterInstance.Instance();
-        var nunitTest = TestContext.CurrentContext.Test;
-        var testName = nunitTest.Name;
-        var description = nunitTest.Properties.Get("Description")?.ToString() ?? string.Empty;
-        var categories = nunitTest.Properties["Category"].ToList().Select(x => x.ToString()).ToArray();
-        UiTestReport.SetupTest(testName, description, categories);
+        SetupUiTestReport();
     }
-    
+
     /// <summary>
     /// Run ad-hoc clean up tasks for a test
     /// </summary>

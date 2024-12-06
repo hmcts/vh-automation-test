@@ -22,8 +22,6 @@ public abstract class VideoWebUiTest : CommonUiTest
     /// </summary>
     protected IVhDriver AdminWebDriver;
 
-    protected EnvironmentConfigSettings EnvConfigSettings;
-
     /// <summary>
     ///     These drivers will store the participants' drivers for a given hearing
     /// </summary>
@@ -32,7 +30,6 @@ public abstract class VideoWebUiTest : CommonUiTest
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
         VideoApiClient = await VhApiClientFactory.CreateVideoApiClient();
     }
@@ -42,7 +39,6 @@ public abstract class VideoWebUiTest : CommonUiTest
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         AdminWebDriver = CreateDriver("AdminWeb");
-        
     }
 
     [TearDown]
@@ -176,13 +172,6 @@ public abstract class VideoWebUiTest : CommonUiTest
         };
         ParticipantDrivers[username] = participant;
         return participant;
-    }
-    
-    private IVhDriver CreateDriver(string username = null)
-    {
-        return EnvConfigSettings.RunOnSauceLabs
-            ? new RemoteChromeVhDriver(username: username)
-            : new LocalChromeVhDriver();
     }
 
     /// <summary>
