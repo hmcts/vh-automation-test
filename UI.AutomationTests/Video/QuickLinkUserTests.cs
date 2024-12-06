@@ -97,7 +97,6 @@ public class QuickLinkUserTests : VideoWebUiTest
         var bookingDetailsPage = bookingListPage.ViewBookingDetails(hearing.Cases[0].Number);
         _quickLinkJoinUrl = bookingDetailsPage.GetQuickLinkJoinUrl(EnvConfigSettings.VideoUrl);
         bookingDetailsPage.SignOut();
-        AdminWebDriver.Terminate();
         await TestContext.Out.WriteLineAsync(_quickLinkJoinUrl);
     }
 
