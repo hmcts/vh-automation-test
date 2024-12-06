@@ -150,14 +150,14 @@ steps:
     displayName: Add NuGet Feed Authentication
     workingDirectory: $(Build.SourcesDirectory)
 
-  # - task: DotNetCoreCLI@2
-  #   displayName: Run UI Tests
-  #   inputs:
-  #     command: test
-  #     projects: '${{ parameters.projectpath }}/*.csproj'
-  #     publishTestResults: true
-  #     testRunTitle: '${{ parameters.testRunTitle }}'
-  #     ${{ if eq(parameters.testCategory, '') }}:
-  #       arguments: '--configuration Release'
-  #     ${{ else }}:
-  #       arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
+  - task: DotNetCoreCLI@2
+    displayName: Run UI Tests
+    inputs:
+      command: test
+      projects: '${{ parameters.projectpath }}/*.csproj'
+      publishTestResults: true
+      testRunTitle: '${{ parameters.testRunTitle }}'
+      ${{ if eq(parameters.testCategory, '') }}:
+        arguments: '--configuration Release'
+      ${{ else }}:
+        arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
