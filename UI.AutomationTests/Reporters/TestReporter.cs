@@ -63,7 +63,11 @@ public class TestReporter
         var logStatus = ConvertNUnitTestResultToExtentReportLogStatus();
         var test = _tests[TestContext.CurrentContext.Test.Name];
         var sb = new StringBuilder(TestContext.CurrentContext.Result.Message);
-        sb.AppendLine(TestContext.CurrentContext.Result.StackTrace);
+        if (logStatus != Status.Pass)
+        {
+            sb.AppendLine(TestContext.CurrentContext.Result.StackTrace);
+        }
+
         LogEntry(test, logStatus, sb.ToString(), driver.TakeScreenshotAsBase64());
         _extent.Flush();
     }

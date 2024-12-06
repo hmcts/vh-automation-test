@@ -45,7 +45,10 @@ public class BookHearingTests : AdminWebUiTest
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        
+        var otherInformationPage = FeatureToggle.Instance().SpecialMeasuresEnabled() ?
+            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage() :
+            videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
 

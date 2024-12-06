@@ -43,14 +43,12 @@ public abstract class AdminWebUiTest : CommonUiTest
         var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
                       TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
         
-        UiTestReport?.AddScreenshotsToReport(VhDriver.GetDriver());
-        UiTestReport?.ProcessTest(VhDriver.GetDriver());
-        UiTestReport?.Flush();
-        
+        BuildUiReport(VhDriver);
+
         VhDriver.PublishTestResult(passed);
         VhDriver.Terminate();
     }
-    
+
     /// <summary>
     /// Run ad-hoc clean up tasks for a test
     /// </summary>

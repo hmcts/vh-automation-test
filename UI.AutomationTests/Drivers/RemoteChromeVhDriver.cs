@@ -123,9 +123,4 @@ public class RemoteChromeVhDriver : IVhDriver
             TestContext.Out.WriteLine($"<{e.GetType().Name}> Failed to report test status to SauceLabs: {e.Message}");
         }
     }
-
-    public void CaptureScreenShot()
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -102,6 +102,13 @@ public abstract class CommonUiTest
         UiTestReport.SetupTest(testName, description, categories);
     }
     
+    protected void BuildUiReport(IVhDriver vhDriver)
+    {
+        UiTestReport?.AddScreenshotsToReport(vhDriver.GetDriver());
+        UiTestReport?.ProcessTest(vhDriver.GetDriver());
+        UiTestReport?.Flush();
+    }
+    
     private async Task DeleteUsers()
     {
         foreach (var userPrincipleName in CreatedUsers)

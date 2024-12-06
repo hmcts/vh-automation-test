@@ -39,6 +39,7 @@ public abstract class VideoWebUiTest : CommonUiTest
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
         AdminWebDriver = CreateDriver("AdminWeb");
+        SetupUiTestReport();
     }
 
     [TearDown]
@@ -49,12 +50,14 @@ public abstract class VideoWebUiTest : CommonUiTest
                      TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
    
         AdminWebDriver.PublishTestResult(passed);
+        BuildUiReport(AdminWebDriver);
         AdminWebDriver.Terminate();
         AdminWebDriver = null;
         
         ParticipantDrivers.Values.ToList().ForEach(x =>
         {
             x.Driver.PublishTestResult(passed);
+            BuildUiReport(x.Driver);
             x.Driver.Terminate();
         });
         ParticipantDrivers.Clear();

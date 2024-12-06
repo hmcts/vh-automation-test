@@ -1,4 +1,6 @@
-﻿namespace UI.PageModels.Pages.Admin.Booking;
+﻿using UI.Common.Utilities;
+
+namespace UI.PageModels.Pages.Admin.Booking;
 
 public class HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
@@ -59,7 +61,9 @@ public class HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : VhAdmi
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        var otherInformationPage = FeatureToggle.Instance().SpecialMeasuresEnabled() ?
+            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage() :
+            videoAccessPointsPage.GoToOtherInformationPage();
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
 
