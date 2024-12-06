@@ -75,12 +75,12 @@ steps:
     displayName: Change User API client secrets to variables
 
   # inserts variables to help create unique test names
-  - task: gitversion/setup@0
+  - task: gitversion/setup@3.0.3
     displayName: Install GitVersion
     inputs:
       versionSpec: '6.x'
 
-  - task: gitversion/execute@0
+  - task: gitversion/execute@3.0.3
     displayName: Determine Version
     inputs:
       useConfigFile: true
