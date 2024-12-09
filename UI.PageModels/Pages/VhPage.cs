@@ -148,15 +148,15 @@ public abstract class VhPage
 
     protected void WaitForElementToBeClickable(By locator)
     {
-        WaitForElementToBeClickable(locator, DefaultWaitTime, false);
+        WaitForElementToBeClickable(locator, DefaultWaitTime);
     }
 
-    protected void WaitForElementToBeClickable(By locator, int timeOut, bool withRefresh = false)
+    protected void WaitForElementToBeClickable(By locator, int timeOut)
     {
-        TryWaitForClickable(locator, timeOut, withRefresh);
+        TryWaitForClickable(locator, timeOut);
     }
 
-    private void TryWaitForClickable(By locator, int timeOut, bool withRefresh)
+    private void TryWaitForClickable(By locator, int timeOut)
     {
         const int maxAttempts = 3;
 
@@ -168,18 +168,15 @@ public abstract class VhPage
                     .Until(ExpectedConditions.ElementToBeClickable(locator));
                 return;
             }
-            catch (StaleElementReferenceException)
+            catch (StaleElementReferenceException e)
             {
                 if (attempts == maxAttempts - 1) 
-                    throw;
+                    throw new WebDriverException($"Element {locator} not clickable after {maxAttempts} attempts", e);
             }
-            catch (WebDriverTimeoutException)
+            catch (WebDriverTimeoutException e)
             {
-                if (!withRefresh) throw;
-                Driver.Navigate().Refresh();
-                
-                if (attempts == maxAttempts - 1) 
-                    throw;
+                if (attempts == maxAttempts - 1)
+                    throw new WebDriverTimeoutException($"Element {locator} not clickable after {maxAttempts} attempts", e);
             }
         }
     }

@@ -33,6 +33,8 @@ namespace UI.AutomationTests.Video
             judgeWaitingRoomPage.ParticipantExistsInHearingRoom(newDisplayName).Should().BeTrue();
             judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
             judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
+            judgeWaitingRoomPage.GetConsultationCloseTime().Should()
+                .MatchRegex(@"The consultation room will close at \d{2}:\d{2}");
             Assert.Pass();
         }
 
