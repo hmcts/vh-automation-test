@@ -1,4 +1,3 @@
-using ChromeForTesting;
 using WebDriverManager;
 
 namespace UI.AutomationTests.Drivers;
@@ -9,15 +8,9 @@ public class LocalChromeVhDriver : IVhDriver
 
     public LocalChromeVhDriver()
     {
-        // var chromePath = ChromeForTestingInstance.ChromePath;
-        var driverPath = new DriverManager().SetUpDriver(new ChromeConfig());
-        TestContext.Out.WriteLine($"Using chrome driver at {driverPath}");
-        var cService = ChromeDriverService.CreateDefaultService(driverPath);
-        // TestContext.Out.WriteLine($"Using chrome binary at {chromePath}");
-        var chromeOptions = new ChromeOptions()
-        {
-            // BinaryLocation = chromePath,
-        };
+        // download the latest chrome
+        new DriverManager().SetUpDriver(new ChromeConfig());
+        var chromeOptions = new ChromeOptions();
         
         chromeOptions.AddArgument("--lang=en-GB"); // Set the region to English (UK)
         chromeOptions.AddArgument("--start-maximized");
@@ -27,7 +20,6 @@ public class LocalChromeVhDriver : IVhDriver
         chromeOptions.AddArgument("--use-fake-device-for-media-stream");
 
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
-        var timeout = envConfigSettings.SauceLabsConfiguration.CommandTimeoutInSeconds;
         if (envConfigSettings.RunHeadlessBrowser)
         {
             chromeOptions.AddArgument("--disable-dev-shm-usage"); // Overcome limited resource problems
@@ -35,7 +27,7 @@ public class LocalChromeVhDriver : IVhDriver
             // chromeOptions.AddArgument("--disable-gpu"); // Applicable to Windows OS only
             // chromeOptions.AddArgument("--remote-debugging-port=9230"); // Debugging port
         }
-        _driver = new ChromeDriver(cService, chromeOptions, TimeSpan.FromSeconds(timeout));
+        _driver = new ChromeDriver(chromeOptions);
         var lang = (string)((IJavaScriptExecutor)_driver).ExecuteScript("return navigator.language || navigator.userLanguage");
         TestContext.Out.WriteLine($"Browser language: {lang}");
 
