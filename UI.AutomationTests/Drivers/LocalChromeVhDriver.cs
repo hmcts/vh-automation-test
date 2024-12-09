@@ -9,14 +9,16 @@ public class LocalChromeVhDriver : IVhDriver
 
     public LocalChromeVhDriver()
     {
-        var chromePath = ChromeForTestingInstance.ChromePath;
-        new DriverManager().SetUpDriver(new ChromeConfig());
-        var cService = ChromeDriverService.CreateDefaultService();
-        TestContext.Out.WriteLine($"Using chrome binary at {chromePath}");
+        // var chromePath = ChromeForTestingInstance.ChromePath;
+        var driverPath = new DriverManager().SetUpDriver(new ChromeConfig());
+        TestContext.Out.WriteLine($"Using chrome driver at {driverPath}");
+        var cService = ChromeDriverService.CreateDefaultService(driverPath);
+        // TestContext.Out.WriteLine($"Using chrome binary at {chromePath}");
         var chromeOptions = new ChromeOptions()
         {
-            BinaryLocation = chromePath
+            // BinaryLocation = chromePath,
         };
+        
         chromeOptions.AddArgument("--lang=en-GB"); // Set the region to English (UK)
         chromeOptions.AddArgument("--start-maximized");
         chromeOptions.AddArgument("--no-sandbox");
@@ -24,14 +26,16 @@ public class LocalChromeVhDriver : IVhDriver
         chromeOptions.AddArgument("--use-fake-ui-for-media-stream");
         chromeOptions.AddArgument("--use-fake-device-for-media-stream");
 
-        if (ConfigRootBuilder.EnvConfigInstance().RunHeadlessBrowser)
+        var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
+        var timeout = envConfigSettings.SauceLabsConfiguration.CommandTimeoutInSeconds;
+        if (envConfigSettings.RunHeadlessBrowser)
         {
             chromeOptions.AddArgument("--disable-dev-shm-usage"); // Overcome limited resource problems
             chromeOptions.AddArgument("--headless"); // Run in headless mode if needed
-            chromeOptions.AddArgument("--disable-gpu"); // Applicable to Windows OS only
-            chromeOptions.AddArgument("--remote-debugging-port=9222"); // Debugging port
+            // chromeOptions.AddArgument("--disable-gpu"); // Applicable to Windows OS only
+            // chromeOptions.AddArgument("--remote-debugging-port=9230"); // Debugging port
         }
-        _driver = new ChromeDriver(cService, chromeOptions);
+        _driver = new ChromeDriver(cService, chromeOptions, TimeSpan.FromSeconds(timeout));
         var lang = (string)((IJavaScriptExecutor)_driver).ExecuteScript("return navigator.language || navigator.userLanguage");
         TestContext.Out.WriteLine($"Browser language: {lang}");
 

@@ -105,4 +105,9 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
         var locator = By.XPath($"//span[@class='wrap-anywhere'][normalize-space()='{displayName}']");
         return IsElementVisible(locator);
     }
+
+    public string GetConsultationCloseTime()
+    {
+        return GetText(By.Id("hearing-consultation-closing-time"));
+    }
 }
