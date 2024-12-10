@@ -4,6 +4,7 @@ using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V1.Responses;
 using UI.AutomationTests.Reporters;
+using UI.PageModels.Extensions;
 using UI.PageModels.Utilities;
 using UserApi.Client;
 
@@ -78,6 +79,7 @@ public abstract class CommonUiTest
 
     protected IVhDriver CreateDriver(string username)
     {
+        ArgumentNullException.ThrowIfNull(username);
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         IVhDriver driver;
         if (envConfigSettings.RunHeadlessBrowser || !envConfigSettings.RunOnSauceLabs)
@@ -88,6 +90,8 @@ public abstract class CommonUiTest
         {
             driver = new RemoteChromeVhDriver(username: username);
         }
+
+        driver.GetDriver().StoreUsername(username);
 
         return driver;
     }
@@ -102,10 +106,10 @@ public abstract class CommonUiTest
         UiTestReport.SetupTest(testName, description, categories);
     }
     
-    protected void BuildUiReport(IVhDriver vhDriver)
+    protected void BuildUiReport(IVhDriver vhDriver, string username)
     {
-        UiTestReport?.AddScreenshotsToReport(vhDriver.GetDriver());
-        UiTestReport?.ProcessTest(vhDriver.GetDriver());
+        UiTestReport?.AddScreenshotsToReport(vhDriver.GetDriver(), username);
+        UiTestReport?.ProcessTest(vhDriver.GetDriver(), username);
         UiTestReport?.Flush();
     }
     

@@ -17,5 +17,6 @@ public enum JourneyType
     Judge,
     Vho,
     QuickLinkParticipant,
-    StaffMember
+    StaffMember,
+    Jvs
 }

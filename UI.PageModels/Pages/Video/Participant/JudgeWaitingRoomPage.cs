@@ -108,6 +108,6 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
 
     public string GetConsultationCloseTime()
     {
-        return GetText(By.Id("hearing-consultation-closing-time"));
+        return GetText(By.XPath("//span[@id='hearing-consultation-closing-time']/parent::strong"));
     }
 }

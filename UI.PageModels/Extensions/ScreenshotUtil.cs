@@ -18,7 +18,8 @@ public static class ScreenshotUtil
         var testName = Environment.GetEnvironmentVariable(VhPage.VHTestNameKey);
         var imageBase64Encoded = driver.TakeScreenshotAsBase64();
         var screenshotCollector = ScreenshotCollector.Instance();
-        screenshotCollector.AddImage(testName!, imageBase64Encoded, sectionTitle, imageTitle, status);
+        screenshotCollector.AddImage(testName!, imageBase64Encoded, sectionTitle, imageTitle,
+            driver.GetStoredUsername(), status);
     }
     
     /// <summary>

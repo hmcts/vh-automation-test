@@ -6,7 +6,7 @@ public abstract class VhLoginPage : VhPage
     private readonly By _passwordField = By.Id("i0118");
     private readonly By _signInBtn = By.Id("idSIButton9"); // also the next button
     private readonly By _usernameTextfield = By.Id("i0116");
-
+    
     protected VhLoginPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime, useAltLocator:false)
     {
     }

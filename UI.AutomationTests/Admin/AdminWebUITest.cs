@@ -19,7 +19,7 @@ public abstract class AdminWebUiTest : CommonUiTest
     protected virtual async Task Setup()
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
-        VhDriver = CreateDriver(null);
+        VhDriver = CreateDriver(AdminLoginUsername);
         
         await InitTest();
         
@@ -43,7 +43,7 @@ public abstract class AdminWebUiTest : CommonUiTest
         var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
                       TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
         
-        BuildUiReport(VhDriver);
+        BuildUiReport(VhDriver, AdminLoginUsername);
 
         VhDriver.PublishTestResult(passed);
         VhDriver.Terminate();

@@ -1,5 +1,6 @@
 using System.Net;
 using UI.AutomationTests.Models;
+using UI.PageModels.Pages.PexipInfinityWeb;
 using UI.PageModels.Pages.Video;
 using UI.PageModels.Pages.Video.Participant;
 using UI.PageModels.Pages.Video.QuickLink;
@@ -38,7 +39,8 @@ public abstract class VideoWebUiTest : CommonUiTest
     protected virtual void Setup()
     {
         Environment.SetEnvironmentVariable(VhPage.VHTestNameKey, TestContext.CurrentContext.Test.Name);
-        AdminWebDriver = CreateDriver("AdminWeb");
+
+        AdminWebDriver = CreateDriver(AdminLoginUsername);
         SetupUiTestReport();
     }
 
@@ -48,22 +50,23 @@ public abstract class VideoWebUiTest : CommonUiTest
         CleanUp();
         var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped ||
                      TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
-   
+
+
         AdminWebDriver.PublishTestResult(passed);
-        BuildUiReport(AdminWebDriver);
+        BuildUiReport(AdminWebDriver, AdminLoginUsername);
         AdminWebDriver.Terminate();
         AdminWebDriver = null;
         
         ParticipantDrivers.Values.ToList().ForEach(x =>
         {
             x.Driver.PublishTestResult(passed);
-            BuildUiReport(x.Driver);
+            BuildUiReport(x.Driver, x.Username);
             x.Driver.Terminate();
         });
         ParticipantDrivers.Clear();
         AccessibilityResultCollection.Clear();
     }
-    
+
     protected virtual async Task<ConferenceDetailsResponse> GetConference(Guid hearingId)
     {
         var pollCount = 0;
@@ -144,6 +147,13 @@ public abstract class VideoWebUiTest : CommonUiTest
         driver.Navigate().GoToUrl(quickLinkJoinUrl);
         return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);
     }
+    
+    protected PexipWebAppPage LoginAsJvsEndpoint(string jvsUrl, string displayName){
+        var participant = InitVideoWebParticipant(displayName, JourneyType.Jvs);
+        var driver = participant.Driver.GetDriver();
+        driver.Navigate().GoToUrl(jvsUrl);
+        return new PexipWebAppPage(driver, EnvConfigSettings.DefaultElementWait);
+    }
 
     /// <summary>
     /// To avoid getting caught out by the IDP selection page when the toggle is turned on, retrieve the IDP specific sign-in url.
@@ -191,7 +201,7 @@ public abstract class VideoWebUiTest : CommonUiTest
     /// </summary>
     protected void SignOutAllUsers()
     {
-        foreach (var videoWebParticipant in ParticipantDrivers.Values)
+        foreach (var videoWebParticipant in ParticipantDrivers.Values.Where(x=> x.JourneyType != JourneyType.Jvs))
         {
             TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
             videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);

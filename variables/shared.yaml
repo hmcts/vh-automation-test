@@ -19,13 +19,15 @@ variables:
   - name: SystemConfiguration.EnvironmentConfigSettings.RunOnSauceLabs
     value: ${{ parameters.runOnSauceLabs }}
   - name: SystemConfiguration.EnvironmentConfigSettings.RunHeadlessBrowser
-    value: true
+    value: ${{ parameters.runHeadlessBrowser }}
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceUsername
     value: $(Saucelabs:Username)
   - name: SystemConfiguration.EnvironmentConfigSettings.SauceLabsConfiguration.SauceAccessKey
     value: $(Saucelabs:AccessKey)
   - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
     value: $(ConferencePhoneNumber)
+  - name: SystemConfiguration.EnvironmentConfigSettings.PexipNodeAddress
+    value: $(VodafonePexipNode)
   - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl
