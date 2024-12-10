@@ -1,6 +1,4 @@
-
 using System.Diagnostics;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -134,27 +132,23 @@ public abstract class VhPage
                 }
             );
     }
-
-    protected void WaitForElementToBeVisible(By locator)
-    {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(DefaultWaitTime))
-            .Until(ExpectedConditions.ElementIsVisible(locator));
-    }
     
-    protected void WaitForElementToBeVisible(By locator, int timeOut)
+    protected void WaitForElementToBeVisible(By locator, int? timeOut = null)
     {
-        new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut))
-            .Until(ExpectedConditions.ElementIsVisible(locator));
+        try
+        {
+            new WebDriverWait(Driver, TimeSpan.FromSeconds(timeOut ??  DefaultWaitTime))
+                .Until(ExpectedConditions.ElementIsVisible(locator));
+        }
+        catch (WebDriverTimeoutException ex)
+        {
+            BuildAndThrowWebDriverException(locator, timeOut, ex, 2, isTryingToClick:false);
+        }
     }
 
-    protected void WaitForElementToBeClickable(By locator)
+    protected void WaitForElementToBeClickable(By locator, int? timeOut = null)
     {
-        WaitForElementToBeClickable(locator, DefaultWaitTime);
-    }
-
-    protected void WaitForElementToBeClickable(By locator, int timeOut)
-    {
-        TryWaitForClickable(locator, timeOut);
+        TryWaitForClickable(locator, timeOut ?? DefaultWaitTime);
     }
 
     private void TryWaitForClickable(By locator, int timeOut)
@@ -171,13 +165,13 @@ public abstract class VhPage
             }
             catch (StaleElementReferenceException e)
             {
-                if (attempts == maxAttempts - 1) 
-                    throw new WebDriverException($"Element {locator} not clickable after {maxAttempts} attempts", e);
+                if (attempts == maxAttempts - 1)
+                    BuildAndThrowWebDriverException(locator, timeOut, e, 3, isTryingToClick:true);
             }
             catch (WebDriverTimeoutException e)
             {
                 if (attempts == maxAttempts - 1)
-                    throw new WebDriverTimeoutException($"Element {locator} not clickable after {maxAttempts} attempts", e);
+                    BuildAndThrowWebDriverException(locator, timeOut, e, 3, isTryingToClick:true);
             }
         }
     }
@@ -280,5 +274,17 @@ public abstract class VhPage
         }
 
         return element;
+    }
+    
+    private void BuildAndThrowWebDriverException(By locator, int? timeOut, WebDriverException e, int methodDepth, bool isTryingToClick)
+    {
+        var clickOrViewText = isTryingToClick 
+            ? $"was unable to be clicked using locator {locator}" 
+            : $"with locator {locator} was not visible";
+        var stackTrace = new StackTrace();
+        var callingClassName = stackTrace
+            .GetFrame(methodDepth)!
+            .GetMethod()!.DeclaringType!.Name;
+        throw new WebDriverException($"Element on page {callingClassName} {clickOrViewText} after {timeOut ?? DefaultWaitTime} seconds", e);
     }
 }
