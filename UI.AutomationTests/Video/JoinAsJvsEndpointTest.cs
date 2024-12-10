@@ -6,6 +6,7 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
 {
     [Test]
     [Category("video")]
+    [Category("coreVideo")]
     public async Task ConnectToPexipAsJvsEndpoint()
     {
         // Arrange
