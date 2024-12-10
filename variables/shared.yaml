@@ -26,6 +26,8 @@ variables:
     value: $(Saucelabs:AccessKey)
   - name: SystemConfiguration.EnvironmentConfigSettings.UKConferencePhoneNumber
     value: $(ConferencePhoneNumber)
+  - name: SystemConfiguration.EnvironmentConfigSettings.PexipNodeAddress
+    value: $(VodafonePexipNode)
   - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl

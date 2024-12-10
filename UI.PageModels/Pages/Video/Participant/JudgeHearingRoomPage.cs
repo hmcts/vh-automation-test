@@ -28,13 +28,25 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         var admitButton = ParticipantAdmitButton(participantId);
         WaitForElementToBeVisible(admitButton);
         ClickElement(admitButton);
+        var transferringInText = GetText(By.CssSelector($"#participants-panel-{participantId}-transferring-in-text"));
+        if (!transferringInText.Equals("Joining..."))
+        {
+            Driver.TakeScreenshotAndSave(GetType().Name, "Admit participant failed");
+            throw new InvalidOperationException("Participant joining text is not appearing as expected");
+        }
         WaitForElementToBeVisible(ParticipantRemoteMuteButton(displayName), 60);
     }
-    
-    public void DismissParticipant(string participantDisplayName)
+
+    /// <summary>
+    /// Dismiss the participant from the hearing via the context menu
+    /// </summary>
+    /// <param name="participantDisplayName"></param>
+    /// <param name="participantId">The id from Video API (not the booking)</param>
+    public void DismissParticipant(string participantDisplayName, string participantId)
     {
         OpenContextMenu(participantDisplayName);
-        var dismissButton = ParticipantDismissButton(participantDisplayName);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Conext menu opened");
+        var dismissButton = ParticipantDismissButton(participantId);
         WaitForElementToBeVisible(dismissButton);
         ClickElement(dismissButton);
         WaitForElementToBeVisible(ParticipantAdmitIconButton(participantDisplayName));
@@ -97,9 +109,9 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         return By.Id($"participants-panel-{participantId}-admit-participant-icon");
     }
     
-    private By ParticipantDismissButton(string participantDisplayName)
+    private By ParticipantDismissButton(string participantId)
     {
-        return By.XPath($"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])/../following-sibling::div[position()=5]//a[normalize-space()='Dismiss participant']");
+        return By.CssSelector($"[id^='judge-context-menu-participant-{participantId}-dismiss-']");
     }
     
     private By ParticipantRemoteMuteButton(string participantDisplayName)

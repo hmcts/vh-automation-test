@@ -233,8 +233,25 @@ public static class HearingTestData
                     ContactTelephone = bookingDto.Judge.Phone
                 }
             ],
-            BookingSupplier = VodafoneEnabled ? BookingSupplier.Vodafone : BookingSupplier.Kinly,
+            BookingSupplier = BookingSupplier.Vodafone,
         };
+        return request;
+    }
+    
+    public static BookNewHearingRequestV2 CreateNewRequestDtoJudgeAndEndpoint(bool remote = false,
+        DateTime? scheduledDateTime = null)
+    {
+        var request = CreateNewRequestDtoWithOnlyAJudge(remote, scheduledDateTime);
+
+        request.Endpoints =
+        [
+            new EndpointRequestV2
+            {
+                DisplayName = "Auto EP 1",
+                ExternalParticipantId = Guid.NewGuid().ToString(),
+            }
+        ];
+        
         return request;
     }
 }

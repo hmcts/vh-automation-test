@@ -97,7 +97,7 @@ stages:
                   - group: vh-automation-test-${{ parameters.environment }}
                   - group: FeatureFlags_${{ parameters.environment }}
                   - group: Saucelabs
-                  - group: KinlyConfiguration_${{ parameters.environment }}
+                  - group: VodafoneConfiguration_${{ parameters.environment }}
                   - name: ApiClientConfiguration.BookingsApiUrl
                     value: ${{ variables.bookingsApiUrl }}
                   - name: ApiClientConfiguration.VideoApiUrl
@@ -159,7 +159,7 @@ stages:
               - group: vh-automation-test-${{ parameters.environment }}
               - group: Saucelabs
               - group: FeatureFlags_${{ parameters.environment }}
-              - group: KinlyConfiguration_${{ parameters.environment }}
+              - group: VodafoneConfiguration_${{ parameters.environment }}
               - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
                 value: true
               - name: ApiClientConfiguration.BookingsApiUrl

@@ -1,5 +1,6 @@
 using System.Text;
 using AventStack.ExtentReports;
+using AventStack.ExtentReports.Model;
 using AventStack.ExtentReports.Reporter;
 using UI.PageModels.Extensions;
 using UI.PageModels.Utilities;
@@ -58,7 +59,7 @@ public class TestReporter
         _tests.Add(testName, test);
     }
 
-    public void ProcessTest(IWebDriver driver)
+    public void ProcessTest(IWebDriver driver, string username)
     {
         var logStatus = ConvertNUnitTestResultToExtentReportLogStatus();
         var test = _tests[TestContext.CurrentContext.Test.Name];
@@ -68,29 +69,33 @@ public class TestReporter
             sb.AppendLine(TestContext.CurrentContext.Result.StackTrace);
         }
 
+        var children = test.Model.Children;
         LogEntry(test, logStatus, sb.ToString(), driver.TakeScreenshotAsBase64());
         _extent.Flush();
     }
 
-    public void AddScreenshotsToReport(IWebDriver driver)
+    public void AddScreenshotsToReport(IWebDriver driver, string username)
     {
+        ArgumentNullException.ThrowIfNull(username);
         driver.TakeScreenshotAndSave("End of Test", "End of Test", ConvertNUnitTestResultToExtentReportLogStatus());
         var testName = Environment.GetEnvironmentVariable(VhPage.VHTestNameKey)!;
-        var images = ScreenshotCollector.Instance().GetImages(testName);
-        
+        var images = ScreenshotCollector.Instance().GetImages(testName, username);
+
         var testReport = _tests[testName];
+        var userNode =  testReport.CreateNode("User: " + username);
+
         ExtentTest node = null;
         foreach (var screenshotDto in images)
         {
             if (node == null || node.Model.Name != screenshotDto.Page)
             {
-                node = testReport.CreateNode(screenshotDto.Page);
+                node = userNode.CreateNode(screenshotDto.Page);
             }
-            
+
             LogEntry(node, screenshotDto.Status, screenshotDto.Action, screenshotDto.ImageBase64Encoded);
         }
     }
-    
+
     private void LogEntry(ExtentTest test, Status logStatus, string message, string imageBase64Encoded)
     {
         if(logStatus == Status.Fail)

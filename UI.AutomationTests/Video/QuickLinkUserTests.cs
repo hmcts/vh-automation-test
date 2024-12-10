@@ -60,8 +60,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeHearingRoomPage.IsParticipantInHearing(quicklink1.DisplayName).Should().BeTrue();
         judgeHearingRoomPage.IsParticipantInHearing(quicklink2.DisplayName).Should().BeTrue();
 
-        judgeHearingRoomPage.DismissParticipant(quicklink1.DisplayName);
-        judgeHearingRoomPage.DismissParticipant(quicklink2.DisplayName);
+        judgeHearingRoomPage.DismissParticipant(quicklink1.DisplayName, quicklink1.Id.ToString());
+        judgeHearingRoomPage.DismissParticipant(quicklink2.DisplayName, quicklink1.Id.ToString());
 
         qlHearingRoom1.TransferToWaitingRoom();
         qlHearingRoom2.TransferToWaitingRoom();
