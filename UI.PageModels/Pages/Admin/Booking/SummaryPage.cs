@@ -64,7 +64,7 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
     public ParticipantsPage ChangeParticipants()
     {
         ClickElement(_participantsBreadcrumbLink);
-        return new ParticipantsPage(Driver, DefaultWaitTime);
+        return new ParticipantsPage(Driver, DefaultWaitTime, true);
     }
     
     private void ValidateEndpointsAndOtherInformation(BookingDto bookingDto)

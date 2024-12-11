@@ -50,7 +50,16 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
     {
         var path = $"//dl[contains(., '{fullName}')]//span[contains(text(), 'Connected')]";
         WaitForElementToBeVisible(By.XPath(path));
- 
+    }
+    
+    /// <summary>
+    /// Use the participant id to wait for the participant to be connected (from Video API)
+    /// </summary>
+    /// <param name="participantId"></param>
+    public void WaitForParticipantToBeConnectedById(string participantId)
+    {
+        var path = $"//span[@id='p-{participantId}-status-participant'][.=' Connected ']";
+        WaitForElementToBeVisible(By.XPath(path));
     }
 
     public string GetVideoAccessPointStatus(string accessPointName)

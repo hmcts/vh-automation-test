@@ -1,4 +1,7 @@
 using UI.PageModels.Pages.PexipInfinityWeb;
+using UI.PageModels.Pages.Video.Participant;
+using VideoApi.Contract.Enums;
+using VideoApi.Contract.Responses;
 
 namespace UI.AutomationTests.Video;
 
@@ -7,7 +10,7 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
     [Test]
     [Category("video")]
     [Category("coreVideo")]
-    public async Task ConnectToPexipAsJvsEndpoint()
+    public async Task LoginWithJvsWithLinkedDefenceAdvocate()
     {
         // Arrange
         var hearing = await CreateTestHearing();
@@ -28,6 +31,9 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         var jvsWebPage = LoginAsJvsEndpoint(pexipWebAppUrl, endpoint.DisplayName);
         jvsWebPage.ClickJoinMeetingButton();
 
+        var representative = conference.Participants.First(x => x.UserRole == UserRole.Representative && endpoint.DefenceAdvocate == x.Username);
+        var participantWaitingRoom = LoginInAsParticipantToWaitingRoomJourney(conference, representative);
+        
         // log in as judge and start the hearing
         var judgeUsername = hearing.JudicialOfficeHolders[0].Email;
         var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
@@ -35,15 +41,28 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
         
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(endpoint.DisplayName);
+        judgeWaitingRoomPage.WaitForParticipantToBeConnectedById(representative.Id.ToString());
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         judgeHearingRoomPage.WaitForCountdownToComplete();
         judgeHearingRoomPage.IsParticipantInHearing(endpoint.DisplayName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(representative.DisplayName).Should().BeTrue();
+
+        var participantHearingRoom = participantWaitingRoom.TransferToHearingRoom();
 
         judgeHearingRoomPage.DismissParticipant(endpoint.DisplayName, endpoint.Id.ToString());
         judgeHearingRoomPage.IsParticipantInHearing(endpoint.DisplayName).Should().BeFalse();
         
+        judgeHearingRoomPage.DismissParticipant(representative.DisplayName, representative.Id.ToString());
+        judgeHearingRoomPage.IsParticipantInHearing(representative.DisplayName).Should().BeFalse();
+        
+        // triggers the ctor to check the page has loaded correctly
+        _ = participantHearingRoom.TransferToWaitingRoom();
+        
         judgeHearingRoomPage.AdmitParticipant(endpoint.DisplayName, endpoint.Id.ToString());
         judgeHearingRoomPage.IsParticipantInHearing(endpoint.DisplayName).Should().BeTrue();
+        
+        judgeHearingRoomPage.AdmitParticipant(representative.DisplayName, representative.Id.ToString());
+        judgeHearingRoomPage.IsParticipantInHearing(representative.DisplayName).Should().BeTrue();
         
         judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
         judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
@@ -53,11 +72,27 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         
         Assert.Pass("Logged in as JVS endpoint and connected to the hearing");
     }
-    
+
+    private ParticipantWaitingRoomPage LoginInAsParticipantToWaitingRoomJourney(ConferenceDetailsResponse conference,
+        ParticipantResponse representative)
+    {
+
+        var participantHearingList = LoginAsParticipant(representative.Username, EnvConfigSettings.UserPassword, true);
+        var participantWaitingRoom = participantHearingList
+            .SelectHearing(conference.Id).GoToEquipmentCheck()
+            .GoToSwitchOnCameraMicrophonePage()
+            .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
+            .SelectYesToVisualAndAudioClarity().AcceptCourtRules()
+            .AcceptDeclaration();
+        // store the participant driver in a dictionary, so we can access it later to sign out
+        ParticipantDrivers[representative.Username].VhVideoWebPage = participantWaitingRoom;
+        return participantWaitingRoom;
+    }
+
     private async Task<HearingDetailsResponseV2> CreateTestHearing()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateNewRequestDtoJudgeAndEndpoint(scheduledDateTime: hearingScheduledDateAndTime);
+        var hearingDto = HearingTestData.CreateNewRequestDtoJudgeAndEndpointWithLinkedDa(scheduledDateTime: hearingScheduledDateAndTime);
         return await BookingsApiClient.BookNewHearingWithCodeAsync(hearingDto);
     }
 }
