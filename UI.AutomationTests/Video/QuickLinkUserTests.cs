@@ -42,8 +42,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         ql1ConsultationPage.IsParticipantConnected(quicklink2.DisplayName).Should().BeTrue();
         ql2ConsultationPage.IsParticipantConnected(quicklink1.DisplayName).Should().BeTrue();
         
-        judgeWaitingRoomPage.GetParticipantStatus(quicklink1.DisplayName).Should().BeEquivalentTo("In Consultation");
-        judgeWaitingRoomPage.GetParticipantStatus(quicklink2.DisplayName).Should().BeEquivalentTo("In Consultation");
+        judgeWaitingRoomPage.GetParticipantStatus(quicklink1.Id).Should().BeEquivalentTo("In Consultation");
+        judgeWaitingRoomPage.GetParticipantStatus(quicklink2.Id).Should().BeEquivalentTo("In Consultation");
         
         // need to set the original waiting room object to the current page else the driver will not be able to navigate sign out
         qlWaitingRoomPage1 = ql1ConsultationPage.LeaveConsultationRoom();
@@ -57,8 +57,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         var qlHearingRoom1 = qlWaitingRoomPage1.TransferToHearingRoom();
         var qlHearingRoom2 = qlWaitingRoomPage2.TransferToHearingRoom();
         
-        judgeHearingRoomPage.IsParticipantInHearing(quicklink1.DisplayName).Should().BeTrue();
-        judgeHearingRoomPage.IsParticipantInHearing(quicklink2.DisplayName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink1.Id).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink2.Id).Should().BeTrue();
 
         judgeHearingRoomPage.DismissParticipant(quicklink1.DisplayName, quicklink1.Id.ToString());
         judgeHearingRoomPage.DismissParticipant(quicklink2.DisplayName, quicklink2.Id.ToString());
@@ -66,8 +66,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         qlHearingRoom1.TransferToWaitingRoom();
         qlHearingRoom2.TransferToWaitingRoom();
         
-        judgeHearingRoomPage.IsParticipantInHearing(quicklink1.DisplayName).Should().BeFalse();
-        judgeHearingRoomPage.IsParticipantInHearing(quicklink2.DisplayName).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink1.Id).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(quicklink2.Id).Should().BeFalse();
         
         judgeHearingRoomPage.WaitForCountdownToComplete();
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();

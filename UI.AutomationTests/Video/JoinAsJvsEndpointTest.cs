@@ -44,25 +44,25 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         judgeWaitingRoomPage.WaitForParticipantToBeConnectedById(representative.Id.ToString());
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         judgeHearingRoomPage.WaitForCountdownToComplete();
-        judgeHearingRoomPage.IsParticipantInHearing(endpoint.DisplayName).Should().BeTrue();
-        judgeHearingRoomPage.IsParticipantInHearing(representative.DisplayName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeTrue();
 
         var participantHearingRoom = participantWaitingRoom.TransferToHearingRoom();
 
         judgeHearingRoomPage.DismissParticipant(endpoint.DisplayName, endpoint.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(endpoint.DisplayName).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeFalse();
         
         judgeHearingRoomPage.DismissParticipant(representative.DisplayName, representative.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(representative.DisplayName).Should().BeFalse();
+        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeFalse();
         
         // triggers the ctor to check the page has loaded correctly
         _ = participantHearingRoom.TransferToWaitingRoom();
         
         judgeHearingRoomPage.AdmitParticipant(endpoint.DisplayName, endpoint.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(endpoint.DisplayName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeTrue();
         
         judgeHearingRoomPage.AdmitParticipant(representative.DisplayName, representative.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(representative.DisplayName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeTrue();
         
         judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
         judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();

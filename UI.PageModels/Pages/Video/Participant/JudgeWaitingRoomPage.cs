@@ -41,9 +41,14 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
         return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing paused']"));
     }
 
-    public string GetParticipantStatus(string fullName)
+    /// <summary>
+    /// Get non staff member participant status
+    /// </summary>
+    /// <param name="participantId"></param>
+    /// <returns></returns>
+    public string GetParticipantStatus(Guid participantId)
     {
-        return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//span"));
+        return GetText(By.Id($"p-{participantId}-status-participant"));
     }
     
     public void WaitForParticipantToBeConnected(string fullName)
