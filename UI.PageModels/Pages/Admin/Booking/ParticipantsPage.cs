@@ -3,7 +3,7 @@
 namespace UI.PageModels.Pages.Admin.Booking;
 
 
-public class ParticipantsPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
+public class ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool isEdit = false) : VhAdminWebPage(driver, defaultWaitTime)
 {
     private readonly By _addParticipantLink = By.Id("addParticipantBtn");
     private readonly By _displayNameTextfield = By.Id("displayName");
@@ -29,8 +29,16 @@ public class ParticipantsPage(IWebDriver driver, int defaultWaitTime) : VhAdminW
     protected override void ConfirmPageHasLoaded()
     {
         WaitForApiSpinnerToDisappear();
-        WaitForElementToBeVisible(_nextButton);
-        WaitForElementToBeClickable(_nextButton);
+        if (isEdit)
+        {
+            WaitForElementToBeVisible(_addParticipantLink);
+            WaitForElementToBeClickable(_addParticipantLink);
+        }
+        else
+        {
+            WaitForElementToBeVisible(_nextButton);
+            WaitForElementToBeClickable(_nextButton);
+        }
     }
 
     public void AddAllParticipantsFromDto(BookingDto bookingDto)

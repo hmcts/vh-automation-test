@@ -41,16 +41,30 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
         return IsElementVisible(By.XPath("//h1[normalize-space()='Hearing paused']"));
     }
 
-    public string GetParticipantStatus(string fullName)
+    /// <summary>
+    /// Get non staff member participant status
+    /// </summary>
+    /// <param name="participantId"></param>
+    /// <returns></returns>
+    public string GetParticipantStatus(Guid participantId)
     {
-        return GetText(By.XPath($"//dt[normalize-space()='{fullName}']/following-sibling::dd[2]//span"));
+        return GetText(By.Id($"p-{participantId}-status-participant"));
     }
     
     public void WaitForParticipantToBeConnected(string fullName)
     {
         var path = $"//dl[contains(., '{fullName}')]//span[contains(text(), 'Connected')]";
         WaitForElementToBeVisible(By.XPath(path));
- 
+    }
+    
+    /// <summary>
+    /// Use the participant id to wait for the participant to be connected (from Video API)
+    /// </summary>
+    /// <param name="participantId"></param>
+    public void WaitForParticipantToBeConnectedById(string participantId)
+    {
+        var path = $"//span[@id='p-{participantId}-status-participant'][.=' Connected ']";
+        WaitForElementToBeVisible(By.XPath(path));
     }
 
     public string GetVideoAccessPointStatus(string accessPointName)

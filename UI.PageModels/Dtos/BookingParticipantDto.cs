@@ -9,7 +9,6 @@ public class BookingParticipantDto
     public string ContactEmail { get; set; }
     public string Phone {get; set;}
     public string DisplayName { get; set; }
-    public GenericTestParty Party { get; set; }
     public GenericTestRole Role { get; set; }
     public string Representing { get; set; }
     public string Title { get; set; }
@@ -25,7 +24,6 @@ public class BookingParticipantDto
     {
         return new BookingParticipantDto
         {
-            Party = party,
             Role = role,
             Username = username,
             ContactEmail = contactEmail,
@@ -42,7 +40,6 @@ public class BookingParticipantDto
     {
         return new BookingParticipantDto
         {
-            Party = party,
             Role = role,
             Username = username,
             ContactEmail = contactEmail,

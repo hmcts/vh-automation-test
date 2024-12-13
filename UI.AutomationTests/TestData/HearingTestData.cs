@@ -238,20 +238,46 @@ public static class HearingTestData
         return request;
     }
     
-    public static BookNewHearingRequestV2 CreateNewRequestDtoJudgeAndEndpoint(bool remote = false,
+    public static BookNewHearingRequestV2 CreateNewRequestDtoJudgeAndEndpointWithLinkedDa(bool remote = false,
         DateTime? scheduledDateTime = null)
     {
         var request = CreateNewRequestDtoWithOnlyAJudge(remote, scheduledDateTime);
-
+        var rep = KnownParticipantsForTesting().First(x => x.Role == GenericTestRole.Representative);
+        request.Participants =
+        [
+            new ParticipantRequestV2
+            {
+                ContactEmail = rep.ContactEmail,
+                DisplayName = rep.DisplayName,
+                FirstName = rep.FirstName,
+                LastName = rep.LastName,
+                ExternalParticipantId = Guid.NewGuid().ToString(),
+                HearingRoleCode = HearingRoleCodes.Representative,
+                OrganisationName = rep.Organisation,
+                Representee = "Auto EP 1"
+            }
+        ];
         request.Endpoints =
         [
             new EndpointRequestV2
             {
                 DisplayName = "Auto EP 1",
                 ExternalParticipantId = Guid.NewGuid().ToString(),
+                DefenceAdvocateContactEmail = rep.ContactEmail
             }
         ];
         
         return request;
+    }
+    
+    public static class HearingRoleCodes
+    {
+        public const string Applicant = "APPL";
+        public const string Intermediary = "INTE";
+        public const string Representative = "RPTT";
+        public const string Respondent = "RESP";
+        public const string StaffMember = "STAF";
+        public const string Interpreter = "INTP";
+        public const string WelfareRepresentative = "WERP";
     }
 }

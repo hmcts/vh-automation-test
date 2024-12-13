@@ -69,11 +69,9 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         WaitForElementToBeVisible(By.XPath($"//app-judge-context-menu//strong[text()='{participantDisplayName}']"));
     }
 
-    public bool IsParticipantInHearing(string participantDisplayName)
+    public bool IsParticipantInHearing(Guid participantId)
     {
-        var participantMicBtn =
-            By.XPath(
-                $"(//span[@class='wrap-anywhere'][normalize-space()='{participantDisplayName}'])[1]/../following-sibling::div[2]//fa-icon[@icon='microphone']");
+        var participantMicBtn = By.Id($"participants-panel-{participantId}-icon-micLocal");
         return IsElementVisible(participantMicBtn);
     }
     
@@ -91,6 +89,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     {
         const int countdown = 30;
         Thread.Sleep(TimeSpan.FromSeconds(countdown + buffer));
+        WaitForElementToBeInvisible(By.XPath("//img[@src='/assets/images/mic_remote_mute.png']"), 10);
     }
     
     private By ParticipantContextButton(string participantDisplayName)

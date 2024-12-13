@@ -89,7 +89,7 @@ public class BookingDetailsPage : VhAdminWebPage
         SwitchToEditMode();
         var participantsBreadcrumbLocator = By.XPath("//app-breadcrumb//div//ol//li//a[text()='Participants']");
         ClickElement(participantsBreadcrumbLocator);
-        var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime);
+        var participantsPage = new ParticipantsPage(Driver, DefaultWaitTime, true);
         participantsPage.AddParticipants(participantsToAdd);
         var videoAccessPointsPage = participantsPage.GoToVideoAccessPointsPage();
         // use existing booking flow (i.e. next on vap goes screening (if enabled) and then to summary page)
