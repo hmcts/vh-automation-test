@@ -132,7 +132,8 @@ stages:
                       artifactName: UI_Html_Report
 
                   - task: PublishHtmlReport@1
-                    displayName: 'Publish HTML Report'
+                    displayName: 'Publish UI Test Reports'
+                    condition: succeededOrFailed()
                     inputs:
                       reportDir: '$(Build.ArtifactStagingDirectory)/UITestReports/'
                       useFilenameTabs: true
