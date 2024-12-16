@@ -131,6 +131,13 @@ stages:
                       pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
                       artifactName: UI_Html_Report
 
+                  - task: PublishHtmlReport@1
+                    displayName: 'Publish UI Test Reports'
+                    condition: succeededOrFailed()
+                    inputs:
+                      reportDir: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+                      useFilenameTabs: true
+
                   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
                       - template: pipelines/templates/get-results-from-trx.yaml
                         parameters:
