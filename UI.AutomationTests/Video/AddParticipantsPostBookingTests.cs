@@ -32,7 +32,8 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         
         var participantsInConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
         // loop through all participants in hearing and login as each one
-        foreach (var participant in hearingDto.Participants)
+        var page = judgeWaitingRoomPage;
+        Parallel.ForEach(hearingDto.Participants, participant =>
         {
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
@@ -45,10 +46,10 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
                 .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
             // store the participant driver in a dictionary so we can access it later to sign out
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
-            
-            judgeWaitingRoomPage.WaitForParticipantToBeConnected(participant.FullName);
-            judgeWaitingRoomPage.ClearParticipantAddedNotification();
-        }
+
+            page.WaitForParticipantToBeConnected(participant.FullName);
+            page.ClearParticipantAddedNotification();
+        });
 
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         foreach (var participant in participantsToAdd)

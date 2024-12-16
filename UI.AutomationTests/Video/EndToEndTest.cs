@@ -41,10 +41,7 @@ public class EndToEndTest : VideoWebUiTest
         var commandCentrePage = CsoCommandCentreJourney(vhoVenueSelectionPage, hearingDto, out var ccHearingPanel, out var testParticipant);
 
         // loop through all participants in hearing and login as each one
-        foreach (var participant in hearingDto.Participants)
-        {
-            ParticipantLoginToWaitingRoomJourney(participant);
-        }
+        Parallel.ForEach(hearingDto.Participants, ParticipantLoginToWaitingRoomJourney);
 
         var testParticipantWaitingRoom = (ParticipantWaitingRoomPage)ParticipantDrivers[testParticipant.Username].VhVideoWebPage;
         ccHearingPanel.ValidateParticipantStatusAfterLogin(testParticipant.Id, _conference.Id.ToString());

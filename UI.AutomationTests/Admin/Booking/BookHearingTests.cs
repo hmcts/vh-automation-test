@@ -111,7 +111,7 @@ public class BookHearingTests : AdminWebUiTest
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
         
-        var otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        var otherInformationPage = videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage();
         otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
 
         var summaryPage = otherInformationPage.GoToSummaryPage();
