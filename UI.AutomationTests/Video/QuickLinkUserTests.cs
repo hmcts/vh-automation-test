@@ -60,6 +60,15 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeHearingRoomPage.IsParticipantInHearing(quicklink1.Id).Should().BeTrue();
         judgeHearingRoomPage.IsParticipantInHearing(quicklink2.Id).Should().BeTrue();
 
+        
+        judgeHearingRoomPage.WaitForCountdownToComplete();
+        
+        qlHearingRoom1.RaiseHand();
+        judgeHearingRoomPage.IsParticipantHandRaised(quicklink1.Id).Should().BeTrue();
+        judgeHearingRoomPage.LowerParticipantHand(quicklink1.Id);
+        judgeHearingRoomPage.IsParticipantHandRaised(quicklink1.Id).Should().BeFalse();
+        qlHearingRoom1.IsHandRaised().Should().BeFalse();
+        
         judgeHearingRoomPage.DismissParticipant(quicklink1.DisplayName, quicklink1.Id.ToString());
         judgeHearingRoomPage.DismissParticipant(quicklink2.DisplayName, quicklink2.Id.ToString());
 
@@ -68,8 +77,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         
         judgeHearingRoomPage.IsParticipantInHearing(quicklink1.Id).Should().BeFalse();
         judgeHearingRoomPage.IsParticipantInHearing(quicklink2.Id).Should().BeFalse();
+
         
-        judgeHearingRoomPage.WaitForCountdownToComplete();
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
 
