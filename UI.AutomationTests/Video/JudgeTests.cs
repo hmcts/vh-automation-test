@@ -33,9 +33,14 @@ namespace UI.AutomationTests.Video
             judgeWaitingRoomPage.ParticipantExistsInHearingRoom(newDisplayName).Should().BeTrue();
             judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
             judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
+            
+            var consultationRoom = judgeWaitingRoomPage.JoinJudicialConsultationRoom();
+            judgeWaitingRoomPage = consultationRoom.LeaveJudicialConsultationRoom();
+            
             judgeWaitingRoomPage.GetConsultationCloseTime().Should()
                 .MatchRegex(@"The consultation room will close at \d{2}:\d{2}");
-            Assert.Pass();
+            
+            Assert.Pass("Logged in as a judge, edited their display name, started and stopped the hearing. Then entered the consultation room.");
         }
 
         [Test]
