@@ -124,4 +124,10 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
     {
         return GetText(By.XPath("//span[@id='hearing-consultation-closing-time']/parent::strong"));
     }
+
+    public ConsultationRoomPage JoinJudicialConsultationRoom()
+    {
+        ClickElement(_enterConsultationRoomBtn);
+        return new ConsultationRoomPage(Driver, DefaultWaitTime);
+    }
 }

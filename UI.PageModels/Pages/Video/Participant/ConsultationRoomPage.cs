@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-
-namespace UI.PageModels.Pages.Video.Participant;
+﻿namespace UI.PageModels.Pages.Video.Participant;
 
 public class ConsultationRoomPage : VhVideoWebPage
 {
@@ -41,9 +39,20 @@ public class ConsultationRoomPage : VhVideoWebPage
     /// <returns>A waiting room instance</returns>
     public ParticipantWaitingRoomPage LeaveConsultationRoom()
     {
+        LeaveConsultationRoomWithConfirmation();
+        return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime);
+    }
+
+    public JudgeWaitingRoomPage LeaveJudicialConsultationRoom()
+    {
+        LeaveConsultationRoomWithConfirmation();
+        return new JudgeWaitingRoomPage(Driver, DefaultWaitTime);
+    }
+
+    private void LeaveConsultationRoomWithConfirmation()
+    {
         ClickElement(LeaveButtonDesktop);
         ClickElement(ConfirmLeaveButton);
-        return new ParticipantWaitingRoomPage(Driver, DefaultWaitTime);
     }
 
     /// <summary>
