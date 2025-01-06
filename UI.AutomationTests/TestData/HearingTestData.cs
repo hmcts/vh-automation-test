@@ -12,6 +12,12 @@ public static class HearingTestData
     public static string AltJudgePersonalCode = "VH-GENERIC-ACCOUNT-00";
     public static string JudgeUsername = "auto_aw.judge_02@hearings.reform.hmcts.net";
     public static string JudgePersonalCode = "VH-GENERIC-ACCOUNT-0";
+    
+    public const string ClerkVideoFileName = "clerk.y4m";
+    public const string Individual01FileName = "individual01.y4m";
+    public const string Individual02FileName = "individual02.y4m";
+    public const string Representative01FileName = "representative01.y4m";
+    public const string Representative02FileName = "representative02.y4m";
 
     public static bool VodafoneEnabled = FeatureToggle.Instance().VodafoneSupplierEnabled();
 
@@ -110,26 +116,26 @@ public static class HearingTestData
     {
         var participants = new List<BookingParticipantDto>
         {
-            BookingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
+            BookingParticipantDto.Individual(GenericTestRole.Witness,
                 "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
-                "Mr", "Automation_Arnold", "Automation_Koelpin"),
-            BookingParticipantDto.Representative(GenericTestParty.Claimant, GenericTestRole.Representative,
+                "Mr", "Automation_Arnold", "Automation_Koelpin", Individual01FileName),
+            BookingParticipantDto.Representative(GenericTestRole.Representative,
                 "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
-                "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1"),
-            BookingParticipantDto.Individual(GenericTestParty.Defendant, GenericTestRole.Witness,
+                "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1", Representative01FileName),
+            BookingParticipantDto.Individual(GenericTestRole.Witness,
                 "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
-                "Mr", "Auto_VW", "Individual_137"),
-            BookingParticipantDto.Representative(GenericTestParty.Defendant, GenericTestRole.Representative,
+                "Mr", "Auto_VW", "Individual_137", Individual02FileName),
+            BookingParticipantDto.Representative(GenericTestRole.Representative,
                 "auto_vw.representative_157@hmcts.net", "auto_vw.representative_157@hearings.reform.hmcts.net",
-                "Auto 4", "Mr", "Automation_Torrance", "Automation_Moen", "Auto 3")
+                "Auto 4", "Mr", "Automation_Torrance", "Automation_Moen", "Auto 3", Representative02FileName)
         };
 
         if (includeInterpreter)
         {
-            participants.Add(BookingParticipantDto.Individual(GenericTestParty.Applicant, GenericTestRole.Interpreter,
+            participants.Add(BookingParticipantDto.Individual(GenericTestRole.Interpreter,
                 "Automation_Claimant_Interpreter_1@hmcts.net",
                 "automation_claimant_interpreter_1@hearings.reform.hmcts.net", "Auto 5",
-                "Mrs", "Automation_Claimant", "Interpreter_1"));
+                "Mrs", "Automation_Claimant", "Interpreter_1", null));
         }
 
         return participants;
@@ -169,10 +175,10 @@ public static class HearingTestData
     public static BookingParticipantDto CreateNewParticipantDto()
     {
         var timeStamp = AddTimeStamp();
-        var user = BookingParticipantDto.Individual(GenericTestParty.Claimant, GenericTestRole.Witness,
+        var user = BookingParticipantDto.Individual(GenericTestRole.Witness,
             $"New_User{timeStamp}@hmcts.net",
             $"New.User{timeStamp}@hearings.reform.hmcts.net", "NewCreatedUser",
-            "Mr", $"New", $"User{timeStamp}");
+            "Mr", $"New", $"User{timeStamp}", null);
         user.Organisation = "HMCTS";
         user.Phone = "0123456789";
         return user;

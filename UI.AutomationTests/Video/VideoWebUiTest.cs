@@ -114,42 +114,42 @@ public abstract class VideoWebUiTest : CommonUiTest
     
     protected JudgeHearingListPage LoginAsJudge(string username, string password)
     {
-        var participant = InitVideoWebParticipant(username, JourneyType.Judge);
+        var participant = InitVideoWebParticipant(username, JourneyType.Judge, HearingTestData.ClerkVideoFileName);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsJudge(username, password);
     }
     
     protected StaffMemberVenueListPage LoginAsStaffMember(string username, string password)
     {
-        var participant = InitVideoWebParticipant(username, JourneyType.StaffMember);
+        var participant = InitVideoWebParticipant(username, JourneyType.StaffMember, HearingTestData.ClerkVideoFileName);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsStaffMember(username, password);
     }
 
     protected VhoVenueSelectionPage LoginAsVho(string username, string password)
     {
-        var participant = InitVideoWebParticipant(username, JourneyType.Vho);
+        var participant = InitVideoWebParticipant(username, JourneyType.Vho, null);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsVho(username, password);
     }
 
-    protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep)
+    protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep, string videoFileName)
     {
-        var participant = InitVideoWebParticipant(username, isRep ? JourneyType.Representative : JourneyType.Citizen);
+        var participant = InitVideoWebParticipant(username, isRep ? JourneyType.Representative : JourneyType.Citizen, videoFileName);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsParticipant(username, password);
     }
 
     protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName)
     {
-        var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant);
+        var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant, null);
         var driver = participant.Driver.GetDriver();
         driver.Navigate().GoToUrl(quickLinkJoinUrl);
         return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);
     }
     
     protected PexipWebAppPage LoginAsJvsEndpoint(string jvsUrl, string displayName){
-        var participant = InitVideoWebParticipant(displayName, JourneyType.Jvs);
+        var participant = InitVideoWebParticipant(displayName, JourneyType.Jvs, HearingTestData.Individual02FileName);
         var driver = participant.Driver.GetDriver();
         driver.Navigate().GoToUrl(jvsUrl);
         return new PexipWebAppPage(driver, EnvConfigSettings.DefaultElementWait);
@@ -174,9 +174,9 @@ public abstract class VideoWebUiTest : CommonUiTest
         return new VideoWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
     }
 
-    private VideoWebParticipant InitVideoWebParticipant(string username, JourneyType journeyType)
+    private VideoWebParticipant InitVideoWebParticipant(string username, JourneyType journeyType, string videoFileName)
     {
-        var vhDriver = CreateDriver(username);
+        var vhDriver = CreateDriver(username, videoFileName);
         var participant = new VideoWebParticipant
         {
             Driver = vhDriver,
