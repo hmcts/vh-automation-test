@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using UI.Common.Utilities;
 
 namespace UI.AutomationTests.Admin.Booking;

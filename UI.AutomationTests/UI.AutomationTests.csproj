@@ -11,6 +11,7 @@
         <PackageReference Include="BookingsApi.Client" Version="3.1.9" />
         <PackageReference Include="ExtentReports" Version="5.0.4" />
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="GovukNotify" Version="7.2.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
         <PackageReference Include="NUnit" Version="4.2.2" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />

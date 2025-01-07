@@ -13,4 +13,5 @@ public class ApiClientConfiguration
     public string VideoApiResourceId { get;set; }
     public string UserApiUrl { get; set; }
     public string UserApiResourceId { get; set; }
+    public string NotifyApiKey { get; set; }
 }
