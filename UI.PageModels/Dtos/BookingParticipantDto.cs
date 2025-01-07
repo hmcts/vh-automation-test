@@ -16,11 +16,12 @@ public class BookingParticipantDto
     public string LastName { get; set; }
     public string Organisation { get; set; }
     public InterpreterLanguageDto? InterpreterLanguage { get; set; }
+    public string? VideoFileName { get; set; }
     
     public string FullName => $"{Title} {FirstName} {LastName}";
 
-    public static BookingParticipantDto Individual(GenericTestParty party, GenericTestRole role,
-        string contactEmail, string username, string displayName, string title, string firstName, string lastName)
+    public static BookingParticipantDto Individual(GenericTestRole role,
+        string contactEmail, string username, string displayName, string title, string firstName, string lastName, string? videoFileName)
     {
         return new BookingParticipantDto
         {
@@ -30,13 +31,14 @@ public class BookingParticipantDto
             DisplayName = displayName,
             Title = title,
             FirstName = firstName,
-            LastName = lastName
+            LastName = lastName,
+            VideoFileName = videoFileName
         };
     }
 
-    public static BookingParticipantDto Representative(GenericTestParty party, GenericTestRole role,
+    public static BookingParticipantDto Representative(GenericTestRole role,
         string contactEmail, string username, string displayName, string title, string firstName, string lastName,
-        string representing)
+        string representing, string videoFileName)
     {
         return new BookingParticipantDto
         {

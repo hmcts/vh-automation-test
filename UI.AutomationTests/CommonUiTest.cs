@@ -77,14 +77,14 @@ public abstract class CommonUiTest
         await DeleteUsers();
     }
 
-    protected IVhDriver CreateDriver(string username)
+    protected IVhDriver CreateDriver(string username, string videoFileName = null)
     {
         ArgumentNullException.ThrowIfNull(username);
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         IVhDriver driver;
         if (envConfigSettings.RunHeadlessBrowser || !envConfigSettings.RunOnSauceLabs)
         {
-            driver = new LocalChromeVhDriver();
+            driver = new LocalChromeVhDriver(videoFileName);
         } 
         else
         {

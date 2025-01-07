@@ -7,7 +7,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     private readonly By _closeHearingButton = By.Id("end-hearing-desktop");
     private readonly By _confirmCloseHearingButton = By.Id("btnConfirmClose");
     private readonly By _pauseHearing = By.Id("pause-hearing-desktop");
-    private By _participantHandRaiseIcon(Guid participantId) => By.Id($"//div[@id='participants-panel-{participantId}-icon-lowerHand']//fa-icon[@class='ng-fa-icon yellow']");
+    private By _participantHandRaiseIcon(Guid participantId) => By.XPath($"//div[@id='participants-panel-{participantId}-icon-lowerHand']//fa-icon[@class='ng-fa-icon yellow']");
 
     public JudgeHearingRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     { }
@@ -90,6 +90,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     {
         const int countdown = 30;
         Thread.Sleep(TimeSpan.FromSeconds(countdown + buffer));
+        Driver.TakeScreenshotAndSave(GetType().Name, "Countdown expected to complete");
         WaitForElementToBeInvisible(By.XPath("//img[@src='/assets/images/mic_remote_mute.png']"), 10);
     }
 
@@ -101,6 +102,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     public void LowerParticipantHand(Guid participantId)
     {
         ClickElement(_participantHandRaiseIcon(participantId));
+        Thread.Sleep(TimeSpan.FromSeconds(5));
     }
     
     private By ParticipantContextButton(string participantDisplayName)

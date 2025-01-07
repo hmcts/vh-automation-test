@@ -17,6 +17,7 @@ public class ParticipantHearingRoomPage : VhVideoWebPage
     {
         if (IsHandRaised()) return;
         ClickElement(_toggleHandRaisedBtn);
+        Thread.Sleep(TimeSpan.FromSeconds(5)); // takes a few seconds for the pexip callback to make a roundtrip
     }
     
     public bool IsHandRaised()

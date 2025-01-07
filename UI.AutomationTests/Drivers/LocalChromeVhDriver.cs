@@ -6,7 +6,7 @@ public class LocalChromeVhDriver : IVhDriver
 {
     private IWebDriver _driver;
 
-    public LocalChromeVhDriver()
+    public LocalChromeVhDriver(string videoFileName = null)
     {
         // download the latest chrome
         new DriverManager().SetUpDriver(new ChromeConfig());
@@ -19,13 +19,21 @@ public class LocalChromeVhDriver : IVhDriver
         chromeOptions.AddArgument("--use-fake-ui-for-media-stream");
         chromeOptions.AddArgument("--use-fake-device-for-media-stream");
 
+        if (videoFileName != null)
+        {
+            var videoFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MockVideos", videoFileName);
+            if (!File.Exists(videoFilePath))
+            {
+                throw new FileNotFoundException($"Video file not found: {videoFilePath}");
+            }
+            chromeOptions.AddArgument($"--use-file-for-fake-video-capture={videoFilePath}");
+        }
+
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         if (envConfigSettings.RunHeadlessBrowser)
         {
             chromeOptions.AddArgument("--disable-dev-shm-usage"); // Overcome limited resource problems
             chromeOptions.AddArgument("--headless"); // Run in headless mode if needed
-            // chromeOptions.AddArgument("--disable-gpu"); // Applicable to Windows OS only
-            // chromeOptions.AddArgument("--remote-debugging-port=9230"); // Debugging port
         }
         _driver = new ChromeDriver(chromeOptions);
         var lang = (string)((IJavaScriptExecutor)_driver).ExecuteScript("return navigator.language || navigator.userLanguage");

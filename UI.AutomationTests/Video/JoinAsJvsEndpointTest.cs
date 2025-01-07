@@ -77,7 +77,7 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         ParticipantResponse representative)
     {
 
-        var participantHearingList = LoginAsParticipant(representative.Username, EnvConfigSettings.UserPassword, true);
+        var participantHearingList = LoginAsParticipant(representative.Username, EnvConfigSettings.UserPassword, true, HearingTestData.Representative01FileName);
         var participantWaitingRoom = participantHearingList
             .SelectHearing(conference.Id).GoToEquipmentCheck()
             .GoToSwitchOnCameraMicrophonePage()

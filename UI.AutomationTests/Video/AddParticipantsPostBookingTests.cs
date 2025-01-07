@@ -37,7 +37,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         {
             var participantUsername = participant.Username;
             var participantPassword = EnvConfigSettings.UserPassword;
-            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative);
+            var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName);
             var participantWaitingRoom = participantHearingList
                 .SelectHearing(conference.Id)
                 .GoToEquipmentCheck()
