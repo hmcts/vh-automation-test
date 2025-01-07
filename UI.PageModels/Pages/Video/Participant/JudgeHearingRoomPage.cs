@@ -90,6 +90,7 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     {
         const int countdown = 30;
         Thread.Sleep(TimeSpan.FromSeconds(countdown + buffer));
+        Driver.TakeScreenshotAndSave(GetType().Name, "Countdown expected to complete");
         WaitForElementToBeInvisible(By.XPath("//img[@src='/assets/images/mic_remote_mute.png']"), 10);
     }
 
