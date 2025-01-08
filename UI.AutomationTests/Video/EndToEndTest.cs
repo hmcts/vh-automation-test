@@ -40,7 +40,6 @@ public class EndToEndTest : VideoWebUiTest
         //Login
         var vhoVenueSelectionPage = LoginAsVho(HearingTestData.VhOfficerUsername, EnvConfigSettings.UserPassword);
         ParticipantDrivers[HearingTestData.VhOfficerUsername].VhVideoWebPage = vhoVenueSelectionPage;
- 
         var commandCentrePage = CsoCommandCentreJourney(vhoVenueSelectionPage, hearingDto, out var ccHearingPanel, out var testParticipant);
 
         // loop through all participants in hearing and login as each one
@@ -139,7 +138,8 @@ public class EndToEndTest : VideoWebUiTest
         
         // vho will be able to see connectivity status of participants in that hearing
         ccHearingPanel = commandCentrePage.ClickHearingsButton();
-        testParticipant = _conference.Participants.First(e => e.UserRole == UserRole.Individual);
+        testParticipant = _conference.Participants
+            .First(e => e.UserRole == UserRole.Individual && !e.Username.Contains("new"));
         ccHearingPanel.ValidateParticipantStatusBeforeLogin(testParticipant.Id);
         return commandCentrePage;
     }
@@ -187,6 +187,7 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: bookingDto.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
+        driver.Close();
     }
     
     private async Task<string> GetTempPasswordForUser(string email)
