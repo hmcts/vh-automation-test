@@ -33,6 +33,7 @@ public abstract class VideoWebUiTest : CommonUiTest
     {
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
         VideoApiClient = await VhApiClientFactory.CreateVideoApiClient();
+        NotifyApiClient = VhApiClientFactory.CreateNotificationApiClient();
     }
 
     [SetUp]
@@ -133,11 +134,13 @@ public abstract class VideoWebUiTest : CommonUiTest
         return loginPage.LogInAsVho(username, password);
     }
 
-    protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep, string videoFileName)
+    protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep, string videoFileName, bool isNew = false)
     {
         var participant = InitVideoWebParticipant(username, isRep ? JourneyType.Representative : JourneyType.Citizen, videoFileName);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
-        return loginPage.LogInAsParticipant(username, password);
+        return isNew 
+            ? loginPage.LogInAsNewParticipant(username, password)
+            : loginPage.LogInAsParticipant(username, password);
     }
 
     protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName)

@@ -57,7 +57,7 @@ public class HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : VhAdmi
 
         var addParticipantPage = assignJudgePage.GotToNextPage();
 
-        addParticipantPage.AddParticipants(bookingDto.Participants);
+        addParticipantPage.AddAllParticipantsFromDto(bookingDto);
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);

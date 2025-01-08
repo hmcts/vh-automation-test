@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using BookingsApi.Contract.V1.Responses;
 using UI.Common.Utilities;
 using UI.PageModels.Pages.Video.Participant;
@@ -14,7 +15,8 @@ public class EndToEndTest : VideoWebUiTest
     private string _hearingIdString;
     private ConferenceDetailsResponse _conference;
     private JusticeUserResponse _justiceUser;
-
+    private readonly Regex _tempPassword = new(@"(?<=temporary password: )[\S]+");
+    
     [Test]
     [Category("a11y")]
     [Category("video")]
@@ -27,21 +29,26 @@ public class EndToEndTest : VideoWebUiTest
     public async Task EndToEnd()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode, 
-            HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
+        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode, HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
+        var newUser = HearingTestData.CreateNewParticipantDto();
+        hearingDto.NewParticipants.Add(newUser);
         await TestContext.Out.WriteLineAsync(
             $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
         
         await BookHearing(hearingDto);
-
+        
         //Login
         var vhoVenueSelectionPage = LoginAsVho(HearingTestData.VhOfficerUsername, EnvConfigSettings.UserPassword);
         ParticipantDrivers[HearingTestData.VhOfficerUsername].VhVideoWebPage = vhoVenueSelectionPage;
- 
         var commandCentrePage = CsoCommandCentreJourney(vhoVenueSelectionPage, hearingDto, out var ccHearingPanel, out var testParticipant);
 
         // loop through all participants in hearing and login as each one
         Parallel.ForEach(hearingDto.Participants, ParticipantLoginToWaitingRoomJourney);
+        
+        // login with new user with temp password journey
+        var newUserTempPassword = await GetTempPasswordForUser(newUser.ContactEmail);
+        NewParticipantLoginToWaitingRoom(newUser, newUserTempPassword);
+        hearingDto.Participants.Add(newUser);
 
         var testParticipantWaitingRoom = (ParticipantWaitingRoomPage)ParticipantDrivers[testParticipant.Username].VhVideoWebPage;
         ccHearingPanel.ValidateParticipantStatusAfterLogin(testParticipant.Id, _conference.Id.ToString());
@@ -92,6 +99,12 @@ public class EndToEndTest : VideoWebUiTest
         var participantUsername = participant.Username;
         var participantPassword = EnvConfigSettings.UserPassword;
         var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName);
+        JourneyToWaitingRoom(participant, participantHearingList, participantUsername);
+    }
+
+    private void JourneyToWaitingRoom(BookingParticipantDto participant, ParticipantHearingListPage participantHearingList,
+        string participantUsername)
+    {
         var participantWaitingRoom = participantHearingList
             .SelectHearing(_conference.Id).GoToEquipmentCheck()
             .GoToSwitchOnCameraMicrophonePage()
@@ -99,6 +112,13 @@ public class EndToEndTest : VideoWebUiTest
             .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
         // store the participant driver in a dictionary, so we can access it later to sign out
         ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
+    }
+
+    private void NewParticipantLoginToWaitingRoom(BookingParticipantDto participant, string tempPassword)
+    {
+        var participantUsername = participant.Username;
+        var participantHearingList = LoginAsParticipant(participantUsername, tempPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName, isNew: true);
+        JourneyToWaitingRoom(participant, participantHearingList, participantUsername);
     }
 
     private CommandCentrePage CsoCommandCentreJourney(VhoVenueSelectionPage vhoVenueSelectionPage, BookingDto hearingDto,
@@ -118,7 +138,8 @@ public class EndToEndTest : VideoWebUiTest
         
         // vho will be able to see connectivity status of participants in that hearing
         ccHearingPanel = commandCentrePage.ClickHearingsButton();
-        testParticipant = _conference.Participants.First(e => e.UserRole == UserRole.Individual);
+        testParticipant = _conference.Participants
+            .First(e => e.UserRole == UserRole.Individual && !e.Username.Contains("new"));
         ccHearingPanel.ValidateParticipantStatusBeforeLogin(testParticipant.Id);
         return commandCentrePage;
     }
@@ -166,5 +187,14 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: bookingDto.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
+    }
+    
+    private async Task<string> GetTempPasswordForUser(string email)
+    {
+        var allNotifications = await NotifyApiClient.GetNotificationsAsync("email");
+        var newUserEmails = allNotifications.notifications.Find(x =>
+            x.emailAddress == email && 
+            x.subject.Contains("Confirming the date, time, and sign in details of your video hearing"));
+        return _tempPassword.Match(newUserEmails!.body).Value;
     }
 }

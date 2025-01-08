@@ -8,7 +8,6 @@ public class DashboardPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebP
     private readonly By _bookHearingButton = By.Id("bookHearingBtn");
     private readonly By _unallocatedHearingsNextSevenDays = By.Id("unallocated-hearings-next-seven-days");
     private readonly By _unallocatedHearingsNextThirtyDays = By.Id("unallocated-hearings-next-thirty-days");
-
     private readonly By _unallocatedHearingsToday = By.Id("unallocated-hearings-today");
     private readonly By _unallocatedHearingsTomorrow = By.Id("unallocated-hearings-tomorrow");
     private readonly By _workAllocationButton = By.Id("manageWorkAllocationBtn");

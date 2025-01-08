@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
 using BookingsApi.Client;
+using Notify.Client;
+using Notify.Interfaces;
 using UI.Common.Security;
 using UserApi.Client;
 using VideoApi.Client;
@@ -39,6 +41,12 @@ public static class VhApiClientFactory
         httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("bearer", apiToken);
         return UserApiClient.GetClient(apiClientConfiguration.UserApiUrl, httpClient);
+    }
+    
+    public static IAsyncNotificationClient CreateNotificationApiClient()
+    {
+        var apiClientConfiguration = ConfigRootBuilder.ApiClientConfigurationInstance();
+        return new NotificationClient(apiClientConfiguration.NotifyApiKey);
     }
     
     private static async Task<string> GenerateBookingsApiToken(ApiClientConfiguration apiClientConfiguration)

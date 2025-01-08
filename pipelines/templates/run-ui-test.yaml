@@ -79,6 +79,17 @@ steps:
     displayName: Change Video API client secrets to variables
 
   - task: AzureKeyVault@2
+    displayName: 'Azure Key Vault: vh-notification-api-${{ lower(parameters.environment) }}'
+    inputs:
+      azureSubscription: '${{ parameters.subscriptionName }}'
+      KeyVaultName: 'vh-notification-api-${{ lower(parameters.environment) }}'
+      SecretsFilter: 'notifyconfiguration--apikey'
+      
+  - bash: |
+      echo "##vso[task.setvariable variable=ApiClientConfiguration.NotifyApiKey;issecret=false]$(notifyconfiguration--apikey)"
+    displayName: Change Notification API client secrets to variables
+
+  - task: AzureKeyVault@2
     displayName: 'Azure Key Vault: vh-user-api-${{ lower(parameters.environment) }}'
     inputs:
       azureSubscription: '${{ parameters.subscriptionName }}'
