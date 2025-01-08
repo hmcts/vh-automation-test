@@ -12,7 +12,6 @@ public class DashboardPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebP
     private readonly By _unallocatedHearingsTomorrow = By.Id("unallocated-hearings-tomorrow");
     private readonly By _workAllocationButton = By.Id("manageWorkAllocationBtn");
     private readonly By _manageTeamButton = By.Id("manageTeamBtn");
-    private readonly By _changePasswordButton = By.Id("changePasswordBtn");
 
     protected override void ConfirmPageHasLoaded()
     {
@@ -69,14 +68,6 @@ public class DashboardPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebP
         ClickElement(_manageTeamButton);
         Driver.TakeScreenshotAndSave(GetType().Name, "Clicked Manage Team Button");
         return new ManageTeamPage(Driver, DefaultWaitTime);
-    }
-    
-    public ChangePasswordPage GoToChangePassword()
-    {
-        WaitForApiSpinnerToDisappear();
-        ClickElement(_changePasswordButton);
-        Driver.TakeScreenshotAndSave(GetType().Name, "Clicked Change Password Button");
-        return new ChangePasswordPage(Driver, DefaultWaitTime);
     }
     
     private int GetNumberOfUnallocatedHearings(By locator)
