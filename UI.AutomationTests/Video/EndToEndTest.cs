@@ -187,7 +187,6 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: bookingDto.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
-        driver.Close();
     }
     
     private async Task<string> GetTempPasswordForUser(string email)
