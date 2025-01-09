@@ -25,8 +25,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         var quickLinkName1 = $"QL Auto Join 1 {Guid.NewGuid():N}";
         var quickLinkName2 = $"QL Auto Join 2 {Guid.NewGuid():N}";
         
-        var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, conference.Id.ToString());
-        var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, conference.Id.ToString());
+        var qlWaitingRoomPage1 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName1, conference.Id.ToString(), HearingTestData.Individual01FileName);
+        var qlWaitingRoomPage2 = LoginInAsQlAndNavigateToWaitingRoom(quickLinkName2, conference.Id.ToString(), HearingTestData.Individual02FileName);
 
         var particiantsFromConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
         var quicklink1 = particiantsFromConference.First(x => x.DisplayName == quickLinkName1);
@@ -109,9 +109,9 @@ public class QuickLinkUserTests : VideoWebUiTest
         await TestContext.Out.WriteLineAsync(_quickLinkJoinUrl);
     }
 
-    private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string conferenceId)
+    private ParticipantWaitingRoomPage LoginInAsQlAndNavigateToWaitingRoom(string qlName, string conferenceId, string videoFileName = null)
     {
-        var quickLinkJoinHearingPage = LoginAsQuickLinkUser(_quickLinkJoinUrl, qlName);
+        var quickLinkJoinHearingPage = LoginAsQuickLinkUser(_quickLinkJoinUrl, qlName, videoFileName);
         quickLinkJoinHearingPage.EnterQuickLinkUserDetails(qlName, true);
         var quickLinkHearingListPage = quickLinkJoinHearingPage.Continue();
         var page = quickLinkHearingListPage.SelectHearing(conferenceId).GoToEquipmentCheck()
