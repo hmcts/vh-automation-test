@@ -69,6 +69,7 @@ public class ConsultationRoomPage : VhVideoWebPage
             return true;
         } catch (Exception)
         {
+            Driver.TakeScreenshotAndSave(GetType().Name, "Participant not connected to consultation room when expected");
             return false;
         }
     }
