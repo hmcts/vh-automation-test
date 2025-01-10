@@ -9,7 +9,7 @@ public class RemoteChromeVhDriver : IVhDriver
     private RemoteWebDriver _driver;
 
     public RemoteChromeVhDriver(string platform = "Windows 11", string browserVersion = "latest",
-        string username = null)
+        string username = null, string videoFileName = null)
     {
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         var chromeOptions = new ChromeOptions
@@ -20,8 +20,7 @@ public class RemoteChromeVhDriver : IVhDriver
 
         chromeOptions.AddArguments("start-maximized");
         chromeOptions.AddArgument("no-sandbox");
-        chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
-        chromeOptions.AddArguments("--use-fake-device-for-media-stream");
+        chromeOptions.AddArgument("--use-fake-ui-for-media-stream");
         
         // this is the name for a build in SauceLabs
         var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null
