@@ -20,8 +20,6 @@ public class RemoteChromeVhDriver : IVhDriver
 
         chromeOptions.AddArguments("start-maximized");
         chromeOptions.AddArgument("no-sandbox");
-        chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
-        chromeOptions.AddArguments("--use-fake-device-for-media-stream");
 
         if (videoFileName != null)
         {
@@ -31,6 +29,11 @@ public class RemoteChromeVhDriver : IVhDriver
                 throw new FileNotFoundException($"Video file not found: {videoFilePath}");
             }
             chromeOptions.AddArgument($"--use-file-for-fake-video-capture={videoFilePath}");
+        }
+        else
+        {
+            chromeOptions.AddArguments("--use-fake-ui-for-media-stream");
+            chromeOptions.AddArguments("--use-fake-device-for-media-stream");
         }
         
         // this is the name for a build in SauceLabs
