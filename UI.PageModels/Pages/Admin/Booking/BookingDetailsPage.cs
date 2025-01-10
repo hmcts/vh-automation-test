@@ -142,7 +142,7 @@ public class BookingDetailsPage : VhAdminWebPage
             {
                 var linkToAdvocate =
                     By.XPath(
-                        $"//div[normalize-space()='{endpoint.DisplayName}']/../child::div[contains(normalize-space(),'{endpoint.DefenceAdvocateDisplayName}')]//img[@alt='link to endpoint']");
+                        $"//div[normalize-space()='{endpoint.DisplayName}']/../child::div[contains(normalize-space(),'{endpoint.DefenceAdvocateDisplayName}')]//fa-icon");
 
                 if (!IsElementVisible(linkToAdvocate))
                 {
