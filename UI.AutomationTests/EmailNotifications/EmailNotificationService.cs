@@ -22,8 +22,16 @@ public class EmailNotificationService
             "7458e52d-3954-4f33-bd2d-0a7d2de295fc"
         },
         {
+            EmailTemplates.ExistingParticipantConfirmationMultiDay,
+            "3d83ee22-71ef-47f6-9557-bdaf0c0eecae"
+        },
+        {
             EmailTemplates.ExistingProfessionalConfirmation,
             "bd64e5d2-610f-449a-a925-3db10f913019"
+        },
+        {
+            EmailTemplates.ExistingProfessionalConfirmationMultiDay,
+            "bc278f80-69a5-4e91-a0ef-4bfe2a52796e"
         },
         { 
             EmailTemplates.EmailReminder48Hour, 
@@ -32,6 +40,22 @@ public class EmailNotificationService
         { 
             EmailTemplates.JudgeHearingConfirmation, 
             "811125fe-4cab-4829-88ed-d3e7d4689cdd" 
+        },
+        {
+            EmailTemplates.JudgeHearingConfirmationMultiDay,
+            "b3b3b3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b"
+        },
+        {
+            EmailTemplates.HearingAmendment,
+            "197d2b04-a600-41ae-bf68-8021d6ea0057"
+        },
+        {
+            EmailTemplates.HearingAmendmentProfessional,
+            "bc278f80-69a5-4e91-a0ef-4bfe2a52796e"
+        },
+        {
+            EmailTemplates.HearingAmendmentJudge,
+            "3210895a-c096-4029-b43e-9fde4642a254"
         }
     };
     
@@ -61,7 +85,13 @@ public enum EmailTemplates
     FirstEmailAllNewUsers,
     SecondEmailNewUserConfirmation,
     ExistingParticipantConfirmation,
+    ExistingParticipantConfirmationMultiDay,
     ExistingProfessionalConfirmation,
-    EmailReminder48Hour,
+    ExistingProfessionalConfirmationMultiDay,
     JudgeHearingConfirmation,
+    JudgeHearingConfirmationMultiDay,
+    HearingAmendment,
+    HearingAmendmentProfessional,
+    HearingAmendmentJudge,
+    EmailReminder48Hour
 }

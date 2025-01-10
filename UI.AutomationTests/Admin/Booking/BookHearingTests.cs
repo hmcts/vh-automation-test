@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using UI.AutomationTests.EmailNotifications;
 using UI.Common.Utilities;
 
@@ -141,9 +140,7 @@ public class BookHearingTests : AdminWebUiTest
             if (participant.Role == GenericTestRole.Representative)
                 await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmation);
             else
-            {
                 await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmation);
-            }
         }
     }
 }

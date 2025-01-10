@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using UI.AutomationTests.EmailNotifications;
 using UI.Common.Utilities;
 using UI.PageModels.Pages.Admin.Booking;
 
@@ -77,8 +79,34 @@ namespace UI.AutomationTests.Admin.Booking
                 bookingDetailsPage = SearchAndViewHearing(bookingDetailPage, hearingDto);
                 bookingDetailsPage.ValidateDetailsPage(hearingDto);
             }
-            
+            await ValidatorEmailNotifications(hearingDto);
             Assert.Pass();
+        }
+
+        private async Task ValidatorEmailNotifications(BookingDto hearingDto)
+        {
+            //Validate Judge email notification
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmationMultiDay);
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.HearingAmendmentJudge);
+            //Validate New User Participant email notification
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.FirstEmailAllNewUsers);
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation);
+            //Validate Other Participants email notification
+            foreach (var participant in hearingDto.Participants)
+            {
+                if (participant.Role == GenericTestRole.Representative)
+                {
+                    
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmationMultiDay);
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.HearingAmendmentProfessional);
+                }
+                else
+                {
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmationMultiDay);
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.HearingAmendment);
+                }
+            }
         }
 
         private SummaryPage EditMultiDayHearing(BookingDto hearingDto, SummaryPage summaryPage)
