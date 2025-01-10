@@ -33,7 +33,6 @@ public abstract class VideoWebUiTest : CommonUiTest
     {
         BookingsApiClient = await VhApiClientFactory.CreateBookingsApiClient();
         VideoApiClient = await VhApiClientFactory.CreateVideoApiClient();
-        NotifyApiClient = VhApiClientFactory.CreateNotificationApiClient();
     }
 
     [SetUp]
