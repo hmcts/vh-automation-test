@@ -143,9 +143,9 @@ public abstract class VideoWebUiTest : CommonUiTest
             : loginPage.LogInAsParticipant(username, password);
     }
 
-    protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName)
+    protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName, string videoFileName = null)
     {
-        var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant, null);
+        var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant, videoFileName);
         var driver = participant.Driver.GetDriver();
         driver.Navigate().GoToUrl(quickLinkJoinUrl);
         return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);

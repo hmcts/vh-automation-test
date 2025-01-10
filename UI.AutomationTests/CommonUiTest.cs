@@ -90,7 +90,7 @@ public abstract class CommonUiTest
         } 
         else
         {
-            driver = new RemoteChromeVhDriver(username: username);
+            driver = new RemoteChromeVhDriver(username: username, videoFileName:videoFileName);
         }
 
         driver.GetDriver().StoreUsername(username);
