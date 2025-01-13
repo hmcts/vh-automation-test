@@ -79,11 +79,11 @@ namespace UI.AutomationTests.Admin.Booking
                 bookingDetailsPage = SearchAndViewHearing(bookingDetailPage, hearingDto);
                 bookingDetailsPage.ValidateDetailsPage(hearingDto);
             }
-            await ValidatorEmailNotifications(hearingDto);
+            await ValidateEmailNotifications(hearingDto);
             Assert.Pass();
         }
 
-        private async Task ValidatorEmailNotifications(BookingDto hearingDto)
+        private async Task ValidateEmailNotifications(BookingDto hearingDto)
         {
             //Validate Judge email notification
             await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
