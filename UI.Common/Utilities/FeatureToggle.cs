@@ -13,7 +13,6 @@ public sealed class FeatureToggle
     public const string InterpreterEnhancementsToggleKey = "interpreter-enhancements";
     public const string Dom1Key = "dom1";
     public const string SpecialMeasuresKey = "special-measures";
-    public const string VodafoneKey = "vodafone";
     public const string ImToggleKey = "instant-message-enhancements-toggle";
     
     private static FeatureToggle _instance;
@@ -61,12 +60,7 @@ public sealed class FeatureToggle
     {
         return GetBoolValueWithKey(MultiDayBookingEnhancementsToggleKey);
     }
-    
-    public bool VodafoneSupplierEnabled()
-    {
-        return GetBoolValueWithKey(VodafoneKey);
-    }
-    
+
     public bool IMEnabled()
     {
         return GetBoolValueWithKey(ImToggleKey);
