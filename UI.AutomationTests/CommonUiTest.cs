@@ -4,6 +4,7 @@ using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V1.Responses;
 using Notify.Interfaces;
+using UI.AutomationTests.EmailNotifications;
 using UI.AutomationTests.Reporters;
 using UI.PageModels.Extensions;
 using UI.PageModels.Utilities;
@@ -17,9 +18,9 @@ public abstract class CommonUiTest
     protected readonly List<string> CreatedUsers = new();
     protected BookingsApiClient BookingsApiClient;
     protected UserApiClient UserApiClient;
-    protected IAsyncNotificationClient NotifyApiClient { get; set; }
     protected TestReporter UiTestReport;
     protected EnvironmentConfigSettings EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
+    protected readonly EmailNotificationService EmailNotificationService = new();
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
         var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);
