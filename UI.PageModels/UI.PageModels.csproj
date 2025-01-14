@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BookingsApi.Client" Version="3.1.9" />
+        <PackageReference Include="BookingsApi.Client" Version="3.1.14" />
         <PackageReference Include="ExtentReports" Version="5.0.4" />
         <PackageReference Include="Selenium.Axe" Version="4.0.21" />
         <PackageReference Include="Selenium.Support" Version="4.27.0" />
