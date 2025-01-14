@@ -19,8 +19,6 @@ public static class HearingTestData
     public const string Representative01FileName = "representative01.y4m";
     public const string Representative02FileName = "representative02.y4m";
 
-    public static bool VodafoneEnabled = FeatureToggle.Instance().VodafoneSupplierEnabled();
-
     private const string HearingVenueName = "Birmingham Civil and Family Justice Centre";
     private const string HearingVenueCode = "231596";
 
