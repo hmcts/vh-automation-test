@@ -86,9 +86,9 @@ namespace UI.AutomationTests.Admin.Booking
         private async Task ValidateEmailNotifications(BookingDto hearingDto)
         {
             //Validate Judge email notification
-            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
             await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmationMultiDay);
             await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.HearingAmendmentJudge);
+            await EmailNotificationService.ValidateEmailReceived(HearingTestData.AltJudgeUsername, EmailTemplates.JudgeHearingConfirmation);
             //Validate New User Participant email notification
             await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.FirstEmailAllNewUsers);
             await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation);

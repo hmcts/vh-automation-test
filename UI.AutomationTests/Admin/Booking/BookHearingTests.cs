@@ -75,6 +75,7 @@ public class BookHearingTests : AdminWebUiTest
             .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
 
         await ValidateEmailNotifications(newUser);
+        
         dashboardPage.SignOut();
 
         Assert.Pass("Hearing booked successfully with existing and a new participant. Unallocated hearings count increased as expected.");

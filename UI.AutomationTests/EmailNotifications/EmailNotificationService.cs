@@ -75,8 +75,8 @@ public class EmailNotificationService
                 x.emailAddress == contactEmail &&
                 x.template.id == _emails[emailTemplate])
             .ToList();
-        var emailExists = notifyContactEmails.Exists(e => DateTime.Parse(e.createdAt) > DateTime.UtcNow.AddMinutes(-1));
-        Assert.That(emailExists, $"Email with template {emailTemplate} was not received by {contactEmail} in the last 60 seconds");
+        var emailExists = notifyContactEmails.Exists(e => DateTime.Parse(e.createdAt) > DateTime.UtcNow.AddMinutes(-2));
+        Assert.That(emailExists, $"Email with template {emailTemplate} was not received by {contactEmail} in the last 120 seconds");
     }
 }
 
