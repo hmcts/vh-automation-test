@@ -18,9 +18,10 @@ public class RemoteChromeVhDriver : IVhDriver
             BrowserVersion = browserVersion
         };
 
-        chromeOptions.AddArguments("start-maximized");
-        chromeOptions.AddArgument("no-sandbox");
+        chromeOptions.AddArgument("--start-maximized");
+        chromeOptions.AddArgument("--no-sandbox");
         chromeOptions.AddArgument("--use-fake-ui-for-media-stream");
+        chromeOptions.AddArgument("--use-fake-device-for-media-stream");
         
         // this is the name for a build in SauceLabs
         var buildName = Environment.GetEnvironmentVariable("TF_BUILD") == null
