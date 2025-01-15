@@ -9,7 +9,7 @@ public class RemoteChromeVhDriver : IVhDriver
     private RemoteWebDriver _driver;
 
     public RemoteChromeVhDriver(string platform = "Windows 11", string browserVersion = "latest",
-        string username = null)
+        string username = null, string videoFileName = null)
     {
         var envConfigSettings = ConfigRootBuilder.EnvConfigInstance();
         var chromeOptions = new ChromeOptions

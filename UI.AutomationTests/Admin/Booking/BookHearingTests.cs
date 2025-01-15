@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+using UI.AutomationTests.EmailNotifications;
 using UI.Common.Utilities;
 
 namespace UI.AutomationTests.Admin.Booking;
@@ -10,7 +10,7 @@ public class BookHearingTests : AdminWebUiTest
     [Test(Description = "Book a hearing")]
     [Category("admin")]
     [Category("coreAdmin")]
-    public void BookAHearing()
+    public async Task BookAHearing()
     {
         var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
@@ -59,7 +59,7 @@ public class BookHearingTests : AdminWebUiTest
         var confirmationPage = summaryPage.ClickBookButton();
         TestHearingIds.Add(confirmationPage.GetNewHearingId());
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
-
+        
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
         dashboardPage = confirmationPage.GoToDashboardPage();
 
@@ -74,11 +74,11 @@ public class BookHearingTests : AdminWebUiTest
         postBookingUnallocatedHearingsNextThirtyDays.Should()
             .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
 
+        await ValidateEmailNotifications(newUser);
         dashboardPage.SignOut();
 
         Assert.Pass("Hearing booked successfully with existing and a new participant. Unallocated hearings count increased as expected.");
     }
-
 
     [TestCase("British Sign Language (BSL)", InterpreterType.Sign)]
     [TestCase("Spanish", InterpreterType.Verbal)]
@@ -125,5 +125,22 @@ public class BookHearingTests : AdminWebUiTest
         confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
 
         Assert.Pass($"Booked a hearing with interpretation for {description}");
+    }
+    
+    private async Task ValidateEmailNotifications(BookingParticipantDto newUser)
+    {
+        //Validate Judge email notification
+        await EmailNotificationService.ValidateEmailReceived(_bookingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
+        //Validate New User Participant email notification
+        await EmailNotificationService.ValidateEmailReceived(newUser.ContactEmail, EmailTemplates.FirstEmailAllNewUsers);
+        await EmailNotificationService.ValidateEmailReceived(newUser.ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation);
+        //Validate Other Participants email notification
+        foreach (var participant in _bookingDto.Participants)
+        {
+            if (participant.Role == GenericTestRole.Representative)
+                await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmation);
+            else
+                await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmation);
+        }
     }
 }

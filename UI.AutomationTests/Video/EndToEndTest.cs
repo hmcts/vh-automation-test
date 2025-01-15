@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using BookingsApi.Contract.V1.Responses;
 using UI.Common.Utilities;
 using UI.PageModels.Pages.Video.Participant;
@@ -15,7 +14,6 @@ public class EndToEndTest : VideoWebUiTest
     private string _hearingIdString;
     private ConferenceDetailsResponse _conference;
     private JusticeUserResponse _justiceUser;
-    private readonly Regex _tempPassword = new(@"(?<=temporary password: )[\S]+");
     
     [Test]
     [Category("a11y")]
@@ -46,7 +44,7 @@ public class EndToEndTest : VideoWebUiTest
         Parallel.ForEach(hearingDto.Participants, ParticipantLoginToWaitingRoomJourney);
         
         // login with new user with temp password journey
-        var newUserTempPassword = await GetTempPasswordForUser(newUser.ContactEmail);
+        var newUserTempPassword = await EmailNotificationService.GetTempPasswordForUser(newUser.ContactEmail);
         NewParticipantLoginToWaitingRoom(newUser, newUserTempPassword);
         hearingDto.Participants.Add(newUser);
 
@@ -187,14 +185,5 @@ public class EndToEndTest : VideoWebUiTest
             caseNumber: bookingDto.CaseNumber,
             justiceUserDisplayName: _justiceUser.FullName,
             justiceUserUsername: _justiceUser.Username);
-    }
-    
-    private async Task<string> GetTempPasswordForUser(string email)
-    {
-        var allNotifications = await NotifyApiClient.GetNotificationsAsync("email");
-        var newUserEmails = allNotifications.notifications.Find(x =>
-            x.emailAddress == email && 
-            x.subject.Contains("Confirming the date, time, and sign in details of your video hearing"));
-        return _tempPassword.Match(newUserEmails!.body).Value;
     }
 }
