@@ -10,19 +10,19 @@
     <ItemGroup>
         <PackageReference Include="BookingsApi.Client" Version="3.1.14" />
         <PackageReference Include="ExtentReports" Version="5.0.4" />
-        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="FluentAssertions" Version="8.0.0" />
         <PackageReference Include="GovukNotify" Version="7.2.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-        <PackageReference Include="NUnit" Version="4.2.2" />
+        <PackageReference Include="NUnit" Version="4.3.2" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
-        <PackageReference Include="NUnit.Analyzers" Version="4.4.0">
+        <PackageReference Include="NUnit.Analyzers" Version="4.6.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Polly" Version="8.5.0" />
+        <PackageReference Include="Polly" Version="8.5.1" />
         <PackageReference Include="UserApi.Client" Version="2.1.1" />
         <PackageReference Include="VideoApi.Client" Version="3.1.15" />
-        <PackageReference Include="WebDriverManager" Version="2.17.4" />
+        <PackageReference Include="WebDriverManager" Version="2.17.5" />
     </ItemGroup>
 
     <ItemGroup>
