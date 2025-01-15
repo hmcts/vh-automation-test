@@ -9,7 +9,6 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
     [Description("Book a hearing with a judge and add a participant after booking. Check if the notification appears and if the user joins the judge in the hearing when a hearing is started.")]
     [Test]
     [Category("video")]
-    [Category("Shaed")]
     public async Task should_add_new_participant_after_booking()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
