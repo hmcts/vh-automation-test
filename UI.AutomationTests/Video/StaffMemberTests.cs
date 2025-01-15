@@ -5,7 +5,6 @@ public class StaffMemberTests : VideoWebUiTest
     [Description("Book a hearing. Log into hearing with a staff member account. Edit their display name. Start and stop the hearing.")]
     [Test]
     [Category("video")]
-    [Category("Shaed")]
     public async Task LogIntoHearingWithStaffMember()
     {
         var hearing = await CreateTestHearing();
