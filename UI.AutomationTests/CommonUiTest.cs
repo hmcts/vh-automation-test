@@ -91,8 +91,8 @@ public abstract class CommonUiTest
         } 
         else
         {
-            driver = new RemoteChromeVhDriver(username: username, videoFileName:videoFileName);
-            TestContext.Out.WriteLine($"Using RemoteChromeDriver for user {username} and video {videoFileName}");
+            driver = new RemoteChromeVhDriver(username: username);
+            TestContext.Out.WriteLine($"Using RemoteChromeDriver for user {username}");
         }
 
         driver.GetDriver().StoreUsername(username);
