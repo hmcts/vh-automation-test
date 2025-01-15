@@ -8,6 +8,7 @@ public class QuickLinkUserTests : VideoWebUiTest
 
     [Test]
     [Category("video")]
+    [Category("Shaed")]
     public async Task JoinAHearingAsAQuickLinkUser()
     {
         var hearing = await CreateTestHearing();

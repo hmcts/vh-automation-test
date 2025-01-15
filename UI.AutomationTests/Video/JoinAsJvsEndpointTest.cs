@@ -10,6 +10,7 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
     [Test]
     [Category("video")]
     [Category("coreVideo")]
+    [Category("Shaed")]
     public async Task LoginWithJvsWithLinkedDefenceAdvocate()
     {
         // Arrange

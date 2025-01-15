@@ -87,10 +87,12 @@ public abstract class CommonUiTest
         if (envConfigSettings.RunHeadlessBrowser || !envConfigSettings.RunOnSauceLabs)
         {
             driver = new LocalChromeVhDriver(videoFileName);
+            TestContext.Out.WriteLine($"Using LocalChromeDriver for user {username}");
         } 
         else
         {
-            driver = new RemoteChromeVhDriver(username: username);
+            driver = new RemoteChromeVhDriver(username: username, videoFileName:videoFileName);
+            TestContext.Out.WriteLine($"Using RemoteChromeDriver for user {username} and video {videoFileName}");
         }
 
         driver.GetDriver().StoreUsername(username);
