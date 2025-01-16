@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using UI.AutomationTests.EmailNotifications;
 using UI.Common.Utilities;
 using UI.PageModels.Pages.Admin.Booking;
@@ -10,7 +9,7 @@ namespace UI.AutomationTests.Admin.Booking
         
         [Test]
         [Category("admin")]
-        public void EditSingleDayOfMultiDayHearing()
+        public async Task EditSingleDayOfMultiDayHearing()
         {
             const int numberOfDays = 3;
             var scheduledDateTime = GetFirstDayOfNextWeek(DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser)).Date
@@ -33,6 +32,7 @@ namespace UI.AutomationTests.Admin.Booking
             confirmationPage.IsBookingSuccessful().Should().BeTrue();
             var bookingDetailPage = confirmationPage.ClickViewBookingLink();
             bookingDetailPage.ValidateDetailsPage(hearingDto);
+            await ValidateEmailNotifications(hearingDto);
             Assert.Pass();
         }
 
@@ -79,16 +79,17 @@ namespace UI.AutomationTests.Admin.Booking
                 bookingDetailsPage = SearchAndViewHearing(bookingDetailPage, hearingDto);
                 bookingDetailsPage.ValidateDetailsPage(hearingDto);
             }
-            await ValidateEmailNotifications(hearingDto);
             Assert.Pass();
         }
 
         private async Task ValidateEmailNotifications(BookingDto hearingDto)
         {
-            //Validate Judge email notification
-            await EmailNotificationService.ValidateEmailReceived(HearingTestData.AltJudgeUsername, EmailTemplates.JudgeHearingConfirmationMultiDay);
-            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmationMultiDay);
-            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmationMultiDay);
+            await EmailNotificationService.PullNotificationList();
+            //original judge
+            await EmailNotificationService.ValidateEmailReceived(HearingTestData.JudgeUsername, EmailTemplates.JudgeHearingConfirmationMultiDay);
+            await EmailNotificationService.ValidateEmailReceived(HearingTestData.JudgeUsername, EmailTemplates.HearingAmendmentJudge);
+            //new judge
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
             //Validate New User Participant email notification
             await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.FirstEmailAllNewUsers);
             await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation);
@@ -124,7 +125,7 @@ namespace UI.AutomationTests.Admin.Booking
             CreatedUsers.Add(newParticipant.Username);
             var participantsPage = summaryPage.ChangeParticipants();
             participantsPage.AddNewUserParticipants([newParticipant]);
-            hearingDto.Participants.Add(newParticipant);
+            hearingDto.NewParticipants.Add(newParticipant);
             
             // Update a participant
             var participantToUpdate = hearingDto.Participants.First(p => p.Role == GenericTestRole.Witness);

@@ -130,6 +130,7 @@ public class BookHearingTests : AdminWebUiTest
     
     private async Task ValidateEmailNotifications(BookingParticipantDto newUser)
     {
+        await EmailNotificationService.PullNotificationList();
         //Validate Judge email notification
         await EmailNotificationService.ValidateEmailReceived(_bookingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
         //Validate New User Participant email notification
