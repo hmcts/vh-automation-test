@@ -128,13 +128,13 @@ namespace UI.AutomationTests.Admin.Booking
             hearingDto.NewParticipants.Add(newParticipant);
             
             // Update a participant
-            var participantToUpdate = hearingDto.Participants.First(p => p.Role == GenericTestRole.Witness);
+            var participantToUpdate = hearingDto.Participants.First(p => p.Role == GenericTestRole.Applicant);
             var newDisplayName = participantToUpdate.DisplayName + " EDITED";
             participantsPage.UpdateParticipant(participantToUpdate.FullName, " EDITED");
             participantToUpdate.DisplayName = newDisplayName;
 
             // Remove a participant
-            var participantToRemove = hearingDto.Participants.Where(p => p.Role == GenericTestRole.Witness).ToList()[1];
+            var participantToRemove = hearingDto.Participants.First(p => p.Role == GenericTestRole.Applicant);
             participantsPage.RemoveParticipant(participantToRemove.FullName);
             hearingDto.Participants.Remove(participantToRemove);
             var videoAccessPointsPage = participantsPage.GoToVideoAccessPointsPage();
