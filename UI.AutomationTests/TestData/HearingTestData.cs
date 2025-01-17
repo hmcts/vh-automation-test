@@ -114,13 +114,13 @@ public static class HearingTestData
     {
         var participants = new List<BookingParticipantDto>
         {
-            BookingParticipantDto.Individual(GenericTestRole.Witness,
+            BookingParticipantDto.Individual(GenericTestRole.Applicant,
                 "auto_vw.individual_60@hmcts.net", "auto_vw.individual_60@hearings.reform.hmcts.net", "Auto 1",
                 "Mr", "Automation_Arnold", "Automation_Koelpin", Individual01FileName),
             BookingParticipantDto.Representative(GenericTestRole.Representative,
                 "auto_vw.representative_139@hmcts.net", "auto_vw.representative_139@hearings.reform.hmcts.net",
                 "Auto 2", "Mr", "Auto_VW", "Representative_139", "Auto 1", Representative01FileName),
-            BookingParticipantDto.Individual(GenericTestRole.Witness,
+            BookingParticipantDto.Individual(GenericTestRole.Applicant,
                 "auto_vw.individual_137@hmcts.net", "auto_vw.individual_137@hearings.reform.hmcts.net", "Auto 3",
                 "Mr", "Auto_VW", "Individual_137", Individual02FileName),
             BookingParticipantDto.Representative(GenericTestRole.Representative,
@@ -173,7 +173,7 @@ public static class HearingTestData
     public static BookingParticipantDto CreateNewParticipantDto()
     {
         var timeStamp = AddTimeStamp();
-        var user = BookingParticipantDto.Individual(GenericTestRole.Witness,
+        var user = BookingParticipantDto.Individual(GenericTestRole.Appellant,
             $"New_User{timeStamp}@hmcts.net",
             $"New.User{timeStamp}@hearings.reform.hmcts.net", "NewCreatedUser",
             "Mr", $"New", $"User{timeStamp}", null);

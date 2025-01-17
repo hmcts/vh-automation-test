@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Notify.Interfaces;
+using Notify.Models;
 
 namespace UI.AutomationTests.EmailNotifications;
 
@@ -7,6 +8,7 @@ public class EmailNotificationService
 {
     private IAsyncNotificationClient NotifyApiClient { get; } = VhApiClientFactory.CreateNotificationApiClient();
     private readonly Regex _tempPassword = new(@"(?<=temporary password: )[\S]+");
+    private NotificationList _notificationList;
     private readonly Dictionary<EmailTemplates, string> _emails = new()
     {
         {
@@ -43,7 +45,7 @@ public class EmailNotificationService
         },
         {
             EmailTemplates.JudgeHearingConfirmationMultiDay,
-            "b3b3b3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b"
+            "04cd937d-c6eb-4932-a040-469123afef67"
         },
         {
             EmailTemplates.HearingAmendment,
@@ -58,25 +60,41 @@ public class EmailNotificationService
             "3210895a-c096-4029-b43e-9fde4642a254"
         }
     };
-    
+
     public async Task<string> GetTempPasswordForUser(string contactEmail)
     {
         var allNotifications = await NotifyApiClient.GetNotificationsAsync("email");
         var newUserEmails = allNotifications.notifications.Find(x =>
             x.emailAddress == contactEmail && 
-            x.template.id == _emails[EmailTemplates.SecondEmailNewUserConfirmation]);
+            x.template.id == _emails[EmailTemplates.SecondEmailNewUserConfirmation] &&
+            DateTime.Parse(x.createdAt, DateTimeFormatInfo.CurrentInfo) > DateTime.UtcNow.AddMinutes(-2));
         return _tempPassword.Match(newUserEmails!.body).Value;
     }
-    
+
+    public async Task PullNotificationList()
+    {
+        _notificationList = await NotifyApiClient.GetNotificationsAsync("email");
+    }
+
     public async Task ValidateEmailReceived(string contactEmail, EmailTemplates emailTemplate)
     {
-        var allNotifications = await NotifyApiClient.GetNotificationsAsync("email");
-        var notifyContactEmails = allNotifications.notifications.Where(x =>
-                x.emailAddress == contactEmail &&
-                x.template.id == _emails[emailTemplate])
-            .ToList();
-        var emailExists = notifyContactEmails.Exists(e => DateTime.Parse(e.createdAt) > DateTime.UtcNow.AddMinutes(-1));
-        Assert.That(emailExists, $"Email with template {emailTemplate} was not received by {contactEmail} in the last 60 seconds");
+        var emailExists = await QueryNotifyForEmail(contactEmail, emailTemplate);
+        Assert.That(emailExists, $"Email with template {emailTemplate} was not sent to {contactEmail} in the last 5 minutes");
+    }
+    
+    private async Task<bool> QueryNotifyForEmail(string contactEmail, EmailTemplates emailTemplate, bool retry = true)
+    {
+        var emailExists = _notificationList.notifications.Exists(x => x.emailAddress == contactEmail && 
+                                                                      x.template.id == _emails[emailTemplate] && 
+                                                                      DateTime.Parse(x.sentAt, DateTimeFormatInfo.CurrentInfo) > DateTime.UtcNow.AddMinutes(-5));
+        if (!emailExists && retry)
+        {
+            //Sleep 10 seconds and try again as the email may not have been sent yet
+            Thread.Sleep(10_000);
+            await PullNotificationList();
+            return await QueryNotifyForEmail(contactEmail, emailTemplate, false);
+        }
+        return emailExists;
     }
 }
 

@@ -14,5 +14,7 @@ public enum GenericTestRole
     Representative,
     Solicitor,
     Witness,
-    Interpreter
+    Interpreter,
+    Applicant,
+    Respondent
 }
