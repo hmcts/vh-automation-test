@@ -155,20 +155,19 @@ stages:
           - job: A11Y_Tests
             displayName: A11Y Tests ${{ parameters.environment }}
             variables:
+              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
+                value: true
               - template: variables/${{ lower(parameters.environment) }}.yaml
-                parameters:
-                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
               - template: variables/shared.yaml
                 parameters:
                   environment: ${{ parameters.environment }}
                   runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+                  runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
               - group: vh-automation-test-${{ parameters.environment }}
-              - group: Saucelabs
               - group: FeatureFlags_${{ parameters.environment }}
+              - group: Saucelabs
               - group: VodafoneConfiguration_${{ parameters.environment }}
-              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
-                value: true
+              - group: VodafoneConfiguration_${{ parameters.environment }}
               - name: ApiClientConfiguration.BookingsApiUrl
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl
@@ -180,12 +179,13 @@ stages:
             steps:
               - template: pipelines/templates/run-ui-test.yaml
                 parameters:
+                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
                   testCategory: a11y
-                  testRunTitle: 'UI Tests ${{ parameters.environment }}'
+                  testRunTitle: 'UI Tests A11y ${{ parameters.environment }}'
                   subscriptionName: ${{ variables.subscriptionName }}
-                  netVersion: 8.x
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish A11Y Output
