@@ -43,6 +43,14 @@ parameters:
   - name: userApiOverrideUrl
     type: string
     default: ' '
+  - name: testReportDisplayName
+    type: string
+  - name: testReportArtifactName
+    type: string
+  - name: slackTestReportName
+    type: string
+  - name: slackTitle
+    type: string
 
 steps:
   - task: AzureKeyVault@2
@@ -172,3 +180,23 @@ steps:
         arguments: '--configuration Release'
       ${{ else }}:
         arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
+  
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Test Output
+    condition: succeededOrFailed()
+    inputs:
+      pathToPublish: '$(Agent.TempDirectory)/'
+      artifactName: ${{ parameters.testReportArtifactName }}
+
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
+    - template: pipelines/templates/get-results-from-trx.yaml
+      parameters:
+        name: ${{ paramaters.slackTestReportName }}
+
+    - template: pipelines/templates/send-results-to-slack.yaml
+      parameters:
+        env: ${{ parameters.environment }}
+        results: $(testOutcome)
+        details: $(testSummary)
+        triggerID: $(triggerID)
+        type: name: ${{ paramaters.slackTitle }}
