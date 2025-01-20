@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium.Support.UI;
+﻿using AventStack.ExtentReports;
 
 namespace UI.PageModels.Pages.Admin.Booking;
 
@@ -25,7 +25,12 @@ public class BookingConfirmationPage : VhAdminWebPage
     
     public bool IsBookingSuccessful()
     {
-        return IsElementVisible(By.XPath("//h1[normalize-space()='Your hearing booking was successful']"));
+        var isSuccessful = IsElementVisible(By.XPath("//h1[normalize-space()='Your hearing booking was successful']"));
+        var message = isSuccessful ? "successful" : "failed";
+        Driver.TakeScreenshotAndSave(GetType().Name,
+            $"Confirmation page booking {(isSuccessful ? "successful" : "failed")}",
+            isSuccessful ? Status.Pass : Status.Error);
+        return isSuccessful;
     }
 
     public BookingDetailsPage ClickViewBookingLink()

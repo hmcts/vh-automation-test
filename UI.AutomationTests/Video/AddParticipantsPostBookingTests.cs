@@ -52,11 +52,6 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         });
 
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
-        foreach (var participant in participantsToAdd)
-        {
-            var p = participantsInConference.First(x => x.Username == participant.Username);
-            judgeHearingRoomPage.AdmitParticipant(p.DisplayName, p.Id.ToString());
-        }
         
         judgeHearingRoomPage.WaitForCountdownToComplete();
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
