@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Notify.Interfaces;
 using Notify.Models;
+using Polly;
 
 namespace UI.AutomationTests.EmailNotifications;
 
@@ -61,14 +62,45 @@ public class EmailNotificationService
         }
     };
 
-    public async Task<string> GetTempPasswordForUser(string contactEmail)
+    public async Task<string> GetTempPasswordForUser(string contactEmail, string caseNumber)
     {
-        var allNotifications = await NotifyApiClient.GetNotificationsAsync("email");
-        var newUserEmails = allNotifications.notifications.Find(x =>
-            x.emailAddress == contactEmail && 
-            x.template.id == _emails[EmailTemplates.SecondEmailNewUserConfirmation] &&
-            DateTime.Parse(x.createdAt, DateTimeFormatInfo.CurrentInfo) > DateTime.UtcNow.AddMinutes(-2));
-        return _tempPassword.Match(newUserEmails!.body).Value;
+        const int maxRetryAttempts = 3;
+        const int retryDelaySeconds = 5;
+        
+        var retryPolicy = Policy
+            .HandleResult<string>(string.IsNullOrEmpty)
+            .WaitAndRetryAsync(maxRetryAttempts, _ => TimeSpan.FromSeconds(retryDelaySeconds),
+                (_, _, retryCount, context) =>
+                {
+                    // Log or handle the retry attempt here
+                    context["RetryCount"] = retryCount;
+                });
+
+        var tempPassword = await retryPolicy.ExecuteAsync(async (context) =>
+        {
+            _ = context.TryGetValue("RetryCount", out var retryCount) ? (int)retryCount : 0;
+            Console.WriteLine($"Executing retry attempt {retryCount} for {contactEmail}");
+
+            var allNotifications = await NotifyApiClient.GetNotificationsAsync("email");
+            var newUserEmail = allNotifications.notifications.Find(x =>
+                x.emailAddress == contactEmail && x.body.Contains(caseNumber) &&
+                x.template.id == _emails[EmailTemplates.SecondEmailNewUserConfirmation]);
+            if(newUserEmail == null)
+            {
+                await TestContext.Out.WriteLineAsync("New user email not found");
+                return null;
+            }
+            await TestContext.Out.WriteLineAsync(newUserEmail.body);
+            var match = _tempPassword.Match(newUserEmail.body);
+            return match.Success ? match.Value : null;
+        }, new Context());
+
+        if (string.IsNullOrEmpty(tempPassword))
+        {
+            throw new Exception($"Temporary password email not found for {contactEmail}");
+        }
+
+        return tempPassword;
     }
 
     public async Task PullNotificationList()
@@ -76,23 +108,23 @@ public class EmailNotificationService
         _notificationList = await NotifyApiClient.GetNotificationsAsync("email");
     }
 
-    public async Task ValidateEmailReceived(string contactEmail, EmailTemplates emailTemplate)
+    public async Task ValidateEmailReceived(string contactEmail, EmailTemplates emailTemplate, string caseName)
     {
-        var emailExists = await QueryNotifyForEmail(contactEmail, emailTemplate);
-        Assert.That(emailExists, $"Email with template {emailTemplate} was not sent to {contactEmail} in the last 5 minutes");
+        var emailExists = await QueryNotifyForEmail(contactEmail, emailTemplate, caseName);
+        Assert.That(emailExists, $"Email with template {emailTemplate} was not sent to {contactEmail} with case number {caseName}");
     }
     
-    private async Task<bool> QueryNotifyForEmail(string contactEmail, EmailTemplates emailTemplate, bool retry = true)
+    private async Task<bool> QueryNotifyForEmail(string contactEmail, EmailTemplates emailTemplate, string caseName,  bool retry = true)
     {
         var emailExists = _notificationList.notifications.Exists(x => x.emailAddress == contactEmail && 
                                                                       x.template.id == _emails[emailTemplate] && 
-                                                                      DateTime.Parse(x.sentAt, DateTimeFormatInfo.CurrentInfo) > DateTime.UtcNow.AddMinutes(-5));
+                                                                      (x.body.Contains(caseName) || x.subject.Contains(caseName)));
         if (!emailExists && retry)
         {
             //Sleep 10 seconds and try again as the email may not have been sent yet
             Thread.Sleep(10_000);
             await PullNotificationList();
-            return await QueryNotifyForEmail(contactEmail, emailTemplate, false);
+            return await QueryNotifyForEmail(contactEmail, emailTemplate, caseName, false);
         }
         return emailExists;
     }

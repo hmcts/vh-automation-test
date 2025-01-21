@@ -88,9 +88,11 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     /// <param name="buffer">Additional buffer, in seconds</param>
     public void WaitForCountdownToComplete(int buffer = 5)
     {
+        Driver.TakeScreenshotAndSave(GetType().Name, "Waiting for countdown to complete");
         const int countdown = 30;
-        Thread.Sleep(TimeSpan.FromSeconds(countdown + buffer));
-        Driver.TakeScreenshotAndSave(GetType().Name, "Countdown expected to complete");
+        var waitTime = countdown+buffer;
+        Thread.Sleep(TimeSpan.FromSeconds(waitTime));
+        Driver.TakeScreenshotAndSave(GetType().Name, $"Countdown expected to complete after {waitTime} seconds");
         WaitForElementToBeInvisible(By.XPath("//img[@src='/assets/images/mic_remote_mute.png']"), 10);
     }
 

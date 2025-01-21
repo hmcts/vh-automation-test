@@ -44,7 +44,7 @@ public class EndToEndTest : VideoWebUiTest
         Parallel.ForEach(hearingDto.Participants, ParticipantLoginToWaitingRoomJourney);
         
         // login with new user with temp password journey
-        var newUserTempPassword = await EmailNotificationService.GetTempPasswordForUser(newUser.ContactEmail);
+        var newUserTempPassword = await EmailNotificationService.GetTempPasswordForUser(newUser.ContactEmail, hearingDto.CaseName);
         NewParticipantLoginToWaitingRoom(newUser, newUserTempPassword);
         hearingDto.Participants.Add(newUser);
 

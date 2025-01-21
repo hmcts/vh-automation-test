@@ -25,7 +25,9 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
     {
         ClickElement(_startOrResumeHearingBtn);
         WaitForElementToBeClickable(_confirmStartHearingButton);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Prompted to confirm start/resume hearing");
         ClickElement(_confirmStartHearingButton);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Confirmed start/resume hearing");
         return new JudgeHearingRoomPage(Driver, DefaultWaitTime);
     }
 
@@ -33,6 +35,7 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
     {
         var hearingClosed = By.XPath("//h1[normalize-space()='Hearing is closed']");
         WaitForElementToBeVisible(hearingClosed);
+        Driver.TakeScreenshotAndSave(GetType().Name, "Hearing closed message displayed");
         return IsElementVisible(hearingClosed);
     }
     

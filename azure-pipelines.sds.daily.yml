@@ -116,13 +116,10 @@ stages:
                       testRunTitle: 'UI Tests ${{ parameters.environment }} - ${{ testCategory }}'
                       testCategory: ${{ testCategory }}
                       subscriptionName: ${{ variables.subscriptionName }}
-
-                  - task: PublishBuildArtifacts@1
-                    displayName: Publish UI Test Output
-                    condition: succeededOrFailed()
-                    inputs:
-                      pathToPublish: '$(Agent.TempDirectory)/'
-                      artifactName: UI_Report
+                      testReportArtifactName: 'UI_Report'
+                      testReportDisplayName: 'Publish UI Test Output'
+                      slackTestReportName: UI
+                      slackTitle: UI Tests - ${{ testCategory }}
 
                   - task: PublishBuildArtifacts@1
                     displayName: Publish UI HTML Report
@@ -138,37 +135,23 @@ stages:
                       reportDir: '$(Build.ArtifactStagingDirectory)/UITestReports/'
                       useFilenameTabs: true
 
-                  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
-                      - template: pipelines/templates/get-results-from-trx.yaml
-                        parameters:
-                          name: UI
-
-                      - template: pipelines/templates/send-results-to-slack.yaml
-                        parameters:
-                          env: ${{ parameters.environment }}
-                          results: $(testOutcome)
-                          details: $(testSummary)
-                          triggerID: $(triggerID)
-                          type: UI Tests - ${{ testCategory }}
-
       - ${{ if eq(parameters.runA11yTests, true) }}:
           - job: A11Y_Tests
             displayName: A11Y Tests ${{ parameters.environment }}
             variables:
+              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
+                value: true
               - template: variables/${{ lower(parameters.environment) }}.yaml
-                parameters:
-                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
               - template: variables/shared.yaml
                 parameters:
                   environment: ${{ parameters.environment }}
                   runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+                  runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
               - group: vh-automation-test-${{ parameters.environment }}
-              - group: Saucelabs
               - group: FeatureFlags_${{ parameters.environment }}
+              - group: Saucelabs
               - group: VodafoneConfiguration_${{ parameters.environment }}
-              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
-                value: true
+              - group: VodafoneConfiguration_${{ parameters.environment }}
               - name: ApiClientConfiguration.BookingsApiUrl
                 value: ${{ variables.bookingsApiUrl }}
               - name: ApiClientConfiguration.VideoApiUrl
@@ -180,12 +163,17 @@ stages:
             steps:
               - template: pipelines/templates/run-ui-test.yaml
                 parameters:
+                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
                   environment: ${{ parameters.environment }}
                   projectPath: ${{ variables.projectPath }}
                   testCategory: a11y
-                  testRunTitle: 'UI Tests ${{ parameters.environment }}'
+                  testRunTitle: 'UI Tests A11y ${{ parameters.environment }}'
                   subscriptionName: ${{ variables.subscriptionName }}
-                  netVersion: 8.x
+                  testReportArtifactName: 'A11Y_Report'
+                  testReportDisplayName: 'Publish A11Y Output'
+                  slackTestReportName: A11y
+                  slackTitle: A11y Tests
 
               - task: PublishBuildArtifacts@1
                 displayName: Publish A11Y Output
@@ -193,23 +181,3 @@ stages:
                 inputs:
                   pathToPublish: '$(Build.ArtifactStagingDirectory)/'
                   artifactName: A11Y_Report
-
-              - task: PublishBuildArtifacts@1
-                displayName: Publish A11Y Output
-                condition: succeededOrFailed()
-                inputs:
-                  pathToPublish: '$(Agent.TempDirectory)/'
-                  artifactName: A11Y_Report_Temp
-
-              - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
-                  - template: pipelines/templates/get-results-from-trx.yaml
-                    parameters:
-                      name: A11y
-
-                  - template: pipelines/templates/send-results-to-slack.yaml
-                    parameters:
-                      env: ${{ parameters.environment }}
-                      results: $(testOutcome)
-                      details: $(testSummary)
-                      triggerID: $(triggerID)
-                      type: A11y Tests
