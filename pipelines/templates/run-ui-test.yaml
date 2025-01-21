@@ -181,12 +181,12 @@ steps:
       ${{ else }}:
         arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
   
-  - task: PublishBuildArtifacts@1
-    displayName: Publish Test Output
-    condition: succeededOrFailed()
-    inputs:
-      pathToPublish: '$(Agent.TempDirectory)/'
-      artifactName: ${{ parameters.testReportArtifactName }}
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish Test Output
+  #   condition: succeededOrFailed()
+  #   inputs:
+  #     pathToPublish: '$(Agent.TempDirectory)/'
+  #     artifactName: ${{ parameters.testReportArtifactName }}
 
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
     - template: pipelines/templates/get-results-from-trx.yaml
