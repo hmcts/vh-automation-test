@@ -191,7 +191,7 @@ steps:
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
     - template: ./get-results-from-trx.yaml
       parameters:
-        name: ${{ paramaters.slackTestReportName }}
+        name: ${{ parameters.slackTestReportName }}
 
     - template: ./send-results-to-slack.yaml
       parameters:
