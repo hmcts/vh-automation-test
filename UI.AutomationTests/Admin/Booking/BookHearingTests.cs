@@ -74,7 +74,7 @@ public class BookHearingTests : AdminWebUiTest
         postBookingUnallocatedHearingsNextThirtyDays.Should()
             .BeGreaterThan(preBookingUnallocatedHearingsNextThirtyDays);
 
-        await ValidateEmailNotifications(newUser);
+        await ValidateEmailNotifications(newUser, _bookingDto.CaseName);
         
         dashboardPage.SignOut();
 
@@ -128,21 +128,21 @@ public class BookHearingTests : AdminWebUiTest
         Assert.Pass($"Booked a hearing with interpretation for {description}");
     }
     
-    private async Task ValidateEmailNotifications(BookingParticipantDto newUser)
+    private async Task ValidateEmailNotifications(BookingParticipantDto newUser, string caseName)
     {
         await EmailNotificationService.PullNotificationList();
         //Validate Judge email notification
-        await EmailNotificationService.ValidateEmailReceived(_bookingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation);
+        await EmailNotificationService.ValidateEmailReceived(_bookingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation, caseName);
         //Validate New User Participant email notification
-        await EmailNotificationService.ValidateEmailReceived(newUser.ContactEmail, EmailTemplates.FirstEmailAllNewUsers);
-        await EmailNotificationService.ValidateEmailReceived(newUser.ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation);
+        await EmailNotificationService.ValidateEmailReceived(newUser.ContactEmail, EmailTemplates.FirstEmailAllNewUsers, caseName);
+        await EmailNotificationService.ValidateEmailReceived(newUser.ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation, caseName);
         //Validate Other Participants email notification
         foreach (var participant in _bookingDto.Participants)
         {
             if (participant.Role == GenericTestRole.Representative)
-                await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmation);
+                await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmation, caseName);
             else
-                await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmation);
+                await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmation, caseName);
         }
     }
 }
