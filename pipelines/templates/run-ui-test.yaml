@@ -199,4 +199,4 @@ steps:
       results: $(testOutcome)
       details: $(testSummary)
       triggerID: $(triggerID)
-      type: name: ${{ parameters.slackTitle }}
+      type: ${{ parameters.slackTitle }}
