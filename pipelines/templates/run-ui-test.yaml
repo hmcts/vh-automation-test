@@ -193,10 +193,10 @@ steps:
       parameters:
         name: ${{ paramaters.slackTestReportName }}
 
-    - template: pipelines/templates/send-results-to-slack.yaml
-      parameters:
-        env: ${{ parameters.environment }}
-        results: $(testOutcome)
-        details: $(testSummary)
-        triggerID: $(triggerID)
-        type: name: ${{ paramaters.slackTitle }}
+  - template: pipelines/templates/send-results-to-slack.yaml
+    parameters:
+      env: ${{ parameters.environment }}
+      results: $(testOutcome)
+      details: $(testSummary)
+      triggerID: $(triggerID)
+      type: name: ${{ paramaters.slackTitle }}
