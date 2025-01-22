@@ -108,25 +108,44 @@ public class EmailNotificationService
         _notificationList = await NotifyApiClient.GetNotificationsAsync("email");
     }
 
-    public async Task ValidateEmailReceived(string contactEmail, EmailTemplates emailTemplate, string caseName)
+    public async Task ValidateEmailReceived(string contactEmail, EmailTemplates emailTemplate, string caseName, string caseNumber)
     {
-        var emailExists = await QueryNotifyForEmail(contactEmail, emailTemplate, caseName);
-        Assert.That(emailExists, $"Email with template {emailTemplate} was not sent to {contactEmail} with case number {caseName}");
+        var emailExists = await QueryNotifyForEmail(contactEmail, emailTemplate, caseName, caseNumber);
+        Assert.That(emailExists, $"Email with template {emailTemplate} was not sent to {contactEmail} with case name {caseName}");
     }
     
-    private async Task<bool> QueryNotifyForEmail(string contactEmail, EmailTemplates emailTemplate, string caseName,  bool retry = true)
+    private async Task<bool> QueryNotifyForEmail(string contactEmail, EmailTemplates emailTemplate, string caseName, string caseNumber)
     {
-        var emailExists = _notificationList.notifications.Exists(x => x.emailAddress == contactEmail && 
-                                                                      x.template.id == _emails[emailTemplate] && 
-                                                                      (x.body.Contains(caseName) || x.subject.Contains(caseName)));
-        if (!emailExists && retry)
+        const int maxRetryAttempts = 3;
+        const int retryDelaySeconds = 5;
+        
+        var retryPolicy = Policy
+            .HandleResult<bool>(x => !x)
+            .WaitAndRetryAsync(maxRetryAttempts, _ => TimeSpan.FromSeconds(retryDelaySeconds), async (_, _, retryCount, context) =>
+                {
+                    // Log or handle the retry attempt here
+                    context["RetryCount"] = retryCount;
+                    await PullNotificationList();
+                });
+
+        return await retryPolicy.ExecuteAsync(async (context) =>
         {
-            //Sleep 10 seconds and try again as the email may not have been sent yet
-            Thread.Sleep(10_000);
-            await PullNotificationList();
-            return await QueryNotifyForEmail(contactEmail, emailTemplate, caseName, false);
-        }
-        return emailExists;
+            _ = context.TryGetValue("RetryCount", out var retryCount) ? (int)retryCount : 0;
+            Console.WriteLine($"Executing retry attempt {retryCount} for {contactEmail}");
+
+            var emailExists = _notificationList.notifications.Exists(x => x.emailAddress == contactEmail &&
+                                                                          x.template.id == _emails[emailTemplate] &&
+                                                                          (x.body.Contains(caseName) ||
+                                                                           x.subject.Contains(caseName) ||
+                                                                           x.body.Contains(caseNumber) ||
+                                                                           x.subject.Contains(caseNumber)
+                                                                          ));
+            if (!emailExists)
+            {
+                await TestContext.Out.WriteLineAsync($"Email not found {contactEmail}, {emailTemplate}, {caseName}");
+            }
+            return emailExists;
+        }, new Context());
     }
 }
 
