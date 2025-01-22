@@ -87,26 +87,27 @@ namespace UI.AutomationTests.Admin.Booking
             await EmailNotificationService.PullNotificationList();
             //original judge
             var caseName = hearingDto.CaseName;
-            await EmailNotificationService.ValidateEmailReceived(HearingTestData.JudgeUsername, EmailTemplates.JudgeHearingConfirmationMultiDay, caseName);
-            await EmailNotificationService.ValidateEmailReceived(HearingTestData.JudgeUsername, EmailTemplates.HearingAmendmentJudge, caseName);
+            var caseNumber = hearingDto.CaseNumber;
+            await EmailNotificationService.ValidateEmailReceived(HearingTestData.JudgeUsername, EmailTemplates.JudgeHearingConfirmationMultiDay, caseName, caseNumber);
+            await EmailNotificationService.ValidateEmailReceived(HearingTestData.JudgeUsername, EmailTemplates.HearingAmendmentJudge, caseName, caseNumber);
             //new judge
-            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation, caseName);
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.Judge.Username, EmailTemplates.JudgeHearingConfirmation, caseName, caseNumber);
             //Validate New User Participant email notification
-            await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.FirstEmailAllNewUsers, caseName);
-            await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation, caseName);
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.FirstEmailAllNewUsers, caseName, caseNumber);
+            await EmailNotificationService.ValidateEmailReceived(hearingDto.NewParticipants[0].ContactEmail, EmailTemplates.SecondEmailNewUserConfirmation, caseName, caseNumber);
             //Validate Other Participants email notification
             foreach (var participant in hearingDto.Participants)
             {
                 if (participant.Role == GenericTestRole.Representative)
                 {
                     
-                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmationMultiDay, caseName);
-                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.HearingAmendmentProfessional, caseName);
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingProfessionalConfirmationMultiDay, caseName, caseNumber);
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.HearingAmendmentProfessional, caseName, caseNumber);
                 }
                 else
                 {
-                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmationMultiDay, caseName);
-                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.HearingAmendment, caseName);
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.ExistingParticipantConfirmationMultiDay, caseName, caseNumber);
+                    await EmailNotificationService.ValidateEmailReceived(participant.ContactEmail, EmailTemplates.HearingAmendment, caseName, caseNumber);
                 }
             }
         }
