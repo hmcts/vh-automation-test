@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using UI.Common.Utilities;
 
 namespace UI.AutomationTests.Admin.Booking;
@@ -6,7 +8,7 @@ namespace UI.AutomationTests.Admin.Booking;
 public class EditBookingTest : HearingTest
 {
     [Test]
-    [Category("admin")]
+    [NUnit.Framework.Category("admin")]
     public void should_update_booking_schedule_and_change_judge()
     {
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(60);
@@ -19,7 +21,7 @@ public class EditBookingTest : HearingTest
         var summaryPage = bookingDetailsPage.UpdateSchedule(newTime, hearingDto.DurationHour, hearingDto.DurationMinute);
         
         //Assign a new Judge 
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudgePersonalCode, HearingTestData.AltJudgeUsername,
+        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudgePersonalCode, HearingTestData.PanelMemberUsername,
             "Auto Judge 2", "");
 
         var assignJudgePage = summaryPage.ChangeJudgeV2();
@@ -34,7 +36,7 @@ public class EditBookingTest : HearingTest
     }
 
     [Test]
-    [Category("admin")]
+    [NUnit.Framework.Category("admin")]
     [FeatureToggleSetting(FeatureToggle.InterpreterEnhancementsToggleKey, true)]
     public void should_update_booking_with_interpreter_languages()
     {
@@ -50,7 +52,7 @@ public class EditBookingTest : HearingTest
         var newInterpreterLanguage = new InterpreterLanguageDto("British Sign Language (BSL)", InterpreterType.Sign);
         
         // Assign a new judge
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode, HearingTestData.AltJudgeUsername,
+        var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode, HearingTestData.PanelMemberUsername,
             "Auto Judge 2", "")
         {
             InterpreterLanguage = newInterpreterLanguage
@@ -59,6 +61,7 @@ public class EditBookingTest : HearingTest
         assignJudgePage.EnterJudgeDetails(alternativeJudge);
         bookingDto.Judge = alternativeJudge;
         summaryPage = assignJudgePage.GotToNextPageOnEdit();
+        
 
         // Update the participants
         var participantsPage = summaryPage.ChangeParticipants();

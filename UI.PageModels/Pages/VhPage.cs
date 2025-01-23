@@ -20,6 +20,7 @@ public abstract class VhPage
     protected bool IgnoreAccessibilityForPage = false;
     protected bool UseAltLocator;
     public string Username { get; protected set; }
+    
 
     protected VhPage(IWebDriver driver, int defaultWaitTime, bool useAltLocator, bool ignoreAccessibilityForPage = false)
     {

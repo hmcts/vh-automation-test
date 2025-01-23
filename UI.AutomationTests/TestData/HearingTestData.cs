@@ -1,14 +1,13 @@
-using BookingsApi.Contract.V1.Requests.Enums;
-using BookingsApi.Contract.V2.Enums;
-using UI.Common.Utilities;
 
+using BookingsApi.Contract.V2.Enums;
 namespace UI.AutomationTests.TestData;
+
 
 public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
-    public static string AltJudgeUsername = "auto_aw.judge_01@hearings.reform.hmcts.net";
+    public static string PanelMemberUsername = "auto_aw.judge_01@hearings.reform.hmcts.net";
     public static string AltJudgePersonalCode = "VH-GENERIC-ACCOUNT-00";
     public static string JudgeUsername = "auto_aw.judge_02@hearings.reform.hmcts.net";
     public static string JudgePersonalCode = "VH-GENERIC-ACCOUNT-0";
