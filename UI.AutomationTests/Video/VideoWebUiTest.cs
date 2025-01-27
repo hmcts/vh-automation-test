@@ -190,23 +190,17 @@ public abstract class VideoWebUiTest : CommonUiTest
     }
 
     /// <summary>
-    /// Sign out of a participant's session
-    /// </summary>
-    /// <param name="username"></param>
-    protected void SignOutAs(string username)
-    {
-        ParticipantDrivers[username].VhVideoWebPage.SignOut();
-    }
-
-    /// <summary>
     /// Sign all users out
     /// </summary>
     protected void SignOutAllUsers()
     {
         foreach (var videoWebParticipant in ParticipantDrivers.Values.Where(x=> x.JourneyType != JourneyType.Jvs))
-        {
-            TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
-            videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);
-        }
+            SignOut(videoWebParticipant);
+    }
+
+    protected static void SignOut(VideoWebParticipant videoWebParticipant)
+    {
+        TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
+        videoWebParticipant.VhVideoWebPage.SignOut(false);
     }
 }
