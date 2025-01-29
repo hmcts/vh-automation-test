@@ -30,7 +30,6 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         
-        var participantsInConference = await VideoApiClient.GetParticipantsByConferenceIdAsync(conference.Id);
         // loop through all participants in hearing and login as each one
         var page = judgeWaitingRoomPage;
         Parallel.ForEach(hearingDto.Participants, participant =>
@@ -73,6 +72,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         _hearingIdString = confirmationPage.GetNewHearingId();
         TestHearingIds.Add(_hearingIdString);
         TestContext.Out.WriteLine($"Hearing  ID: {_hearingIdString}");
+        confirmationPage.IsBookingSuccessful().Should().BeTrue();
         return confirmationPage.ClickViewBookingLink();
     }
 }
