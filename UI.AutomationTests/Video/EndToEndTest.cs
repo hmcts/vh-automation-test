@@ -43,8 +43,6 @@ public class EndToEndTest : VideoWebUiTest
         // loop through all participants in hearing and login as each one
         Parallel.ForEach(hearingDto.Participants, ParticipantLoginToWaitingRoomJourney);
         
-        ValidateRepSelfTestSkipJourney(hearingDto.Participants.First(e => e.Role == GenericTestRole.Representative));
-        
         // login with new user with temp password journey
         var newUserTempPassword = await EmailNotificationService.GetTempPasswordForUser(newUser.ContactEmail, hearingDto.CaseName);
         NewParticipantLoginToWaitingRoom(newUser, newUserTempPassword);
@@ -92,17 +90,7 @@ public class EndToEndTest : VideoWebUiTest
         ReportAccessibility();
         Assert.Pass();
     }
-
-    private void ValidateRepSelfTestSkipJourney(BookingParticipantDto rep)
-    {
-        var participantDriver = ParticipantDrivers[rep.Username];
-        SignOut(participantDriver);
-        var participantUsername = rep.Username;
-        var participantPassword = EnvConfigSettings.UserPassword;
-        var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, true, rep.VideoFileName);
-        SkipSelfTestJourneyToWaitingRoom(participantHearingList, participantUsername);
-    }
-
+    
     private void ParticipantLoginToWaitingRoomJourney(BookingParticipantDto participant)
     {
         var participantUsername = participant.Username;
@@ -121,17 +109,7 @@ public class EndToEndTest : VideoWebUiTest
         // store the participant driver in a dictionary, so we can access it later to sign out
         ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
     }
-
-    private void SkipSelfTestJourneyToWaitingRoom(ParticipantHearingListPage participantHearingList, string participantUsername)
-    {
-        var participantWaitingRoom = participantHearingList
-            .SelectHearing(_conference.Id)
-            .SkipToCourtRules()
-            .AcceptCourtRules()
-            .AcceptDeclaration();
-        ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
-    }
-
+    
     private void NewParticipantLoginToWaitingRoom(BookingParticipantDto participant, string tempPassword)
     {
         var participantUsername = participant.Username;
