@@ -11,7 +11,6 @@ namespace UI.AutomationTests.Video
         [Description("Book a hearing. Log into hearing with a Rep. Use Rep Skip self test journey")]
         [Test]
         [Category("video")]
-        [Category("coreVideo")]
         public async Task RepSkipSelfTestJourney()
         {
             var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);

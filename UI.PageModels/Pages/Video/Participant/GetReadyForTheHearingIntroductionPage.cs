@@ -22,7 +22,15 @@ public class GetReadyForTheHearingIntroductionPage(IWebDriver driver, int defaul
     
     public bool IsSkipButtonVisible()
     {
-        return IsElementVisible(_skipButton);
+        try
+        {
+            WaitForElementToBeVisible(_skipButton, 5);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
     
     public CheckEquipmentPage GoToEquipmentCheck()
