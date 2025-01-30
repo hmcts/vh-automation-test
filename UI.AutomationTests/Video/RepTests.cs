@@ -14,7 +14,7 @@ namespace UI.AutomationTests.Video
         public async Task RepSkipSelfTestJourney()
         {
             var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
-            var request = HearingTestData.CreateNewRequestDtoWithJudgeAndRep(scheduledDateTime: hearingScheduledDateAndTime);
+            var request = HearingTestData.CreateNewRequestDtoJudgeAndEndpointWithLinkedDa(scheduledDateTime: hearingScheduledDateAndTime);
             var hearing = await BookingsApiClient.BookNewHearingWithCodeAsync(request);
             TestHearingIds.Add(hearing.Id.ToString());
             var conference = await GetConference(hearing.Id);
