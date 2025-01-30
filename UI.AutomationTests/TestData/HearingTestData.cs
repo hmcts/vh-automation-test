@@ -1,6 +1,4 @@
-using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V2.Enums;
-using UI.Common.Utilities;
 
 namespace UI.AutomationTests.TestData;
 
@@ -205,40 +203,16 @@ public static class HearingTestData
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
 
         var bookingDto = CreateHearingDtoWithOnlyAJudge(scheduledDateTime: hearingDateTime);
-        var request = new BookNewHearingRequestV2()
-        {
-            Cases = new List<CaseRequestV2>()
+        var request = CreateRequest(bookingDto);
+        request.JudicialOfficeHolders.Add(
+            new()
             {
-                {
-                    new()
-                    {
-                        Name = bookingDto.CaseName,
-                        Number = bookingDto.CaseNumber,
-                        IsLeadCase = true
-                    }
-                }
-            },
-            ScheduledDateTime = bookingDto.ScheduledDateTime,
-            ScheduledDuration = bookingDto.DurationHour = 90,
-            HearingRoomName = bookingDto.RoomName,
-            CreatedBy = "automated test framework",
-            ServiceId = bookingDto.ServiceId,
-            OtherInformation = bookingDto.OtherInformation,
-            AudioRecordingRequired = bookingDto.AudioRecording,
-            HearingVenueCode = bookingDto.VenueCode,
-            JudicialOfficeHolders =
-            [
-                new()
-                {
-                    HearingRoleCode = JudiciaryParticipantHearingRoleCode.Judge,
-                    DisplayName = bookingDto.Judge.DisplayName,
-                    ContactEmail = bookingDto.Judge.Username,
-                    PersonalCode = bookingDto.Judge.PersonalCode,
-                    ContactTelephone = bookingDto.Judge.Phone
-                }
-            ],
-            BookingSupplier = BookingSupplier.Vodafone,
-        };
+                HearingRoleCode = JudiciaryParticipantHearingRoleCode.Judge,
+                DisplayName = bookingDto.Judge.DisplayName,
+                ContactEmail = bookingDto.Judge.Username,
+                PersonalCode = bookingDto.Judge.PersonalCode,
+                ContactTelephone = bookingDto.Judge.Phone
+            });
         return request;
     }
     
@@ -283,5 +257,33 @@ public static class HearingTestData
         public const string StaffMember = "STAF";
         public const string Interpreter = "INTP";
         public const string WelfareRepresentative = "WERP";
+    }
+    
+    private static BookNewHearingRequestV2 CreateRequest(BookingDto bookingDto)
+    {
+        var request = new BookNewHearingRequestV2()
+        {
+            Cases = new List<CaseRequestV2>()
+            {
+                {
+                    new()
+                    {
+                        Name = bookingDto.CaseName,
+                        Number = bookingDto.CaseNumber,
+                        IsLeadCase = true
+                    }
+                }
+            },
+            ScheduledDateTime = bookingDto.ScheduledDateTime,
+            ScheduledDuration = bookingDto.DurationHour = 90,
+            HearingRoomName = bookingDto.RoomName,
+            CreatedBy = "automated test framework",
+            ServiceId = bookingDto.ServiceId,
+            OtherInformation = bookingDto.OtherInformation,
+            AudioRecordingRequired = bookingDto.AudioRecording,
+            HearingVenueCode = bookingDto.VenueCode,
+            BookingSupplier = BookingSupplier.Vodafone,
+        };
+        return request;
     }
 }

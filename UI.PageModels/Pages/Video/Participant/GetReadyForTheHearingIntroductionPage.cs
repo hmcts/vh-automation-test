@@ -19,6 +19,20 @@ public class GetReadyForTheHearingIntroductionPage(IWebDriver driver, int defaul
         ClickElement(_skipButton);
         return new CourtRulesPage(Driver, DefaultWaitTime);
     }
+    
+    public bool IsSkipButtonVisible()
+    {
+        try
+        {
+            WaitForElementToBeVisible(_skipButton, 5);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+    
     public CheckEquipmentPage GoToEquipmentCheck()
     {
         ClickElement(_nextButton);
