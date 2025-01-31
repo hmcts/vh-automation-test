@@ -5,6 +5,8 @@
 /// </summary>
 public class EnvironmentConfigSettings : SystemConfigSettings
 {
+    private const string ProductionEnvironmentName = "Prod";
+    
     public string Environment { get; set; }
     public string UserPassword { get; set; }
     public int DefaultElementWait { get; set; }
@@ -14,5 +16,5 @@ public class EnvironmentConfigSettings : SystemConfigSettings
     public string PexipNodeAddress { get; set; }
     public string PexipSipAddressStem { get; set; }
     
-    public bool IsProd => Environment.Equals("Prod", StringComparison.InvariantCultureIgnoreCase);
+    public bool IsProd => Environment.Equals(ProductionEnvironmentName, StringComparison.InvariantCultureIgnoreCase);
 }
