@@ -12,4 +12,5 @@ public class EnvironmentConfigSettings : SystemConfigSettings
     public string AdminUrl { get; set; }
     public string UKConferencePhoneNumber { get; set; }
     public string PexipNodeAddress { get; set; }
+    public string PexipSipAddressStem { get; set; }
 }

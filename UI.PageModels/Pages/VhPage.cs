@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using AventStack.ExtentReports;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -20,10 +21,12 @@ public abstract class VhPage
     protected bool IgnoreAccessibilityForPage = false;
     protected bool UseAltLocator;
     public string Username { get; protected set; }
+    protected string SipAddressStem { get; set; }
 
     protected VhPage(IWebDriver driver, int defaultWaitTime, bool useAltLocator, bool ignoreAccessibilityForPage = false)
     {
         var config = ConfigRootBuilder.EnvConfigInstance();
+        SipAddressStem = config.PexipSipAddressStem;
         Driver = driver;
         DefaultWaitTime = defaultWaitTime;
         IgnoreAccessibilityForPage = ignoreAccessibilityForPage;
@@ -285,6 +288,7 @@ public abstract class VhPage
         var callingClassName = stackTrace
             .GetFrame(methodDepth)!
             .GetMethod()!.DeclaringType!.Name;
+        Driver.TakeScreenshotAndSave(callingClassName, clickOrViewText, Status.Error);
         throw new WebDriverException($"Element on page {callingClassName} {clickOrViewText} after {timeOut ?? DefaultWaitTime} seconds", e);
     }
 }

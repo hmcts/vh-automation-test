@@ -75,6 +75,15 @@ public class JudgeHearingRoomPage : VhVideoWebPage
         var participantMicBtn = By.Id($"participants-panel-{participantId}-icon-micLocal");
         return IsElementVisible(participantMicBtn);
     }
+
+    public bool IsParticipantInHearing(string displayName)
+    {
+        var element =
+            By.XPath(
+                $"//span[contains(text(), '{displayName}')]/../following-sibling::*//*[contains(@id, 'icon-micLocal')]");
+        return IsElementVisible(element);
+
+    }
     
     public JudgeWaitingRoomPage PauseHearing()
     {

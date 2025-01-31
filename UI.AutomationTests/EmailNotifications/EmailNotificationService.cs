@@ -90,7 +90,6 @@ public class EmailNotificationService
                 await TestContext.Out.WriteLineAsync("New user email not found");
                 return null;
             }
-            await TestContext.Out.WriteLineAsync(newUserEmail.body);
             var match = _tempPassword.Match(newUserEmail.body);
             return match.Success ? match.Value : null;
         }, new Context());

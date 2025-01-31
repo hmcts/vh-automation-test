@@ -201,6 +201,6 @@ public abstract class VideoWebUiTest : CommonUiTest
     protected static void SignOut(VideoWebParticipant videoWebParticipant)
     {
         TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
-        videoWebParticipant.VhVideoWebPage.SignOut(false);
+        videoWebParticipant.VhVideoWebPage.SignOut();
     }
 }
