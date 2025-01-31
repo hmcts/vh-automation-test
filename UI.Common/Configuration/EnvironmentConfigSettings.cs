@@ -13,4 +13,6 @@ public class EnvironmentConfigSettings : SystemConfigSettings
     public string UKConferencePhoneNumber { get; set; }
     public string PexipNodeAddress { get; set; }
     public string PexipSipAddressStem { get; set; }
+    
+    public bool IsProd => Environment.Equals("Prod", StringComparison.InvariantCultureIgnoreCase);
 }

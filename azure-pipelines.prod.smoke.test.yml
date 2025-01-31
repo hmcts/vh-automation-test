@@ -1,0 +1,78 @@
+trigger: none
+pr: none
+
+schedules:
+  - cron: '0 7 * * 1,2,3,4,5'
+    displayName: Daily build
+    always: true
+    branches:
+      include:
+        - master
+
+variables:
+  - name: environment
+    value: 'Prod'
+  - name: testCategory
+    value: 'smokeTest'
+
+name: ${{ variables.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
+
+pool:
+  name: 'VH Self Hosted'
+
+stages:
+  ####################################################
+  # UI Testing. ######################################
+  - stage: Automation_Tests_${{ variables.environment }}
+    displayName: Automation Tests ${{ variables.environment }}
+    jobs:
+      - job: 'UI_Tests_${{ variables.testCategory }}'
+        cancelTimeoutInMinutes: 80
+        displayName: UI Tests ${{ variables.environment }} - ${{ testCategory }}
+        variables:
+          - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
+            value: false
+          - template: variables/${{ lower(variables.environment) }}.yaml
+          - template: variables/shared.yaml
+            parameters:
+              environment: ${{ variables.environment }}
+              runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+              runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
+          - group: vh-automation-test-${{ variables.environment }}
+          - group: FeatureFlags_${{ variables.environment }}
+          - group: Saucelabs
+          - group: VodafoneConfiguration_${{ variables.environment }}
+          - name: ApiClientConfiguration.BookingsApiUrl
+            value: ${{ variables.bookingsApiUrl }}
+          - name: ApiClientConfiguration.VideoApiUrl
+            value: ${{ variables.videoApiUrl }}
+          - name: ApiClientConfiguration.UserApiUrl
+            value: ${{ variables.userApiUrl }}
+          - group: slack
+
+        steps:
+          - template: pipelines/templates/run-ui-test.yaml
+            parameters:
+              environment: ${{ variables.environment }}
+              projectPath: ${{ variables.projectPath }}
+              testRunTitle: 'UI Tests Production - ${{ testCategory }}'
+              testCategory: ${{ testCategory }}
+              subscriptionName: ${{ variables.subscriptionName }}
+              testReportArtifactName: 'UI_Report'
+              testReportDisplayName: 'Publish UI Test Output'
+              slackTestReportName: UI
+              slackTitle: UI Tests - ${{ testCategory }}
+
+          - task: PublishBuildArtifacts@1
+            displayName: Publish UI HTML Report
+            condition: succeededOrFailed()
+            inputs:
+              pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+              artifactName: UI_Html_Report
+
+          - task: PublishHtmlReport@1
+            displayName: 'Publish UI Test Reports'
+            condition: succeededOrFailed()
+            inputs:
+              reportDir: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+              useFilenameTabs: true

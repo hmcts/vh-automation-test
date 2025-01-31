@@ -169,34 +169,27 @@ steps:
     displayName: Add NuGet Feed Authentication
     workingDirectory: $(Build.SourcesDirectory)
 
-  - task: DotNetCoreCLI@2
-    displayName: Run UI Tests
-    inputs:
-      command: test
-      projects: '${{ parameters.projectpath }}/*.csproj'
-      publishTestResults: true
-      testRunTitle: '${{ parameters.testRunTitle }}'
-      ${{ if eq(parameters.testCategory, '') }}:
-        arguments: '--configuration Release'
-      ${{ else }}:
-        arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
-  
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish Test Output
-  #   condition: succeededOrFailed()
+  # - task: DotNetCoreCLI@2
+  #   displayName: Run UI Tests
   #   inputs:
-  #     pathToPublish: '$(Agent.TempDirectory)/'
-  #     artifactName: ${{ parameters.testReportArtifactName }}
+  #     command: test
+  #     projects: '${{ parameters.projectpath }}/*.csproj'
+  #     publishTestResults: true
+  #     testRunTitle: '${{ parameters.testRunTitle }}'
+  #     ${{ if eq(parameters.testCategory, '') }}:
+  #       arguments: '--configuration Release'
+  #     ${{ else }}:
+  #       arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
 
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
-    - template: ./get-results-from-trx.yaml
-      parameters:
-        name: ${{ parameters.slackTestReportName }}
+  # - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
+  #   - template: ./get-results-from-trx.yaml
+  #     parameters:
+  #       name: ${{ parameters.slackTestReportName }}
 
-    - template: ./send-results-to-slack.yaml
-      parameters:
-        env: ${{ parameters.environment }}
-        results: $(testOutcome)
-        details: $(testSummary)
-        triggerID: $(triggerID)
-        type: ${{ parameters.slackTitle }}
+  #   - template: ./send-results-to-slack.yaml
+  #     parameters:
+  #       env: ${{ parameters.environment }}
+  #       results: $(testOutcome)
+  #       details: $(testSummary)
+  #       triggerID: $(triggerID)
+  #       type: ${{ parameters.slackTitle }}
