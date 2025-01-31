@@ -78,11 +78,9 @@ public class DailyProdCheck : VideoWebUiTest
     {
         var hearingScheduledDateAndTime = DateUtil
             .GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
-
-        var tempJudgePersonalCode = "Komal";
-        var tempJudgeUsername = "komal.judge@hearings.reform.hmcts.net";
-        var hearingDto = HearingTestData.CreateHearingDto(tempJudgePersonalCode,
-            tempJudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
+        
+        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode,
+            HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
 
         hearingDto.Participants =
             hearingDto.Participants.Where(x => x.Role == GenericTestRole.Applicant).Take(1).ToList();
