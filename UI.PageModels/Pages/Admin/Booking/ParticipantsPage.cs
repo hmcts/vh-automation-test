@@ -11,7 +11,6 @@ public class ParticipantsPage(IWebDriver driver, int defaultWaitTime, bool isEdi
 
     private readonly By _nextButton = By.Id("nextButton");
     private readonly By _participantEmailTextfield = By.Id("participantEmail");
-    private readonly string _repOrganisationTextfieldId = "companyName";
     private readonly By _representingTextfield = By.Id("representing");
     private readonly By _roleDropdown = By.Id("role");
     

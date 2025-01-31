@@ -17,6 +17,7 @@ namespace UI.AutomationTests.Admin.Booking
             var createHearingPage = dashboardPage.GoToBookANewHearing();
             var summaryPage = createHearingPage.BookAHearingJourney(bookingDto);
             var confirmationPage = summaryPage.ClickBookButton();
+            confirmationPage.IsBookingSuccessful().Should().BeTrue();
             TestHearingIds.Add(confirmationPage.GetNewHearingId());
             var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
             return bookingDetailsPage;

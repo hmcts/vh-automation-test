@@ -28,6 +28,8 @@ variables:
     value: $(ConferencePhoneNumber)
   - name: SystemConfiguration.EnvironmentConfigSettings.PexipNodeAddress
     value: $(VodafonePexipNode)
+  - name: SystemConfiguration.EnvironmentConfigSettings.PexipSipAddressStem
+    value: $(SipAddressStemVodafone)
   - name: SystemConfiguration.EnvironmentConfigSettings.AdminUrl
     value: ${{ variables.adminWebUrl }}
   - name: SystemConfiguration.EnvironmentConfigSettings.VideoUrl

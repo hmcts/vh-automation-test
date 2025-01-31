@@ -92,7 +92,7 @@ steps:
       azureSubscription: '${{ parameters.subscriptionName }}'
       KeyVaultName: 'vh-notification-api-${{ lower(parameters.environment) }}'
       SecretsFilter: 'notifyconfiguration--apikey'
-      
+
   - bash: |
       echo "##vso[task.setvariable variable=ApiClientConfiguration.NotifyApiKey;issecret=false]$(notifyconfiguration--apikey)"
     displayName: Change Notification API client secrets to variables
@@ -180,23 +180,16 @@ steps:
         arguments: '--configuration Release'
       ${{ else }}:
         arguments: '--configuration Release --filter TestCategory=${{ parameters.testCategory }}'
-  
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish Test Output
-  #   condition: succeededOrFailed()
-  #   inputs:
-  #     pathToPublish: '$(Agent.TempDirectory)/'
-  #     artifactName: ${{ parameters.testReportArtifactName }}
 
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master')}}:
-    - template: ./get-results-from-trx.yaml
-      parameters:
-        name: ${{ parameters.slackTestReportName }}
+      - template: ./get-results-from-trx.yaml
+        parameters:
+          name: ${{ parameters.slackTestReportName }}
 
-    - template: ./send-results-to-slack.yaml
-      parameters:
-        env: ${{ parameters.environment }}
-        results: $(testOutcome)
-        details: $(testSummary)
-        triggerID: $(triggerID)
-        type: ${{ parameters.slackTitle }}
+      - template: ./send-results-to-slack.yaml
+        parameters:
+          env: ${{ parameters.environment }}
+          results: $(testOutcome)
+          details: $(testSummary)
+          triggerID: $(triggerID)
+          type: ${{ parameters.slackTitle }}

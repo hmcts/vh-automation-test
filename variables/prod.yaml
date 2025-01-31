@@ -1,0 +1,14 @@
+# For the API urls, we don't to Dev so that the tokens can generate but we do not need to invoke or can invoke Prod APIs
+variables:
+  - name: env
+    value: 'Prod'
+  - name: adminWebUrl
+    value: 'https://admin.hearings.reform.hmcts.net/reform-login'
+  - name: videoWebUrl
+    value: 'http://video.hearings.reform.hmcts.net'
+  - name: bookingsApiUrl
+    value: 'https://vh-bookings-api.dev.platform.hmcts.net/'
+  - name: videoApiUrl
+    value: 'https://vh-video-api.dev.platform.hmcts.net/'
+  - name: userApiUrl
+    value: 'https://vh-user-api.dev.platform.hmcts.net/'

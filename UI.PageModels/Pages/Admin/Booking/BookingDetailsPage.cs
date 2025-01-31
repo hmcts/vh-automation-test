@@ -245,4 +245,21 @@ public class BookingDetailsPage : VhAdminWebPage
     {
         return !IsElementVisible(_cancelledStatus);
     }
+
+    /// <summary>
+    /// Get the SIP connection details at a specific position
+    /// </summary>
+    /// <param name="position">Greater than zero</param>
+    /// <returns></returns>
+    public (string, string) GetSipConnectionDetailsAtPosition(int position)
+    {
+        ArgumentOutOfRangeException.ThrowIfZero(position);
+        var locator = By.XPath($"(//div[contains(text(), '{SipAddressStem}')])[{position}]");
+        var text = GetText(locator);
+        var split = text.Split(":");
+        var address = split[0].Trim();
+        var pin = split[1].Trim();
+        
+        return (address, pin);
+    }
 }
