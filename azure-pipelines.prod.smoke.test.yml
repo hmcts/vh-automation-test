@@ -13,7 +13,7 @@ variables:
   - name: environment
     value: 'Prod'
   - name: testCategory
-    value: 'smokeTest'
+    value: 'smoketest'
 
 name: ${{ variables.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
