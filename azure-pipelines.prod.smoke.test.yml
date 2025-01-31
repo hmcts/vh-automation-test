@@ -50,6 +50,10 @@ stages:
           - group: slack
 
         steps:
+          - checkout: self
+            displayName: Checkout
+            fetchDepth: '0'
+
           - template: pipelines/templates/run-ui-test.yaml
             parameters:
               environment: ${{ variables.environment }}
