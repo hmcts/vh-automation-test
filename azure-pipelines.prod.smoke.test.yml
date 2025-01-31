@@ -28,7 +28,7 @@ stages:
     jobs:
       - job: 'UI_Tests_${{ variables.testCategory }}'
         cancelTimeoutInMinutes: 80
-        displayName: UI Tests ${{ variables.environment }} - ${{ testCategory }}
+        displayName: UI Tests ${{ variables.environment }} - ${{ variables.testCategory }}
         variables:
           - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
             value: false
@@ -36,8 +36,7 @@ stages:
           - template: variables/shared.yaml
             parameters:
               environment: ${{ variables.environment }}
-              runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
-              runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
+              runOnSauceLabs: true
           - group: vh-automation-test-${{ variables.environment }}
           - group: FeatureFlags_${{ variables.environment }}
           - group: Saucelabs
@@ -55,13 +54,13 @@ stages:
             parameters:
               environment: ${{ variables.environment }}
               projectPath: ${{ variables.projectPath }}
-              testRunTitle: 'UI Tests Production - ${{ testCategory }}'
-              testCategory: ${{ testCategory }}
+              testRunTitle: 'UI Tests Production - ${{ variables.testCategory }}'
+              testCategory: ${{ variables.testCategory }}
               subscriptionName: ${{ variables.subscriptionName }}
               testReportArtifactName: 'UI_Report'
               testReportDisplayName: 'Publish UI Test Output'
               slackTestReportName: UI
-              slackTitle: UI Tests - ${{ testCategory }}
+              slackTitle: UI Tests - ${{ variables.testCategory }}
 
           - task: PublishBuildArtifacts@1
             displayName: Publish UI HTML Report
