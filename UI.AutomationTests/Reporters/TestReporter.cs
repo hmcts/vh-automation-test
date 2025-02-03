@@ -1,6 +1,5 @@
 using System.Text;
 using AventStack.ExtentReports;
-using AventStack.ExtentReports.Model;
 using AventStack.ExtentReports.Reporter;
 using UI.PageModels.Extensions;
 using UI.PageModels.Utilities;
@@ -68,8 +67,6 @@ public class TestReporter
         {
             sb.AppendLine(TestContext.CurrentContext.Result.StackTrace);
         }
-
-        var children = test.Model.Children;
         LogEntry(test, logStatus, sb.ToString(), driver.TakeScreenshotAsBase64());
         _extent.Flush();
     }

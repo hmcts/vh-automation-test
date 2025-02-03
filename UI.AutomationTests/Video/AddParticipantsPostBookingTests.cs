@@ -6,7 +6,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
 {
     private string _hearingIdString;
     
-    [Description("Book a hearing with a judge and add a participant after booking. Check if the notification appears and if the user joins the judge in the hearing when a hearing is started.")]
+    [Description("Book a hearing with a judge and add a participant after booking. Check if the notification appears and if the user joins the judge in the hearing after a hearing is started.")]
     [Test]
     [Category("video")]
     public async Task should_add_new_participant_after_booking()
@@ -30,8 +30,13 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         confirmationPage.IsBookingSuccessful().Should().BeTrue();
         hearingDto.Participants.AddRange(participantsToAdd);
         
+        // start a hearing and late joiners should be transferred to the hearing
+        judgeWaitingRoomPage.ClearParticipantAddedNotification();
+        var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
+        judgeHearingRoomPage.WaitForCountdownToComplete();
+
+        
         // loop through all participants in hearing and login as each one
-        var page = judgeWaitingRoomPage;
         Parallel.ForEach(hearingDto.Participants, participant =>
         {
             var participantUsername = participant.Username;
@@ -45,18 +50,17 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
                 .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
             // store the participant driver in a dictionary so we can access it later to sign out
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
-
-            page.WaitForParticipantToBeConnected(participant.FullName);
-            page.ClearParticipantAddedNotification();
         });
-
-        var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         
-        judgeHearingRoomPage.WaitForCountdownToComplete();
+        judgeHearingRoomPage.IsParticipantInHearing(participantsToAdd[0].FullName).Should().BeTrue();
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
 
-        Assert.Pass();
+        Assert.Pass("""
+                    Booked a hearing with a judge, added a participant after booking, 
+                    and checked if the notification appears and if the user joins the judge in the hearing 
+                    after a hearing has already started.
+                    """);
     }
     
     private BookingDetailsPage BookHearingAndGoToDetailsPage(BookingDto bookingDto)

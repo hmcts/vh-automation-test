@@ -2,7 +2,7 @@ using OpenQA.Selenium.Interactions;
 
 namespace UI.PageModels.Pages.Video.Participant;
 
-public class JudgeHearingRoomPage : VhVideoWebPage
+public class JudgeHearingRoomPage : CommonWaitingRoomPage
 {
     private readonly By _closeHearingButton = By.Id("end-hearing-desktop");
     private readonly By _confirmCloseHearingButton = By.Id("btnConfirmClose");
