@@ -1,6 +1,6 @@
 ﻿namespace UI.PageModels.Pages.Video.Participant;
 
-public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVideoWebPage(driver, defaultWaitTime)
+public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : CommonWaitingRoomPage(driver, defaultWaitTime)
 {
     private readonly By _confirmStartHearingButton = By.Id("btnConfirmStart");
 
@@ -79,13 +79,6 @@ public class JudgeWaitingRoomPage(IWebDriver driver, int defaultWaitTime) : VhVi
     {
         var connectedLabel = Driver.FindElements(By.XPath("//span[normalize-space()='Connected']"));
         return connectedLabel.Count;
-    }
-
-    public void ClearParticipantAddedNotification()
-    {
-        var elements = Driver.FindElements(By.XPath("//button[contains(@id,'notification-toastr-participant-added-dismiss')]"));
-        foreach (var element in elements)
-            element.Click();
     }
 
     public void EditStaffMemberDisplayName(string newName = "Edited Staff Member Name")
