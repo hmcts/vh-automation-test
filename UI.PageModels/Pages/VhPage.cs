@@ -11,7 +11,7 @@ public abstract class VhPage
 {
     public const string VHTestNameKey = "VHTestName";
     protected readonly By Spinner = By.Id("waitPopup");
-    protected int DefaultWaitTime;
+    protected static int DefaultWaitTime;
     protected IWebDriver Driver;
     protected bool AccessibilityCheck;
     protected static readonly string GbLocale = "en-GB";

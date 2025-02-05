@@ -7,7 +7,7 @@ public class BookingParticipantDto
 {
     public string Username { get; set; }
     public string ContactEmail { get; set; }
-    public string Phone {get; set;}
+    public string Phone { get; set; }
     public string DisplayName { get; set; }
     public GenericTestRole Role { get; set; }
     public string Representing { get; set; }
@@ -15,8 +15,10 @@ public class BookingParticipantDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Organisation { get; set; }
+
     public InterpreterLanguageDto? InterpreterLanguage { get; set; }
-    public string? VideoFileName { get; set; }
+
+public string? VideoFileName { get; set; }
     
     public string FullName => $"{Title} {FirstName} {LastName}";
 

@@ -8,18 +8,20 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
     private readonly By _judgeInterpreterRequired = By.Name("interpreter-required");
     private readonly By _judgeSpokenLanguageDropdown = By.Id("verbal-language");
     private readonly By _judgeSignLanguageDropdown = By.Id("sign-language");
-  
+    private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
 
-    private readonly By _panelMemberDisplayNameFld = By.Id("judiciaryDisplayNameInput");
-    private readonly By _panelMemberEmail = By.Id("judiciaryEmailInput");
+    private readonly By _addJudicialOfficeHolder = By.Id("addAdditionalPanelMemberBtn");
+    private readonly By _panelMemberDisplayNameFld = By.XPath("(//input[@id='judiciaryDisplayNameInput'])[2]");
+    private readonly By _panelMemberEmail = By.XPath("(//input[@id='judiciaryEmailInput'])[2]");
     private readonly By _panelMemberInterpreterRequired = By.Name("interpreter-required");
     private readonly By _panelMemberSpokenLanguageDropdown = By.Id("verbal-language");
     private readonly By _panelMemberSignLanguageDropdown = By.Id("sign-language");
-  
+    private readonly By _savePanelMember = By.Id("confirmJudiciaryMemberBtn");
+    
 
     private readonly By _nextButton = By.XPath("//*[@id='nextButtonToParticipants'] | //*[@id='nextButton']");
     private readonly By _searchResults = By.Id("search-results-list");
-    private readonly By _saveEJudge = By.Id("confirmJudiciaryMemberBtn");
+   
 
     protected override void ConfirmPageHasLoaded()
     {
@@ -81,8 +83,11 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
         WaitForElementToBeVisible(_saveEJudge);
         ClickElement(_saveEJudge);
     }
-    
 
+    public void clickAddJohLink ()
+    {
+        ClickElement(_addJudicialOfficeHolder);
+    }
     public void EnterPanelMemberDetails(BookingPanelMemberDto panelMember)
     {
         AssignPanelMemberDetails(panelMember.Username, panelMember.DisplayName, panelMember.InterpreterLanguage);
@@ -98,33 +103,19 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
         if (!string.IsNullOrWhiteSpace(PanelanelMemberDisplayName))
-            EnterText(_PanelMemberDisplayNameFld, PanelMemberDisplayName);
-        if (InterpreterLanguage ! = null)
-        {
-            var interpreterRequiredCheckboxElement = Driver.FindElement(_panelMemberInterpreterRequired);
-            if (!interpreterRequiredCheckboxElement.Selected)
-            {
-                ClickElement(_PanelMemberInterpreterRequired, waitToBeClickable: false);
-            }
-
-            SelectInterpreterLanguage(interpreterLanguage);
-        }
+            EnterText(_panelMemberDisplayNameFld, PanelanelMemberDisplayName);
 
         Driver.TakeScreenshotAndSave(GetType().Name, "Enter PanelMember Details");
     }
-
-    public struct MyStruct
-    {
-        
-    }
+    
 
     void SelectInterpreterLangugage(InterpreterLanguageDto interpreterLanguage)
-    {
+    { 
         switch (interpreterLanguage.Type)
         {
             case InterpreterType.Sign:
-                WaitForDropdownListToPopulate(_PanelMemberSignLanguageDropdown, 0);
-                SelectDropDownByText(_PanelMemberSignLanguageDropdown, interpreterLanguage.Description);
+                WaitForDropdownListToPopulate(_panelMemberSignLanguageDropdown, 0);
+                SelectDropDownByText(_panelMemberSignLanguageDropdown, interpreterLanguage.Description);
                 break;
             case InterpreterType.Verbal:
                 WaitForDropdownListToPopulate(_panelMemberSpokenLanguageDropdown, 0);
@@ -138,7 +129,7 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
             $"Selected Interpreter Language {interpreterLanguage.Description}");
     }
 
-    private void ClickSavePanelMemberButton()
+    public void ClickSavePanelMemberButton()
     {
         WaitForElementToBeVisible(_savePanelMember);
         ClickElement(_savePanelMember);

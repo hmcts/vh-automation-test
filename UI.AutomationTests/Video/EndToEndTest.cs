@@ -15,6 +15,7 @@ public class EndToEndTest : VideoWebUiTest
     private ConferenceDetailsResponse _conference;
     private JusticeUserResponse _justiceUser;
     
+    
     [Test]
     [Category("a11y")]
     [Category("video")]
@@ -22,6 +23,7 @@ public class EndToEndTest : VideoWebUiTest
     [Description("Book a hearing." +
                  "Allocate to a CSO." +
                  "Log in as a judge, edit their display name, and log in as 4 participants." +
+                 "Log in as a panelMember"+
                  "Log in as a VHO and monitor the changes. IM between VHO and Judge." +
                  "Start and stop hearing. Log out with all users. ")]
     public async Task EndToEnd()
@@ -31,9 +33,7 @@ public class EndToEndTest : VideoWebUiTest
         var newUser = HearingTestData.CreateNewParticipantDto();
         hearingDto.NewParticipants.Add(newUser);
         await TestContext.Out.WriteLineAsync(
-            $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}");
-        
-        await BookHearing(hearingDto);
+            $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}"); await BookHearing(hearingDto);
         
         //Login
         var vhoVenueSelectionPage = LoginAsVho(HearingTestData.VhOfficerUsername, EnvConfigSettings.UserPassword);
@@ -58,14 +58,21 @@ public class EndToEndTest : VideoWebUiTest
         var judgeUsername = hearingDto.Judge.Username;
         var judgePassword = EnvConfigSettings.UserPassword;
         var judgeHearingListPage = LoginAsJudge(judgeUsername, judgePassword);
-        var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(_conference.Id);
+        var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing (_conference.Id);
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
+        
+        // log in as PanelMember and enter the consultation 
+        var panelMemberUsername = hearingDto.PanelMembers[0].Username;
+        var panelMemberPassword = EnvConfigSettings.UserPassword;
+        var panelMemberHearingListPage = LoginAsPanelMember (panelMemberUsername, panelMemberPassword);
+        var panelMemberWaitingRoomPage = panelMemberHearingListPage.SelectHearing(_conference.Id);
+        ParticipantDrivers[panelMemberUsername].VhVideoWebPage = panelMemberWaitingRoomPage;
         
         // edit the judge display name
         judgeWaitingRoomPage.EditJudgeDisplayName();
 
         // confirm all participants are connected
-        judgeWaitingRoomPage.GetParticipantConnectedCount().Should().Be(hearingDto.Participants.Count);
+        judgeWaitingRoomPage.GetParticipantConnectedCount().Should().Be(hearingDto.Participants.Count + hearingDto.PanelMembers.Count);
         
         // VHO will be able to monitor HearingStatus updates
         ccHearingPanel.ClickHearingsButton();
@@ -84,7 +91,6 @@ public class EndToEndTest : VideoWebUiTest
         judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
         judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
         judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
-
         // sign out of each hearing
         SignOutAllUsers();
 
@@ -99,9 +105,8 @@ public class EndToEndTest : VideoWebUiTest
         var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName);
         JourneyToWaitingRoom(participant, participantHearingList, participantUsername);
     }
-
-    private void JourneyToWaitingRoom(BookingParticipantDto participant, ParticipantHearingListPage participantHearingList,
-        string participantUsername)
+    
+    private void JourneyToWaitingRoom(BookingParticipantDto participant, ParticipantHearingListPage participantHearingList, string participantUsername)
     {
         var participantWaitingRoom = participantHearingList
             .SelectHearing(_conference.Id).GoToEquipmentCheck()
@@ -118,7 +123,16 @@ public class EndToEndTest : VideoWebUiTest
         var participantHearingList = LoginAsParticipant(participantUsername, tempPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName, isNew: true);
         JourneyToWaitingRoom(participant, participantHearingList, participantUsername);
     }
+    private void PanelMemberLoginToWaitingRoomJourney(BookingParticipantDto panelMember)
 
+    {
+        var panelMemberUsername = panelMember.Username;
+        var panelMemberPassword = EnvConfigSettings.UserPassword;
+        var panelHearingListPage = LoginAsPanelMember(panelMemberUsername, panelMemberPassword);
+        var panelMemberWaitingRoom = panelHearingListPage.SelectHearing(_conference.Id);
+        ParticipantDrivers[panelMemberUsername].VhVideoWebPage = panelMemberWaitingRoom;
+    }
+    
     private CommandCentrePage CsoCommandCentreJourney(VhoVenueSelectionPage vhoVenueSelectionPage, BookingDto hearingDto,
         out CommandCentreHearing ccHearingPanel, out ParticipantResponse testParticipant)
     {

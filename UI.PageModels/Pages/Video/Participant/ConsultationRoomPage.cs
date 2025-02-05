@@ -1,11 +1,13 @@
 ﻿namespace UI.PageModels.Pages.Video.Participant;
 
 public class ConsultationRoomPage : VhVideoWebPage
+
 {
     public ConsultationRoomPage(IWebDriver driver, int defaultWaitTime) : base(driver, defaultWaitTime)
     {
+        
     }
-
+    
     protected override void ConfirmPageHasLoaded()
     {
         WaitForElementToBeClickable(LeaveButtonDesktop);

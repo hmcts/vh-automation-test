@@ -21,7 +21,7 @@ public class EditBookingTest : HearingTest
         var summaryPage = bookingDetailsPage.UpdateSchedule(newTime, hearingDto.DurationHour, hearingDto.DurationMinute);
         
         //Assign a new Judge 
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudgePersonalCode, HearingTestData.PanelMemberUsername,
+        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudgePersonalCode, HearingTestData.AltJudgeUsername,
             "Auto Judge 2", "");
 
         var assignJudgePage = summaryPage.ChangeJudgeV2();
@@ -52,7 +52,7 @@ public class EditBookingTest : HearingTest
         var newInterpreterLanguage = new InterpreterLanguageDto("British Sign Language (BSL)", InterpreterType.Sign);
         
         // Assign a new judge
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode, HearingTestData.PanelMemberUsername,
+        var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode, HearingTestData.AltJudgeUsername,
             "Auto Judge 2", "")
         {
             InterpreterLanguage = newInterpreterLanguage

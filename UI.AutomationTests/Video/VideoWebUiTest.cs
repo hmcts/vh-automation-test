@@ -56,7 +56,7 @@ public abstract class VideoWebUiTest : CommonUiTest
         BuildUiReport(AdminWebDriver, AdminLoginUsername);
         AdminWebDriver.Terminate();
         AdminWebDriver = null;
-        
+
         ParticipantDrivers.Values.ToList().ForEach(x =>
         {
             x.Driver.PublishTestResult(passed);
@@ -71,13 +71,14 @@ public abstract class VideoWebUiTest : CommonUiTest
     {
         var pollCount = 0;
         ConferenceDetailsResponse conferenceResponse;
-        do {
-            conferenceResponse = await PollForConferenceDetails(); 
+        do
+        {
+            conferenceResponse = await PollForConferenceDetails();
             pollCount++;
         } while (conferenceResponse == null);
 
         return conferenceResponse;
-        
+
         async Task<ConferenceDetailsResponse> PollForConferenceDetails()
         {
             try
@@ -106,107 +107,122 @@ public abstract class VideoWebUiTest : CommonUiTest
             }
         }
     }
-    
+
     protected virtual Task CleanUp()
     {
         return Task.CompletedTask;
     }
-    
+
     protected JudgeHearingListPage LoginAsJudge(string username, string password)
     {
         var participant = InitVideoWebParticipant(username, JourneyType.Judge, HearingTestData.ClerkVideoFileName);
         var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
         return loginPage.LogInAsJudge(username, password);
+
     }
-    
+
+    protected JudgeHearingListPage LoginAsPanelMember(string username, string password)
+    {
+        var panelMember = InitVideoWebParticipant(username, JourneyType.PanelMember, HearingTestData.ClerkVideoFileName);
+        var loginPage = NavigateToVideoWeb(panelMember.Driver.GetDriver());
+         return loginPage.LoginAsPanelMember(username, password);
+    }
+
     protected StaffMemberVenueListPage LoginAsStaffMember(string username, string password)
-    {
-        var participant = InitVideoWebParticipant(username, JourneyType.StaffMember, HearingTestData.ClerkVideoFileName);
-        var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
-        return loginPage.LogInAsStaffMember(username, password);
-    }
-
-    protected VhoVenueSelectionPage LoginAsVho(string username, string password)
-    {
-        var participant = InitVideoWebParticipant(username, JourneyType.Vho, null);
-        var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
-        return loginPage.LogInAsVho(username, password);
-    }
-
-    protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep, string videoFileName, bool isNew = false)
-    {
-        var participant = InitVideoWebParticipant(username, isRep ? JourneyType.Representative : JourneyType.Citizen, videoFileName);
-        var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
-        return isNew 
-            ? loginPage.LogInAsNewParticipant(username, password)
-            : loginPage.LogInAsParticipant(username, password);
-    }
-
-    protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName, string videoFileName = null)
-    {
-        var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant, videoFileName);
-        var driver = participant.Driver.GetDriver();
-        driver.Navigate().GoToUrl(quickLinkJoinUrl);
-        return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);
-    }
-    
-    protected PexipWebAppPage LoginAsJvsEndpoint(string jvsUrl, string displayName){
-        var participant = InitVideoWebParticipant(displayName, JourneyType.Jvs, HearingTestData.Individual02FileName);
-        var driver = participant.Driver.GetDriver();
-        driver.Navigate().GoToUrl(jvsUrl);
-        return new PexipWebAppPage(driver, EnvConfigSettings.DefaultElementWait);
-    }
-
-    /// <summary>
-    /// To avoid getting caught out by the IDP selection page when the toggle is turned on, retrieve the IDP specific sign-in url.
-    /// </summary>
-    /// <returns></returns>
-    private string GetSignInUrl()
-    {
-        // https://video.hearings.reform.hmcts.net/vh-signin
-        // https://video.hearings.reform.hmcts.net/ejud-signin
-        // https://video.hearings.reform.hmcts.net/justice-signin
-        return $"{EnvConfigSettings.VideoUrl}/vh-signin";
-    }
-
-    private VideoWebLoginPage NavigateToVideoWeb(IWebDriver driver)
-    {
-        var url = GetSignInUrl();
-        driver.Navigate().GoToUrl(url);
-        return new VideoWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
-    }
-
-    private VideoWebParticipant InitVideoWebParticipant(string username, JourneyType journeyType, string videoFileName)
-    {
-        var vhDriver = CreateDriver(username, videoFileName);
-        var participant = new VideoWebParticipant
         {
-            Driver = vhDriver,
-            Username = username,
-            JourneyType = journeyType
-        };
-        ParticipantDrivers[username] = participant;
-        return participant;
-    }
+            var participant = InitVideoWebParticipant(username, JourneyType.StaffMember, HearingTestData.ClerkVideoFileName);
+            var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
+            return loginPage.LogInAsStaffMember(username, password);
+        }
 
-    /// <summary>
-    /// Sign out of a participant's session
-    /// </summary>
-    /// <param name="username"></param>
-    protected void SignOutAs(string username)
-    {
-        ParticipantDrivers[username].VhVideoWebPage.SignOut();
-    }
-
-    /// <summary>
-    /// Sign all users out
-    /// </summary>
-    protected void SignOutAllUsers()
-    {
-        foreach (var videoWebParticipant in ParticipantDrivers.Values.Where(x=> x.JourneyType != JourneyType.Jvs))
+        protected VhoVenueSelectionPage LoginAsVho(string username, string password)
         {
-            TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
-            videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant);
+            var participant = InitVideoWebParticipant(username, JourneyType.Vho, null);
+            var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
+            return loginPage.LogInAsVho(username, password);
+        }
+
+        protected ParticipantHearingListPage LoginAsParticipant(string username, string password, bool isRep,
+            string videoFileName, bool isNew = false)
+        {
+            var participant = InitVideoWebParticipant(username,
+                isRep ? JourneyType.Representative : JourneyType.Citizen, videoFileName);
+            var loginPage = NavigateToVideoWeb(participant.Driver.GetDriver());
+            return isNew
+                ? loginPage.LogInAsNewParticipant(username, password)
+                : loginPage.LogInAsParticipant(username, password);
+        }
+
+        protected QuickLinkJoinYourHearingPage LoginAsQuickLinkUser(string quickLinkJoinUrl, string displayName,
+            string videoFileName = null)
+        {
+            var participant = InitVideoWebParticipant(displayName, JourneyType.QuickLinkParticipant, videoFileName);
+            var driver = participant.Driver.GetDriver();
+            driver.Navigate().GoToUrl(quickLinkJoinUrl);
+            return new QuickLinkJoinYourHearingPage(driver, EnvConfigSettings.DefaultElementWait);
+        }
+
+        protected PexipWebAppPage LoginAsJvsEndpoint(string jvsUrl, string displayName)
+        {
+            var participant =
+                InitVideoWebParticipant(displayName, JourneyType.Jvs, HearingTestData.Individual02FileName);
+            var driver = participant.Driver.GetDriver();
+            driver.Navigate().GoToUrl(jvsUrl);
+            return new PexipWebAppPage(driver, EnvConfigSettings.DefaultElementWait);
+        }
+
+        /// <summary>
+        /// To avoid getting caught out by the IDP selection page when the toggle is turned on, retrieve the IDP specific sign-in url.
+        /// </summary>
+        /// <returns></returns>
+        private string GetSignInUrl()
+        {
+            // https://video.hearings.reform.hmcts.net/vh-signin
+            // https://video.hearings.reform.hmcts.net/ejud-signin
+            // https://video.hearings.reform.hmcts.net/justice-signin
+            return $"{EnvConfigSettings.VideoUrl}/vh-signin";
+        }
+
+        private VideoWebLoginPage NavigateToVideoWeb(IWebDriver driver)
+        {
+            var url = GetSignInUrl();
+            driver.Navigate().GoToUrl(url);
+            return new VideoWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        }
+
+        private VideoWebParticipant InitVideoWebParticipant(string username, JourneyType journeyType,
+            string videoFileName)
+        {
+            var vhDriver = CreateDriver(username, videoFileName);
+            var participant = new VideoWebParticipant
+            {
+                Driver = vhDriver,
+                Username = username,
+                JourneyType = journeyType
+            };
+            ParticipantDrivers[username] = participant;
+            return participant;
+        }
+
+        /// <summary>
+        /// Sign out of a participant's session
+        /// </summary>
+        /// <param name="username"></param>
+        protected void SignOutAs(string username)
+        {
+            ParticipantDrivers[username].VhVideoWebPage.SignOut();
+        }
+
+        /// <summary>
+        /// Sign all users out
+        /// </summary>
+        protected void SignOutAllUsers()
+        {
+            foreach (var videoWebParticipant in ParticipantDrivers.Values.Where(x => x.JourneyType != JourneyType.Jvs))
+            {
+                TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
+                videoWebParticipant.VhVideoWebPage.SignOut(videoWebParticipant.JourneyType !=
+                                                           JourneyType.QuickLinkParticipant);
+            }
         }
     }
-}

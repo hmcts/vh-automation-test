@@ -121,6 +121,14 @@ namespace UI.AutomationTests.Admin.Booking
             assignJudgePage.EnterJudgeDetails(alternativeJudge);
             hearingDto.Judge = alternativeJudge;
             summaryPage = assignJudgePage.GotToNextPageOnEdit();
+            
+            // Assign a Judicial Office Holder
+            var alternativePanelMember = new BookingPanelMemberDto(HearingTestData.JudgePersonalCode,
+                HearingTestData.AltJudgeUsername, "Auto Judge 01", "");
+            var assigJudgePage = summaryPage.ChangeJudgeV2();
+            assignJudgePage.EnterJudgeDetails(alternativeJudge);
+            hearingDto.Judge = alternativeJudge;
+            summaryPage =assignJudgePage.GotToNextPageOnEdit();
 
             // Add a new participant
             var newParticipant = HearingTestData.CreateNewParticipantDto();

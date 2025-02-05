@@ -7,7 +7,9 @@ public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
-    public static string PanelMemberUsername = "auto_aw.judge_01@hearings.reform.hmcts.net";
+    public static string AltJudgeUsername = "auto_aw.judge_01@hearings.reform.hmcts.net";
+    public static string PmUsername = "auto_aw.panelmember_01@hearings.reform.hmcts.net";
+    public static string PmPersonalCode = "VH-GENERIC-ACCOUNT-02";
     public static string AltJudgePersonalCode = "VH-GENERIC-ACCOUNT-00";
     public static string JudgeUsername = "auto_aw.judge_02@hearings.reform.hmcts.net";
     public static string JudgePersonalCode = "VH-GENERIC-ACCOUNT-0";
@@ -17,6 +19,7 @@ public static class HearingTestData
     public const string Individual02FileName = "individual02.y4m";
     public const string Representative01FileName = "representative01.y4m";
     public const string Representative02FileName = "representative02.y4m";
+    public const string PanelMemberFileName = "clerk.y4m";
 
     private const string HearingVenueName = "Birmingham Civil and Family Justice Centre";
     private const string HearingVenueCode = "231596";
@@ -59,6 +62,7 @@ public static class HearingTestData
     /// <returns>a hearing with 4 participants, 2 claimants and 2 defendants</returns>
     public static BookingDto CreateHearingDto(string judgePersonalCode, string judgeUsername, bool remote = false,
         DateTime? scheduledDateTime = null, bool includeInterpreter = false)
+    
     {
         var date = DateUtil.GetNow(remote);
         var hearingDateTime = scheduledDateTime ?? date.AddMinutes(5);
@@ -81,7 +85,8 @@ public static class HearingTestData
                 ""),
             Participants = KnownParticipantsForTesting(includeInterpreter: includeInterpreter),
             AudioRecording = false,
-            OtherInformation = "This is a test hearing"
+            OtherInformation = "This is a test hearing",
+            PanelMembers = new List<BookingPanelMemberDto>() {new BookingPanelMemberDto(PmPersonalCode,PmUsername,"PanelMember1","123456") }
         };
         return bookingDto;
     }

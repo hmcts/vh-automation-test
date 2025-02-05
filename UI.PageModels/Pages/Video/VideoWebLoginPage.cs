@@ -11,6 +11,12 @@ public class VideoWebLoginPage(IWebDriver driver, int defaultWaitTime) : VhLogin
         return new JudgeHearingListPage(Driver, DefaultWaitTime);
     }
 
+    public JudgeHearingListPage LoginAsPanelMember(string username, string password)
+    {
+        EnterLoginDetails(username,password);
+        return new JudgeHearingListPage(Driver, DefaultWaitTime);
+    }
+
     public ParticipantHearingListPage LogInAsParticipant(string username, string password)
     {
         EnterLoginDetails(username, password);
@@ -35,4 +41,5 @@ public class VideoWebLoginPage(IWebDriver driver, int defaultWaitTime) : VhLogin
         EnterLoginDetails(username, password);
         return new VhoVenueSelectionPage(Driver, DefaultWaitTime);
     }
+    
 }
