@@ -52,7 +52,7 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
         });
         
-        judgeHearingRoomPage.IsParticipantInHearing(participantsToAdd[0].FullName).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearingAlreadyInSession(participantsToAdd[0].DisplayName).Should().BeTrue($"{participantsToAdd[0].DisplayName} should have been transferred to the hearing after joining a hearing in session");
         judgeWaitingRoomPage = judgeHearingRoomPage.PauseHearing();
         judgeWaitingRoomPage.IsHearingPaused().Should().BeTrue();
 
