@@ -33,6 +33,7 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
 
     private void ValidateDateMultiDayIndividualDates(List<DateTime>? individualDatesForValidation)
     {
+        ArgumentNullException.ThrowIfNull(individualDatesForValidation);
         foreach (var bookingDate in individualDatesForValidation)
         {
             var day = bookingDate.ToString("%d");

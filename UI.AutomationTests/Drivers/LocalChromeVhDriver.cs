@@ -37,6 +37,7 @@ public class LocalChromeVhDriver : IVhDriver
             chromeOptions.AddArgument("--headless"); // Run in headless mode if needed
         }
         _driver = new ChromeDriver(chromeOptions);
+        _driver.Manage().Window.Size = new System.Drawing.Size(2560, 1600);
         var lang = (string)((IJavaScriptExecutor)_driver).ExecuteScript("return navigator.language || navigator.userLanguage");
         TestContext.Out.WriteLine($"Browser language: {lang}");
 

@@ -20,9 +20,17 @@ public class ParticipantHearingListPage : VhVideoWebPage
         WaitForElementToBeClickable(_checkEquipmentBtn);
     }
 
-    public GetReadyForTheHearingIntroductionPage SelectHearing(Guid conferenceID)
+    public GetReadyForTheHearingIntroductionPage SelectHearing(string caseNumber)
     {
-        var selectHearingLocator = By.XPath($"//button[contains(@id, '{conferenceID}')]");
+        var selectHearingLocator = By.XPath($"//button[contains(@aria-label,'{caseNumber}')]");
+        WaitForElementToBeVisible(selectHearingLocator, 60);
+        ClickElement(selectHearingLocator);
+        return new GetReadyForTheHearingIntroductionPage(Driver, DefaultWaitTime);
+    }
+    
+    public GetReadyForTheHearingIntroductionPage SelectHearing(Guid conferenceId)
+    {
+        var selectHearingLocator = By.XPath($"//button[contains(@id, '{conferenceId}')]");
         WaitForElementToBeVisible(selectHearingLocator, 60);
         ClickElement(selectHearingLocator);
         return new GetReadyForTheHearingIntroductionPage(Driver, DefaultWaitTime);

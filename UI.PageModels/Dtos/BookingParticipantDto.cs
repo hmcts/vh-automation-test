@@ -5,20 +5,18 @@ namespace UI.PageModels.Dtos;
 /// </summary>
 public class BookingParticipantDto
 {
-    public string Username { get; set; }
-    public string ContactEmail { get; set; }
-    public string Phone { get; set; }
-    public string DisplayName { get; set; }
+    public required string Username { get; set; }
+    public required string ContactEmail { get; set; }
+    public string Phone { get; set; } = string.Empty;
+    public required string DisplayName { get; set; }
     public GenericTestRole Role { get; set; }
-    public string Representing { get; set; }
-    public string Title { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Organisation { get; set; }
-
+    public string? Representing { get; set; }
+    public required string Title { get; set; }
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
+    public string? Organisation { get; set; }
     public InterpreterLanguageDto? InterpreterLanguage { get; set; }
-
-public string? VideoFileName { get; set; }
+    public string? VideoFileName { get; set; }
     
     public string FullName => $"{Title} {FirstName} {LastName}";
 

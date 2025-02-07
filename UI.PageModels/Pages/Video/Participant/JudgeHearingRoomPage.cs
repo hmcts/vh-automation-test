@@ -2,7 +2,7 @@ using OpenQA.Selenium.Interactions;
 
 namespace UI.PageModels.Pages.Video.Participant;
 
-public class JudgeHearingRoomPage : VhVideoWebPage
+public class JudgeHearingRoomPage : CommonWaitingRoomPage
 {
     private readonly By _closeHearingButton = By.Id("end-hearing-desktop");
     private readonly By _confirmCloseHearingButton = By.Id("btnConfirmClose");
@@ -74,6 +74,36 @@ public class JudgeHearingRoomPage : VhVideoWebPage
     {
         var participantMicBtn = By.Id($"participants-panel-{participantId}-icon-micLocal");
         return IsElementVisible(participantMicBtn);
+    }
+
+    /// <summary>
+    /// Check if a participant is in the hearing after being transferred in on start or being admitted.
+    /// Please use <see cref="IsParticipantInHearingAlreadyInSession"/> to check if a participant is in a hearing that has already started.
+    /// </summary>
+    /// <param name="displayName"></param>
+    /// <returns></returns>
+    public bool IsParticipantInHearing(string displayName)
+    {
+        var element =
+            By.XPath(
+                $"//span[contains(text(), '{displayName}')]/../following-sibling::*//*[contains(@id, 'icon-micLocal')]");
+        return IsElementVisible(element);
+
+    }
+
+    /// <summary>
+    /// Check if a participant is in the hearing that has already started.
+    /// The participant would join as remote muted, instead of local muted.
+    /// </summary>
+    /// <param name="displayName"></param>
+    /// <returns></returns>
+    public bool IsParticipantInHearingAlreadyInSession(string displayName)
+    {
+        var element =
+            By.XPath(
+                $"//span[contains(text(), '{displayName}')]/../following-sibling::*//*[contains(@id, 'icon-micRemoteMuted')]");
+        WaitForElementToBeClickable(element, 5); // if a user takes more than 5 seconds to join, we should fail 
+        return IsElementVisible(element);
     }
     
     public JudgeWaitingRoomPage PauseHearing()
