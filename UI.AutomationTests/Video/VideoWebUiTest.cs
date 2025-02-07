@@ -201,6 +201,8 @@ public abstract class VideoWebUiTest : CommonUiTest
     protected static void SignOut(VideoWebParticipant videoWebParticipant)
     {
         TestContext.Out.WriteLine($"Signing out of participant {videoWebParticipant.Username}");
-        videoWebParticipant.VhVideoWebPage.SignOut();
+        var confirmSignOut = videoWebParticipant.JourneyType != JourneyType.QuickLinkParticipant;
+        // QL participants do not autheneticate with AD so they do not have to sign out like other users
+        videoWebParticipant.VhVideoWebPage.SignOut(confirmSignOut);
     }
 }
