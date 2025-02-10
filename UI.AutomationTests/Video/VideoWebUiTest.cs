@@ -120,7 +120,7 @@ public abstract class VideoWebUiTest : CommonUiTest
 
     }
 
-    protected JudgeHearingListPage LoginAsPanelMember(string username, string password)
+    protected PanelMemberHearingListPage LoginAsPanelMember(string username, string password)
     {
         var panelMember = InitVideoWebParticipant(username, JourneyType.PanelMember, HearingTestData.ClerkVideoFileName);
         var loginPage = NavigateToVideoWeb(panelMember.Driver.GetDriver());

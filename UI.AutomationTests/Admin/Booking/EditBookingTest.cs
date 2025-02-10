@@ -6,7 +6,7 @@ namespace UI.AutomationTests.Admin.Booking;
 public class EditBookingTest : HearingTest
 {
     [Test]
-    [NUnit.Framework.Category("admin")]
+    [Category("admin")]
     public void should_update_booking_schedule_and_change_judge()
     {
         var hearingScheduledDateAndTime = DateUtil
