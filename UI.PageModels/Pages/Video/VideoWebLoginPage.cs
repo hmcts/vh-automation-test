@@ -29,7 +29,6 @@ public class VideoWebLoginPage(IWebDriver driver, int defaultWaitTime) : VhLogin
         UpdateUserPassword(password);
         return new ParticipantHearingListPage(Driver, DefaultWaitTime);
     }
-    
     public StaffMemberVenueListPage LogInAsStaffMember(string username, string password)
     {
         EnterLoginDetails(username, password);
