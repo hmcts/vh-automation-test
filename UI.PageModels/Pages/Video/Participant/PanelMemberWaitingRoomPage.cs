@@ -3,7 +3,7 @@ namespace UI.PageModels.Pages.Video.Participant;
 public class PanelMemberWaitingRoomPage(IWebDriver driver, int defaultWaitTime)  : VhVideoWebPage(driver, defaultWaitTime)
 {
 
-    private readonly By _enterPanelMemberConsultationRoomBtn = By.Id("btnStartConcultation");
+    private readonly By _enterPanelMemberConsultationRoomBtn = By.XPath("//button[@id='joinPCButton']");
     
     protected override void ConfirmPageHasLoaded()
     {
