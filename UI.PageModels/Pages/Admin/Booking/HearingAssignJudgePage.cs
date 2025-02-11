@@ -94,21 +94,32 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
         Driver.TakeScreenshotAndSave(GetType().Name, "Enter panelMember Details");
     }
 
-    private void AssignPanelMemberDetails(string panelMemberEmail, string panelanelMemberDisplayName,
+    private void AssignPanelMemberDetails(string panelMemberEmail, string panelMemberDisplayName,
         InterpreterLanguageDto? interpreterLanguage = null)
     {
         EnterText(_panelMemberEmail, panelMemberEmail);
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
-        if (!string.IsNullOrWhiteSpace(panelanelMemberDisplayName))
-            EnterText(_panelMemberDisplayNameFld, panelanelMemberDisplayName);
+        if (!string.IsNullOrWhiteSpace(panelMemberDisplayName))
+            EnterText(_panelMemberDisplayNameFld, panelMemberDisplayName);
 
+        if (interpreterLanguage != null)
+        {
+            var interpreterRequiredCheckboxElement = Driver.FindElement(_panelMemberInterpreterRequired);
+            if (!interpreterRequiredCheckboxElement.Selected)
+            {
+                ClickElement(_panelMemberInterpreterRequired, waitToBeClickable: false);
+            }
+
+            SelectInterpreterLanguageForAdditionalJudiciary(interpreterLanguage);
+        }
+        
         Driver.TakeScreenshotAndSave(GetType().Name, "Enter PanelMember Details");
     }
     
 
-    void SelectInterpreterLangugage(InterpreterLanguageDto interpreterLanguage)
+    void SelectInterpreterLanguageForAdditionalJudiciary(InterpreterLanguageDto interpreterLanguage)
     { 
         switch (interpreterLanguage.Type)
         {
