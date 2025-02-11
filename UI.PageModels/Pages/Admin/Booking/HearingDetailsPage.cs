@@ -54,10 +54,13 @@ public class HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : VhAdmi
 
         var assignJudgePage = hearingSchedulePage.GoToNextPage();
         assignJudgePage.EnterJudgeDetails(bookingDto.Judge);
-        assignJudgePage.clickAddJohLink();
-        
-        assignJudgePage.EnterPanelMemberDetails(bookingDto.PanelMembers.First());
-        
+        assignJudgePage.ClickAddJohLink();
+
+        if (bookingDto.PanelMembers.Count > 0)
+        {
+            assignJudgePage.EnterPanelMemberDetails(bookingDto.PanelMembers.First());
+        }
+
         var addParticipantPage = assignJudgePage.GotToNextPage();
 
         addParticipantPage.AddAllParticipantsFromDto(bookingDto);

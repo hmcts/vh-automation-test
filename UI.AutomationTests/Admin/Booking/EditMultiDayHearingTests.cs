@@ -110,7 +110,7 @@ namespace UI.AutomationTests.Admin.Booking
         private SummaryPage EditMultiDayHearing(BookingDto hearingDto, SummaryPage summaryPage)
         {
             // Assign a new Judge 
-            var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode,
+            var alternativeJudge = new BookingJudiciaryParticipantDto(HearingTestData.JudgePersonalCode,
                 HearingTestData.AltJudgeUsername, "Auto Judge 2", "");
             var assignJudgePage = summaryPage.ChangeJudgeV2();
             assignJudgePage.EnterJudgeDetails(alternativeJudge);
