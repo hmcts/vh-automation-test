@@ -6,16 +6,22 @@ public static class HearingTestData
 {
     public static string StaffMemberUsername = "auto_aw.staffmember_01@hearings.reform.hmcts.net";
     public static string VhOfficerUsername = "auto_aw.videohearingsofficer_07@hearings.reform.hmcts.net";
+   
     public static string AltJudgeUsername = "auto_aw.judge_01@hearings.reform.hmcts.net";
     public static string AltJudgePersonalCode = "VH-GENERIC-ACCOUNT-00";
+    
     public static string JudgeUsername = "auto_aw.judge_02@hearings.reform.hmcts.net";
     public static string JudgePersonalCode = "VH-GENERIC-ACCOUNT-0";
+    
+    public static string PmUsername = "auto_aw.panelmember_01@hearings.reform.hmcts.net";
+    public static string PmPersonalCode = "VH-GENERIC-ACCOUNT-02";
     
     public const string ClerkVideoFileName = "clerk.y4m";
     public const string Individual01FileName = "individual01.y4m";
     public const string Individual02FileName = "individual02.y4m";
     public const string Representative01FileName = "representative01.y4m";
     public const string Representative02FileName = "representative02.y4m";
+    public const string PanelMemberFileName = "clerk.y4m";
 
     private const string HearingVenueName = "Birmingham Civil and Family Justice Centre";
     private const string HearingVenueCode = "231596";
@@ -80,7 +86,8 @@ public static class HearingTestData
                 ""),
             Participants = KnownParticipantsForTesting(includeInterpreter: includeInterpreter),
             AudioRecording = false,
-            OtherInformation = "This is a test hearing"
+            OtherInformation = "This is a test hearing",
+            PanelMembers = [new(PmPersonalCode, PmUsername, "PanelMember1", "123456")]
         };
         return bookingDto;
     }

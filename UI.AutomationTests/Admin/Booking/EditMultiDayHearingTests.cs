@@ -6,9 +6,6 @@ namespace UI.AutomationTests.Admin.Booking
 {
     public class EditMultiDayHearingTests : MultiDayHearingTest
     {
-        
-        [Test]
-        [Category("admin")]
         public async Task EditSingleDayOfMultiDayHearing()
         {
             const int numberOfDays = 3;
@@ -35,8 +32,6 @@ namespace UI.AutomationTests.Admin.Booking
             await ValidateEmailNotifications(hearingDto);
             Assert.Pass();
         }
-
-        
         [Test]
         [Category("admin")]
         [FeatureToggleSetting(FeatureToggle.MultiDayBookingEnhancementsToggleKey, true)]
@@ -121,8 +116,8 @@ namespace UI.AutomationTests.Admin.Booking
             assignJudgePage.EnterJudgeDetails(alternativeJudge);
             hearingDto.Judge = alternativeJudge;
             summaryPage = assignJudgePage.GotToNextPageOnEdit();
-
-            // Add a new participant
+            
+           // Add a new participant
             var newParticipant = HearingTestData.CreateNewParticipantDto();
             CreatedUsers.Add(newParticipant.Username);
             var participantsPage = summaryPage.ChangeParticipants();

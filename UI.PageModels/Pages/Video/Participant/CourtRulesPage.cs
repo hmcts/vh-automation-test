@@ -15,6 +15,11 @@ public class CourtRulesPage : VhVideoWebPage
         WaitForElementToBeVisible(By.XPath("//h1[contains(text(), 'Court rules')]"));
     }
 
+    public void ConfirmPanelMemberPageHasLoaded()
+
+    {
+        WaitForElementToBeVisible(locator:By.XPath("//h1[contains(text(), 'Court rules')]"));
+    }
     public DeclarationPage AcceptCourtRules()
     {
         ConfirmPageHasLoaded();

@@ -28,8 +28,7 @@ public class BookingDto
     public List<BookingParticipantDto> NewParticipants { get; set; } = new ();
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public required BookingJudgeDto Judge { get; set; }
-    
-    
+    public List<BookingPanelMemberDto> PanelMembers { get; set; } = new ();
     public List<BookingJudgeDto> AdditionalJudges { get; set; } = new ();
     
 }
