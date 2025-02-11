@@ -51,7 +51,7 @@ public static class HearingTestData
             VenueName = HearingVenueName,
             VenueCode = HearingVenueCode,
             RoomName = "Room 1",
-            Judge = new BookingJudgeDto(JudgePersonalCode, JudgeUsername, "Auto Judge", ""),
+            Judge = new BookingJudiciaryParticipantDto(JudgePersonalCode, JudgeUsername, "Auto Judge", ""),
             AudioRecording = false,
             OtherInformation = "This is a test hearing"
         };
@@ -79,7 +79,7 @@ public static class HearingTestData
             VenueName = "Birmingham Civil and Family Justice Centre",
             VenueCode = HearingVenueCode,
             RoomName = "Room 1",
-            Judge = new BookingJudgeDto(
+            Judge = new BookingJudiciaryParticipantDto(
                 judgePersonalCode,
                 judgeUsername,
                 "Auto Judge",

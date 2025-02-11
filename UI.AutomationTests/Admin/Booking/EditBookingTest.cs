@@ -1,6 +1,4 @@
 
-using AventStack.ExtentReports.Model;
-
 namespace UI.AutomationTests.Admin.Booking;
 
 public class EditBookingTest : HearingTest
@@ -21,7 +19,7 @@ public class EditBookingTest : HearingTest
             bookingDetailsPage.UpdateSchedule(newTime, hearingDto.DurationHour, hearingDto.DurationMinute);
 
         //Assign a new Judge 
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.AltJudgePersonalCode,
+        var alternativeJudge = new BookingJudiciaryParticipantDto(HearingTestData.AltJudgePersonalCode,
             HearingTestData.AltJudgeUsername,
             "Auto Judge 2", "");
 
@@ -52,7 +50,7 @@ public class EditBookingTest : HearingTest
         var newInterpreterLanguage = new InterpreterLanguageDto("British Sign Language (BSL)", InterpreterType.Sign);
 
         // Assign a new judge
-        var alternativeJudge = new BookingJudgeDto(HearingTestData.JudgePersonalCode, HearingTestData.AltJudgeUsername,
+        var alternativeJudge = new BookingJudiciaryParticipantDto(HearingTestData.JudgePersonalCode, HearingTestData.AltJudgeUsername,
             "Auto Judge 2", "")
         {
             InterpreterLanguage = newInterpreterLanguage

@@ -1,5 +1,4 @@
-﻿using UI.PageModels.Pages.Video.Participant;
-namespace UI.PageModels.Pages.Admin.Booking;
+﻿namespace UI.PageModels.Pages.Admin.Booking;
 
 public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
@@ -28,7 +27,7 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
         WaitForApiSpinnerToDisappear();
     }
 
-    public void EnterJudgeDetails(BookingJudgeDto judge)
+    public void EnterJudgeDetails(BookingJudiciaryParticipantDto judge)
     {
         AssignPresidingJudiciaryDetails(judge.Username, judge.DisplayName, judge.InterpreterLanguage);
         ClickSaveJudgeButton();
@@ -84,32 +83,43 @@ public class HearingAssignJudgePage(IWebDriver driver, int defaultWaitTime) : Vh
         ClickElement(_saveEJudge);
     }
 
-    public void clickAddJohLink ()
+    public void ClickAddJohLink ()
     {
         ClickElement(_addJudicialOfficeHolder);
     }
-    public void EnterPanelMemberDetails(BookingPanelMemberDto panelMember)
+    public void EnterPanelMemberDetails(BookingJudiciaryParticipantDto panelMember)
     {
         AssignPanelMemberDetails(panelMember.Username, panelMember.DisplayName, panelMember.InterpreterLanguage);
         ClickSavePanelMemberButton();
         Driver.TakeScreenshotAndSave(GetType().Name, "Enter panelMember Details");
     }
 
-    private void AssignPanelMemberDetails(string PanelMemberEmail, string PanelanelMemberDisplayName,
+    private void AssignPanelMemberDetails(string panelMemberEmail, string panelMemberDisplayName,
         InterpreterLanguageDto? interpreterLanguage = null)
     {
-        EnterText(_panelMemberEmail, PanelMemberEmail);
+        EnterText(_panelMemberEmail, panelMemberEmail);
         WaitForApiSpinnerToDisappear();
         WaitForElementToBeVisible(_searchResults);
         ClickElement(_searchResults);
-        if (!string.IsNullOrWhiteSpace(PanelanelMemberDisplayName))
-            EnterText(_panelMemberDisplayNameFld, PanelanelMemberDisplayName);
+        if (!string.IsNullOrWhiteSpace(panelMemberDisplayName))
+            EnterText(_panelMemberDisplayNameFld, panelMemberDisplayName);
 
+        if (interpreterLanguage != null)
+        {
+            var interpreterRequiredCheckboxElement = Driver.FindElement(_panelMemberInterpreterRequired);
+            if (!interpreterRequiredCheckboxElement.Selected)
+            {
+                ClickElement(_panelMemberInterpreterRequired, waitToBeClickable: false);
+            }
+
+            SelectInterpreterLanguageForAdditionalJudiciary(interpreterLanguage);
+        }
+        
         Driver.TakeScreenshotAndSave(GetType().Name, "Enter PanelMember Details");
     }
     
 
-    void SelectInterpreterLangugage(InterpreterLanguageDto interpreterLanguage)
+    void SelectInterpreterLanguageForAdditionalJudiciary(InterpreterLanguageDto interpreterLanguage)
     { 
         switch (interpreterLanguage.Type)
         {

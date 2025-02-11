@@ -24,13 +24,6 @@ public class AddParticipantsPostBookingTests : VideoWebUiTest
         var judgeHearingListPage = LoginAsJudge(judgeUsername, EnvConfigSettings.UserPassword);
         var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing(conference.Id);
         ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
-        
-        
-        //log in as a panelMember, go tp waiting room and wait for alerts
-        var panelMemberUsername = hearingDto.PanelMembers[0].Username;
-        var panelMemberHearingListPage = LoginAsPanelMember(panelMemberUsername, EnvConfigSettings.UserPassword);
-        var panelMemberWaitingRoomPage = panelMemberHearingListPage.SelectHearing(conference.Id);
-        ParticipantDrivers[panelMemberUsername].VhVideoWebPage = panelMemberWaitingRoomPage;
                    
         var participantsToAdd = new List<BookingParticipantDto>(){HearingTestData.KnownParticipantsForTesting()[0]};
         var confirmationPage = bookingDetailsPage.AddParticipantsToBooking(participantsToAdd);
