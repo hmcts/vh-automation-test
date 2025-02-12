@@ -95,7 +95,7 @@ public class BookingDetailsPage : VhAdminWebPage
         // use existing booking flow (i.e. next on vap goes screening (if enabled) and then to summary page)
         var summaryPage = FeatureToggle.Instance().SpecialMeasuresEnabled() ?
             videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage().GoToSummaryPage()
-            : videoAccessPointsPage.GoToSummaryPage();
+            : videoAccessPointsPage.GoToOtherInformationPage().GoToSummaryPage();
         return summaryPage.ClickBookButton();
     }
     
