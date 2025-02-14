@@ -1,0 +1,32 @@
+trigger: none
+pr: none
+
+schedules:
+  - cron: '0 18 * * 1,2,3,4,5'
+    displayName: Daily build
+    always: true
+    branches:
+      include:
+        - master
+
+parameters:
+  - name: testCategories
+    type: object
+    default:
+      - admin
+      - video
+
+name: Demo_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
+
+pool:
+  name: 'VH Self Hosted'
+
+jobs:
+  - template: pipelines/templates/pipeline.yaml
+    parameters:
+      environment: 'Demo'
+      runUITests: true
+      runA11yTests: false
+      runOnSaucelabs: true
+      runHeadlessBrowser: false
+      testCategories: ${{ parameters.testCategories }}
