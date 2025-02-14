@@ -74,110 +74,17 @@ name: ${{ parameters.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 pool:
   name: 'VH Self Hosted'
 
-stages:
-  ####################################################
-  # UI Testing. ######################################
-  - stage: Automation_Tests_${{ parameters.environment }}
-    displayName: Automation Tests ${{ parameters.environment }}
-    jobs:
-      - ${{ if eq(parameters.runUITests, true) }}:
-          - ${{ each testCategory in parameters.testCategories }}:
-              - job: UI_Tests_${{ testCategory }}
-                cancelTimeoutInMinutes: 80
-                displayName: UI Tests ${{ parameters.environment }} - ${{ testCategory }}
-                variables:
-                  - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
-                    value: false
-                  - template: variables/${{ lower(parameters.environment) }}.yaml
-                  - template: variables/shared.yaml
-                    parameters:
-                      environment: ${{ parameters.environment }}
-                      runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
-                      runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
-                  - group: vh-automation-test-${{ parameters.environment }}
-                  - group: FeatureFlags_${{ parameters.environment }}
-                  - group: Saucelabs
-                  - group: VodafoneConfiguration_${{ parameters.environment }}
-                  - name: ApiClientConfiguration.BookingsApiUrl
-                    value: ${{ variables.bookingsApiUrl }}
-                  - name: ApiClientConfiguration.VideoApiUrl
-                    value: ${{ variables.videoApiUrl }}
-                  - name: ApiClientConfiguration.UserApiUrl
-                    value: ${{ variables.userApiUrl }}
-                  - group: slack
-
-                steps:
-                  - template: pipelines/templates/run-ui-test.yaml
-                    parameters:
-                      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
-                      environment: ${{ parameters.environment }}
-                      projectPath: ${{ variables.projectPath }}
-                      testRunTitle: 'UI Tests ${{ parameters.environment }} - ${{ testCategory }}'
-                      testCategory: ${{ testCategory }}
-                      subscriptionName: ${{ variables.subscriptionName }}
-                      testReportArtifactName: 'UI_Report'
-                      testReportDisplayName: 'Publish UI Test Output'
-                      slackTestReportName: UI
-                      slackTitle: UI Tests - ${{ testCategory }}
-
-                  - task: PublishBuildArtifacts@1
-                    displayName: Publish UI HTML Report
-                    condition: succeededOrFailed()
-                    inputs:
-                      pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
-                      artifactName: UI_Html_Report
-
-                  - task: PublishHtmlReport@1
-                    displayName: 'Publish UI Test Reports'
-                    condition: succeededOrFailed()
-                    inputs:
-                      reportDir: '$(Build.ArtifactStagingDirectory)/UITestReports/'
-                      useFilenameTabs: true
-
-      - ${{ if eq(parameters.runA11yTests, true) }}:
-          - job: A11Y_Tests
-            displayName: A11Y Tests ${{ parameters.environment }}
-            variables:
-              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
-                value: true
-              - template: variables/${{ lower(parameters.environment) }}.yaml
-              - template: variables/shared.yaml
-                parameters:
-                  environment: ${{ parameters.environment }}
-                  runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
-                  runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
-              - group: vh-automation-test-${{ parameters.environment }}
-              - group: FeatureFlags_${{ parameters.environment }}
-              - group: Saucelabs
-              - group: VodafoneConfiguration_${{ parameters.environment }}
-              - group: VodafoneConfiguration_${{ parameters.environment }}
-              - name: ApiClientConfiguration.BookingsApiUrl
-                value: ${{ variables.bookingsApiUrl }}
-              - name: ApiClientConfiguration.VideoApiUrl
-                value: ${{ variables.videoApiUrl }}
-              - name: ApiClientConfiguration.UserApiUrl
-                value: ${{ variables.userApiUrl }}
-              - group: slack
-
-            steps:
-              - template: pipelines/templates/run-ui-test.yaml
-                parameters:
-                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
-                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
-                  environment: ${{ parameters.environment }}
-                  projectPath: ${{ variables.projectPath }}
-                  testCategory: a11y
-                  testRunTitle: 'UI Tests A11y ${{ parameters.environment }}'
-                  subscriptionName: ${{ variables.subscriptionName }}
-                  testReportArtifactName: 'A11Y_Report'
-                  testReportDisplayName: 'Publish A11Y Output'
-                  slackTestReportName: A11y
-                  slackTitle: A11y Tests
-
-              - task: PublishBuildArtifacts@1
-                displayName: Publish A11Y Output
-                condition: succeededOrFailed()
-                inputs:
-                  pathToPublish: '$(Build.ArtifactStagingDirectory)/'
-                  artifactName: A11Y_Report
+jobs:
+  - template: pipelines/templates/pipeline.yaml
+    parameters:
+      environment: ${{ parameters.environment }}
+      runUITests: ${{ parameters.runUITests }}
+      runA11yTests: ${{ parameters.runA11yTests }}
+      runOnSaucelabs: ${{ parameters.runOnSaucelabs }}
+      runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
+      adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+      videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
+      bookingsApiOverrideUrl: ${{ parameters.bookingsApiOverrideUrl }}
+      videoApiOverrideUrl: ${{ parameters.videoApiOverrideUrl }}
+      userApiOverrideUrl: ${{ parameters.userApiOverrideUrl }}
+      testCategories: ${{ parameters.testCategories }}
