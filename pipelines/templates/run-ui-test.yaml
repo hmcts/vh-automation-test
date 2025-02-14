@@ -53,6 +53,10 @@ parameters:
     type: string
 
 steps:
+  - checkout: self
+    displayName: Checkout
+    fetchDepth: '0'
+
   - task: AzureKeyVault@2
     displayName: 'Azure Key Vault: vh-infra-core-${{ lower(parameters.environment) }}'
     inputs:

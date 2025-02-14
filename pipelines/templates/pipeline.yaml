@@ -1,0 +1,163 @@
+parameters:
+  - name: runUITests
+    displayName: Run UI Tests
+    type: boolean
+    default: true
+
+  - name: runA11yTests
+    displayName: Run Accessibility Tests
+    type: boolean
+    default: true
+
+  - name: runOnSaucelabs
+    displayName: Run on SauceLabs
+    type: boolean
+    default: true
+
+  - name: runHeadlessBrowser
+    displayName: Run Headless Browser (Required for PR environments)
+    type: boolean
+    default: false
+
+  - name: adminWebOverrideUrl
+    displayName: Admin Web URL Override (leave blank for default)
+    type: string
+    default: ' ' # Optional parameter with default value
+
+  - name: videoWebOverrideUrl
+    displayName: Video Web URL Override (leave blank for default)
+    type: string
+    default: ' ' # Optional parameter with default value
+
+  - name: bookingsApiOverrideUrl
+    displayName: Bookings API PR Url (leave blank for default)
+    type: string
+    default: ' '
+  - name: videoApiOverrideUrl
+    displayName: Video API PR Url (leave blank for default)
+    type: string
+    default: ' '
+  - name: userApiOverrideUrl
+    displayName: User API PR Url (leave blank for default)
+    type: string
+    default: ' '
+
+  - name: environment
+    displayName: Environment name (used by to get the correct configuration from LaunchDarkly and KeyVault)
+    type: string
+    default: Dev
+    values:
+      - Dev
+      - Demo
+      - Test
+      - Stg
+      - Prod
+
+  - name: testCategories
+    type: object
+    default:
+      - admin
+      - video
+
+jobs:
+  - ${{ if eq(parameters.runUITests, true) }}:
+      - ${{ each testCategory in parameters.testCategories }}:
+          - job: UI_Tests_${{ testCategory }}
+            cancelTimeoutInMinutes: 80
+            displayName: UI Tests ${{ parameters.environment }} - ${{ testCategory }}
+            variables:
+              - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
+                value: false
+              - template: variables/${{ lower(parameters.environment) }}.yaml
+              - template: variables/shared.yaml
+                parameters:
+                  environment: ${{ parameters.environment }}
+                  runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+                  runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
+              - group: vh-automation-test-${{ parameters.environment }}
+              - group: FeatureFlags_${{ parameters.environment }}
+              - group: Saucelabs
+              - group: VodafoneConfiguration_${{ parameters.environment }}
+              - name: ApiClientConfiguration.BookingsApiUrl
+                value: ${{ variables.bookingsApiUrl }}
+              - name: ApiClientConfiguration.VideoApiUrl
+                value: ${{ variables.videoApiUrl }}
+              - name: ApiClientConfiguration.UserApiUrl
+                value: ${{ variables.userApiUrl }}
+              - group: slack
+
+            steps:
+              - template: ./run-ui-test.yaml
+                parameters:
+                  adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+                  videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
+                  environment: ${{ parameters.environment }}
+                  projectPath: ${{ variables.projectPath }}
+                  testRunTitle: 'UI Tests ${{ parameters.environment }} - ${{ testCategory }}'
+                  testCategory: ${{ testCategory }}
+                  subscriptionName: ${{ variables.subscriptionName }}
+                  testReportArtifactName: 'UI_Report'
+                  testReportDisplayName: 'Publish UI Test Output'
+                  slackTestReportName: UI
+                  slackTitle: UI Tests - ${{ testCategory }}
+
+              - task: PublishBuildArtifacts@1
+                displayName: Publish UI HTML Report
+                condition: succeededOrFailed()
+                inputs:
+                  pathToPublish: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+                  artifactName: UI_Html_Report
+
+              - task: PublishHtmlReport@1
+                displayName: 'Publish UI Test Reports'
+                condition: succeededOrFailed()
+                inputs:
+                  reportDir: '$(Build.ArtifactStagingDirectory)/UITestReports/'
+                  useFilenameTabs: true
+
+  - ${{ if eq(parameters.runA11yTests, true) }}:
+      - job: A11Y_Tests
+        displayName: A11Y Tests ${{ parameters.environment }}
+        variables:
+          - name: SystemConfiguration.EnvironmentConfigSettings.EnableAccessibilityCheck
+            value: true
+          - template: variables/${{ lower(parameters.environment) }}.yaml
+          - template: variables/shared.yaml
+            parameters:
+              environment: ${{ parameters.environment }}
+              runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
+              runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
+          - group: vh-automation-test-${{ parameters.environment }}
+          - group: FeatureFlags_${{ parameters.environment }}
+          - group: Saucelabs
+          - group: VodafoneConfiguration_${{ parameters.environment }}
+          - group: VodafoneConfiguration_${{ parameters.environment }}
+          - name: ApiClientConfiguration.BookingsApiUrl
+            value: ${{ variables.bookingsApiUrl }}
+          - name: ApiClientConfiguration.VideoApiUrl
+            value: ${{ variables.videoApiUrl }}
+          - name: ApiClientConfiguration.UserApiUrl
+            value: ${{ variables.userApiUrl }}
+          - group: slack
+
+        steps:
+          - template: ./run-ui-test.yaml
+            parameters:
+              adminWebOverrideUrl: ${{ parameters.adminWebOverrideUrl }}
+              videoWebOverrideUrl: ${{ parameters.videoWebOverrideUrl }}
+              environment: ${{ parameters.environment }}
+              projectPath: ${{ variables.projectPath }}
+              testCategory: a11y
+              testRunTitle: 'UI Tests A11y ${{ parameters.environment }}'
+              subscriptionName: ${{ variables.subscriptionName }}
+              testReportArtifactName: 'A11Y_Report'
+              testReportDisplayName: 'Publish A11Y Output'
+              slackTestReportName: A11y
+              slackTitle: A11y Tests
+
+          - task: PublishBuildArtifacts@1
+            displayName: Publish A11Y Output
+            condition: succeededOrFailed()
+            inputs:
+              pathToPublish: '$(Build.ArtifactStagingDirectory)/'
+              artifactName: A11Y_Report
