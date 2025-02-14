@@ -15,7 +15,7 @@ parameters:
     default:
       - smoketest
 
-name: ${{ variables.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
+name: Production_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
   name: 'VH Self Hosted'

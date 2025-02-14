@@ -16,7 +16,7 @@ parameters:
       - admin
       - video
 
-name: ${{ variables.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
+name: Staging_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
   name: 'VH Self Hosted'
