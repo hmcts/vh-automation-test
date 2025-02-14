@@ -13,7 +13,8 @@ parameters:
   - name: testCategories
     type: object
     default:
-      - smoketest
+      - admin
+      - video
 
 name: ${{ variables.environment }}_UI_Daily_Tests_$(Date:yyyyMMdd)$(Rev:.r)
 
