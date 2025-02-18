@@ -101,7 +101,7 @@ public class JudgeHearingRoomPage : CommonWaitingRoomPage
     {
         var element =
             By.XPath(
-                $"//span[contains(text(), '{displayName}')]/../following-sibling::*//*[contains(@id, 'icon-micRemoteMuted')]");
+                $"//span[contains(text(), '{displayName}')]/../following-sibling::*//*[contains(@id, 'icon-micLocal')]");
         WaitForElementToBeClickable(element, 5); // if a user takes more than 5 seconds to join, we should fail 
         return IsElementVisible(element);
     }

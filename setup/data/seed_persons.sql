@@ -166,7 +166,7 @@ BEGIN
         END
     ELSE
         BEGIN
-            PRINT ('Adding: auto_vw.representative_157@hmcts.net')
+            PRINT ('Adding: automation_claimant_interpreter_1@hmcts.net')
             insert into dbo.Person(Id, Title, FirstName, LastName, MiddleNames, Username, ContactEmail,
                                    TelephoneNumber, OrganisationId, CreatedDate, UpdatedDate)
             values ('663EEE0C-0884-4B80-AD9E-234BC179A4EF', 'Mrs', 'Automation_Claimant', 'Interpreter_1', 'MiddleName1',
