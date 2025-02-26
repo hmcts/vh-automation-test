@@ -44,3 +44,6 @@ variables:
     value: $(Build.ArtifactStagingDirectory)/TestResults/
   - name: SystemConfiguration.EnvironmentConfigSettings.ReportLocation
     value: $(Build.ArtifactStagingDirectory)/UITestReports/
+    
+  - name: SystemConfiguration.EnvironmentConfigSettings.CleanUpData
+    value: ${{ or(eq(variables.env, 'staging'), eq(variables.env, 'stg'), eq(variables.env, 'Prod')) }}

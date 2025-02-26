@@ -135,7 +135,7 @@ public abstract class CommonUiTest
 
     private async Task DeleteHearings()
     {
-        if (EnvConfigSettings.IsProd)
+        if (EnvConfigSettings.CleanUpData)
         {
             await TestContext.Out.WriteLineAsync("Not removing hearings from Production");
             return;
