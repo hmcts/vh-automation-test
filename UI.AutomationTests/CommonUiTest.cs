@@ -3,9 +3,9 @@ using BookingsApi.Client;
 using BookingsApi.Contract.V1.Requests;
 using BookingsApi.Contract.V1.Requests.Enums;
 using BookingsApi.Contract.V1.Responses;
-using Notify.Interfaces;
 using UI.AutomationTests.EmailNotifications;
 using UI.AutomationTests.Reporters;
+using UI.Common.Utilities;
 using UI.PageModels.Extensions;
 using UI.PageModels.Utilities;
 using UserApi.Client;
@@ -21,6 +21,7 @@ public abstract class CommonUiTest
     protected TestReporter UiTestReport;
     protected EnvironmentConfigSettings EnvConfigSettings = ConfigRootBuilder.EnvConfigInstance();
     protected readonly EmailNotificationService EmailNotificationService = new();
+    
     protected async Task<JusticeUserResponse> CreateVhTeamLeaderJusticeUserIfNotExist(string username)
     {
         var matchedUsers = await BookingsApiClient.GetJusticeUserListAsync(username, true);
@@ -135,9 +136,9 @@ public abstract class CommonUiTest
 
     private async Task DeleteHearings()
     {
-        if (EnvConfigSettings.IsProd)
+        if (!FeatureToggle.Instance().DataCleanupEnabled())
         {
-            await TestContext.Out.WriteLineAsync("Not removing hearings from Production");
+            await TestContext.Out.WriteLineAsync("Data cleanup not enabled");
             return;
         }
         List<string> removedHearings = new();
