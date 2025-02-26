@@ -138,7 +138,7 @@ public abstract class CommonUiTest
     {
         if (!FeatureToggle.Instance().DataCleanupEnabled())
         {
-            await TestContext.Out.WriteLineAsync("Not removing hearings from Production");
+            await TestContext.Out.WriteLineAsync("Data cleanup not enabled");
             return;
         }
         List<string> removedHearings = new();
