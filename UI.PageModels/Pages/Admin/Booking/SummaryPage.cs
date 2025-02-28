@@ -29,6 +29,7 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
             ValidateDateAndDuration(bookingDto);
         ValidateEndpointsAndOtherInformation(bookingDto);
         ValidateParticipantDetails(bookingDto);
+        ValidateScreeningDetails(bookingDto);
     }
 
     private void ValidateDateMultiDayIndividualDates(List<DateTime>? individualDatesForValidation)
@@ -79,6 +80,20 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
         if (!string.IsNullOrWhiteSpace(bookingDto.OtherInformation))
         {
             CompareText(By.Id("otherInformation"), bookingDto.OtherInformation);
+        }
+    }
+
+    private void ValidateScreeningDetails(BookingDto bookingDto)
+    {
+        var expectedScreeningCount = bookingDto.ScreeningParticipants.Count;
+        if (expectedScreeningCount == 0) return;
+        
+        var screeningElements = driver.FindElements(By.XPath("//div[contains(@class, 'participant-row__screening')]"));
+        CompareNumbers(screeningElements.Count, expectedScreeningCount);
+        foreach (var screeningElement in screeningElements)
+        {
+            var text = screeningElement.Text;
+            CompareText(text, "Screening enabled");
         }
     }
 
@@ -184,9 +199,22 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
     private void CompareText(By element, string expectedText)
     {
         var text = GetText(element).Trim();
+        CompareText(text, expectedText);
+    }
+
+    private static void CompareText(string text, string expectedText)
+    {
         if (!text.Equals(expectedText.Trim(), StringComparison.InvariantCultureIgnoreCase))
         {
             throw new InvalidOperationException($"Expected text: {expectedText} but was {text}");
+        }
+    }
+
+    private static void CompareNumbers(int number, int expectedNumber)
+    {
+        if (number != expectedNumber)
+        {
+            throw new InvalidOperationException($"Expected number: {expectedNumber} but was {number}");
         }
     }
 
