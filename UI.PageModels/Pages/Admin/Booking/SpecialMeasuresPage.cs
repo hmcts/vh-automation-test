@@ -24,11 +24,18 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
         return new OtherInfoPage(Driver, DefaultWaitTime);
     }
 
-    public void ScreenParticipant(ScreeningParticipantDto screeningParticipantDto)
+    /// <summary>
+    /// Add participants or endpoints for screening
+    /// </summary>
+    /// <param name="screeningParticipants"></param>
+    public void AddScreeningParticipants(List<ScreeningParticipantDto> screeningParticipants)
     {
-        SelectParticipantToScreen(screeningParticipantDto);
-        SelectParticipantsToScreenFrom(screeningParticipantDto);
-        ClickElement(_saveButton);
+        foreach (var screeningParticipant in screeningParticipants)
+        {
+            SelectParticipantToScreen(screeningParticipant);
+            SelectParticipantsToScreenFrom(screeningParticipant.DisplayNamesToScreenFrom);
+            ClickElement(_saveButton);
+        }
     }
 
     private void SelectParticipantToScreen(ScreeningParticipantDto screeningParticipantDto)
@@ -37,9 +44,9 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
         SelectDropDownByText(_participantsToScreenDropdown, screeningParticipantDto.DisplayName);
     }
 
-    private void SelectParticipantsToScreenFrom(ScreeningParticipantDto screeningParticipantDto)
+    private void SelectParticipantsToScreenFrom(List<string> displayNamesToScreenFrom)
     {
-        foreach (var displayNameToScreenFrom in screeningParticipantDto.DisplayNamesToScreenFrom)
+        foreach (var displayNameToScreenFrom in displayNamesToScreenFrom)
         {
             ClickElement(_participantsToScreenFromDropdown);
             var checkbox = By.XPath($"//input[@aria-label='Participant display name {displayNameToScreenFrom}']");

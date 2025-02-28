@@ -137,6 +137,11 @@ public class BookHearingTests : AdminWebUiTest
         _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
             judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date);
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
+        _bookingDto.ScreeningParticipants =
+        [
+            new ScreeningParticipantDto(_bookingDto.Participants[0].DisplayName, [_bookingDto.Participants[1].DisplayName]),
+            new ScreeningParticipantDto(_bookingDto.VideoAccessPoints[0].DisplayName, [_bookingDto.VideoAccessPoints[1].DisplayName])
+        ];
         
         var driver = VhDriver.GetDriver();
         driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
@@ -159,15 +164,7 @@ public class BookHearingTests : AdminWebUiTest
         videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
 
         var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
-        var screeningParticipants = new List<ScreeningParticipantDto>
-        {
-            new(_bookingDto.Participants[0].DisplayName, [_bookingDto.Participants[1].DisplayName]),
-            new(_bookingDto.VideoAccessPoints[0].DisplayName, [_bookingDto.VideoAccessPoints[1].DisplayName])
-        };
-        foreach (var screeningParticipant in screeningParticipants)
-        {
-            specialMeasuresPage.ScreenParticipant(screeningParticipant);
-        }
+        specialMeasuresPage.AddScreeningParticipants(_bookingDto.ScreeningParticipants);
         
         var otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
         if (_bookingDto.AudioRecording)
