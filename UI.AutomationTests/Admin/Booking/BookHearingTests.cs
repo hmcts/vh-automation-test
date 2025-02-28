@@ -127,6 +127,66 @@ public class BookHearingTests : AdminWebUiTest
 
         Assert.Pass($"Booked a hearing with interpretation for {description}");
     }
+
+    [Test(Description = "Book a hearing with screening")]
+    [FeatureToggleSetting(FeatureToggle.SpecialMeasuresKey, true)]
+    [Category("admin")]
+    public void BookAHearingWithScreening()
+    {
+        var date = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(30);
+        _bookingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
+            judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: date);
+        _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
+        
+        var driver = VhDriver.GetDriver();
+        driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+        
+        var createHearingPage = dashboardPage.GoToBookANewHearing();
+        createHearingPage.EnterHearingDetails(_bookingDto);
+
+        var hearingSchedulePage = createHearingPage.GoToNextPage();
+        hearingSchedulePage.EnterSingleDayHearingSchedule(_bookingDto);
+
+        var assignJudgePage = hearingSchedulePage.GoToNextPage();
+        assignJudgePage.EnterJudgeDetails(_bookingDto.Judge);
+
+        var addParticipantPage = assignJudgePage.GotToNextPage();
+        addParticipantPage.AddAllParticipantsFromDto(_bookingDto);
+
+        var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
+        videoAccessPointsPage.AddVideoAccessPoints(_bookingDto.VideoAccessPoints);
+
+        var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
+        var screeningParticipants = new List<ScreeningParticipantDto>
+        {
+            new(_bookingDto.Participants[0].DisplayName, [_bookingDto.Participants[1].DisplayName]),
+            new(_bookingDto.VideoAccessPoints[0].DisplayName, [_bookingDto.VideoAccessPoints[1].DisplayName])
+        };
+        foreach (var screeningParticipant in screeningParticipants)
+        {
+            specialMeasuresPage.ScreenParticipant(screeningParticipant);
+        }
+        
+        var otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
+        if (_bookingDto.AudioRecording)
+            otherInformationPage.TurnOnAudioRecording();
+        else
+            otherInformationPage.TurnOffAudioRecording();
+        otherInformationPage.EnterOtherInformation(_bookingDto.OtherInformation);
+        
+        var summaryPage = otherInformationPage.GoToSummaryPage();
+        summaryPage.ValidateSummaryPage(_bookingDto);
+
+        var confirmationPage = summaryPage.ClickBookButton();
+        TestHearingIds.Add(confirmationPage.GetNewHearingId());
+        confirmationPage.IsBookingSuccessful().Should().BeTrue();
+
+        confirmationPage.ClickViewBookingLink().ValidateDetailsPage(_bookingDto);
+
+        Assert.Pass($"Booked a hearing with screening");
+    }
     
     private async Task ValidateEmailNotifications(BookingParticipantDto newUser, string caseName, string caseNumber)
     {
