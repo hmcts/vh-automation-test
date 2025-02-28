@@ -13,27 +13,11 @@ public class ConsultationRoomPage : VhVideoWebPage
         WaitForElementToBeClickable(LeaveButtonDesktop);
     }
 
-    public static By InviteParticipants => By.ClassName("phone");
-    public static By ParticipantsTick => By.CssSelector(".member-group+.member-group .yellow fa-icon");
-    public static By ConfirmLeaveButton => By.Id("consultation-leave-button");
-    public static By CloseButton => By.Id("closeButton");
-    public static By LeaveButtonDesktop => By.Id("leaveButton-desktop");
-    public static By WaitingRoomIframe => By.Id("admin-frame");
-    public static By WaitingRoomJudgeLink => By.XPath("//table[@id='WaitingRoom']//td[contains(.,'Judge')]");
+    private static By ConfirmLeaveButton => By.Id("consultation-leave-button");
+    private static By LeaveButtonDesktop => By.Id("leaveButton-desktop");
 
-    public static By WaitingRoomParticipantLink =>
-        By.XPath("//td[contains(@id,'-WaitingRoom-menu')][not(text(),'Judge')]");
-
-    public static By WaitingRoomMenu => By.XPath("//ul[contains(@id,'-WaitingRoom-menu')]");
-    public static By PrivateConsultation => By.XPath("//ul[contains(@id,'-WaitingRoom-menu')]//li");
-    public static By SelfViewButton => By.Id("selfViewButton");
-    public static By MuteButton => By.Id("muteButton");
-
-    public static By InviteParticipant(string name) =>
+    private static By InviteParticipantButton(string name) =>
         By.XPath($"//div[@class='participant-endpoint-row' and contains(.,'{name}')]//app-invite-participant");
-
-    public static By ParticipantDisplayName(string name) =>
-        By.XPath($"//div[@class='participant-endpoint-row' and contains(.,'{name}')]");
 
     /// <summary>
     /// Leave the consultation room and return to the waiting room
@@ -55,6 +39,18 @@ public class ConsultationRoomPage : VhVideoWebPage
     {
         ClickElement(LeaveButtonDesktop);
         ClickElement(ConfirmLeaveButton);
+    }
+
+    public void InviteParticipant(string displayName)
+    {
+        var inviteButton = InviteParticipantButton(displayName);
+        ClickElement(inviteButton);
+    }
+    
+    public bool CanInviteParticipant(string displayName)
+    {
+        var inviteButton = InviteParticipantButton(displayName);
+        return IsElementVisible(inviteButton);
     }
 
     /// <summary>

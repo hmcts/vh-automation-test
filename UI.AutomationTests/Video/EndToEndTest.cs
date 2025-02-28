@@ -41,7 +41,7 @@ public class EndToEndTest : VideoWebUiTest
         var commandCentrePage = CsoCommandCentreJourney(vhoVenueSelectionPage, hearingDto, out var ccHearingPanel, out var testParticipant);
 
         // loop through all participants in hearing and login as each one
-        Parallel.ForEach(hearingDto.Participants, ParticipantLoginToWaitingRoomJourney);
+        Parallel.ForEach(hearingDto.Participants, participantDto => ParticipantLoginToWaitingRoomJourney(participantDto, _conference.Id));
         
         // login with new user with temp password journey
         var newUserTempPassword = await EmailNotificationService.GetTempPasswordForUser(newUser.ContactEmail, hearingDto.CaseName);
@@ -55,11 +55,7 @@ public class EndToEndTest : VideoWebUiTest
             AssertInstantMessagesFeature(commandCentrePage, testParticipant, testParticipantWaitingRoom);
 
         // log in as judge and start the hearing
-        var judgeUsername = hearingDto.Judge.Username;
-        var judgePassword = EnvConfigSettings.UserPassword;
-        var judgeHearingListPage = LoginAsJudge(judgeUsername, judgePassword);
-        var judgeWaitingRoomPage = judgeHearingListPage.SelectHearing (_conference.Id);
-        ParticipantDrivers[judgeUsername].VhVideoWebPage = judgeWaitingRoomPage;
+        var judgeWaitingRoomPage = JudgeLoginToWaitingRoomJourney(hearingDto, _conference.Id);
         
         // log in as PanelMember and enter the consultation 
         var panelMemberUsername = hearingDto.PanelMembers[0].Username;
@@ -97,41 +93,13 @@ public class EndToEndTest : VideoWebUiTest
         Assert.Pass();
     }
     
-    private void ParticipantLoginToWaitingRoomJourney(BookingParticipantDto participant)
-    {
-        var participantUsername = participant.Username;
-        var participantPassword = EnvConfigSettings.UserPassword;
-        var participantHearingList = LoginAsParticipant(participantUsername, participantPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName);
-        JourneyToWaitingRoom(participant, participantHearingList, participantUsername);
-    }
-
-    private void JourneyToWaitingRoom(BookingParticipantDto participant, ParticipantHearingListPage participantHearingList, string participantUsername)
-    {
-        var participantWaitingRoom = participantHearingList
-            .SelectHearing(_conference.Id).GoToEquipmentCheck()
-            .GoToSwitchOnCameraMicrophonePage()
-            .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
-            .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
-        // store the participant driver in a dictionary, so we can access it later to sign out
-        ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
-    }
-    
     private void NewParticipantLoginToWaitingRoom(BookingParticipantDto participant, string tempPassword)
     {
         var participantUsername = participant.Username;
         var participantHearingList = LoginAsParticipant(participantUsername, tempPassword, participant.Role == GenericTestRole.Representative, participant.VideoFileName, isNew: true);
-        JourneyToWaitingRoom(participant, participantHearingList, participantUsername);
+        ParticipantJourneyToWaitingRoom(participant, participantHearingList, participantUsername, _conference.Id);
     }
-    private void PanelMemberLoginToWaitingRoomJourney(BookingParticipantDto panelMember)
 
-    {
-        var panelMemberUsername = panelMember.Username;
-        var panelMemberPassword = EnvConfigSettings.UserPassword;
-        var panelHearingListPage = LoginAsPanelMember(panelMemberUsername, panelMemberPassword);
-        var panelMemberWaitingRoom = panelHearingListPage.SelectHearing(_conference.Id);
-        ParticipantDrivers[panelMemberUsername].VhVideoWebPage = panelMemberWaitingRoom;
-    }
-    
     private CommandCentrePage CsoCommandCentreJourney(VhoVenueSelectionPage vhoVenueSelectionPage, BookingDto hearingDto,
         out CommandCentreHearing ccHearingPanel, out ParticipantResponse testParticipant)
     {

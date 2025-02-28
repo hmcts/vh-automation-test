@@ -213,4 +213,39 @@ public abstract class VideoWebUiTest : CommonUiTest
         // QL participants do not autheneticate with AD so they do not have to sign out like other users
         videoWebParticipant.VhVideoWebPage.SignOut(confirmSignOut);
     }
+    
+    protected JudgeWaitingRoomPage JudgeLoginToWaitingRoomJourney(BookingDto bookingDto, Guid conferenceId)
+    {
+        var judge = bookingDto.Judge;
+        var username = judge.Username;
+        var password = EnvConfigSettings.UserPassword;
+        var hearingListPage = LoginAsJudge(username, password);
+        var waitingRoomPage = hearingListPage.SelectHearing(conferenceId);
+        ParticipantDrivers[judge.Username].VhVideoWebPage = waitingRoomPage;
+        return waitingRoomPage;
+    }
+    
+    protected ParticipantWaitingRoomPage ParticipantLoginToWaitingRoomJourney(BookingParticipantDto participant, Guid conferenceId)
+    {
+        var username = participant.Username;
+        var password = EnvConfigSettings.UserPassword;
+        var hearingListPage = LoginAsParticipant(username, password, participant.Role == GenericTestRole.Representative, participant.VideoFileName);
+        return ParticipantJourneyToWaitingRoom(participant, hearingListPage, username, conferenceId);
+    }
+
+    protected ParticipantWaitingRoomPage ParticipantJourneyToWaitingRoom(
+        BookingParticipantDto participant, 
+        ParticipantHearingListPage participantHearingList, 
+        string participantUsername,
+        Guid conferenceId)
+    {
+        var participantWaitingRoomPage = participantHearingList
+            .SelectHearing(conferenceId).GoToEquipmentCheck()
+            .GoToSwitchOnCameraMicrophonePage()
+            .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
+            .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration(participant.Role == GenericTestRole.Witness);
+        // store the participant driver in a dictionary, so we can access it later to sign out
+        ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoomPage;
+        return participantWaitingRoomPage;
+    }
 }
