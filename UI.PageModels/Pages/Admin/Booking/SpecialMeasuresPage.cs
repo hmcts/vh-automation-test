@@ -2,8 +2,8 @@ namespace UI.PageModels.Pages.Admin.Booking;
 
 public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPage(driver, defaultWaitTime)
 {
-    private readonly By _participantsAndEndpointsToScreenDropdown = By.Id("screening-participant");
-    private readonly By _participantsAndEndpointsToScreenFromDropdown = By.XPath("//ng-select[@id='protect-participant-from']//input[@type='text']");
+    private readonly By _participantsToScreenDropdown = By.Id("screening-participant");
+    private readonly By _participantsToScreenFromDropdown = By.XPath("//ng-select[@id='protect-participant-from']//input[@type='text']");
     private readonly By _saveButton = By.Id("confirmScreeningBtn");
     private readonly By _nextButton = By.Id("nextButton");
     
@@ -26,22 +26,22 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
 
     public void ScreenParticipant(ScreeningParticipantDto screeningParticipantDto)
     {
-        SelectParticipantOrEndpointToScreen(screeningParticipantDto);
-        SelectParticipantsOrEndpointsToScreenFrom(screeningParticipantDto);
+        SelectParticipantToScreen(screeningParticipantDto);
+        SelectParticipantsToScreenFrom(screeningParticipantDto);
         ClickElement(_saveButton);
     }
 
-    private void SelectParticipantOrEndpointToScreen(ScreeningParticipantDto screeningParticipantDto)
+    private void SelectParticipantToScreen(ScreeningParticipantDto screeningParticipantDto)
     {
-        WaitForDropdownListToPopulate(_participantsAndEndpointsToScreenDropdown, 0);
-        SelectDropDownByText(_participantsAndEndpointsToScreenDropdown, screeningParticipantDto.DisplayName);
+        WaitForDropdownListToPopulate(_participantsToScreenDropdown, 0);
+        SelectDropDownByText(_participantsToScreenDropdown, screeningParticipantDto.DisplayName);
     }
 
-    private void SelectParticipantsOrEndpointsToScreenFrom(ScreeningParticipantDto screeningParticipantDto)
+    private void SelectParticipantsToScreenFrom(ScreeningParticipantDto screeningParticipantDto)
     {
         foreach (var displayNameToScreenFrom in screeningParticipantDto.DisplayNamesToScreenFrom)
         {
-            ClickElement(_participantsAndEndpointsToScreenFromDropdown);
+            ClickElement(_participantsToScreenFromDropdown);
             var checkbox = By.XPath($"//input[@aria-label='Participant display name {displayNameToScreenFrom}']");
             ClickElement(checkbox, waitToBeClickable: false);
         }
