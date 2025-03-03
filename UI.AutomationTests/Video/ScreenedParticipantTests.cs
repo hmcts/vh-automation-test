@@ -16,7 +16,7 @@ public class ScreenedParticipantTests : VideoWebUiTest
     {
         // Book a hearing with 2 participants, screened from each other
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
-        var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
+        var hearingDto = HearingTestData.CreateHearingDto(HearingTestData.JudgePersonalCode,
             judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
         var participant1 = hearingDto.Participants[0];
         var participant2 = hearingDto.Participants[1];
@@ -64,18 +64,9 @@ public class ScreenedParticipantTests : VideoWebUiTest
     
     private async Task BookHearing(BookingDto bookingDto)
     {
-        var driver = AdminWebDriver.GetDriver();
-            
-        await driver.Navigate().GoToUrlAsync(EnvConfigSettings.AdminUrl);
-        var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
-        var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
-        
-        var createHearingPage = dashboardPage.GoToBookANewHearing();
-        
-        var summaryPage = createHearingPage.BookAHearingJourney(bookingDto);
-        var confirmationPage = summaryPage.ClickBookButton();
-        _hearingIdString = confirmationPage.GetNewHearingId();
-        TestHearingIds.Add(_hearingIdString);
-        _conference = await GetConference(new Guid(_hearingIdString));
+        var request = HearingTestData.CreateRequest(bookingDto);
+        var hearing = await BookingsApiClient.BookNewHearingWithCodeAsync(request);
+        TestHearingIds.Add(hearing.Id.ToString());
+        _conference = await GetConference(hearing.Id);
     }
 }
