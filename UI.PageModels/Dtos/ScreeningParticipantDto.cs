@@ -1,13 +1,7 @@
 namespace UI.PageModels.Dtos;
 
-public class ScreeningParticipantDto
+public class ScreeningParticipantDto(string displayName, ScreeningDto screening)
 {
-    public string DisplayName { get; set; }
-    public List<string> DisplayNamesToScreenFrom { get; set; }
-    
-    public ScreeningParticipantDto(string displayName, List<string> displayNamesToScreenFrom)
-    {
-        DisplayName = displayName;
-        DisplayNamesToScreenFrom = displayNamesToScreenFrom;
-    }
+    public string DisplayName { get; } = displayName;
+    public ScreeningDto Screening { get; } = screening;
 }

@@ -14,19 +14,16 @@ public class ScreenedParticipantTests : VideoWebUiTest
     [FeatureToggleSetting(FeatureToggle.SpecialMeasuresKey, true)]
     public async Task JoinConsultationWithScreenedParticipants()
     {
-        // Book a hearing with 2 participants, screened from each other (1 protected, 1 to screen from)
+        // Book a hearing with 2 participants, screened from each other
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
         var hearingDto = HearingTestData.CreateHearingDtoWithEndpoints(HearingTestData.JudgePersonalCode,
             judgeUsername: HearingTestData.JudgeUsername, scheduledDateTime: hearingScheduledDateAndTime);
         var participant1 = hearingDto.Participants[0];
         var participant2 = hearingDto.Participants[1];
-        var screeningParticipants = new List<BookingParticipantDto> { participant1, participant2 };
-        hearingDto.ScreeningParticipants =
-        [
-            new ScreeningParticipantDto(participant1.DisplayName, [participant2.DisplayName])
-        ];
-        await TestContext.Out.WriteLineAsync(
-            $"Attempting to book a hearing with the case name: {hearingDto.CaseName} and case number: {hearingDto.CaseNumber}"); 
+        participant1.Screening = new ScreeningDto
+        {
+            ProtectedFrom = [participant2.DisplayName] 
+        };
         await BookHearing(hearingDto);
         
         // Log in as judge, go to waiting room
@@ -34,6 +31,7 @@ public class ScreenedParticipantTests : VideoWebUiTest
         
         // Log in as each participant involved in screening, go to the waiting room
         var participantWaitingRoomPages = new Dictionary<BookingParticipantDto, ParticipantWaitingRoomPage>();
+        var screeningParticipants = new List<BookingParticipantDto>{ participant1, participant2 };
         Parallel.ForEach(screeningParticipants, participant =>
         {
             var waitingRoomPage = ParticipantLoginToWaitingRoomJourney(participant, _conference.Id);
@@ -42,7 +40,7 @@ public class ScreenedParticipantTests : VideoWebUiTest
 
         // Enter the consultation room as the judge
         var judgeConsultationRoomPage = judgeWaitingRoomPage.JoinJudicialConsultationRoom();
-
+        
         foreach (var participant in screeningParticipants)
         {
             // Admit the participant into the consultation room

@@ -29,5 +29,18 @@ public class BookingDto
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public required BookingJudiciaryParticipantDto Judge { get; set; }
     public List<BookingJudiciaryParticipantDto> PanelMembers { get; set; } = [];
-    public List<ScreeningParticipantDto> ScreeningParticipants { get; set; } = [];
+
+    public List<ScreeningParticipantDto> ScreeningParticipants
+    {
+        get
+        {
+            return Participants
+                .Where(x => x.Screening != null)
+                .Select(x => new ScreeningParticipantDto(x.DisplayName, x.Screening))
+                .Concat(VideoAccessPoints
+                    .Where(x => x.Screening != null)
+                    .Select(x =>  new ScreeningParticipantDto(x.DisplayName, x.Screening)))
+                .ToList();
+        }
+    }
 }

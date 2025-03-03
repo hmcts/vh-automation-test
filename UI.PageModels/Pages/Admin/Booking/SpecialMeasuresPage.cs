@@ -30,18 +30,18 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
     /// <param name="screeningParticipants"></param>
     public void AddScreeningParticipants(List<ScreeningParticipantDto> screeningParticipants)
     {
-        foreach (var screeningParticipant in screeningParticipants)
+        foreach (var participant in screeningParticipants)
         {
-            SelectParticipantToScreen(screeningParticipant);
-            SelectParticipantsToScreenFrom(screeningParticipant.DisplayNamesToScreenFrom);
+            SelectParticipantToScreen(participant.DisplayName);
+            SelectParticipantsToScreenFrom(participant.Screening.ProtectedFrom);
             ClickElement(_saveButton);
         }
     }
 
-    private void SelectParticipantToScreen(ScreeningParticipantDto screeningParticipant)
+    private void SelectParticipantToScreen(string displayName)
     {
         WaitForDropdownListToPopulate(_participantsToScreenDropdown, 0);
-        SelectDropDownByText(_participantsToScreenDropdown, screeningParticipant.DisplayName);
+        SelectDropDownByText(_participantsToScreenDropdown, displayName);
     }
 
     private void SelectParticipantsToScreenFrom(List<string> displayNamesToScreenFrom)
