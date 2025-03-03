@@ -25,6 +25,16 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
     }
 
     /// <summary>
+    /// On editing an existing booking, clicking next will take you to the summary page
+    /// </summary>
+    /// <returns></returns>
+    public SummaryPage GoToSummaryPage()
+    {
+        ClickElement(_nextButton);
+        return new SummaryPage(Driver, DefaultWaitTime);
+    }
+
+    /// <summary>
     /// Add participants or endpoints for screening
     /// </summary>
     /// <param name="screeningParticipants"></param>
@@ -36,6 +46,16 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
             SelectParticipantsToScreenFrom(participant.Screening.ProtectedFrom);
             ClickElement(_saveButton);
         }
+    }
+
+    /// <summary>
+    /// Remove screening for a participant at a specified index
+    /// </summary>
+    /// <param name="index"></param>
+    public void RemoveScreening(int index)
+    {
+        var removeScreeningXPath = $"(//a[@class='vhlink'][normalize-space()='Remove'])[{index + 1}]";
+        ClickElement(By.XPath(removeScreeningXPath));
     }
 
     private void SelectParticipantToScreen(string displayName)

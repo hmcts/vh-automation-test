@@ -156,6 +156,7 @@ public class BookingDetailsPage : VhAdminWebPage
         }
         ValidateParticipants(bookingDto.Participants.Concat(bookingDto.NewParticipants).ToList());
         ValidateDetails(bookingDto);
+        ValidateScreeningDetails(bookingDto);
     }
 
     public void ValidateBookingIsCancelled()
@@ -219,7 +220,7 @@ public class BookingDetailsPage : VhAdminWebPage
             throw new InvalidOperationException($"Expected text: {expectedText} but was {text}");
         }
     }
-    
+
     private void SwitchToEditMode()
     {
         ClickElement(_editBookingButton);
@@ -261,5 +262,19 @@ public class BookingDetailsPage : VhAdminWebPage
         var pin = split[1].Trim();
         
         return (address, pin);
+    }
+
+    /// <summary>
+    /// Edit the hearing and go to the special measures page
+    /// </summary>
+    /// <returns></returns>
+    public SpecialMeasuresPage EditSpecialMeasures()
+    {
+        ClickElement(_editBookingButton);
+        WaitForElementToBeVisible(By.XPath("//main[@id='main-content']//app-summary//app-breadcrumb"));
+        var specialMeasuresBreadcrumbLocator = By.XPath("//app-breadcrumb//div//ol//li//a[text()='Screening (Special Measure)']");
+        ClickElement(specialMeasuresBreadcrumbLocator);
+        var specialMeasuresPage = new SpecialMeasuresPage(Driver, DefaultWaitTime);
+        return specialMeasuresPage;
     }
 }
