@@ -7,14 +7,6 @@ namespace UI.AutomationTests.Video;
 public class ScreenedParticipantTests : VideoWebUiTest
 {
     private ConferenceDetailsResponse _conference;
-
-    [Test]
-    [Category("video")]
-    [FeatureToggleSetting(FeatureToggle.SpecialMeasuresKey, true)]
-    public async Task JoinConsultationWithScreenedParticipants()
-    {
-        // TODO
-    }
     
     [Test]
     [Category("video")]
