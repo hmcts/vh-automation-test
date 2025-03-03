@@ -6,7 +6,6 @@ namespace UI.AutomationTests.Video;
 
 public class ScreenedParticipantTests : VideoWebUiTest
 {
-    private string _hearingIdString;
     private ConferenceDetailsResponse _conference;
     
     [Test]
