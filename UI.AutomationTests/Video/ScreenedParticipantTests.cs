@@ -7,11 +7,19 @@ namespace UI.AutomationTests.Video;
 public class ScreenedParticipantTests : VideoWebUiTest
 {
     private ConferenceDetailsResponse _conference;
-    
+
     [Test]
     [Category("video")]
     [FeatureToggleSetting(FeatureToggle.SpecialMeasuresKey, true)]
     public async Task JoinConsultationWithScreenedParticipants()
+    {
+        // TODO
+    }
+    
+    [Test]
+    [Category("video")]
+    [FeatureToggleSetting(FeatureToggle.SpecialMeasuresKey, true)]
+    public async Task JoinJohConsultationWithScreenedParticipants()
     {
         // Book a hearing with 2 participants, screened from each other
         var hearingScheduledDateAndTime = DateUtil.GetNow(EnvConfigSettings.RunOnSauceLabs || EnvConfigSettings.RunHeadlessBrowser).AddMinutes(5);
@@ -21,7 +29,7 @@ public class ScreenedParticipantTests : VideoWebUiTest
         var participant2 = hearingDto.Participants[1];
         participant1.Screening = new ScreeningDto
         {
-            ProtectedFrom = [participant2.DisplayName] 
+            ProtectedFrom = [new ScreeningEntityDto(participant2.DisplayName)] 
         };
         await BookHearing(hearingDto);
         

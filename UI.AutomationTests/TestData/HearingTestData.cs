@@ -317,7 +317,7 @@ public static class HearingTestData
                 Type = ScreeningType.Specific,
                 ProtectedFrom = bookingDtoParticipant.Screening.ProtectedFrom
                     .Select(protectedFrom => request.Participants
-                        .Find(p => p.DisplayName == protectedFrom).ExternalParticipantId)
+                        .Find(p => p.DisplayName == protectedFrom.DisplayName).ExternalParticipantId)
                     .ToList()
             };
         }

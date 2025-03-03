@@ -44,12 +44,12 @@ public class SpecialMeasuresPage(IWebDriver driver, int defaultWaitTime) : VhAdm
         SelectDropDownByText(_participantsToScreenDropdown, displayName);
     }
 
-    private void SelectParticipantsToScreenFrom(List<string> displayNamesToScreenFrom)
+    private void SelectParticipantsToScreenFrom(List<ScreeningEntityDto> entitiesToScreenFrom)
     {
-        foreach (var displayNameToScreenFrom in displayNamesToScreenFrom)
+        foreach (var displayNameToScreenFrom in entitiesToScreenFrom)
         {
             ClickElement(_participantsToScreenFromDropdown);
-            var checkbox = By.XPath($"//input[@aria-label='Participant display name {displayNameToScreenFrom}']");
+            var checkbox = By.XPath($"//input[@aria-label='Participant display name {displayNameToScreenFrom.DisplayName}']");
             ClickElement(checkbox, waitToBeClickable: false);
         }
     }

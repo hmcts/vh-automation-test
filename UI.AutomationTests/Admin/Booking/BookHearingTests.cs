@@ -139,11 +139,11 @@ public class BookHearingTests : AdminWebUiTest
         _bookingDto.CaseNumber = $"Automation Test Hearing - BookAHearing {Guid.NewGuid():N}";
         _bookingDto.Participants[0].Screening = new ScreeningDto
         {
-            ProtectedFrom = [_bookingDto.Participants[1].DisplayName] 
+            ProtectedFrom = [new ScreeningEntityDto(_bookingDto.Participants[1].DisplayName)]
         };
         _bookingDto.VideoAccessPoints[0].Screening = new ScreeningDto
         {
-            ProtectedFrom = [_bookingDto.VideoAccessPoints[1].DisplayName] 
+            ProtectedFrom = [new ScreeningEntityDto(_bookingDto.VideoAccessPoints[1].DisplayName)] 
         };
         
         var driver = VhDriver.GetDriver();
