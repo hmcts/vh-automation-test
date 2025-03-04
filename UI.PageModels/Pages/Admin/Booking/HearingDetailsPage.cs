@@ -67,9 +67,20 @@ public class HearingDetailsPage(IWebDriver driver, int defaultWaitTime) : VhAdmi
 
         var videoAccessPointsPage = addParticipantPage.GoToVideoAccessPointsPage();
         videoAccessPointsPage.AddVideoAccessPoints(bookingDto.VideoAccessPoints);
-        var otherInformationPage = FeatureToggle.Instance().SpecialMeasuresEnabled() ?
-            videoAccessPointsPage.GoToSpecialMeasuresPage().GoToOtherInformationPage() :
-            videoAccessPointsPage.GoToOtherInformationPage();
+        
+        OtherInfoPage otherInformationPage;
+        if (FeatureToggle.Instance().SpecialMeasuresEnabled())
+        {
+            var specialMeasuresPage = videoAccessPointsPage.GoToSpecialMeasuresPage();
+            if (bookingDto.ScreeningParticipants.Count > 0)
+                specialMeasuresPage.AddScreeningParticipants(bookingDto.ScreeningParticipants);
+            otherInformationPage = specialMeasuresPage.GoToOtherInformationPage();
+        }
+        else
+        {
+            otherInformationPage = videoAccessPointsPage.GoToOtherInformationPage();
+        }
+
         otherInformationPage.TurnOffAudioRecording();
         otherInformationPage.EnterOtherInformation(bookingDto.OtherInformation);
 

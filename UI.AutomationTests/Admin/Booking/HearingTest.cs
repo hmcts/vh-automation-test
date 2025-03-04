@@ -22,5 +22,15 @@ namespace UI.AutomationTests.Admin.Booking
             var bookingDetailsPage = confirmationPage.ClickViewBookingLink();
             return bookingDetailsPage;
         }
+
+        protected BookingDetailsPage LogInAndJourneyToBookingDetailsPage(string caseNumber)
+        {
+            var driver = VhDriver.GetDriver();
+            driver.Navigate().GoToUrl(EnvConfigSettings.AdminUrl);
+            var loginPage = new AdminWebLoginPage(driver, EnvConfigSettings.DefaultElementWait);
+            var dashboardPage = loginPage.Login(AdminLoginUsername, EnvConfigSettings.UserPassword);
+            var bookingListPage = dashboardPage.GoToBookingList().ViewBookingDetails(caseNumber);
+            return bookingListPage;
+        }
     }
 }

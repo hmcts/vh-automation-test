@@ -29,6 +29,7 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
             ValidateDateAndDuration(bookingDto);
         ValidateEndpointsAndOtherInformation(bookingDto);
         ValidateParticipantDetails(bookingDto);
+        ValidateScreeningDetails(bookingDto);
     }
 
     private void ValidateDateMultiDayIndividualDates(List<DateTime>? individualDatesForValidation)
@@ -184,10 +185,7 @@ public class SummaryPage(IWebDriver driver, int defaultWaitTime) : VhAdminWebPag
     private void CompareText(By element, string expectedText)
     {
         var text = GetText(element).Trim();
-        if (!text.Equals(expectedText.Trim(), StringComparison.InvariantCultureIgnoreCase))
-        {
-            throw new InvalidOperationException($"Expected text: {expectedText} but was {text}");
-        }
+        CompareText(text, expectedText);
     }
 
     public BookingConfirmationPage ClickBookButton()

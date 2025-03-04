@@ -25,9 +25,22 @@ public class BookingDto
     public bool AudioRecording { get; set; } = true;
     public required string OtherInformation { get; set; }
     public List<BookingParticipantDto> Participants { get; set; }
-    public List<BookingParticipantDto> NewParticipants { get; set; } = new ();
+    public List<BookingParticipantDto> NewParticipants { get; set; } = [];
     public List<VideoAccessPointsDto> VideoAccessPoints { get; set; }
     public required BookingJudiciaryParticipantDto Judge { get; set; }
-    public List<BookingJudiciaryParticipantDto> PanelMembers { get; set; } = new ();
-    
+    public List<BookingJudiciaryParticipantDto> PanelMembers { get; set; } = [];
+
+    public List<ScreeningParticipantDto> ScreeningParticipants
+    {
+        get
+        {
+            return Participants
+                .Where(x => x.Screening != null)
+                .Select(x => new ScreeningParticipantDto(x.DisplayName, x.Screening))
+                .Concat(VideoAccessPoints
+                    .Where(x => x.Screening != null)
+                    .Select(x =>  new ScreeningParticipantDto(x.DisplayName, x.Screening)))
+                .ToList();
+        }
+    }
 }

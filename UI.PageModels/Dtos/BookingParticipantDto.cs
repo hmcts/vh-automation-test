@@ -19,6 +19,7 @@ public class BookingParticipantDto
     public string? VideoFileName { get; set; }
     
     public string FullName => $"{Title} {FirstName} {LastName}";
+    public ScreeningDto? Screening { get; set; }
 
     public static BookingParticipantDto Individual(GenericTestRole role,
         string contactEmail, string username, string displayName, string title, string firstName, string lastName, string? videoFileName)

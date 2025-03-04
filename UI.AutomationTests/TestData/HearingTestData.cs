@@ -1,4 +1,5 @@
 using BookingsApi.Contract.V2.Enums;
+using UI.AutomationTests.Mappers;
 
 namespace UI.AutomationTests.TestData;
 
@@ -211,15 +212,6 @@ public static class HearingTestData
 
         var bookingDto = CreateHearingDtoWithOnlyAJudge(scheduledDateTime: hearingDateTime);
         var request = CreateRequest(bookingDto);
-        request.JudicialOfficeHolders.Add(
-            new()
-            {
-                HearingRoleCode = JudiciaryParticipantHearingRoleCode.Judge,
-                DisplayName = bookingDto.Judge.DisplayName,
-                ContactEmail = bookingDto.Judge.Username,
-                PersonalCode = bookingDto.Judge.PersonalCode,
-                ContactTelephone = bookingDto.Judge.Phone
-            });
         return request;
     }
     
@@ -254,7 +246,7 @@ public static class HearingTestData
         
         return request;
     }
-    
+
     public static class HearingRoleCodes
     {
         public const string Applicant = "APPL";
@@ -266,7 +258,7 @@ public static class HearingTestData
         public const string WelfareRepresentative = "WERP";
     }
     
-    private static BookNewHearingRequestV2 CreateRequest(BookingDto bookingDto)
+    public static BookNewHearingRequestV2 CreateRequest(BookingDto bookingDto)
     {
         var request = new BookNewHearingRequestV2()
         {
@@ -290,7 +282,57 @@ public static class HearingTestData
             AudioRecordingRequired = bookingDto.AudioRecording,
             HearingVenueCode = bookingDto.VenueCode,
             BookingSupplier = BookingSupplier.Vodafone,
+            JudicialOfficeHolders =
+            [
+                new JudiciaryParticipantRequest
+                {
+                    HearingRoleCode = JudiciaryParticipantHearingRoleCode.Judge,
+                    DisplayName = bookingDto.Judge.DisplayName,
+                    ContactEmail = bookingDto.Judge.Username,
+                    PersonalCode = bookingDto.Judge.PersonalCode,
+                    ContactTelephone = bookingDto.Judge.Phone
+                }
+            ],
+            Participants = bookingDto.Participants.Select(p => new ParticipantRequestV2
+            {
+                ContactEmail = p.ContactEmail,
+                DisplayName = p.DisplayName,
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                ExternalParticipantId = Guid.NewGuid().ToString(),
+                HearingRoleCode = p.Role.MapToHearingRoleCode(),
+                OrganisationName = p.Organisation,
+                Representee = p.Representing,
+                Screening = p.Screening != null ? new ScreeningRequest() : null
+            }).ToList()
         };
+        
+        // Populate screening details
+        foreach (var participant in request.Participants.Where(p => p.Screening != null))
+        {
+            var bookingDtoParticipant = bookingDto.Participants.Find(p => p.DisplayName == participant.DisplayName);
+
+            participant.Screening = new ScreeningRequest
+            {
+                Type = ScreeningType.Specific,
+                ProtectedFrom = bookingDtoParticipant.Screening.ProtectedFrom
+                    .Select(protectedFrom => request.Participants
+                        .Find(p => p.DisplayName == protectedFrom.DisplayName).ExternalParticipantId)
+                    .ToList()
+            };
+        }
+        
+        foreach (var panelMember in bookingDto.PanelMembers)
+        {
+            request.JudicialOfficeHolders.Add(new JudiciaryParticipantRequest
+            {
+                HearingRoleCode = JudiciaryParticipantHearingRoleCode.PanelMember,
+                DisplayName = panelMember.DisplayName,
+                ContactEmail = panelMember.Username,
+                PersonalCode = panelMember.PersonalCode,
+                ContactTelephone = panelMember.Phone
+            });
+        }
         return request;
     }
 }
