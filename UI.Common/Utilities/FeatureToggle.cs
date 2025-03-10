@@ -13,7 +13,6 @@ public sealed class FeatureToggle
     public const string InterpreterEnhancementsToggleKey = "interpreter-enhancements";
     public const string Dom1Key = "dom1";
     public const string SpecialMeasuresKey = "special-measures";
-    public const string ImToggleKey = "instant-message-enhancements-toggle";
     public const string DataCleanup = "ui-automation-test-data-cleanup";
     private static FeatureToggle _instance;
     private static ILdClient _ldClient;
@@ -59,11 +58,6 @@ public sealed class FeatureToggle
     public bool MultiDayBookingEnhancementsEnabled()
     {
         return GetBoolValueWithKey(MultiDayBookingEnhancementsToggleKey);
-    }
-
-    public bool IMEnabled()
-    {
-        return GetBoolValueWithKey(ImToggleKey);
     }
     
     public bool DataCleanupEnabled()
