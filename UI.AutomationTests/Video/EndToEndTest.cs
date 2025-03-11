@@ -51,7 +51,8 @@ public class EndToEndTest : VideoWebUiTest
         var testParticipantWaitingRoom = (ParticipantWaitingRoomPage)ParticipantDrivers[testParticipant.Username].VhVideoWebPage;
         ccHearingPanel.ValidateParticipantStatusAfterLogin(testParticipant.Id, _conference.Id.ToString());
         
-        AssertInstantMessagesFeature(commandCentrePage, testParticipant, testParticipantWaitingRoom);
+        if(FeatureToggle.Instance().IMEnabled())
+            AssertInstantMessagesFeature(commandCentrePage, testParticipant, testParticipantWaitingRoom);
 
         // log in as judge and start the hearing
         var judgeWaitingRoomPage = JudgeLoginToWaitingRoomJourney(hearingDto, _conference.Id);
