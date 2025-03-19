@@ -14,8 +14,14 @@ public class TestingEquipmentPage : VhVideoWebPage
         WaitForElementToBeClickable(_continueBtn);
     }
 
-    public CameraWorkingPage GoToCameraWorkingPage()
+    public CameraWorkingPage GoToCameraWorkingPage(bool waitForSelfTestToComplete = false)
     {
+        if (waitForSelfTestToComplete)
+        {
+            var videoStream = By.Id("incomingStream");
+            WaitForElementToBeVisible(videoStream);
+            WaitForElementToBeInvisible(videoStream, DefaultWaitTime);
+        }
         ClickElement(_continueBtn);
         return new CameraWorkingPage(Driver, DefaultWaitTime);
     }

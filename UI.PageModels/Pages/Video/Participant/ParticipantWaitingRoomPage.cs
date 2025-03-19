@@ -1,6 +1,6 @@
 ﻿namespace UI.PageModels.Pages.Video.Participant;
 
-public class ParticipantWaitingRoomPage : VhVideoWebPage
+public class ParticipantWaitingRoomPage : CommonWaitingRoomPage
 {
     public static string ParticipantWaitingRoomClosedTitle = "This hearing has finished. You may now sign out";
     public static string ParticipantWaitingRoomPausedTitle = "The judge will restart the hearing when they are ready. Please stay near your screen";
