@@ -36,6 +36,8 @@ public class QuickLinkUserTests : VideoWebUiTest
         judgeWaitingRoomPage.WaitForParticipantToBeConnected(quicklink2.DisplayName);
         judgeWaitingRoomPage.ClearParticipantAddedNotification();
         
+        qlWaitingRoomPage1.ClearParticipantAddedNotification();
+        
         var ql1ConsultationPage = qlWaitingRoomPage1.StartPrivateConsultation([quicklink2.DisplayName]);
         var ql2ConsultationPage = qlWaitingRoomPage2.AcceptPrivateConsultation();
         
@@ -50,7 +52,9 @@ public class QuickLinkUserTests : VideoWebUiTest
         qlWaitingRoomPage2 = ql2ConsultationPage.LeaveConsultationRoom();
         
         var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
-
+        
+        // need to wait for the countdown to complete so that the joining text can be tested on admit after countdown
+        
         judgeHearingRoomPage.AdmitParticipant(quicklink1.DisplayName, quicklink1.Id.ToString()); 
         judgeHearingRoomPage.AdmitParticipant(quicklink2.DisplayName, quicklink2.Id.ToString());
         

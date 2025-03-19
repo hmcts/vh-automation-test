@@ -55,7 +55,7 @@ namespace UI.AutomationTests.Video
             var participantWaitingRoom = introductionPage
                 .GoToEquipmentCheck()
                 .GoToSwitchOnCameraMicrophonePage()
-                .SwitchOnCameraMicrophone().GoToCameraWorkingPage().SelectCameraYes().SelectMicrophoneYes()
+                .SwitchOnCameraMicrophone().GoToCameraWorkingPage(true).SelectCameraYes().SelectMicrophoneYes()
                 .SelectYesToVisualAndAudioClarity().AcceptCourtRules().AcceptDeclaration();
             ParticipantDrivers[participantUsername].VhVideoWebPage = participantWaitingRoom;
         }
