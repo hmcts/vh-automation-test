@@ -63,7 +63,7 @@ namespace UI.AutomationTests.Admin.Booking
             var confirmationPage = summaryPage.ClickBookButton();
             
             confirmationPage.IsBookingSuccessful().Should().BeTrue();
-            await Task.Delay(10000); // Allow time for new users to be created
+            await Task.Delay(20000); // Allow time for new users to be created. TODO replace this with a change to admin web to wait for new users to be created in multi day bookings before showing the success screen
             var bookingDetailPage = confirmationPage.ClickViewBookingLink();
             bookingDetailPage.ValidateDetailsPage(hearingDto);
             
