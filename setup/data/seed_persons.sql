@@ -160,7 +160,7 @@ BEGIN
                 FirstName       = 'Automation_Claimant',
                 LastName        = 'Interpreter_1',
                 MiddleNames     = 'MiddleName1',
-                Username        = 'automation_claimant_interpreter_1@hearings.reform.hmcts.net',
+                Username        = 'auto_claimant.interpreter_1@hearings.reform.hmcts.net',
                 TelephoneNumber = '01234567890'
             WHERE ContactEmail = 'automation_claimant_interpreter_1@hmcts.net'
         END
@@ -170,7 +170,7 @@ BEGIN
             insert into dbo.Person(Id, Title, FirstName, LastName, MiddleNames, Username, ContactEmail,
                                    TelephoneNumber, OrganisationId, CreatedDate, UpdatedDate)
             values ('663EEE0C-0884-4B80-AD9E-234BC179A4EF', 'Mrs', 'Automation_Claimant', 'Interpreter_1', 'MiddleName1',
-                    'automation_claimant_interpreter_1@hearings.reform.hmcts.net', 'automation_claimant_interpreter_1@hmcts.net',
+                    'auto_claimant.interpreter_1@hearings.reform.hmcts.net', 'automation_claimant_interpreter_1@hmcts.net',
                     '01234567890', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
         END
 END
