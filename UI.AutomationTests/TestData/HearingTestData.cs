@@ -138,7 +138,7 @@ public static class HearingTestData
         {
             participants.Add(BookingParticipantDto.Individual(GenericTestRole.Interpreter,
                 "Automation_Claimant_Interpreter_1@hmcts.net",
-                "automation_claimant_interpreter_1@hearings.reform.hmcts.net", "Auto 5",
+                "auto_claimant.interpreter_1@hearings.reform.hmcts.net", "Auto 5",
                 "Mrs", "Automation_Claimant", "Interpreter_1", null));
         }
 
