@@ -75,7 +75,10 @@ jobs:
                   runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
                   runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
               - group: vh-automation-test-${{ parameters.environment }}
-              - group: FeatureFlags_${{ parameters.environment }}
+              - ${{ if eq(parameters.environment, 'prod') }}:
+                - group: FeatureFlags_Prod
+              - ${{ else }}:
+                - group: FeatureFlags_Non-Prod
               - group: Saucelabs
               - group: VodafoneConfiguration_${{ parameters.environment }}
               - name: ApiClientConfiguration.BookingsApiUrl
@@ -128,7 +131,10 @@ jobs:
               runOnSauceLabs: ${{ parameters.runOnSaucelabs }}
               runHeadlessBrowser: ${{ parameters.runHeadlessBrowser }}
           - group: vh-automation-test-${{ parameters.environment }}
-          - group: FeatureFlags_${{ parameters.environment }}
+          - ${{ if eq(parameters.environment, 'prod') }}:
+            - group: FeatureFlags_Prod
+          - ${{ else }}:
+            - group: FeatureFlags_Non-Prod
           - group: Saucelabs
           - group: VodafoneConfiguration_${{ parameters.environment }}
           - group: VodafoneConfiguration_${{ parameters.environment }}
