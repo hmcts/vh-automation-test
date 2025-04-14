@@ -215,23 +215,45 @@ public static class HearingTestData
         return request;
     }
     
-    public static BookNewHearingRequestV2 CreateNewRequestDtoJudgeAndEndpointWithLinkedDa(bool remote = false,
+    public static BookNewHearingRequestV2 CreateNewRequestDtoJudgeAndEndpointWithLinkedParticipants(bool remote = false,
         DateTime? scheduledDateTime = null)
     {
         var request = CreateNewRequestDtoWithOnlyAJudge(remote, scheduledDateTime);
-        var rep = KnownParticipantsForTesting().First(x => x.Role == GenericTestRole.Representative);
+        var reps = KnownParticipantsForTesting().Where(x => x.Role == GenericTestRole.Representative).ToArray();
+        var regularParticipant = KnownParticipantsForTesting().Find(x => x.Role == GenericTestRole.Applicant);
         request.Participants =
         [
             new ParticipantRequestV2
             {
-                ContactEmail = rep.ContactEmail,
-                DisplayName = rep.DisplayName,
-                FirstName = rep.FirstName,
-                LastName = rep.LastName,
+                ContactEmail = reps[0].ContactEmail,
+                DisplayName = reps[0].DisplayName,
+                FirstName = reps[0].FirstName,
+                LastName = reps[0].LastName,
                 ExternalParticipantId = Guid.NewGuid().ToString(),
                 HearingRoleCode = HearingRoleCodes.Representative,
-                OrganisationName = rep.Organisation,
+                OrganisationName = reps[0].Organisation,
                 Representee = "Auto EP 1"
+            },
+            new ParticipantRequestV2
+            {
+                ContactEmail = reps[1].ContactEmail,
+                DisplayName = reps[1].DisplayName,
+                FirstName = reps[1].FirstName,
+                LastName = reps[1].LastName,
+                ExternalParticipantId = Guid.NewGuid().ToString(),
+                HearingRoleCode = HearingRoleCodes.Intermediary,
+                OrganisationName = reps[1].Organisation,
+                Representee = "Intermediary for Auto EP 1"
+            },
+            new ParticipantRequestV2
+            {
+                ContactEmail = regularParticipant.ContactEmail,
+                DisplayName = regularParticipant.DisplayName,
+                FirstName = regularParticipant.FirstName,
+                LastName = regularParticipant.LastName,
+                ExternalParticipantId = Guid.NewGuid().ToString(),
+                HearingRoleCode = HearingRoleCodes.Applicant,
+                OrganisationName = regularParticipant.Organisation
             }
         ];
         request.Endpoints =
@@ -240,7 +262,7 @@ public static class HearingTestData
             {
                 DisplayName = "Auto EP 1",
                 ExternalParticipantId = Guid.NewGuid().ToString(),
-                DefenceAdvocateContactEmail = rep.ContactEmail
+                LinkedParticipantEmails = [reps[0].ContactEmail, reps[1].ContactEmail],
             }
         ];
         

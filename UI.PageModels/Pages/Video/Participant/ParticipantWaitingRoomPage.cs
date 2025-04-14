@@ -12,6 +12,7 @@ public class ParticipantWaitingRoomPage : CommonWaitingRoomPage
     private readonly By openChatButton = By.XPath("//img[@id='open-chat-arrow']");
     private readonly By closeChatButton = By.XPath("//img[@id='close-chat-arrow']");
     private readonly By _selectHearing =By.Id ("startHearingButton");
+    private readonly By _acknowledgePrivateConsultationRules = By.XPath("//button[normalize-space()=\"Acknowledge\"]");
     public ParticipantWaitingRoomPage(IWebDriver driver, int defaultWaitTime, bool isParticipantWithLimitedControls = false) : base(driver, defaultWaitTime, isParticipantWithLimitedControls)
     {
     }
@@ -53,6 +54,10 @@ public class ParticipantWaitingRoomPage : CommonWaitingRoomPage
             ClickElement(By.XPath($"//span[normalize-space()='{name}']"));
         }
         ClickElement(_continueJoiningPrivateMeetingButton);
+        
+        if(IsElementVisible(_acknowledgePrivateConsultationRules))
+            ClickElement(_acknowledgePrivateConsultationRules);
+        
         return new ConsultationRoomPage(Driver, DefaultWaitTime);
     }
 
@@ -86,7 +91,4 @@ public class ParticipantWaitingRoomPage : CommonWaitingRoomPage
         ClickElement(_selectHearing);
         return new PanelMemberWaitingRoomPage(Driver, DefaultWaitTime);
     }
-   
-   
-
 }
