@@ -10,7 +10,71 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
     [Test]
     [Category("video")]
     [Category("coreVideo")]
-    public async Task LoginWithJvsWithLinkedParticipants()
+    public async Task LoginWithJvsWithLinkedDefenceAdvocate()
+    {
+        // Arrange
+        var hearing = await CreateTestHearing();
+        TestHearingIds.Add(hearing.Id.ToString());
+        
+        await TestContext.Out.WriteLineAsync($"Attempting to book a hearing with the case name: {hearing.Cases[0].Name} and case number: {hearing.Cases[0].Number}");
+        // wait until conference is created
+        var conference = await GetConference(hearing.Id);
+        
+        // log in as JVS endpoint
+        var endpoint = conference.Endpoints[0];
+        var pexipNodeAddress = EnvConfigSettings.PexipNodeAddress;
+        
+        var displayName = "VH Test";
+        var pexipWebAppUrl = PexipWebAppUrlBuilder.BuildPexipWebAppUrl(pexipNodeAddress, endpoint.SipAddress, endpoint.Pin, displayName);
+        var jvsWebPage = LoginAsJvsEndpoint(pexipWebAppUrl, endpoint.DisplayName);
+        jvsWebPage.ClickJoinMeetingButton();
+        
+        var representative = conference.Participants
+            .First(cp => hearing.Participants
+                .Any(hp => hp.Username == cp.Username && hp.HearingRoleCode == HearingTestData.HearingRoleCodes.Representative));
+        
+        // log in as participants and go to waiting room
+        var repWaitingRoom = LoginInAsParticipantToWaitingRoomJourney(conference, representative.Username, HearingTestData.Representative01FileName);
+        var judgeWaitingRoomPage = LoginWithJudge(hearing, conference);
+
+        judgeWaitingRoomPage.WaitForParticipantToBeConnected(endpoint.DisplayName);
+        judgeWaitingRoomPage.WaitForParticipantToBeConnectedById(representative.Id.ToString());
+        
+        //Test the Hearing
+        var judgeHearingRoomPage = judgeWaitingRoomPage.StartOrResumeHearing();
+        judgeHearingRoomPage.WaitForCountdownToComplete();
+        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeTrue();
+        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeTrue();
+
+        var participantHearingRoom = repWaitingRoom.TransferToHearingRoom();
+
+        judgeHearingRoomPage.DismissParticipant(endpoint.DisplayName, endpoint.Id.ToString());
+        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeFalse();
+        
+        judgeHearingRoomPage.DismissParticipant(representative.DisplayName, representative.Id.ToString());
+        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeFalse();
+        
+        // triggers the ctor to check the page has loaded correctly
+        _ = participantHearingRoom.TransferToWaitingRoom();
+        
+        judgeHearingRoomPage.AdmitParticipant(endpoint.DisplayName, endpoint.Id.ToString());
+        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeTrue();
+        
+        judgeHearingRoomPage.AdmitParticipant(representative.DisplayName, representative.Id.ToString());
+        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeTrue();
+        
+        judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
+        judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
+        
+        judgeWaitingRoomPage.GetConsultationCloseTime().Should()
+            .MatchRegex(@"The consultation room will close at \d{2}:\d{2}");
+        
+        Assert.Pass("Logged in as JVS endpoint and connected to the hearing");
+    }
+    
+    [Test]
+    [Category("video")]
+    public async Task LoginWithJvsWithMultipleLinkedParticipants()
     {
         // Arrange
         var hearing = await CreateTestHearing();
@@ -64,24 +128,6 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeTrue();
         judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeTrue();
         judgeHearingRoomPage.IsParticipantInHearing(intermediary.Id).Should().BeTrue();
-
-        var participantHearingRoom = repWaitingRoom.TransferToHearingRoom();
-
-        judgeHearingRoomPage.DismissParticipant(endpoint.DisplayName, endpoint.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeFalse();
-        
-        judgeHearingRoomPage.DismissParticipant(representative.DisplayName, representative.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeFalse();
-        
-        // triggers the ctor to check the page has loaded correctly
-        _ = participantHearingRoom.TransferToWaitingRoom();
-        
-        judgeHearingRoomPage.AdmitParticipant(endpoint.DisplayName, endpoint.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(endpoint.Id).Should().BeTrue();
-        
-        judgeHearingRoomPage.AdmitParticipant(representative.DisplayName, representative.Id.ToString());
-        judgeHearingRoomPage.IsParticipantInHearing(representative.Id).Should().BeTrue();
-        
         judgeWaitingRoomPage = judgeHearingRoomPage.CloseHearing();
         judgeWaitingRoomPage.IsHearingClosed().Should().BeTrue();
         
