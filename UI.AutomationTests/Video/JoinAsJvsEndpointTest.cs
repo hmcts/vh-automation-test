@@ -174,14 +174,15 @@ public class JoinAsJvsEndpointTest : VideoWebUiTest
         
         //leave and validate consultation endpoint is still in there with the other linked participant 
         intConsultationRoom.LeaveConsultationRoom();
-        repConsultationRoom.IsParticipantConnected(intermediary.DisplayName).Should().BeFalse();
         repConsultationRoom.IsParticipantConnected(endpoint.DisplayName).Should().BeTrue();
         repConsultationRoom.IsParticipantConnected(otherParticipant.DisplayName).Should().BeTrue();
+        repConsultationRoom.IsParticipantConnected(intermediary.DisplayName, 2).Should().BeFalse();
         
-        //other linked participant to leave consultation, validate endpoint is also remove, via the 3rd party
+        //other linked participant to leave consultation, validate endpoint is also removed, via the 3rd party still connected
         repConsultationRoom.LeaveConsultationRoom();
-        otherConsultationRoom.IsParticipantConnected(representative.DisplayName).Should().BeFalse();
-        otherConsultationRoom.IsParticipantConnected(endpoint.DisplayName).Should().BeFalse();
+        otherConsultationRoom.IsParticipantConnected(representative.DisplayName, 2).Should().BeFalse();
+        otherConsultationRoom.IsParticipantConnected(endpoint.DisplayName, 2).Should().BeFalse();
+        otherConsultationRoom.LeaveConsultationRoom();
     }
 
     private ParticipantWaitingRoomPage LoginInAsParticipantToWaitingRoomJourney(ConferenceDetailsResponse conference, string username, string videoFile)
