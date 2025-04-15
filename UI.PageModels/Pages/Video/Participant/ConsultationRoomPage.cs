@@ -57,13 +57,14 @@ public class ConsultationRoomPage : VhVideoWebPage
     /// Check if the user has connected to consultation room
     /// </summary>
     /// <param name="displayName">The display name of the user to verify has connected</param>
+    /// <param name="timeout">Add custome time for how long to wait before through exception</param>
     /// <returns>true if the user is connected, else false</returns>
-    public bool IsParticipantConnected(string displayName)
+    public bool IsParticipantConnected(string displayName, int? timeout = null)
     {
         var connectedStatus = By.XPath($"//span[normalize-space()='{displayName}'][contains(@class,'yellow')]");
         try
         {
-            WaitForElementToBeVisible(connectedStatus);
+            WaitForElementToBeVisible(connectedStatus, timeout);
             return true;
         } catch (Exception)
         {
